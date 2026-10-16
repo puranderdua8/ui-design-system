@@ -1,0 +1,4 @@
+/* Mirrors what a consumer adds (docs/styling-rules.md). */
+@import "tailwindcss";
+@import "../../dist/foundations.css";
+@source "../src";

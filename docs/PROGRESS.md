@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M1 Tokens, branch `m1-tokens`
-- **Next session:** S4
+- **Current milestone:** M2 Styles, branch `m2-styles`
+- **Next session:** S5
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -29,7 +29,7 @@
 | S1 Kickoff and scaffold                  | M0        | ☑      |
 | S2 Token source                          | M1        | ☑      |
 | S3 Token build and checks                | M1        | ☑      |
-| S4 Tailwind bridge and recipes           | M2        | ☐      |
+| S4 Tailwind bridge and recipes           | M2        | ☑      |
 | S5 Text and Heading                      | M3        | ☐      |
 | S6 Button (shadcn intake and adaptation) | M3        | ☐      |
 | S7 Package build and publish             | M3        | ☐      |
@@ -76,6 +76,13 @@
 - Decisions: D-023 to D-026.
 - Gotchas: palette split (brand vs neutral) is documented, not changed (D-025). Parking-lot item below.
 - Next: S4.
+
+### S4 — Tailwind bridge and recipes — 2026-10-16
+
+- Done: `theme.css` (`@theme inline` bridge for colors, type roles with line-height/weight/letter-spacing companions, `font-ds-sans`, `rounded-ds-control`, control spacing; recipes `.ds-type-<role>`, `.ds-focus-ring`). `scripts/build-foundations.mjs` → `packages/ui/dist/foundations.css` (no Tailwind import). `docs/styling-rules.md`. Playground in `packages/ui/playground/` (Vite+React, throwaway); `playground:check` builds it and greps the CSS for 42 classes; added to `pnpm check`.
+- Decisions: D-027, D-028.
+- Gotchas: dev deps added to `packages/ui`: tailwindcss, @tailwindcss/vite, vite, @vitejs/plugin-react (needed for the playground). `packages/ui` `build` currently only builds foundations; S7 adds tsup. Playground sits under tsc `include` (no Node types, so config avoids `node:` imports).
+- Next: S5 Text and Heading. Open PR `m2-styles` for Purander to merge.
 
 ## Parking lot (out of scope, later)
 
