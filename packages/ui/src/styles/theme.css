@@ -1,0 +1,130 @@
+/*
+ * Tier 3: Tailwind v4 bridge + recipes (hand-written).
+ * Maps semantic `--ds-*` variables (generated/tokens.css) into Tailwind
+ * namespaces. `inline` makes utilities reference the token var directly, so a
+ * token change flows through without a Tailwind rebuild of the value.
+ * Primitives are never mapped here: components use semantic tokens only.
+ */
+
+@theme inline {
+  /* Colors: bg-ds-*, text-ds-*, border-ds-*, ... */
+  --color-ds-text: var(--ds-text-primary);
+  --color-ds-text-muted: var(--ds-text-muted);
+  --color-ds-text-inverse: var(--ds-text-inverse);
+  --color-ds-canvas: var(--ds-surface-canvas);
+  --color-ds-border: var(--ds-border-default);
+
+  --color-ds-primary: var(--ds-action-primary-bg);
+  --color-ds-primary-hover: var(--ds-action-primary-bg-hover);
+  --color-ds-primary-active: var(--ds-action-primary-bg-active);
+  --color-ds-primary-fg: var(--ds-action-primary-fg);
+
+  --color-ds-secondary: var(--ds-action-secondary-bg);
+  --color-ds-secondary-hover: var(--ds-action-secondary-bg-hover);
+  --color-ds-secondary-active: var(--ds-action-secondary-bg-active);
+  --color-ds-secondary-fg: var(--ds-action-secondary-fg);
+  --color-ds-secondary-border: var(--ds-action-secondary-border);
+
+  --color-ds-focus-ring: var(--ds-focus-ring);
+
+  --color-ds-disabled: var(--ds-disabled-bg);
+  --color-ds-disabled-fg: var(--ds-disabled-fg);
+  --color-ds-disabled-border: var(--ds-disabled-border);
+
+  /* Font family: font-ds-sans */
+  --font-ds-sans: var(--ds-font-family-sans);
+
+  /* Type roles: text-ds-<role> sets size; companions set line-height,
+     weight and letter-spacing. */
+  --text-ds-display: var(--ds-type-display-font-size);
+  --text-ds-display--line-height: var(--ds-type-display-line-height);
+  --text-ds-display--font-weight: var(--ds-type-display-font-weight);
+  --text-ds-display--letter-spacing: var(--ds-type-display-letter-spacing);
+
+  --text-ds-h1: var(--ds-type-h1-font-size);
+  --text-ds-h1--line-height: var(--ds-type-h1-line-height);
+  --text-ds-h1--font-weight: var(--ds-type-h1-font-weight);
+  --text-ds-h1--letter-spacing: var(--ds-type-h1-letter-spacing);
+
+  --text-ds-h2: var(--ds-type-h2-font-size);
+  --text-ds-h2--line-height: var(--ds-type-h2-line-height);
+  --text-ds-h2--font-weight: var(--ds-type-h2-font-weight);
+  --text-ds-h2--letter-spacing: var(--ds-type-h2-letter-spacing);
+
+  --text-ds-h3: var(--ds-type-h3-font-size);
+  --text-ds-h3--line-height: var(--ds-type-h3-line-height);
+  --text-ds-h3--font-weight: var(--ds-type-h3-font-weight);
+  --text-ds-h3--letter-spacing: var(--ds-type-h3-letter-spacing);
+
+  --text-ds-body: var(--ds-type-body-font-size);
+  --text-ds-body--line-height: var(--ds-type-body-line-height);
+  --text-ds-body--font-weight: var(--ds-type-body-font-weight);
+  --text-ds-body--letter-spacing: var(--ds-type-body-letter-spacing);
+
+  --text-ds-lead: var(--ds-type-lead-font-size);
+  --text-ds-lead--line-height: var(--ds-type-lead-line-height);
+  --text-ds-lead--font-weight: var(--ds-type-lead-font-weight);
+  --text-ds-lead--letter-spacing: var(--ds-type-lead-letter-spacing);
+
+  --text-ds-caption: var(--ds-type-caption-font-size);
+  --text-ds-caption--line-height: var(--ds-type-caption-line-height);
+  --text-ds-caption--font-weight: var(--ds-type-caption-font-weight);
+  --text-ds-caption--letter-spacing: var(--ds-type-caption-letter-spacing);
+
+  --text-ds-label: var(--ds-type-label-font-size);
+  --text-ds-label--line-height: var(--ds-type-label-line-height);
+  --text-ds-label--font-weight: var(--ds-type-label-font-weight);
+  --text-ds-label--letter-spacing: var(--ds-type-label-letter-spacing);
+
+  /* Control label sizes: text-ds-control-sm / text-ds-control-md */
+  --text-ds-control-sm: var(--ds-control-sm-font-size);
+  --text-ds-control-md: var(--ds-control-md-font-size);
+
+  /* Radius: rounded-ds-control */
+  --radius-ds-control: var(--ds-control-radius);
+
+  /* Spacing namespace, control metrics only: h-ds-control-md, px-ds-control-sm */
+  --spacing-ds-control-sm: var(--ds-control-sm-height);
+  --spacing-ds-control-md: var(--ds-control-md-height);
+  --spacing-ds-control-px-sm: var(--ds-control-sm-padding-x);
+  --spacing-ds-control-px-md: var(--ds-control-md-padding-x);
+}
+
+/*
+ * Recipes: only for composites a single utility cannot express.
+ * `@apply` is allowed here and nowhere else (docs/styling-rules.md).
+ */
+@layer components {
+  /* One class per type role: family + size + weight + line-height + tracking. */
+  .ds-type-display {
+    @apply font-ds-sans text-ds-display;
+  }
+  .ds-type-h1 {
+    @apply font-ds-sans text-ds-h1;
+  }
+  .ds-type-h2 {
+    @apply font-ds-sans text-ds-h2;
+  }
+  .ds-type-h3 {
+    @apply font-ds-sans text-ds-h3;
+  }
+  .ds-type-body {
+    @apply font-ds-sans text-ds-body;
+  }
+  .ds-type-lead {
+    @apply font-ds-sans text-ds-lead;
+  }
+  .ds-type-caption {
+    @apply font-ds-sans text-ds-caption;
+  }
+  .ds-type-label {
+    @apply font-ds-sans text-ds-label;
+  }
+
+  /* Keyboard focus ring from the focus.ring-* tokens (width and offset have
+     no Tailwind namespace, so a recipe keeps them out of arbitrary values). */
+  .ds-focus-ring:focus-visible {
+    outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring);
+    outline-offset: var(--ds-focus-ring-offset);
+  }
+}

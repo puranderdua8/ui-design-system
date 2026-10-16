@@ -14,7 +14,7 @@
     "tokens:build": "node scripts/build-tokens.mjs",
     "tokens:check": "node scripts/check-tokens.mjs",
     "registry:build": "echo 'registry:build: not implemented yet (S8)'",
-    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
