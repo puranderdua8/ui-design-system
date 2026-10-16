@@ -1,0 +1,16 @@
+{
+  "control": {
+    "$type": "dimension",
+    "sm": {
+      "height": { "$value": "{size.control.sm}" },
+      "padding-x": { "$value": "{space.3}" },
+      "font-size": { "$value": "{font.size.sm}" }
+    },
+    "md": {
+      "height": { "$value": "{size.control.md}" },
+      "padding-x": { "$value": "{space.4}" },
+      "font-size": { "$value": "{font.size.base}" }
+    },
+    "radius": { "$value": "{radius.md}" }
+  }
+}
