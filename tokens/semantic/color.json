@@ -1,0 +1,106 @@
+{
+  "text": {
+    "$type": "color",
+    "primary": {
+      "$value": "{color.neutral.900}",
+      "$description": "Default text on surfaces."
+    },
+    "muted": {
+      "$value": "{color.neutral.600}",
+      "$description": "Secondary text: hints, captions, helper copy."
+    },
+    "inverse": {
+      "$value": "{color.white}",
+      "$description": "Text on dark or brand-filled backgrounds."
+    }
+  },
+  "surface": {
+    "$type": "color",
+    "canvas": {
+      "$value": "{color.white}",
+      "$description": "Page background."
+    }
+  },
+  "border": {
+    "$type": "color",
+    "default": {
+      "$value": "{color.neutral.300}",
+      "$description": "Decorative separators and neutral outlines. Not a control boundary (3:1 not guaranteed)."
+    }
+  },
+  "action": {
+    "$type": "color",
+    "primary": {
+      "bg": {
+        "$value": "{color.brand.600}",
+        "$description": "Primary action fill."
+      },
+      "bg-hover": {
+        "$value": "{color.brand.700}",
+        "$description": "Primary action fill on hover."
+      },
+      "bg-active": {
+        "$value": "{color.brand.800}",
+        "$description": "Primary action fill when pressed."
+      },
+      "fg": {
+        "$value": "{color.white}",
+        "$description": "Text and icons on the primary action fill."
+      }
+    },
+    "secondary": {
+      "bg": {
+        "$value": "{color.white}",
+        "$description": "Secondary action fill."
+      },
+      "bg-hover": {
+        "$value": "{color.brand.50}",
+        "$description": "Secondary action fill on hover."
+      },
+      "bg-active": {
+        "$value": "{color.brand.100}",
+        "$description": "Secondary action fill when pressed."
+      },
+      "fg": {
+        "$value": "{color.brand.700}",
+        "$description": "Text and icons on the secondary action fill."
+      },
+      "border": {
+        "$value": "{color.brand.500}",
+        "$description": "Secondary action outline; meets 3:1 against its fills."
+      }
+    }
+  },
+  "focus": {
+    "ring": {
+      "$type": "color",
+      "$value": "{color.brand.600}",
+      "$description": "Keyboard focus ring colour; meets 3:1 against the canvas."
+    },
+    "ring-width": {
+      "$type": "dimension",
+      "$value": "{ring.width}",
+      "$description": "Keyboard focus ring thickness."
+    },
+    "ring-offset": {
+      "$type": "dimension",
+      "$value": "{ring.offset}",
+      "$description": "Gap between a control and its focus ring."
+    }
+  },
+  "disabled": {
+    "$type": "color",
+    "bg": {
+      "$value": "{color.neutral.100}",
+      "$description": "Disabled control fill."
+    },
+    "fg": {
+      "$value": "{color.neutral.500}",
+      "$description": "Disabled control text (exempt from contrast requirements)."
+    },
+    "border": {
+      "$value": "{color.neutral.200}",
+      "$description": "Disabled control outline."
+    }
+  }
+}

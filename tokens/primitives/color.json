@@ -1,0 +1,82 @@
+{
+  "color": {
+    "$type": "color",
+    "white": {
+      "$value": "#ffffff",
+      "$description": "Pure white; page canvas and inverse text."
+    },
+    "brand": {
+      "$description": "Achromatic scale built around the primary #595959 (brand.600).",
+      "50": {
+        "$value": "#f7f7f7"
+      },
+      "100": {
+        "$value": "#ededed"
+      },
+      "200": {
+        "$value": "#dcdcdc"
+      },
+      "300": {
+        "$value": "#c4c4c4"
+      },
+      "400": {
+        "$value": "#9a9a9a"
+      },
+      "500": {
+        "$value": "#737373"
+      },
+      "600": {
+        "$value": "#595959",
+        "$description": "Primary (D-016)."
+      },
+      "700": {
+        "$value": "#454545"
+      },
+      "800": {
+        "$value": "#303030"
+      },
+      "900": {
+        "$value": "#1c1c1c"
+      }
+    },
+    "neutral": {
+      "$description": "Slightly cool gray scale for text, surfaces and borders.",
+      "0": {
+        "$value": "#fbfbfc"
+      },
+      "50": {
+        "$value": "#f4f5f7"
+      },
+      "100": {
+        "$value": "#eceef1"
+      },
+      "200": {
+        "$value": "#dde0e5"
+      },
+      "300": {
+        "$value": "#c5cad2"
+      },
+      "400": {
+        "$value": "#9aa1ad"
+      },
+      "500": {
+        "$value": "#6f7785"
+      },
+      "600": {
+        "$value": "#565d6a"
+      },
+      "700": {
+        "$value": "#434955"
+      },
+      "800": {
+        "$value": "#2c313a"
+      },
+      "900": {
+        "$value": "#1a1d23"
+      },
+      "950": {
+        "$value": "#0d0f12"
+      }
+    }
+  }
+}

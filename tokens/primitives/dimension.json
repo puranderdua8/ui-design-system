@@ -1,0 +1,63 @@
+{
+  "space": {
+    "$type": "dimension",
+    "$description": "Key is the multiple of 0.25rem; 1-5 means 1.5.",
+    "1": {
+      "$value": "0.25rem"
+    },
+    "1-5": {
+      "$value": "0.375rem"
+    },
+    "2": {
+      "$value": "0.5rem"
+    },
+    "3": {
+      "$value": "0.75rem"
+    },
+    "4": {
+      "$value": "1rem"
+    },
+    "6": {
+      "$value": "1.5rem"
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "sm": {
+        "$value": "2rem"
+      },
+      "md": {
+        "$value": "2.5rem"
+      }
+    },
+    "$description": "Fixed control heights that are not on the spacing scale (D-018)."
+  },
+  "radius": {
+    "$type": "dimension",
+    "sm": {
+      "$value": "0.25rem"
+    },
+    "md": {
+      "$value": "0.5rem"
+    },
+    "$description": "Corner radii."
+  },
+  "border-width": {
+    "$type": "dimension",
+    "default": {
+      "$value": "1px"
+    },
+    "$description": "Border thickness."
+  },
+  "ring": {
+    "$type": "dimension",
+    "width": {
+      "$value": "2px"
+    },
+    "offset": {
+      "$value": "2px"
+    },
+    "$description": "Raw focus ring metrics. Components use the semantic focus.ring-* tokens instead."
+  }
+}

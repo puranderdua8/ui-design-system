@@ -1,0 +1,85 @@
+{
+  "type": {
+    "$type": "typography",
+    "display": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.3xl}",
+        "fontWeight": "{font.weight.bold}",
+        "lineHeight": "{font.line-height.tight}",
+        "letterSpacing": "{font.letter-spacing.tight}"
+      },
+      "$description": "Largest display text."
+    },
+    "h1": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.2xl}",
+        "fontWeight": "{font.weight.bold}",
+        "lineHeight": "{font.line-height.tight}",
+        "letterSpacing": "{font.letter-spacing.tight}"
+      },
+      "$description": "Page title."
+    },
+    "h2": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.xl}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{font.line-height.tight}",
+        "letterSpacing": "{font.letter-spacing.tight}"
+      },
+      "$description": "Section heading."
+    },
+    "h3": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.lg}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{font.line-height.tight}",
+        "letterSpacing": "{font.letter-spacing.normal}"
+      },
+      "$description": "Subsection heading."
+    },
+    "body": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.base}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{font.line-height.normal}",
+        "letterSpacing": "{font.letter-spacing.normal}"
+      },
+      "$description": "Default paragraph text."
+    },
+    "lead": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.lg}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{font.line-height.relaxed}",
+        "letterSpacing": "{font.letter-spacing.normal}"
+      },
+      "$description": "Introductory paragraph under a heading."
+    },
+    "caption": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.xs}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{font.line-height.normal}",
+        "letterSpacing": "{font.letter-spacing.normal}"
+      },
+      "$description": "Small supporting text."
+    },
+    "label": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.sm}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{font.line-height.normal}",
+        "letterSpacing": "{font.letter-spacing.normal}"
+      },
+      "$description": "Form and control labels."
+    }
+  }
+}
