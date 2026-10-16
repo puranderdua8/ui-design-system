@@ -2,15 +2,36 @@
   "control": {
     "$type": "dimension",
     "sm": {
-      "height": { "$value": "{size.control.sm}" },
-      "padding-x": { "$value": "{space.3}" },
-      "font-size": { "$value": "{font.size.sm}" }
+      "height": {
+        "$value": "{size.control.sm}",
+        "$description": "Small control height."
+      },
+      "padding-x": {
+        "$value": "{space.3}",
+        "$description": "Small control horizontal padding."
+      },
+      "font-size": {
+        "$value": "{font.size.sm}",
+        "$description": "Small control label size."
+      }
     },
     "md": {
-      "height": { "$value": "{size.control.md}" },
-      "padding-x": { "$value": "{space.4}" },
-      "font-size": { "$value": "{font.size.base}" }
+      "height": {
+        "$value": "{size.control.md}",
+        "$description": "Medium control height."
+      },
+      "padding-x": {
+        "$value": "{space.4}",
+        "$description": "Medium control horizontal padding."
+      },
+      "font-size": {
+        "$value": "{font.size.base}",
+        "$description": "Medium control label size."
+      }
     },
-    "radius": { "$value": "{radius.md}" }
+    "radius": {
+      "$value": "{radius.md}",
+      "$description": "Corner radius shared by controls."
+    }
   }
 }

@@ -70,6 +70,13 @@
 - Gotchas: `pnpm add style-dictionary` installs v5; pinned `^4`. pnpm 11 needs `allowBuilds` entries. With `outputReferences`, changing a primitive changes only that CSS line (semantics are `var()` refs); `tokens.json` holds resolved values and shows every dependent changing (verified with brand.600).
 - Next: S4 Tailwind bridge and recipes. Open PR `m1-tokens` for Purander to review/merge.
 
+### S2/S3 review fixes — 2026-10-16
+
+- Done: PR #2 review. `validate-tokens` now checks alias types, value formats and semantic `$description`s (all semantic tokens described). `contrast.mjs` adds 3:1 pairs (focus ring, secondary border), accepts `#rgb`, uses the 0.04045 threshold, reports bad colours cleanly. `check-tokens` exits with the child's status (no stack traces) and runs `test-token-propagation.mjs`. Build: custom `css/variables-ds` format (no repeated typography comments, `space-1-5` in order).
+- Decisions: D-023 to D-026.
+- Gotchas: palette split (brand vs neutral) is documented, not changed (D-025). Parking-lot item below.
+- Next: S4.
+
 ## Parking lot (out of scope, later)
 
--
+- Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).

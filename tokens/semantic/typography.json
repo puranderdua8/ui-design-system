@@ -18,7 +18,8 @@
         "fontWeight": "{font.weight.bold}",
         "lineHeight": "{font.line-height.tight}",
         "letterSpacing": "{font.letter-spacing.tight}"
-      }
+      },
+      "$description": "Page title."
     },
     "h2": {
       "$value": {
@@ -27,7 +28,8 @@
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{font.line-height.tight}",
         "letterSpacing": "{font.letter-spacing.tight}"
-      }
+      },
+      "$description": "Section heading."
     },
     "h3": {
       "$value": {
@@ -36,7 +38,8 @@
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{font.line-height.tight}",
         "letterSpacing": "{font.letter-spacing.normal}"
-      }
+      },
+      "$description": "Subsection heading."
     },
     "body": {
       "$value": {
@@ -45,7 +48,8 @@
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{font.line-height.normal}",
         "letterSpacing": "{font.letter-spacing.normal}"
-      }
+      },
+      "$description": "Default paragraph text."
     },
     "lead": {
       "$value": {
@@ -54,7 +58,8 @@
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{font.line-height.relaxed}",
         "letterSpacing": "{font.letter-spacing.normal}"
-      }
+      },
+      "$description": "Introductory paragraph under a heading."
     },
     "caption": {
       "$value": {
@@ -63,7 +68,8 @@
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{font.line-height.normal}",
         "letterSpacing": "{font.letter-spacing.normal}"
-      }
+      },
+      "$description": "Small supporting text."
     },
     "label": {
       "$value": {
@@ -72,7 +78,8 @@
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{font.line-height.normal}",
         "letterSpacing": "{font.letter-spacing.normal}"
-      }
+      },
+      "$description": "Form and control labels."
     }
   }
 }
