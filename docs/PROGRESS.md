@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M0 Foundation, branch `m0-foundation`
-- **Next session:** S3
+- **Current milestone:** M1 Tokens, branch `m1-tokens`
+- **Next session:** S4
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -28,7 +28,7 @@
 | ---------------------------------------- | --------- | ------ |
 | S1 Kickoff and scaffold                  | M0        | ☑      |
 | S2 Token source                          | M1        | ☑      |
-| S3 Token build and checks                | M1        | ☐      |
+| S3 Token build and checks                | M1        | ☑      |
 | S4 Tailwind bridge and recipes           | M2        | ☐      |
 | S5 Text and Heading                      | M3        | ☐      |
 | S6 Button (shadcn intake and adaptation) | M3        | ☐      |
@@ -62,6 +62,13 @@
 - Decisions: D-017 to D-019. Branch `m1-tokens` cut from updated `main`.
 - Gotchas: keys can't contain `.` (reference separator), so spacing 1.5 is `space.1-5`. Control height needed 2rem/2.5rem, which the spacing scale lacks, so I added primitive `size.control.{sm,md}`. Added semantic `focus.ring-width` and `focus.ring-offset` (not in the prompt) so Button can use the ring without touching primitives. Contrast not yet checked (S3 `contrast.mjs`); secondary border is brand.500 (#737373).
 - Next: S3 Style Dictionary build, `tokens:check`, contrast script, wire into `pnpm check` and CI; open PR `m1-tokens`. Purander still needs to review role names (S2 "Done when").
+
+### S3 — Token build and checks — 2026-10-16
+
+- Done: `scripts/build-tokens.mjs` (Style Dictionary v4) writes `packages/ui/src/styles/generated/tokens.css` (`:root`, `--ds-` prefix, `outputReferences`) and flat `tokens.json`. `scripts/check-tokens.mjs` (validate, rebuild-and-diff, contrast) and `scripts/contrast.mjs`. `tokens:build`/`tokens:check` wired into root scripts, `pnpm check` and therefore CI. All 8 contrast pairs pass (lowest: text.muted 6.63:1, primary 7.00:1), so no token changes.
+- Decisions: D-020 to D-022.
+- Gotchas: `pnpm add style-dictionary` installs v5; pinned `^4`. pnpm 11 needs `allowBuilds` entries. With `outputReferences`, changing a primitive changes only that CSS line (semantics are `var()` refs); `tokens.json` holds resolved values and shows every dependent changing (verified with brand.600).
+- Next: S4 Tailwind bridge and recipes. Open PR `m1-tokens` for Purander to review/merge.
 
 ## Parking lot (out of scope, later)
 

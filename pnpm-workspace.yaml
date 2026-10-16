@@ -1,3 +1,6 @@
 packages:
   - "packages/*"
   - "apps/*"
+allowBuilds:
+  "@bundled-es-modules/glob": false
+  style-dictionary: false
