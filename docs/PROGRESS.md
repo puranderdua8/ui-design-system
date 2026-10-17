@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M3 Components and package, branch `m3-button`
-- **Next session:** S8
+- **Current milestone:** M4 Registry, branch `m4-registry`
+- **Next session:** S8 deploy (Purander), then S9
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -33,7 +33,7 @@
 | S5 Text and Heading                      | M3        | ☑      |
 | S6 Button (shadcn intake and adaptation) | M3        | ☑      |
 | S7 Package build and publish             | M3        | ☑      |
-| S8 Registry build and hosting            | M4        | ☐      |
+| S8 Registry build and hosting            | M4        | ◐      |
 | S9 Clean-install and update checks       | M4        | ☐      |
 | S10 Portfolio site                       | M5        | ☐      |
 | S11 QA and accessibility                 | M5        | ☐      |
@@ -108,6 +108,15 @@
 - Gotchas: tsup `clean` wipes `dist`, so `build` runs tsup before `build-foundations`. `esbuild` set to `false` in `allowBuilds`. peerDeps are `^19` (plan said `>=18`; CLAUDE.md/D-033 win). The README `@source` path depends on where the consumer's CSS file sits.
 - Published by Purander on 2026-10-17: `@puranderdua/ui@0.1.0`. The first publish failed with E404 "Scope not found" because the `puranderdua` npm org did not exist (the npm user is `puranderdua8`); creating the free org fixed it. `npm view @puranderdua/ui version` returned 404 for a short while after publishing, then 0.1.0 (registry propagation). `npm view ui version` is an unrelated package.
 - Next: S8 registry build and hosting.
+
+### S8 — Registry build and hosting — 2026-10-17
+
+- Done: `registry.json` (template; items `ds-foundations`, `ds-types`, `ds-typography`, `ds-button`), `scripts/build-registry.mjs` (`pnpm registry:build` → `public/r/v0.1.0` + `public/r/latest`), `scripts/check-parity.mjs` (`pnpm registry:check`), `apps/registry/vercel.json` (output `public`, CORS and cache headers), `docs/registry.md`. Both scripts are in `pnpm check`. Built `ds-button.json` contains `@/lib/utils` and `@/lib/types` imports.
+- Decisions: D-038.
+- Gotchas: added the `ds-types` item (not in the plan) because components import `@/lib/types`. The registry host is not known yet, so the default is `https://puranderdua-registry.vercel.app`; after creating the Vercel project run `REGISTRY_URL=<url> pnpm registry:build` and commit the output. Standard shadcn `utils` lacks the `ds-*` tailwind-merge extension (see `docs/registry.md`). Not yet verified in a real consumer (S9).
+- PR #6 review fixes: explicit `components/ui/<file>` targets (CLI nested the source path otherwise); new `ds-utils` item (stock `cn` dropped Button's text colour); `registry.config.json` host with URL validation; no silent overwrite of a built version (`--force`); build in a temp dir with `try/finally`; parity compares every file to its source and checks targets; CI fails on a stale `public/r`; `vercel.json` version pattern tightened. Verified with `shadcn add` from a local copy of the registry (7 files, correct paths and rewritten imports).
+- Open: `registry.config.json` still holds the placeholder host. After the Vercel project exists, set the real URL and run `node scripts/build-registry.mjs --force`, then commit before merging.
+- Next: Purander creates the Vercel project (root `apps/registry`) and gives the URL; then S9 clean-install.
 
 ## Parking lot (out of scope, later)
 

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ds-button",
+  "title": "Button",
+  "description": "Token-driven Button (primary and secondary; sm and md).",
+  "dependencies": [
+    "class-variance-authority",
+    "@radix-ui/react-slot"
+  ],
+  "registryDependencies": [
+    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-utils.json",
+    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-types.json",
+    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-foundations.json"
+  ],
+  "files": [
+    {
+      "path": "packages/ui/src/components/button.tsx",
+      "content": "import { cva, type VariantProps } from \"class-variance-authority\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cn } from \"@/lib/utils\";\nimport type { ElementProps } from \"@/lib/types\";\n\nconst base =\n  \"inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border font-ds-sans font-medium rounded-ds-control transition-colors ds-focus-ring \" +\n  \"disabled:pointer-events-none disabled:border-ds-disabled-border disabled:bg-ds-disabled disabled:text-ds-disabled-fg \" +\n  \"[&_svg]:pointer-events-none [&_svg]:shrink-0\";\n\nexport const buttonVariants = cva(base, {\n  variants: {\n    variant: {\n      primary:\n        \"border-transparent bg-ds-primary text-ds-primary-fg hover:bg-ds-primary-hover active:bg-ds-primary-active\",\n      secondary:\n        \"border-ds-secondary-border bg-ds-secondary text-ds-secondary-fg hover:bg-ds-secondary-hover active:bg-ds-secondary-active\",\n    },\n    size: {\n      sm: \"h-ds-control-sm px-ds-control-px-sm text-ds-control-sm\",\n      md: \"h-ds-control-md px-ds-control-px-md text-ds-control-md\",\n    },\n  },\n  defaultVariants: { variant: \"primary\", size: \"md\" },\n});\n\nexport type ButtonProps = VariantProps<typeof buttonVariants> &\n  ElementProps<\"button\"> & {\n    /** Render the child element instead of a `<button>`, merging props onto it. */\n    asChild?: boolean;\n  };\n\nexport const Button = ({\n  variant,\n  size,\n  asChild = false,\n  type,\n  className,\n  ...props\n}: ButtonProps) => {\n  const Comp = asChild ? Slot : \"button\";\n  return (\n    <Comp\n      // Default `type=\"button\"` only on a real <button>; asChild may be a link.\n      type={asChild ? type : (type ?? \"button\")}\n      {...(props as object)}\n      data-slot=\"button\"\n      data-variant={variant ?? \"primary\"}\n      data-size={size ?? \"md\"}\n      className={cn(buttonVariants({ variant, size }), className)}\n    />\n  );\n};\n",
+      "type": "registry:ui",
+      "target": "components/ui/button.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}
