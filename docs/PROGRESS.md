@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M5 Real website, branch `m5-site`
-- **Next session:** S12 Storybook, Penpot, release (after Purander does the S11 manual pass and merges the `m5-site` PR)
+- **Current milestone:** M6 Docs and release, branch `m6-release`
+- **Next session:** S12 Storybook, Penpot, release (S12a Storybook, S12b release docs)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -142,7 +142,8 @@
 - Decisions: D-041.
 - Gotchas: `SITE_URL=<preview>` runs the same suite against a deployed site; not run against Vercel yet because the site is not deployed. `pnpm lint` shows Prettier warnings only for the git-excluded `.claude/worktrees/` checkout (not in CI). Every other `pnpm check` step passes when run directly.
 - Manual pass (Purander, to record): keyboard-only walk-through and browser zoom at 200%. Done 2026-10-17: Tab order and focus ring look right; 200% zoom breaks nothing and adds no scroll. Browser and the Enter-key alert were not reported.
-- Next: Purander merges the PR. Then S12.
+- QA and accessibility **passed** (recorded 2026-10-17): automated Playwright + axe suite green, manual keyboard and 200% zoom pass done. The M5 PR (#9) was merged before the S11 commits were pushed, so they were carried onto `m6-release` (cut from `origin/main`).
+- Next: S12.
 
 ## Parking lot (out of scope, later)
 
