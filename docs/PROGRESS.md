@@ -20,7 +20,7 @@
 - npm: https://www.npmjs.com/package/@puranderdua/ui
 - Registry: https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`; the root path is a 404 by design)
 - Site: _tbd_ (Purander creates the Vercel project, root `apps/site`)
-- Storybook: _tbd_
+- Storybook: _tbd_ (local: `pnpm --filter docs storybook`)
 
 ## Session checklist
 
@@ -144,6 +144,13 @@
 - Manual pass (Purander, to record): keyboard-only walk-through and browser zoom at 200%. Done 2026-10-17: Tab order and focus ring look right; 200% zoom breaks nothing and adds no scroll. Browser and the Enter-key alert were not reported.
 - QA and accessibility **passed** (recorded 2026-10-17): automated Playwright + axe suite green, manual keyboard and 200% zoom pass done. The M5 PR (#9) was merged before the S11 commits were pushed, so they were carried onto `m6-release` (cut from `origin/main`).
 - Next: S12.
+
+### S12a — Storybook — 2026-10-17
+
+- Done: `apps/docs` Storybook 10 (React + Vite, Tailwind v4 via `@tailwindcss/vite`, `foundations.css` from the package, a11y addon). Stories: Text (all variants, `as` vs variant), Heading (all variants, `as` vs variant), Button (variant × size × default/disabled matrix, asChild link). `pnpm --filter docs build-storybook` succeeds and is in `pnpm check`. Opened the built `button--matrix` story in the browser pane: tokens and Button styles render.
+- Decisions: D-042.
+- Gotchas: ESLint and Prettier needed `storybook-static` ignores. Stories avoid refs (D-034). The a11y addon's `test: "error"` only fails in the Storybook test runner/Vitest addon, not in `build-storybook`, so axe results are not yet checked in CI.
+- Next: S12b release docs (README, CHANGELOG, release notes, retro). Penpot part is Purander's. Storybook URL (hosting) is not set.
 
 ## Parking lot (out of scope, later)
 
