@@ -1,7 +1,7 @@
 import { Heading, Text } from "@puranderdua/ui";
 import { Cta } from "@/components/cta";
 
-export default function Home() {
+const Home = () => {
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-col gap-16 px-4 py-12 sm:px-6 sm:py-20">
       <header className="flex flex-col gap-6">
@@ -64,4 +64,6 @@ export default function Home() {
       </footer>
     </main>
   );
-}
+};
+
+export default Home;

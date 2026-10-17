@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -14,10 +15,10 @@ export const metadata: Metadata = {
     "Portfolio of Purander Dua, built with its own token-driven design system.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen">{children}</body>
-    </html>
-  );
-}
+const RootLayout = ({ children }: { children: ReactNode }) => (
+  <html lang="en" className={inter.variable}>
+    <body className="min-h-screen">{children}</body>
+  </html>
+);
+
+export default RootLayout;
