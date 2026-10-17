@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M3 Components and package, branch `m3-components`
-- **Next session:** S6
+- **Current milestone:** M3 Components and package, branch `m3-button`
+- **Next session:** S7
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -31,7 +31,7 @@
 | S3 Token build and checks                | M1        | ☑      |
 | S4 Tailwind bridge and recipes           | M2        | ☑      |
 | S5 Text and Heading                      | M3        | ☑      |
-| S6 Button (shadcn intake and adaptation) | M3        | ☐      |
+| S6 Button (shadcn intake and adaptation) | M3        | ☑      |
 | S7 Package build and publish             | M3        | ☐      |
 | S8 Registry build and hosting            | M4        | ☐      |
 | S9 Clean-install and update checks       | M4        | ☐      |
@@ -93,6 +93,13 @@
 - Independent PR review (D-032): fixed conflicting caption colours in `textVariants`, added `cn` tests (incl. theme.css drift check), stubbed canvas noise in test setup. 35 tests pass.
 - Review round 2 (D-033): React 19 only (no forwardRef), `StrictRef` + ref type tests, `cn` dedupes `ds-type-*`, class lists generated from theme.css. 39 tests pass.
 - Next: S6 Button.
+
+### S6 — Button — 2026-10-17
+
+- Done: `button.tsx` adapted from shadcn new-york-v4 (D-036), exported from `index.ts`; `docs/provenance/button.md`; 13 Button tests (keyboard, disabled, type default, focus recipe, sizes, asChild, ref, axe). Added deps `@radix-ui/react-slot`, dev `@testing-library/user-event`. `pnpm check` green (52 tests).
+- Decisions: D-036.
+- Gotchas: no jest-dom, so tests use plain DOM assertions. `font-medium` kept (no weight token for controls). Button classes (`disabled:*`) are not yet in the playground CSS check; S7's tarball app exercises them. D-025 tint mismatch: primary/secondary look consistent enough in tokens; no change.
+- Next: S7 package build and publish.
 
 ## Parking lot (out of scope, later)
 
