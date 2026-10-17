@@ -5,7 +5,7 @@
 ## Current state
 
 - **Current milestone:** M5 Real website, branch `m5-site`
-- **Next session:** S11 QA and accessibility (after Purander deploys the site and S10 is committed/merged)
+- **Next session:** S12 Storybook, Penpot, release (after Purander does the S11 manual pass and merges the `m5-site` PR)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -24,20 +24,20 @@
 
 ## Session checklist
 
-| Session                                  | Milestone | Status |
-| ---------------------------------------- | --------- | ------ |
-| S1 Kickoff and scaffold                  | M0        | ☑      |
-| S2 Token source                          | M1        | ☑      |
-| S3 Token build and checks                | M1        | ☑      |
-| S4 Tailwind bridge and recipes           | M2        | ☑      |
-| S5 Text and Heading                      | M3        | ☑      |
-| S6 Button (shadcn intake and adaptation) | M3        | ☑      |
-| S7 Package build and publish             | M3        | ☑      |
-| S8 Registry build and hosting            | M4        | ☑      |
-| S9 Clean-install and update checks       | M4        | ☑      |
-| S10 Portfolio site                       | M5        | ☑      |
-| S11 QA and accessibility                 | M5        | ☐      |
-| S12 Storybook, Penpot, release           | M6        | ☐      |
+| Session                                  | Milestone | Status                  |
+| ---------------------------------------- | --------- | ----------------------- |
+| S1 Kickoff and scaffold                  | M0        | ☑                       |
+| S2 Token source                          | M1        | ☑                       |
+| S3 Token build and checks                | M1        | ☑                       |
+| S4 Tailwind bridge and recipes           | M2        | ☑                       |
+| S5 Text and Heading                      | M3        | ☑                       |
+| S6 Button (shadcn intake and adaptation) | M3        | ☑                       |
+| S7 Package build and publish             | M3        | ☑                       |
+| S8 Registry build and hosting            | M4        | ☑                       |
+| S9 Clean-install and update checks       | M4        | ☑                       |
+| S10 Portfolio site                       | M5        | ☑                       |
+| S11 QA and accessibility                 | M5        | ◐ (manual pass pending) |
+| S12 Storybook, Penpot, release           | M6        | ☐                       |
 
 ## Log
 
@@ -133,6 +133,14 @@
 - Decisions: D-040.
 - Gotchas: pnpm links the npm package through `node_modules/.pnpm` (always a symlink); the real check is that it is not `packages/ui`. create-next-app brings its own `pnpm-workspace.yaml`/lockfile/AGENTS.md (removed) and `cacheComponents`/`partialPrefetching` flags (dropped, page is static). `shadcn init` writes a stock theme and extra deps (removed). Root `pnpm-workspace.yaml` gained `allowBuilds` for sharp/unrs-resolver and a `minimumReleaseAgeExclude` entry for `@puranderdua/ui@0.1.0` (pnpm added it automatically, fresh release). Next sets `settings.next.rootDir` in the site ESLint config so root `eslint .` doesn't warn about a missing pages dir. Copy on the page is placeholder-quality; Purander should edit it.
 - Next: Purander creates the Vercel project (root `apps/site`, framework Next.js; install runs at the monorepo root) and deploys; then S11 Playwright/axe. S10 PR is not opened yet.
+
+### S11 — QA and accessibility — 2026-10-17
+
+- Done: Playwright 1.54.2 + `@axe-core/playwright` in `apps/site` (`playwright.config.ts`, `e2e/smoke.spec.ts`, `pnpm --filter site test:e2e`). Six tests, all green locally against `next start`: one h1 and heading order, primary Button by keyboard (Tab focus, outline present, Enter shows "Button clicked" via `page.once('dialog')`), secondary link goes to `#approach`, axe 0 violations (colour-contrast on, real browser), 320px no horizontal scroll, 200% zoom (640px viewport) readable. No site/component/token fixes were needed. CI installs Chromium and runs the suite; `.gitignore` covers reports.
+- Decisions: D-041.
+- Gotchas: `SITE_URL=<preview>` runs the same suite against a deployed site; not run against Vercel yet because the site is not deployed. `pnpm lint` shows Prettier warnings only for the git-excluded `.claude/worktrees/` checkout (not in CI). Every other `pnpm check` step passes when run directly.
+- Manual pass (Purander, to record): keyboard-only walk-through and browser zoom at 200%. _Pending._
+- Next: Purander does the manual pass, notes it here, merges the PR. Then S12.
 
 ## Parking lot (out of scope, later)
 
