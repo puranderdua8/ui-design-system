@@ -28,7 +28,7 @@ SERVER_PID=""
 
 cleanup() {
   local status=$?
-  [ -n "$SERVER_PID" ] && kill "$SERVER_PID" 2>/dev/null || true
+  if [ -n "$SERVER_PID" ]; then kill "$SERVER_PID" 2>/dev/null || true; fi
   sleep 1 # let tee flush the log
   if [ -n "${EVIDENCE:-}" ] && [ -f "$LOG" ]; then write_evidence "$status"; fi
   if [ "${KEEP:-0}" = 1 ]; then echo "kept $WORK"; else rm -rf "$WORK"; fi
