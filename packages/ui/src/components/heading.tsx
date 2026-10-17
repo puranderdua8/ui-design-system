@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import type { ElementProps } from "@/lib/types";
 
 export const headingVariants = cva("text-ds-text", {
   variants: {
@@ -27,28 +28,20 @@ export const headingDefaultElement: Record<HeadingVariant, HeadingElement> = {
   h3: "h3",
 };
 
-export type HeadingProps = Omit<
-  React.ComponentPropsWithRef<"h1">,
-  "as" | "variant"
-> &
+export type HeadingProps = Omit<ElementProps<"h1">, "as" | "variant"> &
   VariantProps<typeof headingVariants> & {
     /** HTML heading level. Independent of `variant`; derived from it if omitted. */
     as?: HeadingElement;
   };
 
-// `forwardRef` because peerDependencies allow React 18.
-export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
-  ({ as, variant, className, ...props }, ref) => {
-    const resolved: HeadingVariant = variant ?? "h1";
-    const Comp = as ?? headingDefaultElement[resolved];
-    return (
-      <Comp
-        {...props}
-        ref={ref}
-        data-slot="heading"
-        className={cn(headingVariants({ variant: resolved }), className)}
-      />
-    );
-  },
-);
-Heading.displayName = "Heading";
+export function Heading({ as, variant, className, ...props }: HeadingProps) {
+  const resolved: HeadingVariant = variant ?? "h1";
+  const Comp = as ?? headingDefaultElement[resolved];
+  return (
+    <Comp
+      {...props}
+      data-slot="heading"
+      className={cn(headingVariants({ variant: resolved }), className)}
+    />
+  );
+}

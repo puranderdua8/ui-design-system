@@ -116,14 +116,14 @@ describe("Text API", () => {
     <Text as="p" htmlFor="i" />;
   });
 
-  it("does not dedupe competing ds-type-* classes (documented)", () => {
+  it("lets className replace the variant's type recipe", () => {
     render(
       <Text variant="caption" className="ds-type-lead">
         c
       </Text>,
     );
-    // Documented limitation (D-031): tailwind-merge cannot see that two
-    // ds-type-* recipes conflict; use `variant`, not className, to pick one.
-    expect(screen.getByText("c").className).toContain("ds-type-caption");
+    const cls = screen.getByText("c").className;
+    expect(cls).toContain("ds-type-lead");
+    expect(cls).not.toContain("ds-type-caption");
   });
 });

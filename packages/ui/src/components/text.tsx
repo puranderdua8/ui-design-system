@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import type { ElementProps } from "@/lib/types";
 
 export const textVariants = cva("", {
   variants: {
@@ -24,28 +25,21 @@ type TextStyleProps = VariantProps<typeof textVariants>;
  */
 export type TextProps = TextStyleProps &
   (
-    | ({ as?: "p" } & React.ComponentPropsWithRef<"p">)
-    | ({ as: "span" } & React.ComponentPropsWithRef<"span">)
-    | ({ as: "div" } & React.ComponentPropsWithRef<"div">)
-    | ({ as: "label" } & React.ComponentPropsWithRef<"label">)
+    | ({ as?: "p" } & ElementProps<"p">)
+    | ({ as: "span" } & ElementProps<"span">)
+    | ({ as: "div" } & ElementProps<"div">)
+    | ({ as: "label" } & ElementProps<"label">)
   );
 
-// `forwardRef` (not ref-as-prop) because peerDependencies allow React 18.
-// The cast restores the per-element ref typing of `TextProps`.
-export const Text = React.forwardRef<HTMLElement, Record<string, unknown>>(
-  function Text({ as = "p", variant, className, ...props }, ref) {
-    const Comp = as as React.ElementType;
-    return (
-      <Comp
-        {...props}
-        ref={ref}
-        data-slot="text"
-        className={cn(
-          textVariants({ variant: variant as TextStyleProps["variant"] }),
-          className as string | undefined,
-        )}
-      />
-    );
-  },
-) as unknown as (props: TextProps) => React.ReactElement | null;
-(Text as { displayName?: string }).displayName = "Text";
+export function Text({ as = "p", variant, className, ...props }: TextProps) {
+  // Widened internally for the dynamic tag; the public `TextProps` union
+  // enforces the per-element props and ref type at the call site.
+  const Comp: React.ElementType = as;
+  return (
+    <Comp
+      {...(props as object)}
+      data-slot="text"
+      className={cn(textVariants({ variant }), className)}
+    />
+  );
+}

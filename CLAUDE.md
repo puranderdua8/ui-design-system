@@ -42,6 +42,7 @@ docs/                       PLAN, PROGRESS, DECISIONS, provenance/, registry.md
 - **No dynamic Tailwind class names** (`text-${size}`). Use static variant maps (cva or plain objects).
 - **No arbitrary values** (`text-[17px]`, `bg-[#123]`) for shared design decisions. Use tokens.
 - **Semantic tokens alias primitives; components use semantic tokens only.** Never reference a primitive (e.g. `blue-600`) from a component.
+- **React 19 only.** `ref` is a plain prop; no `forwardRef`. Peer dep is `^19`.
 - **Tailwind v4 only.** No `tailwind.config.js`. Configuration goes through CSS `@theme`.
 - Inside `packages/ui`, import `cn` as `@/lib/utils` (tsconfig path). Registry consumers rely on that alias being rewritten.
 - Text/Heading: the `as` prop (HTML element) is independent of `variant` (visual role).
