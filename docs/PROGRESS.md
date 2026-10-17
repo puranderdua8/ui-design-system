@@ -18,7 +18,7 @@
 
 - GitHub: https://github.com/puranderdua8/ui-design-system
 - npm: https://www.npmjs.com/package/@puranderdua/ui
-- Registry: _tbd_ (e.g. `https://<registry>.vercel.app/r/v0.1.0/{name}.json`)
+- Registry: https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`; the root path is a 404 by design)
 - Site: _tbd_
 - Storybook: _tbd_
 
@@ -115,7 +115,7 @@
 - Decisions: D-038.
 - Gotchas: added the `ds-types` item (not in the plan) because components import `@/lib/types`. The registry host is not known yet, so the default is `https://puranderdua-registry.vercel.app`; after creating the Vercel project run `REGISTRY_URL=<url> pnpm registry:build` and commit the output. Standard shadcn `utils` lacks the `ds-*` tailwind-merge extension (see `docs/registry.md`). Not yet verified in a real consumer (S9).
 - PR #6 review fixes: explicit `components/ui/<file>` targets (CLI nested the source path otherwise); new `ds-utils` item (stock `cn` dropped Button's text colour); `registry.config.json` host with URL validation; no silent overwrite of a built version (`--force`); build in a temp dir with `try/finally`; parity compares every file to its source and checks targets; CI fails on a stale `public/r`; `vercel.json` version pattern tightened. Verified with `shadcn add` from a local copy of the registry (7 files, correct paths and rewritten imports).
-- Open: `registry.config.json` still holds the placeholder host. After the Vercel project exists, set the real URL and run `node scripts/build-registry.mjs --force`, then commit before merging.
+- Resolved: deployed to Vercel on 2026-10-17 (project `ui-design-system-registry`, root `apps/registry`, preset Other). `registry.config.json` now holds the real host and the output was rebuilt with `--force` (the first deploy served the placeholder dependency URLs, so installs would have failed). Note: v0.1.0 content changed after its first deploy; the immutable cache header (1 year) means nobody should have fetched it yet, but if anyone did, bump to 0.1.1 next time.
 - Next: Purander creates the Vercel project (root `apps/registry`) and gives the URL; then S9 clean-install.
 
 ## Parking lot (out of scope, later)
