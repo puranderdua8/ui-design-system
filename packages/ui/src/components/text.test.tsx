@@ -49,7 +49,7 @@ describe("Text", () => {
   });
 
   it("forwards ref", () => {
-    const ref = React.createRef<HTMLElement>();
+    const ref = React.createRef<HTMLParagraphElement>();
     render(<Text ref={ref}>x</Text>);
     expect(ref.current?.tagName).toBe("P");
   });
@@ -80,5 +80,50 @@ describe("Text", () => {
         "text-ds-text ds-type-label",
       ]
     `);
+  });
+});
+
+describe("Text API", () => {
+  it("forwards native attributes and sets data-slot", () => {
+    render(
+      <Text id="x" title="t" aria-label="a">
+        hi
+      </Text>,
+    );
+    const el = screen.getByText("hi");
+    expect(el.id).toBe("x");
+    expect(el.title).toBe("t");
+    expect(el.getAttribute("aria-label")).toBe("a");
+    expect(el.getAttribute("data-slot")).toBe("text");
+  });
+
+  it("types refs and props per element", () => {
+    const spanRef = React.createRef<HTMLSpanElement>();
+    render(
+      <Text as="span" ref={spanRef}>
+        s
+      </Text>,
+    );
+    expect(spanRef.current?.tagName).toBe("SPAN");
+    const labelRef = React.createRef<HTMLLabelElement>();
+    render(
+      <Text as="label" htmlFor="i" ref={labelRef}>
+        l
+      </Text>,
+    );
+    expect(labelRef.current?.htmlFor).toBe("i");
+    // @ts-expect-error htmlFor is only valid on as="label"
+    <Text as="p" htmlFor="i" />;
+  });
+
+  it("does not dedupe competing ds-type-* classes (documented)", () => {
+    render(
+      <Text variant="caption" className="ds-type-lead">
+        c
+      </Text>,
+    );
+    // Documented limitation (D-031): tailwind-merge cannot see that two
+    // ds-type-* recipes conflict; use `variant`, not className, to pick one.
+    expect(screen.getByText("c").className).toContain("ds-type-caption");
   });
 });

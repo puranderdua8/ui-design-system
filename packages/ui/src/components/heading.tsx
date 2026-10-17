@@ -27,20 +27,28 @@ export const headingDefaultElement: Record<HeadingVariant, HeadingElement> = {
   h3: "h3",
 };
 
-export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> &
+export type HeadingProps = Omit<
+  React.ComponentPropsWithRef<"h1">,
+  "as" | "variant"
+> &
   VariantProps<typeof headingVariants> & {
     /** HTML heading level. Independent of `variant`; derived from it if omitted. */
     as?: HeadingElement;
   };
 
+// `forwardRef` because peerDependencies allow React 18.
 export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
   ({ as, variant, className, ...props }, ref) => {
     const resolved: HeadingVariant = variant ?? "h1";
-    return React.createElement(as ?? headingDefaultElement[resolved], {
-      ref,
-      className: cn(headingVariants({ variant: resolved }), className),
-      ...props,
-    });
+    const Comp = as ?? headingDefaultElement[resolved];
+    return (
+      <Comp
+        {...props}
+        ref={ref}
+        data-slot="heading"
+        className={cn(headingVariants({ variant: resolved }), className)}
+      />
+    );
   },
 );
 Heading.displayName = "Heading";

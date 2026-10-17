@@ -78,3 +78,16 @@ describe("Heading", () => {
     });
   });
 });
+
+describe("Heading API", () => {
+  it("forwards native attributes and sets data-slot", () => {
+    render(
+      <Heading id="x" aria-label="a">
+        t
+      </Heading>,
+    );
+    const el = screen.getByText("t");
+    expect(el.id).toBe("x");
+    expect(el.getAttribute("data-slot")).toBe("heading");
+  });
+});

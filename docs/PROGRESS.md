@@ -89,6 +89,7 @@
 - Done: `cn` (`src/lib/utils.ts`), `Text` and `Heading` (cva, forwardRef, exported prop types), `src/index.ts` exports. Vitest + RTL + jsdom + vitest-axe set up (`vitest.config.ts`, `test/setup.ts`). 27 tests pass; `pnpm check` green.
 - Decisions: D-029, D-030.
 - Gotchas: tailwind-merge needed extending for `text-ds-*` sizes (D-029). Dev deps added: vitest, jsdom, @testing-library/react, @testing-library/dom, vitest-axe, vite-tsconfig-paths; runtime: class-variance-authority, clsx, tailwind-merge. jsdom prints a harmless "HTMLCanvasElement getContext" notice from axe. Vite 8 warns the tsconfig-paths plugin is now redundant. `@radix-ui/react-slot` is left for S6.
+- Review follow-up (2026-10-17): applied external review (D-031): JSX, `data-slot`, per-element Text props/refs, tests (31 pass). Not adopted: ref-as-prop (React 18 peer), removing `label` from `Text` (spec).
 - Next: S6 Button.
 
 ## Parking lot (out of scope, later)
