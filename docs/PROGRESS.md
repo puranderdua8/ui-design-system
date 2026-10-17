@@ -19,8 +19,8 @@
 - GitHub: https://github.com/puranderdua8/ui-design-system
 - npm: https://www.npmjs.com/package/@puranderdua/ui
 - Registry: https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`; the root path is a 404 by design)
-- Site: _tbd_ (Purander creates the Vercel project, root `apps/site`)
-- Storybook: _tbd_ (local: `pnpm --filter docs storybook`)
+- Site: https://ui-design-system-beta.vercel.app/
+- Storybook: https://ui-design-system-storybook-mu.vercel.app/ (local: `pnpm --filter docs storybook`)
 
 ## Session checklist
 
@@ -175,6 +175,11 @@
 
 - Done: `apps/docs/vercel.json` pins framework none, install, build (`pnpm build-storybook`) and output (`storybook-static`).
 - Gotchas: Vercel auto-detected Vite (the docs app has a `vite` dependency) and ran `vite build`, which failed with `UNRESOLVED_ENTRY: Cannot resolve entry module index.html`. Storybook has no root `index.html`. Vercel project: root `apps/docs`, "Include files outside the root directory" on, `ENABLE_EXPERIMENTAL_COREPACK=1`.
+
+### Live URLs verified — 2026-10-17
+
+- Site: `SITE_URL=https://ui-design-system-beta.vercel.app pnpm --filter site test:e2e` passed (6 of 6: heading order, keyboard, secondary link, axe 0 violations, 320px, 200% zoom).
+- Storybook: https://ui-design-system-storybook-mu.vercel.app/ returns 200 for `/` and `/iframe.html`.
 
 ## Parking lot (out of scope, later)
 

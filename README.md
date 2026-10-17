@@ -2,6 +2,8 @@
 
 A small, token-driven design system: **Text**, **Heading** and **Button** for React 19 and Tailwind CSS v4. One token source, two ways to consume it.
 
+- Site: https://ui-design-system-beta.vercel.app/
+- Storybook: https://ui-design-system-storybook-mu.vercel.app/
 - npm package: [`@puranderdua/ui`](https://www.npmjs.com/package/@puranderdua/ui)
 - shadcn registry (namespace `@puranderdua`): https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`)
 
