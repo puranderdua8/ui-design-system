@@ -6,7 +6,7 @@
   "scripts": {
     "storybook": "pnpm --filter @puranderdua/ui build && storybook dev -p 6006",
     "build-storybook": "pnpm --filter @puranderdua/ui build && storybook build -o storybook-static",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm --filter @puranderdua/ui build && tsc --noEmit"
   },
   "dependencies": {
     "@puranderdua/ui": "workspace:*",

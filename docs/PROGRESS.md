@@ -150,6 +150,7 @@
 - Done: `apps/docs` Storybook 10 (React + Vite, Tailwind v4 via `@tailwindcss/vite`, `foundations.css` from the package, a11y addon). Stories: Text (all variants, `as` vs variant), Heading (all variants, `as` vs variant), Button (variant × size × default/disabled matrix, asChild link). `pnpm --filter docs build-storybook` succeeds and is in `pnpm check`. Opened the built `button--matrix` story in the browser pane: tokens and Button styles render.
 - Decisions: D-042.
 - Gotchas: ESLint and Prettier needed `storybook-static` ignores. Stories avoid refs (D-034). The a11y addon's `test: "error"` only fails in the Storybook test runner/Vitest addon, not in `build-storybook`, so axe results are not yet checked in CI.
+- CI fix (PR #10): `apps/docs` typecheck failed on a clean checkout because `@puranderdua/ui` types come from `dist/`, which `pnpm check` builds only after typecheck. The docs `typecheck` script now builds the package first. Verified with `dist` removed.
 - Next: S12b release docs (README, CHANGELOG, release notes, retro). Penpot part is Purander's. Storybook URL (hosting) is not set.
 
 ### S12b — Release docs and retro — 2026-10-17
