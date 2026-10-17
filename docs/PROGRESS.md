@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M3 Components and package, branch `m3-components`
-- **Next session:** S6
+- **Current milestone:** M3 Components and package, branch `m3-button`
+- **Next session:** S8
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -31,8 +31,8 @@
 | S3 Token build and checks                | M1        | ☑      |
 | S4 Tailwind bridge and recipes           | M2        | ☑      |
 | S5 Text and Heading                      | M3        | ☑      |
-| S6 Button (shadcn intake and adaptation) | M3        | ☐      |
-| S7 Package build and publish             | M3        | ☐      |
+| S6 Button (shadcn intake and adaptation) | M3        | ☑      |
+| S7 Package build and publish             | M3        | ☑      |
 | S8 Registry build and hosting            | M4        | ☐      |
 | S9 Clean-install and update checks       | M4        | ☐      |
 | S10 Portfolio site                       | M5        | ☐      |
@@ -93,6 +93,21 @@
 - Independent PR review (D-032): fixed conflicting caption colours in `textVariants`, added `cn` tests (incl. theme.css drift check), stubbed canvas noise in test setup. 35 tests pass.
 - Review round 2 (D-033): React 19 only (no forwardRef), `StrictRef` + ref type tests, `cn` dedupes `ds-type-*`, class lists generated from theme.css. 39 tests pass.
 - Next: S6 Button.
+
+### S6 — Button — 2026-10-17
+
+- Done: `button.tsx` adapted from shadcn new-york-v4 (D-036), exported from `index.ts`; `docs/provenance/button.md`; 13 Button tests (keyboard, disabled, type default, focus recipe, sizes, asChild, ref, axe). Added deps `@radix-ui/react-slot`, dev `@testing-library/user-event`. `pnpm check` green (52 tests).
+- Decisions: D-036.
+- Gotchas: no jest-dom, so tests use plain DOM assertions. `font-medium` kept (no weight token for controls). Button classes (`disabled:*`) are not yet in the playground CSS check; S7's tarball app exercises them. D-025 tint mismatch: primary/secondary look consistent enough in tokens; no change.
+- Next: S7 package build and publish.
+
+### S7 — Package build — 2026-10-17
+
+- Done: tsup (`tsup.config.ts`), `package.json` 0.1.0 (`exports` for `.` and `./foundations.css`, `files`, `sideEffects`, `publishConfig`, repository, keywords), README with install + Tailwind setup. `pnpm pack` tarball contains dist (css, js, map, d.ts), package.json, README. Throwaway Next 16 app (outside the repo, in the session scratchpad) installed the tarball, rendered Text/Heading/Button in a Server Component, and `next build` passed; built CSS contained the Button classes (hover, `disabled:`, focus ring, control sizes).
+- Decisions: D-037.
+- Gotchas: tsup `clean` wipes `dist`, so `build` runs tsup before `build-foundations`. `esbuild` set to `false` in `allowBuilds`. peerDeps are `^19` (plan said `>=18`; CLAUDE.md/D-033 win). The README `@source` path depends on where the consumer's CSS file sits.
+- Published by Purander on 2026-10-17: `@puranderdua/ui@0.1.0`. The first publish failed with E404 "Scope not found" because the `puranderdua` npm org did not exist (the npm user is `puranderdua8`); creating the free org fixed it. `npm view @puranderdua/ui version` returned 404 for a short while after publishing, then 0.1.0 (registry propagation). `npm view ui version` is an unrelated package.
+- Next: S8 registry build and hosting.
 
 ## Parking lot (out of scope, later)
 
