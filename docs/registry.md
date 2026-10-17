@@ -48,6 +48,13 @@ Install (the repo is tested with shadcn 4.22.0):
 npx shadcn@4.22.0 add @puranderdua/ds-typography @puranderdua/ds-button
 ```
 
+`shadcn init` already writes a stock `components/ui/button.tsx` and `lib/utils.ts`, so the CLI asks before replacing them. Answer **yes** to both:
+
+- `lib/utils.ts` must become our `cn` (from `ds-utils`). With the stock one, `text-ds-primary-fg` and `text-ds-control-md` look like two text colours and Button loses its text colour (D-029).
+- `components/ui/button.tsx` must become the design-system Button.
+
+A file you have edited is never overwritten without that prompt (default answer: no). Use `--overwrite` only to accept every prompt non-interactively.
+
 Then add the foundations import to `globals.css` after Tailwind. With a `src/` directory the file lands in `src/styles/`:
 
 ```css
@@ -56,6 +63,14 @@ Then add the foundations import to `globals.css` after Tailwind. With a `src/` d
 ```
 
 (Adjust the path to where `globals.css` sits.)
+
+## Verification
+
+`scripts/clean-install.sh` (manual workflow `clean-install`) builds two fresh Next.js apps outside the repo: one from this registry plus a package route, one from the package alone (`@puranderdua/ui/foundations.css`). Both are built, served with `next start`, fetched and checked for markup, CSS and axe violations. It also checks that re-adding an edited `button.tsx` prompts instead of overwriting. Versions are pinned (`create-next-app`, `shadcn`, the package). `EVIDENCE=<file> scripts/clean-install.sh` writes the sanitized log; the latest is in `docs/evidence/`.
+
+## Deployment
+
+Automatic Git deployments are disabled (`git.deploymentEnabled: false` in `apps/registry/vercel.json`), so pushing or merging does not change the live registry. Purander deploys by hand from `apps/registry` (Vercel CLI or a dashboard redeploy) after `pnpm registry:build` output is merged.
 
 ## Versioning and rollback
 
