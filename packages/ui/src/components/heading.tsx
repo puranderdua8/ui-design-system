@@ -34,7 +34,7 @@ export type HeadingProps = Omit<ElementProps<"h1">, "as" | "variant"> &
     as?: HeadingElement;
   };
 
-export function Heading({ as, variant, className, ...props }: HeadingProps) {
+export const Heading = ({ as, variant, className, ...props }: HeadingProps) => {
   const resolved: HeadingVariant = variant ?? "h1";
   const Comp = as ?? headingDefaultElement[resolved];
   return (
@@ -44,4 +44,4 @@ export function Heading({ as, variant, className, ...props }: HeadingProps) {
       className={cn(headingVariants({ variant: resolved }), className)}
     />
   );
-}
+};

@@ -31,7 +31,7 @@ export type TextProps = TextStyleProps &
     | ({ as: "label" } & ElementProps<"label">)
   );
 
-export function Text({ as = "p", variant, className, ...props }: TextProps) {
+export const Text = ({ as = "p", variant, className, ...props }: TextProps) => {
   // Widened internally for the dynamic tag; the public `TextProps` union
   // enforces the per-element props and ref type at the call site.
   const Comp: React.ElementType = as;
@@ -42,4 +42,4 @@ export function Text({ as = "p", variant, className, ...props }: TextProps) {
       className={cn(textVariants({ variant }), className)}
     />
   );
-}
+};

@@ -44,6 +44,7 @@ docs/                       PLAN, PROGRESS, DECISIONS, provenance/, registry.md
 - **Semantic tokens alias primitives; components use semantic tokens only.** Never reference a primitive (e.g. `blue-600`) from a component.
 - **React 19 only.** `ref` is a plain prop; no `forwardRef`. Peer dep is `^19`.
 - **Refs (D-034):** type a ref from the same tag passed to `as` (`createRef<HTMLSpanElement>()` with `as="span"`; `HTMLHeadingElement` for `Heading`), and prefer callback refs over object refs. TypeScript cannot catch a mismatched p/span/div object ref, so you must get it right by hand, in code, tests, stories and docs.
+- **Components are arrow-function consts:** `export const Text = (props) => {}`, not `export function Text()`.
 - **Tailwind v4 only.** No `tailwind.config.js`. Configuration goes through CSS `@theme`.
 - Inside `packages/ui`, import `cn` as `@/lib/utils` (tsconfig path). Registry consumers rely on that alias being rewritten.
 - Text/Heading: the `as` prop (HTML element) is independent of `variant` (visual role).
