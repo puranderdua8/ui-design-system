@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M4 Registry, branch `m4-registry`
-- **Next session:** S8 deploy (Purander), then S9
+- **Current milestone:** M4 Registry, branch `m4-clean-install`
+- **Next session:** S10 portfolio site (after Purander merges the S9 PR)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -33,8 +33,8 @@
 | S5 Text and Heading                      | M3        | ☑      |
 | S6 Button (shadcn intake and adaptation) | M3        | ☑      |
 | S7 Package build and publish             | M3        | ☑      |
-| S8 Registry build and hosting            | M4        | ◐      |
-| S9 Clean-install and update checks       | M4        | ☐      |
+| S8 Registry build and hosting            | M4        | ☑      |
+| S9 Clean-install and update checks       | M4        | ☑      |
 | S10 Portfolio site                       | M5        | ☐      |
 | S11 QA and accessibility                 | M5        | ☐      |
 | S12 Storybook, Penpot, release           | M6        | ☐      |
@@ -117,6 +117,13 @@
 - PR #6 review fixes: explicit `components/ui/<file>` targets (CLI nested the source path otherwise); new `ds-utils` item (stock `cn` dropped Button's text colour); `registry.config.json` host with URL validation; no silent overwrite of a built version (`--force`); build in a temp dir with `try/finally`; parity compares every file to its source and checks targets; CI fails on a stale `public/r`; `vercel.json` version pattern tightened. Verified with `shadcn add` from a local copy of the registry (7 files, correct paths and rewritten imports).
 - Resolved: deployed to Vercel on 2026-10-17 (project `ui-design-system-registry`, root `apps/registry`, preset Other). `registry.config.json` now holds the real host and the output was rebuilt with `--force` (the first deploy served the placeholder dependency URLs, so installs would have failed). Note: v0.1.0 content changed after its first deploy; the immutable cache header (1 year) means nobody should have fetched it yet, but if anyone did, bump to 0.1.1 next time.
 - Next: Purander creates the Vercel project (root `apps/registry`) and gives the URL; then S9 clean-install.
+
+### S9 — Clean-install and update checks — 2026-10-17
+
+- Done: `scripts/clean-install.sh` (temp dir outside the repo: create-next-app 16.4.2 → `shadcn@4.22.0 init` → `@puranderdua` registry in components.json → add ds-typography + ds-button → foundations import → page → `npm i @puranderdua/ui@0.1.0` and `/package` route → `next build` → built CSS grep → local edit of button.tsx + re-add). Passes against the live registry (Gate D). Evidence in `docs/evidence/clean-install-2026-10-17.md`. Manual workflow `.github/workflows/clean-install.yml`.
+- Decisions: none new.
+- Gotchas: `shadcn init` already writes a stock button.tsx and utils.ts, so the first `add` needs `--overwrite` for the registry versions. The no-overwrite check relies on the CLI prompting (default N) with stdin closed; it exits 0 without writing. The package route needs `@source` pointing at `node_modules/@puranderdua/ui/dist`. BSD sed lacks `0,/re/`, so file edits in the script use node. The workflow has not been run on GitHub yet (Linux/Node 22).
+- Next: S10 portfolio site. Purander reviews and merges the S9 PR.
 
 ## Parking lot (out of scope, later)
 
