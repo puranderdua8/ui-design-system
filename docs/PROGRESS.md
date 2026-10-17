@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M2 Styles, branch `m2-styles`
-- **Next session:** S5
+- **Current milestone:** M3 Components and package, branch `m3-components`
+- **Next session:** S6
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -30,7 +30,7 @@
 | S2 Token source                          | M1        | ☑      |
 | S3 Token build and checks                | M1        | ☑      |
 | S4 Tailwind bridge and recipes           | M2        | ☑      |
-| S5 Text and Heading                      | M3        | ☐      |
+| S5 Text and Heading                      | M3        | ☑      |
 | S6 Button (shadcn intake and adaptation) | M3        | ☐      |
 | S7 Package build and publish             | M3        | ☐      |
 | S8 Registry build and hosting            | M4        | ☐      |
@@ -83,6 +83,16 @@
 - Decisions: D-027, D-028.
 - Gotchas: dev deps added to `packages/ui`: tailwindcss, @tailwindcss/vite, vite, @vitejs/plugin-react (needed for the playground). `packages/ui` `build` currently only builds foundations; S7 adds tsup. Playground sits under tsc `include` (no Node types, so config avoids `node:` imports).
 - Next: S5 Text and Heading. Open PR `m2-styles` for Purander to merge.
+
+### S5 — Text and Heading — 2026-10-16
+
+- Done: `cn` (`src/lib/utils.ts`), `Text` and `Heading` (cva, forwardRef, exported prop types), `src/index.ts` exports. Vitest + RTL + jsdom + vitest-axe set up (`vitest.config.ts`, `test/setup.ts`). 27 tests pass; `pnpm check` green.
+- Decisions: D-029, D-030.
+- Gotchas: tailwind-merge needed extending for `text-ds-*` sizes (D-029). Dev deps added: vitest, jsdom, @testing-library/react, @testing-library/dom, vitest-axe, vite-tsconfig-paths; runtime: class-variance-authority, clsx, tailwind-merge. jsdom prints a harmless "HTMLCanvasElement getContext" notice from axe. Vite 8 warns the tsconfig-paths plugin is now redundant. `@radix-ui/react-slot` is left for S6.
+- Review follow-up (2026-10-17): applied external review (D-031): JSX, `data-slot`, per-element Text props/refs, tests (31 pass). Not adopted: ref-as-prop (React 18 peer), removing `label` from `Text` (spec).
+- Independent PR review (D-032): fixed conflicting caption colours in `textVariants`, added `cn` tests (incl. theme.css drift check), stubbed canvas noise in test setup. 35 tests pass.
+- Review round 2 (D-033): React 19 only (no forwardRef), `StrictRef` + ref type tests, `cn` dedupes `ds-type-*`, class lists generated from theme.css. 39 tests pass.
+- Next: S6 Button.
 
 ## Parking lot (out of scope, later)
 
