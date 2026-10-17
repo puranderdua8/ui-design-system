@@ -5,7 +5,7 @@
 ## Current state
 
 - **Current milestone:** M3 Components and package, branch `m3-button`
-- **Next session:** S7
+- **Next session:** S8 (after Purander publishes 0.1.0, see S7 log)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -24,20 +24,20 @@
 
 ## Session checklist
 
-| Session                                  | Milestone | Status |
-| ---------------------------------------- | --------- | ------ |
-| S1 Kickoff and scaffold                  | M0        | ☑      |
-| S2 Token source                          | M1        | ☑      |
-| S3 Token build and checks                | M1        | ☑      |
-| S4 Tailwind bridge and recipes           | M2        | ☑      |
-| S5 Text and Heading                      | M3        | ☑      |
-| S6 Button (shadcn intake and adaptation) | M3        | ☑      |
-| S7 Package build and publish             | M3        | ☐      |
-| S8 Registry build and hosting            | M4        | ☐      |
-| S9 Clean-install and update checks       | M4        | ☐      |
-| S10 Portfolio site                       | M5        | ☐      |
-| S11 QA and accessibility                 | M5        | ☐      |
-| S12 Storybook, Penpot, release           | M6        | ☐      |
+| Session                                  | Milestone | Status            |
+| ---------------------------------------- | --------- | ----------------- |
+| S1 Kickoff and scaffold                  | M0        | ☑                 |
+| S2 Token source                          | M1        | ☑                 |
+| S3 Token build and checks                | M1        | ☑                 |
+| S4 Tailwind bridge and recipes           | M2        | ☑                 |
+| S5 Text and Heading                      | M3        | ☑                 |
+| S6 Button (shadcn intake and adaptation) | M3        | ☑                 |
+| S7 Package build and publish             | M3        | ◐ publish pending |
+| S8 Registry build and hosting            | M4        | ☐                 |
+| S9 Clean-install and update checks       | M4        | ☐                 |
+| S10 Portfolio site                       | M5        | ☐                 |
+| S11 QA and accessibility                 | M5        | ☐                 |
+| S12 Storybook, Penpot, release           | M6        | ☐                 |
 
 ## Log
 
@@ -100,6 +100,14 @@
 - Decisions: D-036.
 - Gotchas: no jest-dom, so tests use plain DOM assertions. `font-medium` kept (no weight token for controls). Button classes (`disabled:*`) are not yet in the playground CSS check; S7's tarball app exercises them. D-025 tint mismatch: primary/secondary look consistent enough in tokens; no change.
 - Next: S7 package build and publish.
+
+### S7 — Package build — 2026-10-17
+
+- Done: tsup (`tsup.config.ts`), `package.json` 0.1.0 (`exports` for `.` and `./foundations.css`, `files`, `sideEffects`, `publishConfig`, repository, keywords), README with install + Tailwind setup. `pnpm pack` tarball contains dist (css, js, map, d.ts), package.json, README. Throwaway Next 16 app (outside the repo, in the session scratchpad) installed the tarball, rendered Text/Heading/Button in a Server Component, and `next build` passed; built CSS contained the Button classes (hover, `disabled:`, focus ring, control sizes).
+- Decisions: D-037.
+- Gotchas: tsup `clean` wipes `dist`, so `build` runs tsup before `build-foundations`. `esbuild` set to `false` in `allowBuilds`. peerDeps are `^19` (plan said `>=18`; CLAUDE.md/D-033 win). The README `@source` path depends on where the consumer's CSS file sits.
+- **Purander to do:** `cd packages/ui && npm publish --access public` (2FA), then `npm view @puranderdua/ui` should show 0.1.0. Then tick S7 here and fill the npm line above. Nothing was published or tagged by me.
+- Next: S8 registry build and hosting.
 
 ## Parking lot (out of scope, later)
 
