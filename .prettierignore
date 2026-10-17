@@ -4,4 +4,3 @@ dist
 **/generated/**
 apps/registry/public/r/**
 pnpm-lock.yaml
-docs/evidence/

@@ -116,15 +116,18 @@
 - Gotchas: added the `ds-types` item (not in the plan) because components import `@/lib/types`. The registry host is not known yet, so the default is `https://puranderdua-registry.vercel.app`; after creating the Vercel project run `REGISTRY_URL=<url> pnpm registry:build` and commit the output. Standard shadcn `utils` lacks the `ds-*` tailwind-merge extension (see `docs/registry.md`). Not yet verified in a real consumer (S9).
 - PR #6 review fixes: explicit `components/ui/<file>` targets (CLI nested the source path otherwise); new `ds-utils` item (stock `cn` dropped Button's text colour); `registry.config.json` host with URL validation; no silent overwrite of a built version (`--force`); build in a temp dir with `try/finally`; parity compares every file to its source and checks targets; CI fails on a stale `public/r`; `vercel.json` version pattern tightened. Verified with `shadcn add` from a local copy of the registry (7 files, correct paths and rewritten imports).
 - Resolved: deployed to Vercel on 2026-10-17 (project `ui-design-system-registry`, root `apps/registry`, preset Other). `registry.config.json` now holds the real host and the output was rebuilt with `--force` (the first deploy served the placeholder dependency URLs, so installs would have failed). Note: v0.1.0 content changed after its first deploy; the immutable cache header (1 year) means nobody should have fetched it yet, but if anyone did, bump to 0.1.1 next time.
-- Next: Purander creates the Vercel project (root `apps/registry`) and gives the URL; then S9 clean-install.
+- Next: S9 clean-install.
 
 ### S9 — Clean-install and update checks — 2026-10-17
 
-- Done: `scripts/clean-install.sh` (temp dir outside the repo: create-next-app 16.4.2 → `shadcn@4.22.0 init` → `@puranderdua` registry in components.json → add ds-typography + ds-button → foundations import → page → `npm i @puranderdua/ui@0.1.0` and `/package` route → `next build` → built CSS grep → local edit of button.tsx + re-add). Passes against the live registry (Gate D). Evidence in `docs/evidence/clean-install-2026-10-17.md`. Manual workflow `.github/workflows/clean-install.yml`.
-- Decisions: none new.
-- Gotchas: `shadcn init` already writes a stock button.tsx and utils.ts, so the first `add` needs `--overwrite` for the registry versions. The no-overwrite check relies on the CLI prompting (default N) with stdin closed; it exits 0 without writing. The package route needs `@source` pointing at `node_modules/@puranderdua/ui/dist`. BSD sed lacks `0,/re/`, so file edits in the script use node. The workflow has not been run on GitHub yet (Linux/Node 22).
-- Next: S10 portfolio site. Purander reviews and merges the S9 PR.
+- Done: `scripts/clean-install.sh`, pinned (create-next-app 16.4.2, shadcn 4.22.0, package 0.1.0). App A: init → registry → add ds-typography + ds-button → page, plus a `/package` route. App B: package only, using `@puranderdua/ui/foundations.css`. Both are built, served with `next start`, fetched and checked (markup, built CSS, axe with 0 violations). The overwrite check asserts the prompt text and that the local edit survives; `--overwrite` then restores the registry copy. `EVIDENCE=<file>` writes the sanitized log (`docs/evidence/clean-install-2026-10-17.md`, Prettier-checked). Manual workflow `clean-install.yml` (read-only permissions); CI runs shellcheck on `scripts/*.sh`.
+- PR review fixes: independent package test (app B), `grep -q` pipefail/SIGPIPE flake removed (files instead of pipes), prompt asserted, docs note on the init-time overwrite prompts, pins, HTTP + axe checks, workflow permissions, stale S8 note fixed. Vercel Git deployments disabled in `apps/registry/vercel.json` (D-039).
+- Decisions: D-039.
+- Gotchas: `shadcn init` writes a stock button.tsx and utils.ts, so the first `add` needs `--overwrite`. The package route needs `@source` for `node_modules/@puranderdua/ui/dist`. BSD sed lacks `0,/re/`, so CSS edits use node. axe's colour-contrast rule is off (jsdom has no layout); contrast is covered by `tokens:check`. The workflow has not been run on GitHub (Linux/Node 22).
+- Next: S10 portfolio site. Purander reviews and merges the S9 PR, then deploys the registry by hand if needed.
 
 ## Parking lot (out of scope, later)
 
 - Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).
+- Update-path checks for the registry: build a v0.1.1, point a consumer at it and confirm `shadcn add` shows the change and an edited file is kept (S9 only covers re-adding the same version).
+- Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds.

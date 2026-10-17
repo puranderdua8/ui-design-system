@@ -4,6 +4,7 @@
   "buildCommand": null,
   "installCommand": null,
   "outputDirectory": "public",
+  "git": { "deploymentEnabled": false },
   "headers": [
     {
       "source": "/r/(.*)",
