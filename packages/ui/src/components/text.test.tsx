@@ -76,7 +76,7 @@ describe("Text", () => {
       [
         "text-ds-text ds-type-body",
         "text-ds-text ds-type-lead",
-        "text-ds-text ds-type-caption text-ds-text-muted",
+        "text-ds-text-muted ds-type-caption",
         "text-ds-text ds-type-label",
       ]
     `);

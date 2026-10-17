@@ -2,13 +2,13 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-export const textVariants = cva("text-ds-text", {
+export const textVariants = cva("", {
   variants: {
     variant: {
-      body: "ds-type-body",
-      lead: "ds-type-lead",
-      caption: "ds-type-caption text-ds-text-muted",
-      label: "ds-type-label",
+      body: "text-ds-text ds-type-body",
+      lead: "text-ds-text ds-type-lead",
+      caption: "text-ds-text-muted ds-type-caption",
+      label: "text-ds-text ds-type-label",
     },
   },
   defaultVariants: { variant: "body" },

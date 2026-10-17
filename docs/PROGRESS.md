@@ -90,6 +90,7 @@
 - Decisions: D-029, D-030.
 - Gotchas: tailwind-merge needed extending for `text-ds-*` sizes (D-029). Dev deps added: vitest, jsdom, @testing-library/react, @testing-library/dom, vitest-axe, vite-tsconfig-paths; runtime: class-variance-authority, clsx, tailwind-merge. jsdom prints a harmless "HTMLCanvasElement getContext" notice from axe. Vite 8 warns the tsconfig-paths plugin is now redundant. `@radix-ui/react-slot` is left for S6.
 - Review follow-up (2026-10-17): applied external review (D-031): JSX, `data-slot`, per-element Text props/refs, tests (31 pass). Not adopted: ref-as-prop (React 18 peer), removing `label` from `Text` (spec).
+- Independent PR review (D-032): fixed conflicting caption colours in `textVariants`, added `cn` tests (incl. theme.css drift check), stubbed canvas noise in test setup. 35 tests pass.
 - Next: S6 Button.
 
 ## Parking lot (out of scope, later)
