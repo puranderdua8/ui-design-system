@@ -171,6 +171,11 @@
 - **What worked:** reviews by an independent session caught real bugs in S2/S3, S5, S8, S10; the clean-install script found issues the repo-local tests could not.
 - **Next slice, Release 1:** colours plus light/dark theming (semantic layer with modes), update-path checks (registry 0.1.1, package upgrade), axe in Storybook CI, hosted Storybook, more components.
 
+### Storybook hosting — 2026-10-17
+
+- Done: `apps/docs/vercel.json` pins framework none, install, build (`pnpm build-storybook`) and output (`storybook-static`).
+- Gotchas: Vercel auto-detected Vite (the docs app has a `vite` dependency) and ran `vite build`, which failed with `UNRESOLVED_ENTRY: Cannot resolve entry module index.html`. Storybook has no root `index.html`. Vercel project: root `apps/docs`, "Include files outside the root directory" on, `ENABLE_EXPERIMENTAL_COREPACK=1`.
+
 ## Parking lot (out of scope, later)
 
 - Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).
