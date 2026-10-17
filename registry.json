@@ -1,0 +1,79 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "puranderdua",
+  "homepage": "{{REGISTRY_URL}}",
+  "items": [
+    {
+      "name": "ds-foundations",
+      "type": "registry:file",
+      "title": "Design system foundations",
+      "description": "Tokens, Tailwind v4 bridge and type/focus recipes (foundations.css).",
+      "docs": "Import it once in your globals.css, after Tailwind: @import \"tailwindcss\"; @import \"../styles/ds-foundations.css\"; (adjust the relative path to where globals.css sits).",
+      "files": [
+        {
+          "path": "packages/ui/dist/foundations.css",
+          "type": "registry:file",
+          "target": "styles/ds-foundations.css"
+        }
+      ]
+    },
+    {
+      "name": "ds-types",
+      "type": "registry:lib",
+      "title": "Design system ref types",
+      "description": "StrictRef and ElementProps helper types used by the components.",
+      "files": [
+        {
+          "path": "packages/ui/src/lib/types.ts",
+          "type": "registry:lib",
+          "target": "lib/types.ts"
+        }
+      ]
+    },
+    {
+      "name": "ds-typography",
+      "type": "registry:ui",
+      "title": "Text and Heading",
+      "description": "Token-driven Text and Heading components.",
+      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
+      "registryDependencies": [
+        "utils",
+        "{{REGISTRY_URL}}/r/v{{VERSION}}/ds-types.json",
+        "{{REGISTRY_URL}}/r/v{{VERSION}}/ds-foundations.json"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/text.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "packages/ui/src/components/heading.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ds-button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Token-driven Button (primary and secondary; sm and md).",
+      "dependencies": [
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "utils",
+        "{{REGISTRY_URL}}/r/v{{VERSION}}/ds-types.json",
+        "{{REGISTRY_URL}}/r/v{{VERSION}}/ds-foundations.json"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
+}

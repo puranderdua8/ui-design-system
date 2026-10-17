@@ -13,13 +13,15 @@
     "build": "pnpm -r --if-present build",
     "tokens:build": "node scripts/build-tokens.mjs",
     "tokens:check": "node scripts/check-tokens.mjs",
-    "registry:build": "echo 'registry:build: not implemented yet (S8)'",
-    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check"
+    "registry:build": "node scripts/build-registry.mjs",
+    "registry:check": "node scripts/check-parity.mjs",
+    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check && pnpm registry:build && pnpm registry:check"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.12.0",
     "prettier": "^3.9.10",
+    "shadcn": "4.22.0",
     "style-dictionary": "^4.4.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.2"

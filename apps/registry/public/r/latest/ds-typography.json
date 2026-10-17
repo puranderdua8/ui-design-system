@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ds-typography",
+  "title": "Text and Heading",
+  "description": "Token-driven Text and Heading components.",
+  "dependencies": [
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "registryDependencies": [
+    "utils",
+    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-types.json",
+    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-foundations.json"
+  ],
+  "files": [
+    {
+      "path": "packages/ui/src/components/text.tsx",
+      "content": "import * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { cn } from \"@/lib/utils\";\nimport type { ElementProps } from \"@/lib/types\";\n\nexport const textVariants = cva(\"\", {\n  variants: {\n    variant: {\n      body: \"text-ds-text ds-type-body\",\n      lead: \"text-ds-text ds-type-lead\",\n      caption: \"text-ds-text-muted ds-type-caption\",\n      label: \"text-ds-text ds-type-label\",\n    },\n  },\n  defaultVariants: { variant: \"body\" },\n});\n\nexport type TextElement = \"p\" | \"span\" | \"div\" | \"label\";\n\ntype TextStyleProps = VariantProps<typeof textVariants>;\n\n/**\n * Element-specific props and ref type per `as`. `htmlFor` only exists on\n * `as=\"label\"`; `ref` is typed to the chosen element.\n */\nexport type TextProps = TextStyleProps &\n  (\n    | ({ as?: \"p\" } & ElementProps<\"p\">)\n    | ({ as: \"span\" } & ElementProps<\"span\">)\n    | ({ as: \"div\" } & ElementProps<\"div\">)\n    | ({ as: \"label\" } & ElementProps<\"label\">)\n  );\n\nexport const Text = ({ as = \"p\", variant, className, ...props }: TextProps) => {\n  // Widened internally for the dynamic tag; the public `TextProps` union\n  // enforces the per-element props and ref type at the call site.\n  const Comp: React.ElementType = as;\n  return (\n    <Comp\n      {...(props as object)}\n      data-slot=\"text\"\n      className={cn(textVariants({ variant }), className)}\n    />\n  );\n};\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "packages/ui/src/components/heading.tsx",
+      "content": "import * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { cn } from \"@/lib/utils\";\nimport type { ElementProps } from \"@/lib/types\";\n\nexport const headingVariants = cva(\"text-ds-text\", {\n  variants: {\n    variant: {\n      display: \"ds-type-display\",\n      h1: \"ds-type-h1\",\n      h2: \"ds-type-h2\",\n      h3: \"ds-type-h3\",\n    },\n  },\n  defaultVariants: { variant: \"h1\" },\n});\n\nexport type HeadingVariant = NonNullable<\n  VariantProps<typeof headingVariants>[\"variant\"]\n>;\nexport type HeadingElement = \"h1\" | \"h2\" | \"h3\" | \"h4\" | \"h5\" | \"h6\";\n\n/** Default element per variant. Static map, never built from strings. */\nexport const headingDefaultElement: Record<HeadingVariant, HeadingElement> = {\n  display: \"h1\",\n  h1: \"h1\",\n  h2: \"h2\",\n  h3: \"h3\",\n};\n\nexport type HeadingProps = Omit<ElementProps<\"h1\">, \"as\" | \"variant\"> &\n  VariantProps<typeof headingVariants> & {\n    /** HTML heading level. Independent of `variant`; derived from it if omitted. */\n    as?: HeadingElement;\n  };\n\nexport const Heading = ({ as, variant, className, ...props }: HeadingProps) => {\n  const resolved: HeadingVariant = variant ?? \"h1\";\n  const Comp = as ?? headingDefaultElement[resolved];\n  return (\n    <Comp\n      {...props}\n      data-slot=\"heading\"\n      className={cn(headingVariants({ variant: resolved }), className)}\n    />\n  );\n};\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}
