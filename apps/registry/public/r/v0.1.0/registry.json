@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "puranderdua",
-  "homepage": "https://puranderdua-registry.vercel.app",
+  "homepage": "https://ui-design-system-registry.vercel.app",
   "items": [
     {
       "name": "ds-foundations",
@@ -57,9 +57,9 @@
       "description": "Token-driven Text and Heading components.",
       "dependencies": ["class-variance-authority"],
       "registryDependencies": [
-        "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-utils.json",
-        "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-types.json",
-        "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-foundations.json"
+        "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-utils.json",
+        "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-types.json",
+        "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-foundations.json"
       ],
       "files": [
         {
@@ -81,9 +81,9 @@
       "description": "Token-driven Button (primary and secondary; sm and md).",
       "dependencies": ["class-variance-authority", "@radix-ui/react-slot"],
       "registryDependencies": [
-        "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-utils.json",
-        "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-types.json",
-        "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-foundations.json"
+        "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-utils.json",
+        "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-types.json",
+        "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-foundations.json"
       ],
       "files": [
         {

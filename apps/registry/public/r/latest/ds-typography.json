@@ -7,9 +7,9 @@
     "class-variance-authority"
   ],
   "registryDependencies": [
-    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-utils.json",
-    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-types.json",
-    "https://puranderdua-registry.vercel.app/r/v0.1.0/ds-foundations.json"
+    "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-utils.json",
+    "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-types.json",
+    "https://ui-design-system-registry.vercel.app/r/v0.1.0/ds-foundations.json"
   ],
   "files": [
     {
