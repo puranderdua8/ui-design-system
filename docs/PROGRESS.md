@@ -24,20 +24,20 @@
 
 ## Session checklist
 
-| Session                                  | Milestone | Status                  |
-| ---------------------------------------- | --------- | ----------------------- |
-| S1 Kickoff and scaffold                  | M0        | ☑                       |
-| S2 Token source                          | M1        | ☑                       |
-| S3 Token build and checks                | M1        | ☑                       |
-| S4 Tailwind bridge and recipes           | M2        | ☑                       |
-| S5 Text and Heading                      | M3        | ☑                       |
-| S6 Button (shadcn intake and adaptation) | M3        | ☑                       |
-| S7 Package build and publish             | M3        | ☑                       |
-| S8 Registry build and hosting            | M4        | ☑                       |
-| S9 Clean-install and update checks       | M4        | ☑                       |
-| S10 Portfolio site                       | M5        | ☑                       |
-| S11 QA and accessibility                 | M5        | ◐ (manual pass pending) |
-| S12 Storybook, Penpot, release           | M6        | ☐                       |
+| Session                                  | Milestone | Status |
+| ---------------------------------------- | --------- | ------ |
+| S1 Kickoff and scaffold                  | M0        | ☑      |
+| S2 Token source                          | M1        | ☑      |
+| S3 Token build and checks                | M1        | ☑      |
+| S4 Tailwind bridge and recipes           | M2        | ☑      |
+| S5 Text and Heading                      | M3        | ☑      |
+| S6 Button (shadcn intake and adaptation) | M3        | ☑      |
+| S7 Package build and publish             | M3        | ☑      |
+| S8 Registry build and hosting            | M4        | ☑      |
+| S9 Clean-install and update checks       | M4        | ☑      |
+| S10 Portfolio site                       | M5        | ☑      |
+| S11 QA and accessibility                 | M5        | ☑      |
+| S12 Storybook, Penpot, release           | M6        | ☐      |
 
 ## Log
 
@@ -139,8 +139,8 @@
 - Done: Playwright 1.54.2 + `@axe-core/playwright` in `apps/site` (`playwright.config.ts`, `e2e/smoke.spec.ts`, `pnpm --filter site test:e2e`). Six tests, all green locally against `next start`: one h1 and heading order, primary Button by keyboard (Tab focus, outline present, Enter shows "Button clicked" via `page.once('dialog')`), secondary link goes to `#approach`, axe 0 violations (colour-contrast on, real browser), 320px no horizontal scroll, 200% zoom (640px viewport) readable. No site/component/token fixes were needed. CI installs Chromium and runs the suite; `.gitignore` covers reports.
 - Decisions: D-041.
 - Gotchas: `SITE_URL=<preview>` runs the same suite against a deployed site; not run against Vercel yet because the site is not deployed. `pnpm lint` shows Prettier warnings only for the git-excluded `.claude/worktrees/` checkout (not in CI). Every other `pnpm check` step passes when run directly.
-- Manual pass (Purander, to record): keyboard-only walk-through and browser zoom at 200%. _Pending._
-- Next: Purander does the manual pass, notes it here, merges the PR. Then S12.
+- Manual pass (Purander, to record): keyboard-only walk-through and browser zoom at 200%. Done 2026-10-17: Tab order and focus ring look right; 200% zoom breaks nothing and adds no scroll. Browser and the Enter-key alert were not reported.
+- Next: Purander merges the PR. Then S12.
 
 ## Parking lot (out of scope, later)
 
