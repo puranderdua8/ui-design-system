@@ -149,3 +149,6 @@ vite.config.ts.timestamp-*
 .turbo
 
 .DS_Store
+# Playwright
+/apps/site/test-results/
+/apps/site/playwright-report/

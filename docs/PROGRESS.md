@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M5 Real website, branch `m5-site`
-- **Next session:** S11 QA and accessibility (after Purander deploys the site and S10 is committed/merged)
+- **Current milestone:** M6 Docs and release, branch `m6-release`
+- **Next session:** S12 Storybook, Penpot, release (S12a Storybook, S12b release docs)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -20,7 +20,7 @@
 - npm: https://www.npmjs.com/package/@puranderdua/ui
 - Registry: https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`; the root path is a 404 by design)
 - Site: _tbd_ (Purander creates the Vercel project, root `apps/site`)
-- Storybook: _tbd_
+- Storybook: _tbd_ (local: `pnpm --filter docs storybook`)
 
 ## Session checklist
 
@@ -36,8 +36,8 @@
 | S8 Registry build and hosting            | M4        | ☑      |
 | S9 Clean-install and update checks       | M4        | ☑      |
 | S10 Portfolio site                       | M5        | ☑      |
-| S11 QA and accessibility                 | M5        | ☐      |
-| S12 Storybook, Penpot, release           | M6        | ☐      |
+| S11 QA and accessibility                 | M5        | ☑      |
+| S12 Storybook, Penpot, release           | M6        | ◐      |
 
 ## Log
 
@@ -128,11 +128,48 @@
 
 ### S10 — Portfolio site — 2026-10-17
 
-- Done: `apps/site` (create-next-app 16.4.2, App Router, Tailwind v4). Package `@puranderdua/ui` pinned `0.1.0` from npm; `shadcn init` + `@puranderdua` registry at `/r/v0.1.0`, `shadcn add @puranderdua/ds-button` (brings ds-foundations, ds-utils, ds-types). `globals.css` imports `../styles/ds-foundations.css` only, plus `@source` for the package dist; Inter via `next/font` mapped onto `--ds-font-family-sans`. Page: Heading display h1, lead Text, caption, h2/h3 long-form section, client `Cta` with registry Button primary (`alert("Button clicked")`) and secondary (anchor via `asChild`). Heading/Text from the package, Button from the registry copy. ESLint bans `Button`/`buttonVariants` from the package (checked with a throwaway file). `pnpm check` green; site lint, typecheck and build run through it.
+- Done: `apps/site` (create-next-app 16.4.2, App Router, Tailwind v4). Package `@puranderdua/ui` pinned `0.1.0` from npm; `shadcn init` + `@puranderdua` registry at `/r/v0.1.0`, `shadcn add @puranderdua/ds-button` (brings ds-foundations, ds-utils, ds-types). `globals.css` imports `../styles/ds-foundations.css` only, plus `@source` for the package dist; Inter via `next/font` mapped onto `--ds-font-family-sans`. Page: Heading display h1, lead Text, caption, h2/h3 long-form section, client `Cta` with registry Button primary (`alert("Button clicked")`) and secondary (anchor via `asChild`). Heading/Text from the package, Button from the registry copy. ESLint bans `Button`/`buttonVariants` from the package (checked with a throwaway file). `pnpm check` green (after the PR review fix below); site lint, typecheck and build run through it.
 - Verified: `next start` in the browser pane, clicking the primary button fires the alert "Button clicked"; Inter applied; 320px viewport has no horizontal scroll (scrollWidth 320).
 - Decisions: D-040.
 - Gotchas: pnpm links the npm package through `node_modules/.pnpm` (always a symlink); the real check is that it is not `packages/ui`. create-next-app brings its own `pnpm-workspace.yaml`/lockfile/AGENTS.md (removed) and `cacheComponents`/`partialPrefetching` flags (dropped, page is static). `shadcn init` writes a stock theme and extra deps (removed). Root `pnpm-workspace.yaml` gained `allowBuilds` for sharp/unrs-resolver and a `minimumReleaseAgeExclude` entry for `@puranderdua/ui@0.1.0` (pnpm added it automatically, fresh release). Next sets `settings.next.rootDir` in the site ESLint config so root `eslint .` doesn't warn about a missing pages dir. Copy on the page is placeholder-quality; Purander should edit it.
-- Next: Purander creates the Vercel project (root `apps/site`, framework Next.js; install runs at the monorepo root) and deploys; then S11 Playwright/axe. S10 PR is not opened yet.
+- PR #9 review (independent session): `LayoutProps` is a global that Next generates only during a build, so `tsc` failed on a clean checkout (and `pnpm check` was red until `1c10c44`); layout/page are now typed explicitly arrow-function consts. `components.json` style set to `new-york` (matches D-036; `base-nova` would pull `@base-ui/react` back in on a later `shadcn add`). The `no-restricted-imports` ban also catches `import * as DS` (tested).
+- Vercel setup (Purander): project root `apps/site`, framework Next.js, "Include files outside the root directory" on, install at the repo root, env `ENABLE_EXPERIMENTAL_COREPACK=1` (so Vercel honours `packageManager: pnpm@11.22.0`; otherwise it may pick pnpm 9/10 and ignore `allowBuilds`/`minimumReleaseAgeExclude`). Node default is fine (`engines >=22`).
+- Next: Purander merges PR #9, creates the Vercel project and deploys; then S11 Playwright/axe.
+
+### S11 — QA and accessibility — 2026-10-17
+
+- Done: Playwright 1.54.2 + `@axe-core/playwright` in `apps/site` (`playwright.config.ts`, `e2e/smoke.spec.ts`, `pnpm --filter site test:e2e`). Six tests, all green locally against `next start`: one h1 and heading order, primary Button by keyboard (Tab focus, outline present, Enter shows "Button clicked" via `page.once('dialog')`), secondary link goes to `#approach`, axe 0 violations (colour-contrast on, real browser), 320px no horizontal scroll, 200% zoom (640px viewport) readable. No site/component/token fixes were needed. CI installs Chromium and runs the suite; `.gitignore` covers reports.
+- Decisions: D-041.
+- Gotchas: `SITE_URL=<preview>` runs the same suite against a deployed site; not run against Vercel yet because the site is not deployed. `pnpm lint` shows Prettier warnings only for the git-excluded `.claude/worktrees/` checkout (not in CI). Every other `pnpm check` step passes when run directly.
+- Manual pass (Purander, to record): keyboard-only walk-through and browser zoom at 200%. Done 2026-10-17: Tab order and focus ring look right; 200% zoom breaks nothing and adds no scroll. Browser and the Enter-key alert were not reported.
+- QA and accessibility **passed** (recorded 2026-10-17): automated Playwright + axe suite green, manual keyboard and 200% zoom pass done. The M5 PR (#9) was merged before the S11 commits were pushed, so they were carried onto `m6-release` (cut from `origin/main`).
+- Next: S12.
+
+### S12a — Storybook — 2026-10-17
+
+- Done: `apps/docs` Storybook 10 (React + Vite, Tailwind v4 via `@tailwindcss/vite`, `foundations.css` from the package, a11y addon). Stories: Text (all variants, `as` vs variant), Heading (all variants, `as` vs variant), Button (variant × size × default/disabled matrix, asChild link). `pnpm --filter docs build-storybook` succeeds and is in `pnpm check`. Opened the built `button--matrix` story in the browser pane: tokens and Button styles render.
+- Decisions: D-042.
+- Gotchas: ESLint and Prettier needed `storybook-static` ignores. Stories avoid refs (D-034). The a11y addon's `test: "error"` only fails in the Storybook test runner/Vitest addon, not in `build-storybook`, so axe results are not yet checked in CI.
+- CI fix (PR #10): `apps/docs` typecheck failed on a clean checkout because `@puranderdua/ui` types come from `dist/`, which `pnpm check` builds only after typecheck. The docs `typecheck` script now builds the package first. Verified with `dist` removed.
+- Next: S12b release docs (README, CHANGELOG, release notes, retro). Penpot part is Purander's. Storybook URL (hosting) is not set.
+
+### S12b — Release docs and retro — 2026-10-17
+
+- Done: root `README.md` (tiers, both install routes, Tailwind setup, links), `CHANGELOG.md` (0.1.0), `docs/releases/v0.1.0.md` (scope, evidence, known gaps), this retro.
+- Next: Purander reviews and merges PR `m6-release`, then runs `git tag v0.1.0 && git push --tags` and creates the GitHub Release; deploys the site; optional Penpot board.
+
+## Retro (Release 0)
+
+- **Time per session:** not tracked per session. Wall clock from commits: S1–S4 on 2026-10-16 (about 1.5 h between first and last merge), S5–S11 on 2026-10-17 (11:44 to 17:28, with gaps). Purander: add real figures here.
+- **What broke:**
+  - First npm publish failed (E404, the `puranderdua` org did not exist), then a short 404 on `npm view`.
+  - The registry's first Vercel deploy served placeholder dependency URLs; rebuilt with `--force` (D-038 note).
+  - Stock shadcn `cn` dropped Button's text colour next to `text-ds-control-md` (fixed with `ds-utils`, D-029).
+  - `LayoutProps` is generated by `next build`, so site typecheck failed on a clean checkout (PR #9 review).
+  - PR #9 was merged before the last S10/S11 commits were pushed; they were carried onto `m6-release`.
+  - React 18 `forwardRef` crept in twice and was removed in review (D-033).
+- **What worked:** reviews by an independent session caught real bugs in S2/S3, S5, S8, S10; the clean-install script found issues the repo-local tests could not.
+- **Next slice, Release 1:** colours plus light/dark theming (semantic layer with modes), update-path checks (registry 0.1.1, package upgrade), axe in Storybook CI, hosted Storybook, more components.
 
 ## Parking lot (out of scope, later)
 
