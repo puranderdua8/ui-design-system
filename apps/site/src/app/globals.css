@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "../styles/ds-foundations.css";
+@source "../../node_modules/@puranderdua/ui/dist";
+
+/* Map the next/font Inter variable onto the design-system font token. */
+:root {
+  --ds-font-family-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+body {
+  @apply bg-ds-canvas text-ds-text font-ds-sans;
+}

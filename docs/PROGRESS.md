@@ -4,8 +4,8 @@
 
 ## Current state
 
-- **Current milestone:** M4 Registry, branch `m4-clean-install`
-- **Next session:** S10 portfolio site (after Purander merges the S9 PR)
+- **Current milestone:** M5 Real website, branch `m5-site`
+- **Next session:** S11 QA and accessibility (after Purander deploys the site and S10 is committed/merged)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -19,7 +19,7 @@
 - GitHub: https://github.com/puranderdua8/ui-design-system
 - npm: https://www.npmjs.com/package/@puranderdua/ui
 - Registry: https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`; the root path is a 404 by design)
-- Site: _tbd_
+- Site: _tbd_ (Purander creates the Vercel project, root `apps/site`)
 - Storybook: _tbd_
 
 ## Session checklist
@@ -35,7 +35,7 @@
 | S7 Package build and publish             | M3        | ☑      |
 | S8 Registry build and hosting            | M4        | ☑      |
 | S9 Clean-install and update checks       | M4        | ☑      |
-| S10 Portfolio site                       | M5        | ☐      |
+| S10 Portfolio site                       | M5        | ☑      |
 | S11 QA and accessibility                 | M5        | ☐      |
 | S12 Storybook, Penpot, release           | M6        | ☐      |
 
@@ -125,6 +125,14 @@
 - Decisions: D-039.
 - Gotchas: `shadcn init` writes a stock button.tsx and utils.ts, so the first `add` needs `--overwrite`. The package route needs `@source` for `node_modules/@puranderdua/ui/dist`. BSD sed lacks `0,/re/`, so CSS edits use node. axe's colour-contrast rule is off (jsdom has no layout); contrast is covered by `tokens:check`. The workflow has not been run on GitHub (Linux/Node 22).
 - Next: S10 portfolio site. Purander reviews and merges the S9 PR, then deploys the registry by hand if needed.
+
+### S10 — Portfolio site — 2026-10-17
+
+- Done: `apps/site` (create-next-app 16.4.2, App Router, Tailwind v4). Package `@puranderdua/ui` pinned `0.1.0` from npm; `shadcn init` + `@puranderdua` registry at `/r/v0.1.0`, `shadcn add @puranderdua/ds-button` (brings ds-foundations, ds-utils, ds-types). `globals.css` imports `../styles/ds-foundations.css` only, plus `@source` for the package dist; Inter via `next/font` mapped onto `--ds-font-family-sans`. Page: Heading display h1, lead Text, caption, h2/h3 long-form section, client `Cta` with registry Button primary (`alert("Button clicked")`) and secondary (anchor via `asChild`). Heading/Text from the package, Button from the registry copy. ESLint bans `Button`/`buttonVariants` from the package (checked with a throwaway file). `pnpm check` green; site lint, typecheck and build run through it.
+- Verified: `next start` in the browser pane, clicking the primary button fires the alert "Button clicked"; Inter applied; 320px viewport has no horizontal scroll (scrollWidth 320).
+- Decisions: D-040.
+- Gotchas: pnpm links the npm package through `node_modules/.pnpm` (always a symlink); the real check is that it is not `packages/ui`. create-next-app brings its own `pnpm-workspace.yaml`/lockfile/AGENTS.md (removed) and `cacheComponents`/`partialPrefetching` flags (dropped, page is static). `shadcn init` writes a stock theme and extra deps (removed). Root `pnpm-workspace.yaml` gained `allowBuilds` for sharp/unrs-resolver and a `minimumReleaseAgeExclude` entry for `@puranderdua/ui@0.1.0` (pnpm added it automatically, fresh release). Next sets `settings.next.rootDir` in the site ESLint config so root `eslint .` doesn't warn about a missing pages dir. Copy on the page is placeholder-quality; Purander should edit it.
+- Next: Purander creates the Vercel project (root `apps/site`, framework Next.js; install runs at the monorepo root) and deploys; then S11 Playwright/axe. S10 PR is not opened yet.
 
 ## Parking lot (out of scope, later)
 
