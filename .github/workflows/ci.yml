@@ -16,3 +16,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - name: Committed registry output is up to date
+        run: |
+          git add -N apps/registry/public/r
+          git diff --exit-code -- apps/registry/public/r

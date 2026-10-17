@@ -11,6 +11,6 @@
       "target": "styles/ds-foundations.css"
     }
   ],
-  "docs": "Import it once in your globals.css, after Tailwind: @import \"tailwindcss\"; @import \"../styles/ds-foundations.css\"; (adjust the relative path to where globals.css sits).",
+  "docs": "Import it once in your globals.css, after Tailwind: @import \"tailwindcss\"; @import \"../styles/ds-foundations.css\"; (adjust the relative path to where globals.css sits; with a src/ directory it lands in src/styles/).",
   "type": "registry:file"
 }

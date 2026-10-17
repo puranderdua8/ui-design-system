@@ -14,7 +14,7 @@
       ]
     },
     {
-      "source": "/r/v(.*)",
+      "source": "/r/v:version(\\d.*)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

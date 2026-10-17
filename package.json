@@ -15,7 +15,7 @@
     "tokens:check": "node scripts/check-tokens.mjs",
     "registry:build": "node scripts/build-registry.mjs",
     "registry:check": "node scripts/check-parity.mjs",
-    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check && pnpm registry:build && pnpm registry:check"
+    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check && pnpm registry:build --no-package-build && pnpm registry:check"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
