@@ -18,7 +18,7 @@ A small, token-driven design system: **Text**, **Heading** and **Button** for Re
 4. Components   packages/ui/src/components/   Text, Heading, Button (semantic tokens only)
 ```
 
-Generated files (`**/generated/**`, `apps/registry/public/r/**`, `dist/**`) are never edited by hand. Change the source and rebuild.
+Generated files (`**/generated/**`, `dist/**`) are never edited by hand. Change the source and rebuild.
 
 ## Install via npm
 
@@ -41,10 +41,6 @@ import { Button, Heading, Text } from "@puranderdua/ui";
 Full usage notes: [`packages/ui/README.md`](packages/ui/README.md).
 
 From 0.2.0, `foundations.css` carries no token values: you also import one theme, e.g. `@import "@puranderdua/ui/themes/base.css";` (D-056).
-
-## shadcn registry (retired)
-
-Release 0 also shipped a shadcn registry. Release 1 retires it: the npm package is the only source of truth for components (D-055). The registry files leave the repo in S13.
 
 ## Tailwind setup
 
@@ -69,14 +65,13 @@ pnpm check                          # lint, tokens, types, tests, builds, Storyb
 pnpm --filter docs storybook        # Storybook on :6006
 ```
 
-| Path            | What                                       |
-| --------------- | ------------------------------------------ |
-| `tokens/`       | DTCG source                                |
-| `packages/ui/`  | the npm package                            |
-| `apps/registry` | retired shadcn registry (removed in S13)   |
-| `apps/site`     | portfolio site, showcase and playground    |
-| `apps/docs`     | Storybook                                  |
-| `docs/`         | plan, progress, decisions, evidence, notes |
+| Path           | What                                       |
+| -------------- | ------------------------------------------ |
+| `tokens/`      | DTCG source                                |
+| `packages/ui/` | the npm package                            |
+| `apps/site`    | portfolio site, showcase and playground    |
+| `apps/docs`    | Storybook                                  |
+| `docs/`        | plan, progress, decisions, evidence, notes |
 
 ## Links
 

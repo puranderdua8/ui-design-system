@@ -2,6 +2,5 @@ node_modules
 dist
 .next
 **/generated/**
-apps/registry/public/r/**
 pnpm-lock.yaml
 storybook-static

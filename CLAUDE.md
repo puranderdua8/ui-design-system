@@ -12,7 +12,7 @@ Four tiers, one source of truth:
 3. **Styles** — Tailwind v4 bridge + recipes in `packages/ui/src/styles/theme.css`
 4. **Components** — React + TS in `packages/ui/src/components/`
 
-**One distribution channel (D-055):** the npm package **`@puranderdua/ui`** ships every component plus `foundations.css` (bridge + recipes) and, from 0.2.0, one CSS + one JSON file per theme. The shadcn registry is retired: S13 deletes its remaining files (`registry.json`, `apps/registry/`, registry scripts). Until then, don't extend them.
+**One distribution channel (D-055):** the npm package **`@puranderdua/ui`** ships every component plus `foundations.css` (bridge + recipes) and, from 0.2.0, one CSS + one JSON file per theme. The shadcn copy-in route was removed in S13.
 
 **Themes (D-046, D-047):** Base (default, today's grey/Inter), Corporate, Nature, Quirky. A consumer imports `foundations.css` plus **one** `themes/<name>.css`. Live switching (site, Storybook, playground) applies a theme's resolved `themes/<name>.json` var map as inline CSS vars. `tokens/resolver.json` (DTCG Resolver 2025.10 shape) lists themes and reserves a `mode` modifier for dark mode (light only for now).
 
@@ -45,7 +45,7 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 - **No arbitrary values** (`text-[17px]`, `bg-[#123]`) for shared design decisions. Use tokens.
 - **Semantic tokens alias primitives; components use semantic tokens only.** Never reference a primitive (e.g. `blue-600`) from a component.
 - **Themes live only in tokens (D-048).** Components never branch on the theme. Every themeable token exists in every theme (`validate-tokens` enforces it). Breakpoints are shared, never themed. Apps never hand-write theme values; they apply a generated theme JSON map.
-- **Single channel (D-055).** Every component lives in `packages/ui` and ships through npm. No registry, and no copied component sources in apps.
+- **Single channel (D-055).** Every component lives in `packages/ui` and ships through npm. No copied component sources in apps.
 - **React 19 only.** `ref` is a plain prop; no `forwardRef`. Peer dep is `^19`.
 - **Refs (D-034):** type a ref from the same tag passed to `as` (`createRef<HTMLSpanElement>()` with `as="span"`; `HTMLHeadingElement` for `Heading`), and prefer callback refs over object refs. TypeScript cannot catch a mismatched p/span/div object ref, so you must get it right by hand, in code, tests, stories and docs.
 - **Components are arrow-function consts:** `export const Text = (props) => {}`, not `export function Text()`.

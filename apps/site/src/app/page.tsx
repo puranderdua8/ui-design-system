@@ -35,16 +35,15 @@ const Home = () => {
         </Text>
 
         <Heading as="h3" variant="h3">
-          Two ways to consume it
+          One package to consume
         </Heading>
         <Text>
-          The typography components come from an npm package, pinned to an exact
-          version. The button is copied into this project from a shadcn
-          registry, so it can be read and edited like any other local file.
+          Every component on this page comes from a single npm package, pinned
+          to an exact version. There are no copied sources to keep in sync.
         </Text>
         <Text>
-          Both channels share the same tokens, so a package Heading and a
-          registry Button sit side by side without any visual seams.
+          Heading, Text and Button share the same tokens, so they sit side by
+          side without any visual seams.
         </Text>
 
         <Heading as="h3" variant="h3">
@@ -59,7 +58,7 @@ const Home = () => {
 
       <footer>
         <Text variant="caption" className="text-ds-text-muted">
-          Built with @puranderdua/ui and the @puranderdua shadcn registry.
+          Built with @puranderdua/ui.
         </Text>
       </footer>
     </main>

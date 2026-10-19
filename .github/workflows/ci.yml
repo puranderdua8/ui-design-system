@@ -22,7 +22,3 @@ jobs:
         run: pnpm --filter site test:e2e
       - name: Shell scripts pass shellcheck
         run: shellcheck scripts/*.sh
-      - name: Committed registry output is up to date
-        run: |
-          git add -N apps/registry/public/r
-          git diff --exit-code -- apps/registry/public/r

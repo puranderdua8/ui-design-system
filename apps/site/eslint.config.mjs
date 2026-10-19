@@ -7,24 +7,6 @@ const eslintConfig = defineConfig([
   ...nextTs,
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
   { settings: { next: { rootDir: import.meta.dirname } } },
-  {
-    // Button comes from the shadcn registry (src/components/ui/button.tsx), never the package.
-    rules: {
-      "no-restricted-imports": [
-        "error",
-        {
-          paths: [
-            {
-              name: "@puranderdua/ui",
-              importNames: ["Button", "buttonVariants"],
-              message:
-                "Import Button from '@/components/ui/button' (registry copy), not from @puranderdua/ui.",
-            },
-          ],
-        },
-      ],
-    },
-  },
 ]);
 
 export default eslintConfig;

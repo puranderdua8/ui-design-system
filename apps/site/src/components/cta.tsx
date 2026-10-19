@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@puranderdua/ui";
 
 export const Cta = () => (
   <div className="flex flex-wrap gap-3">

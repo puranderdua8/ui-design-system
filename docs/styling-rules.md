@@ -29,7 +29,7 @@ Add a recipe only when utilities cannot express the composite.
 
 ## Consuming
 
-`foundations.css` contains tokens, the `@theme inline` bridge and recipes. It does **not** import Tailwind. Import it once (from the package or the registry copy, never both, D-008):
+`foundations.css` contains tokens, the `@theme inline` bridge and recipes. It does **not** import Tailwind. Import it once, from the package (D-055):
 
 ```css
 @import "tailwindcss";

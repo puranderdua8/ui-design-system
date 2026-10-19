@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-foundations` (cut from `main` 2026-10-19; holds the Release 1 planning commit)
-- **Next session:** S13 Remove the registry
+- **Next session:** S14 Theme architecture
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -19,7 +19,7 @@
 
 - GitHub: https://github.com/puranderdua8/ui-design-system
 - npm: https://www.npmjs.com/package/@puranderdua/ui
-- Registry (being retired, D-055; removed from the repo in S13, Vercel project paused or deleted by Purander): https://ui-design-system-registry.vercel.app
+- Registry (retired, D-055; removed from the repo in S13; Vercel project `ui-design-system-registry` still to be paused or deleted by Purander): https://ui-design-system-registry.vercel.app
 - Site: https://ui-design-system-beta.vercel.app/
 - Storybook: https://ui-design-system-storybook-mu.vercel.app/ (local: `pnpm --filter docs storybook`)
 
@@ -46,7 +46,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 | Session                                     | Milestone | Status |
 | ------------------------------------------- | --------- | ------ |
-| S13 Remove the registry                     | M7        | ☐      |
+| S13 Remove the registry                     | M7        | ☑      |
 | S14 Theme architecture                      | M7        | ☐      |
 | S15 New token categories and semantic roles | M7        | ☐      |
 | S16 0.2.0 release prep                      | M7        | ☐      |
@@ -188,6 +188,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 - Done: root `README.md` (tiers, both install routes, Tailwind setup, links), `CHANGELOG.md` (0.1.0), `docs/releases/v0.1.0.md` (scope, evidence, known gaps), this retro.
 - Next: Purander reviews and merges PR `m6-release`, then runs `git tag v0.1.0 && git push --tags` and creates the GitHub Release; deploys the site; optional Penpot board.
+
+### S13 — Remove the registry — 2026-10-19
+
+- Done: deleted `registry.json`, `registry.config.json`, `scripts/build-registry.mjs`, `scripts/check-parity.mjs`, `apps/registry/`, `docs/registry.md`. Root: dropped `registry:*` scripts and their `pnpm check` steps, the `shadcn` devDependency and the shadcn `minimumReleaseAgeExclude` entries (lockfile −173 packages); CI registry-output step, `.prettierignore` and ESLint ignores cleaned. `scripts/clean-install.sh` now tests only the package-only app. Site: `Button` from `@puranderdua/ui`, `globals.css` imports `@puranderdua/ui/foundations.css` (kept `@source` and the Inter mapping); deleted `components.json`, `src/components/ui/`, `src/lib/`, `src/styles/`, the ESLint ban and the four unused deps. README, CLAUDE.md and `docs/styling-rules.md` updated.
+- Decisions: none new (D-055 covers it).
+- Gotchas: the site page copy described the two-channel split, so its "Two ways to consume it" section and footer were rewritten to describe one package (placeholder-quality copy, Purander may reword). `docs/provenance/button.md` still says "registry" because it quotes the upstream shadcn path and registry JSON it was fetched from; `docs/PLAN.md` also mentions it (describes this work). `clean-install.sh` passes `bash -n` but was not run end to end (needs network and npm), so the evidence file was not regenerated; shellcheck is not installed locally (CI runs it). `pnpm lint` still warns on the git-excluded `.claude/worktrees/` checkout (known, not in CI); eslint and prettier are clean otherwise.
+- Verified: `pnpm check` steps run individually (tokens, typecheck, 52 tests, build, playground, Storybook) green; `pnpm --filter site test:e2e` 6 of 6.
+- Next: S14 Theme architecture. Purander: pause or delete the Vercel project `ui-design-system-registry`.
 
 ## Retro (Release 0)
 
