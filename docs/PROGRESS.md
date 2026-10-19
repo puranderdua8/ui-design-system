@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S21 Showcase Layout + Actions (after Purander publishes 0.3.0)
+- **Next session:** S21 Showcase Layout + Actions (0.3.0 is published)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -258,7 +258,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `pnpm check` green (lint, tokens, typecheck, tests, build, playground, Storybook). `pnpm pack` tarball (0.3.0) holds dist index/d.ts/foundations/themes/contrast-pairs, README, package.json; `lucide-react` is in `dependencies`, the bundle imports it, and the d.ts exports `Link`. Not published.
 - Decisions: D-063.
 - Gotchas: (1) The accessible name was "Example(opens in a new tab)" with the space inside the `sr-only` span; the space is now a separate text node before the span. (2) With `asChild`, two children (content plus icon) make Slot throw, so `children` always goes through `Slot.Slottable`. (3) Vite warns that the `"use client"` directive in lucide's files may not be preserved when bundling (Storybook build only, harmless). S22 owns the client boundary. (4) I did not tarball-install into a throwaway Next app (only inspected the tarball). (5) The site is on 0.2.0 and does not use Link yet (S21).
-- Next: Purander runs `npm publish` for 0.3.0 and checks `npm view @puranderdua/ui version`; then S21 (site moves to 0.3.0, Layout page, Link on Actions).
+- Published by Purander on 2026-10-19: `@puranderdua/ui@0.3.0`. Tag after the milestone PR merges.
+- Next: S21 (site moves to 0.3.0, Layout page, Link on Actions).
 
 ## Retro (Release 0)
 
