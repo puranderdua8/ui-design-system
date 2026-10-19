@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S19 Section, Split, Sidebar
+- **Next session:** S20 Link + 0.3.0 prep
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -52,7 +52,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S16 0.2.0 release prep                      | M7        | ☑      |
 | S17 Showcase shell                          | M7        | ☑      |
 | S18 Container, Grid, Stack, Cluster         | M8        | ☑      |
-| S19 Section, Split, Sidebar                 | M8        | ☐      |
+| S19 Section, Split, Sidebar                 | M8        | ☑      |
 | S20 Link + 0.3.0 prep                       | M8        | ☐      |
 | S21 Showcase Layout + Actions               | M8        | ☐      |
 | S22 Client boundary + Label, Field, Input   | M9        | ☐      |
@@ -243,6 +243,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-061.
 - Gotchas: the grid-fit recipes needed new tokens because the plan had no min-item-width token. I appended `AsProps` to `types.ts` with a shell heredoc (against D-043); everything else used Write/Edit. The site is pinned to 0.2.0 and does not use these yet (release in S20, showcase in S21). The playground check does not grep the layout classes.
 - Next: S19.
+
+### S19 — Section, Split, Sidebar — 2026-10-19
+
+- Done (branch `s19-section-split-sidebar`, cut from synced `main` after #18 merged): `Section` (tone canvas/subtle/inverse/brand with matching text colour, padding from `section-padding` tokens, optional inner `Container`), `Split` (1:1, 1:2, 2:1, `reverse`, `align`, `gap`, stacks under `md`), `Sidebar` (`sidebar` slot, `side`, `collapseBelow` md/lg, `sidebarAs`, content min width half the row). 22 new tests in `page-layout.test.tsx` (97 total), stories under `Layout/` each with `Narrow320` and `Desktop` variants (new Storybook viewports in `preview.ts`).
+- Verified: `pnpm check` green. In the built Storybook: Sidebar is row / row-reverse at 1280px with a 256px aside and no horizontal scroll at 320px; Split ratios and reverse render as expected.
+- Decisions: D-062.
+- Gotchas: contrast pairs for every tone already existed (text.primary on canvas/subtle, text.inverse on inverse, text.on-brand on brand), so none were added; a test asserts they stay listed. A required prop (`sidebar`) must be in Storybook meta `args` or `satisfies Meta` typing breaks per-story overrides. The site is still on 0.2.0 and does not use these yet (release S20, showcase S21).
+- Next: S20 Link + 0.3.0 prep.
 
 ## Retro (Release 0)
 
