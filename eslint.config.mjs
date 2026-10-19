@@ -9,7 +9,6 @@ export default tseslint.config(
       "**/.next/**",
       "**/storybook-static/**",
       "**/generated/**",
-      "apps/registry/public/r/**",
       "pnpm-lock.yaml",
     ],
   },

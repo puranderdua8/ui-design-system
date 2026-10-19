@@ -1,31 +1,39 @@
-# Release 0 plan: Task → Milestone → Goal
+# Release 1 plan: single channel → component showcase → themes → theme playground
 
-Source: _Design System Single-Repo Multi-Agent Blueprint v6_, adapted. The multi-agent infrastructure (B0, sections 13–19) is dropped; Purander builds with Claude Code in short sessions. See `DECISIONS.md`.
+Release 0 (v0.1.0, tagged) is archived in [`plans/release-0.md`](plans/release-0.md). This file always holds the current release (D-054).
 
-## Goal (Release 0, done when all are true)
+## Goal (Release 1, done when all are true)
 
-1. `@puranderdua/ui@0.1.0` is on npm with typed Text, Heading, Button and `foundations.css`.
-2. The registry is live on Vercel: `ds-foundations`, `ds-typography`, `ds-button` at `/r/v0.1.0/`.
-3. The portfolio site is live on Vercel. Text/Heading come from the npm package; Button was installed from the registry. The Button shows `alert("Button clicked")`.
-4. CI is green: tokens build/check, contrast, lint, types, unit and a11y tests, package build, registry build, foundations parity, site build.
-5. A clean install outside the repo works for both channels (script output saved).
-6. Accessibility pass: heading order, keyboard, focus-visible, disabled, contrast AA, 200% zoom, layout at 320px wide.
-7. v0.1.0 tagged, README covers both install routes, PROGRESS.md has a retro.
-8. _(Cuttable)_ Storybook stories and a Penpot specimen board.
+1. **Single channel.** The shadcn registry is gone from the repo and from Vercel. `@puranderdua/ui` on npm is the only source of truth for every component, including Text, Heading and Button (D-055).
+2. **Components.** `@puranderdua/ui@0.6.0` on npm ships every component in five categories:
+   - Typography: Text, Heading
+   - Layout: Container, Grid, Stack, Cluster, Section, Split, Sidebar
+   - Forms: Label, Field, Input, Checkbox, RadioGroup, Select
+   - Actions: Button, Link
+   - Display: Card, Tabs, Banner
+3. **Themes.** Four themes ship: Base (today's grey/Inter, the default), Corporate, Nature and Quirky. Each defines its own colour, typography, shape, elevation, density and motion. A consumer imports `foundations.css` plus **one** `themes/<name>.css` (D-046, D-056).
+4. **Showcase.** The portfolio site has `/components` with one page per category. Every component comes from the pinned npm package, and a header switcher changes themes live by loading only the chosen theme.
+5. **Playground.** `/playground` tweaks a theme with knobs plus per-token overrides, updates the preview instantly with live contrast badges, remembers edits locally, and exports DTCG JSON and CSS. An exported theme builds and validates in `tokens/themes/`.
+6. **Quality.** CI is green: per-theme token validation and contrast, unit and a11y tests, package build, Storybook build, site e2e with axe on every showcase page in every theme.
+7. **Docs.** Storybook covers every component and has a theme toolbar. README, CHANGELOG, `docs/themes.md`, release notes and a retro are written.
+8. **Ready for dark mode.** Light only, but the token manifest reserves a `mode` modifier, so dark mode later needs only token files (D-047).
 
 ## Milestones
 
-| Milestone                     | Blueprint tiers / gates     | Sessions   | Branch → PR     |
-| ----------------------------- | --------------------------- | ---------- | --------------- |
-| **M0 Foundation**             | P-01…P-07, G-02             | S1         | `m0-foundation` |
-| **M1 Tokens**                 | Tier 1 + 2, Gate A          | S2, S3     | `m1-tokens`     |
-| **M2 Styles**                 | Tier 3                      | S4         | `m2-styles`     |
-| **M3 Components and package** | Tier 4, Gate E (provenance) | S5, S6, S7 | `m3-components` |
-| **M4 Registry**               | Distribution, Gate D        | S8, S9     | `m4-registry`   |
-| **M5 Real website**           | Gates B, C                  | S10, S11   | `m5-site`       |
-| **M6 Docs and release**       | Gate F                      | S12        | `m6-release`    |
+| Milestone                                  | Sessions | npm release | Branch → PR      |
+| ------------------------------------------ | -------- | ----------- | ---------------- |
+| **M7 Single channel + theme-ready tokens** | S13–S17  | 0.2.0       | `m7-foundations` |
+| **M8 Layout + Actions**                    | S18–S21  | 0.3.0       | `m8-layout`      |
+| **M9 Forms**                               | S22–S25  | 0.4.0       | `m9-forms`       |
+| **M10 Display**                            | S26–S28  | 0.5.0       | `m10-display`    |
+| **M11 Themes**                             | S29–S32  | 0.6.0       | `m11-themes`     |
+| **M12 Theme playground**                   | S33–S35  | (site only) | `m12-playground` |
 
-**Total:** about 9.5–10 hours. With the cuts in D-014, about 8 hours.
+**Total:** 23 sessions, about 21 hours.
+
+**Order rationale (D-044):** single channel first, so new work isn't built twice. Then the token structure becomes theme-ready, so every component is built once against the final contract. Components and the showcase come next, then themes (values only), then the playground.
+
+**Release rhythm (D-050):** each milestone publishes one npm minor. The release-prep session ends with **you** running `npm publish`. The next session bumps `apps/site` to that exact version and builds that category's showcase page. After merging the milestone PR, you tag `v<version>` on `main` and redeploy the site.
 
 ## How to run every session
 
@@ -37,178 +45,351 @@ Source: _Design System Single-Repo Multi-Agent Blueprint v6_, adapted. The multi
 
 > Run the Done-when checks, update PROGRESS.md and DECISIONS.md, and commit as "S<n>: …".
 
-Then `/clear`, or start a new session. On the last session of a milestone, the AI pushes the branch and opens/edits the PR; wait for CI; Purander reviews and merges.
+Then `/clear`, or start a new session. On the last session of a milestone, the AI pushes the branch and opens or edits the PR; wait for CI; Purander reviews and merges. The next milestone branch is cut from the updated `main`.
 
 **If a session runs over 60 minutes:** stop, have the AI write the remaining work into PROGRESS.md "Next", commit, and continue in a fresh session.
 
----
+**Pre-approved dependencies** (only in the session that names them): `radix-ui` (S16), `lucide-react` (S20), `culori` and `vitest` in `apps/site` (S33). Anything else needs asking first.
 
-## M0 Foundation
+## Cross-cutting design (read once; sessions refer back here)
 
-### S1: Kickoff and scaffold (45 min)
+**Theme model (D-046).**
 
-**You do first (10 min):**
+- Source: shared non-themeable primitives in `tokens/primitives/` (breakpoints, z-index); themeable primitives in `tokens/themes/<theme>/*.json`; the role contract in `tokens/semantic/` (aliases only).
+- Manifest: `tokens/resolver.json` follows the DTCG Resolver Module 2025.10 (sets + modifiers). It has a `theme` modifier (base | corporate | nature | quirky) and a `mode` modifier (`light` only; `dark` reserved). `scripts/build-tokens.mjs` resolves it; we don't depend on resolver support in Style Dictionary (unverified).
+- Two outputs per theme from one source:
+  - `generated/themes/<name>.css`: `:root { --ds-*: … }` with references kept. A consumer imports exactly one.
+  - `generated/themes/<name>.json`: a **fully resolved** flat var map (`"--ds-text-primary": "#1a1d23"`) plus alias refs (semantic → primitive).
+- `foundations.css` = Tailwind bridge + recipes only, no values. This breaks 0.1.0 consumers; accepted at 0.x and documented in the CHANGELOG.
+- Live switching (site, Storybook, playground) sets a theme's resolved JSON map as inline CSS vars on `<html>` or a scope element. Every var is resolved, so nothing depends on where `var()` refs were declared, and only the active theme is loaded.
+- Breakpoints are not themeable (media queries can't read custom properties).
 
-- Pick the font. Suggested: Inter or Geist, self-hosted through `next/font` in the site; the package only references the family name.
-- Pick a primary color hex. It must reach 4.5:1 contrast against white text.
-- Create the empty GitHub repo `ui-design-system`.
-- Copy these 4 files into it.
+**Completeness (D-048).** Every theme defines exactly the themeable keys Base defines; `validate-tokens` fails otherwise. Contrast runs per theme.
 
-**Prompt:**
+**Components (D-049).**
 
-> S1. Scaffold the pnpm monorepo per CLAUDE.md layout: root package.json (pnpm workspaces, node 22, scripts `check`, `tokens:build`, `tokens:check`, `registry:build` as stubs), `pnpm-workspace.yaml` (`packages/*`, `apps/*`), `.npmrc` with `link-workspace-packages=false`, TypeScript base config (strict), ESLint (flat config) + Prettier, `.gitignore`, `packages/ui` skeleton (`@puranderdua/ui`, version 0.0.0, React 18/19 peer deps, `src/index.ts` empty export, tsconfig path `@/*` → `src/*`), empty `tokens/`, `scripts/`, `apps/` folders with .gitkeep, and `.github/workflows/ci.yml` (pnpm install --frozen-lockfile, `pnpm check`). Record my brand choices in PROGRESS.md: font <X>, primary <HEX>.
+- Interactive components are adapted from shadcn new-york-v4 source on the unified `radix-ui` package, each with a provenance doc in `docs/provenance/`. Icons come from `lucide-react`.
+- Client components start with `"use client"`, and the package build must keep it.
+- Portal components (Select) accept a `container` prop, so the playground's scoped preview can theme them.
 
-**Done when:** `pnpm install && pnpm check` passes locally; CI is green on the pushed branch.
-**Feeds:** M0, then Purander merges PR `m0-foundation`.
-
----
-
-## M1 Tokens (Tier 1 + 2)
-
-### S2: Token source (40 min)
-
-**Prompt:**
-
-> S2. Write DTCG token JSON (`$value`, `$type`, `$description`).
-> **tokens/primitives/**: font family (brand + fallback stack), font sizes (about 7, a rem scale from 0.75 to 3), weights (400/500/600/700), line heights (tight/normal/relaxed), letter spacing (tight/normal), colors (brand scale 50–900 built around my primary, neutral scale 0–950, white), spacing (1, 1.5, 2, 3, 4, 6 in rem), radius (sm, md), border width (1), focus ring width/offset.
-> **tokens/semantic/**: typography composites for `type.display, type.h1, type.h2, type.h3, type.body, type.lead, type.caption, type.label`; colors `text.primary, text.muted, text.inverse, surface.canvas, border.default, action.primary.{bg,bg-hover,bg-active,fg}, action.secondary.{bg,bg-hover,bg-active,fg,border}, focus.ring, disabled.{bg,fg,border}`; control sizes `control.{sm,md}.{height,padding-x,font-size}`, `control.radius`.
-> Semantic tokens must only alias primitives. Add a JSON schema sanity script `scripts/validate-tokens.mjs` (every token has `$value` and `$type`; aliases point to existing tokens).
-
-**Done when:** `node scripts/validate-tokens.mjs` passes; you've reviewed the role names (5 min).
-
-### S3: Token build and checks (50 min)
-
-**Prompt:**
-
-> S3. Add Style Dictionary v4 (`usesDtcg: true`). `pnpm tokens:build` outputs `packages/ui/src/styles/generated/tokens.css` (`:root` vars with prefix `--ds-`, `outputReferences: true` so semantics reference primitives) and `tokens.json` (flat). Typography composites expand to per-property vars (`--ds-type-body-font-size`, etc.). `pnpm tokens:check` must: (1) run validate-tokens, (2) rebuild and fail if generated output differs from the committed copy (determinism and no stale output), (3) run `scripts/contrast.mjs` that checks WCAG AA (4.5:1 normal text) for text.primary/surface.canvas, text.muted/surface.canvas, action.primary.fg/bg (and hover, active), action.secondary.fg/bg. Wire both into `pnpm check` and CI.
-
-**Done when:** CI is green. Changing one primitive and rebuilding changes every dependent `--ds-*` var. Contrast passes, or adjust the primary color now. This is **Gate A**. Open PR `m1-tokens` (Purander merges).
+**Per component, every time:** static variant maps, semantic tokens only, `data-slot`, typed props/refs (D-034), tests (behaviour, keyboard, axe), a Storybook story, an export from `src/index.ts`, and the README component list.
 
 ---
 
-## M2 Styles (Tier 3)
+## M7 Single channel + theme-ready tokens → 0.2.0
 
-### S4: Tailwind bridge and recipes (45 min)
-
-**Prompt:**
-
-> S4. In `packages/ui/src/styles/theme.css` (hand-written) map semantic vars into Tailwind v4 with `@theme inline` (namespaces: `--color-ds-*` for semantic colors, `--text-ds-*` with line-height and weight companions for each type role, `--font-ds-sans`, `--radius-ds-control`, `--spacing-*` only if needed). Add `@layer components` recipes `.ds-type-<role>` only where utilities can't express a composite. Write `scripts/build-foundations.mjs` that concatenates generated `tokens.css` + `theme.css` into `packages/ui/dist/foundations.css` (no `@import "tailwindcss"` inside it). Add `docs/styling-rules.md`: no dynamic class names, no arbitrary values for shared decisions, `@apply` only inside recipes, consumers add `@import "tailwindcss"; @import "@puranderdua/ui/foundations.css"; @source "../node_modules/@puranderdua/ui/dist";`.
-> Create a minimal throwaway Vite+React page in `packages/ui/playground/` (not published) that renders every type role and both button color pairs using only token utilities, and verify the production build CSS contains them.
-
-**Done when:** The playground production build shows all roles correctly, with no missing classes in the built CSS (grep for e.g. `text-ds-h1`). Open PR `m2-styles` (Purander merges).
-
----
-
-## M3 Components and package (Tier 4)
-
-### S5: Text and Heading (45 min)
+### S13: Remove the registry (45 min)
 
 **Prompt:**
 
-> S5. In packages/ui implement `Text` (variants body, lead, caption, label; `as`: p | span | div | label; default p) and `Heading` (variants display, h1, h2, h3; `as`: h1–h6, default derived from variant via a static map, display→h1). Static variant maps (cva), `className` merged with `cn` from `@/lib/utils` (clsx + tailwind-merge), forwardRef, exported prop types. Set up Vitest + @testing-library/react + jsdom + vitest-axe (+ vite-tsconfig-paths). Tests: correct element per `as`, variant independent of element, no a11y violations, class strings contain no template interpolation (snapshot of variant map).
-
-**Done when:** `pnpm --filter @puranderdua/ui test` passes and types export cleanly.
-
-### S6: Button, shadcn intake and adaptation (60 min)
-
-**You do first:** Approve the dependencies `@radix-ui/react-slot`, `class-variance-authority`, `clsx`, `tailwind-merge` (some already added in S5).
-
-**Prompt:**
-
-> S6. Bring in shadcn/ui's Button source (use the current shadcn CLI or copy from the official repo), place it at `packages/ui/src/components/button.tsx`. Write `docs/provenance/button.md`: source URL, shadcn version/commit, date, MIT license, dependencies, and a list of every change we make. Adapt: variants only `primary | secondary`, sizes `sm | md`, colors/radius/height/padding/font only from `ds` token utilities, states hover/active/focus-visible (ring from `focus.ring`)/disabled (`disabled.*`), default `type="button"`, keep `asChild`. Tests: Enter and Space activate, disabled blocks onClick and is announced, focus-visible class present, `type="button"` default, axe clean for both variants, sizes.
-
-**Done when:** Tests pass, and the provenance doc lists the upstream version and the diff summary.
-
-### S7: Package build and publish (50 min)
-
-**Prompt:**
-
-> S7. Configure tsup for `@puranderdua/ui`: ESM + `.d.ts`, `"use client"` banner on the Button entry only if needed, externalize react/react-dom/radix, resolve `@/` paths. package.json: version 0.1.0, `exports` for `.` and `./foundations.css`, `files: ["dist"]`, `sideEffects: ["*.css"]`, peerDeps react >=18, `publishConfig.access: public`, repository/license/keywords, a README with install + Tailwind setup. Build runs `build-foundations` too. Then `pnpm pack`, create a throwaway Next.js app in `/tmp` (outside the repo), install the tarball, render Text/Heading/Button with the documented CSS setup, and `next build` it. Report the result. Do NOT publish.
-
-**You do:** `cd packages/ui && npm publish --access public`, using your 2FA code. Check `npm view @puranderdua/ui`.
-**Done when:** The tarball app builds and `npm view` shows 0.1.0. Open PR `m3-components` (Purander merges).
-
----
-
-## M4 Registry (distribution)
-
-### S8: Registry build and hosting (60 min)
-
-**Prompt:**
-
-> S8. Create root `registry.json` (`$schema: https://ui.shadcn.com/schema/registry.json`, name `puranderdua`, homepage = registry URL) with items:
+> S13. Retire the shadcn registry (D-055); npm is the only channel.
 >
-> - `ds-foundations`: `registry:file` → `packages/ui/dist/foundations.css`, target `styles/ds-foundations.css`; docs field explains the one-line import in globals.css.
-> - `ds-typography`: `registry:ui`, files text.tsx + heading.tsx from packages/ui/src/components, dependencies `class-variance-authority clsx tailwind-merge`, `registryDependencies`: `utils` + full URL of ds-foundations.
-> - `ds-button`: `registry:ui`, button.tsx, dependencies incl. `@radix-ui/react-slot`, registryDependencies `utils` + ds-foundations URL.
->   Script `pnpm registry:build`: build package → `shadcn build --output apps/registry/public/r/v<version>` → copy to `public/r/latest`. Version is read from packages/ui/package.json. Add `scripts/check-parity.mjs` (CI): the registry's foundations content is byte-identical to `packages/ui/dist/foundations.css`. Set up `apps/registry` as a static Vercel project (output dir `public`, CORS header for `/r/*`). Write `docs/registry.md` (namespace config, install commands, versioning, rollback = pin previous version path).
+> - Delete: `registry.json`, `registry.config.json`, `scripts/build-registry.mjs`, `scripts/check-parity.mjs`, `apps/registry/`, `docs/registry.md`.
+> - Root `package.json`: drop the `registry:*` scripts and their `pnpm check` steps, and the `shadcn` devDependency. Drop the shadcn-related `minimumReleaseAgeExclude` entries in `pnpm-workspace.yaml`.
+> - CI: drop the "Committed registry output is up to date" step.
+> - `scripts/clean-install.sh`: keep only the package app (B), and update the workflow and docs. Regenerate the evidence file only if the script ran end to end.
+> - `apps/site`: import `Button` from `@puranderdua/ui` (0.1.0 already exports it) and `@puranderdua/ui/foundations.css` in `globals.css` (keep `@source` and the Inter mapping). Delete `components.json`, `src/components/ui/button.tsx`, `src/lib/utils.ts`, `src/lib/types.ts`, `src/lib/generated/`, `src/styles/ds-foundations.css`, and the ESLint `no-restricted-imports` ban. Remove the now-unused site deps (`@radix-ui/react-slot`, `class-variance-authority`, `clsx`, `tailwind-merge`).
+> - Check `packages/ui/README.md`, root README, `docs/styling-rules.md` and `.prettierignore`/ESLint ignores for registry leftovers.
 
-**You do:** Create the Vercel project with root `apps/registry`, then deploy.
-**Done when:** `curl https://<registry>/r/v0.1.0/ds-button.json` returns valid JSON with file content. `@/lib/utils` imports are present, so the CLI can rewrite them.
+**You do:** pause or delete the Vercel project `ui-design-system-registry` (your call; nothing depends on it after this session).
+**Done when:** `pnpm check` and `pnpm --filter site test:e2e` are green. A Grep for `registry` only hits CHANGELOG, `docs/plans/release-0.md`, `docs/releases/v0.1.0.md`, `docs/evidence/`, DECISIONS and PROGRESS.
 
-### S9: Clean-install and update checks (40 min) _(cuttable)_
-
-**Prompt:**
-
-> S9. Write `scripts/clean-install.sh`: in a temp dir outside the repo, `create-next-app` (TS, Tailwind v4, App Router) → `shadcn init` → add `"registries": {"@puranderdua": "<REGISTRY>/r/v0.1.0/{name}.json"}` to components.json → `shadcn add @puranderdua/ds-typography @puranderdua/ds-button` → add the foundations import → render a page using both → `npm i @puranderdua/ui@0.1.0` and render the package Button on a second route → `next build`. Then edit button.tsx locally and rerun `shadcn add @puranderdua/ds-button` to confirm it prompts and doesn't overwrite silently. Save the logs to `docs/evidence/clean-install-<date>.md`. Add a manual-trigger GitHub workflow that runs the script.
-
-**Done when:** The script passes end to end; evidence file committed. This is **Gate D**. Open PR `m4-registry` (Purander merges).
-
----
-
-## M5 Real website
-
-### S10: Portfolio site (60 min)
+### S14: Theme architecture (60 min)
 
 **Prompt:**
 
-> S10. Create `apps/site` (Next.js App Router, TS, Tailwind v4, `next/font` for my font mapped to the `--ds` font var). Dependency `"@puranderdua/ui": "0.1.0"` (pinned, from npm; verify `node_modules/@puranderdua/ui` is NOT a symlink). `shadcn init` then add the namespace pointing at the live registry `v0.1.0`, `shadcn add @puranderdua/ds-button` (this also brings ds-foundations → import `styles/ds-foundations.css` once in globals.css; do not also import the package's foundations.css; add `@source` for the package dist). Page: hero Heading (display, as h1), lead Text, caption, a long-form section with h2/h3 + body paragraphs, and a CTA using registry Button primary + secondary, where primary calls `alert("Button clicked")` (client component). ESLint `no-restricted-imports`: ban `Button` from `@puranderdua/ui` in apps/site. Responsive and readable at 320px.
+> S14. Make the token pipeline theme-aware (see "Cross-cutting design").
+>
+> - Move themeable primitives (colour, font family/size/weight/line-height/letter-spacing, space, size, radius, border-width, ring) into `tokens/themes/base/*.json` with unchanged values. Keep only non-themeable values in `tokens/primitives/`. Add shared breakpoints matching Tailwind's defaults; they are not bridged yet.
+> - Add `tokens/resolver.json` (DTCG Resolver 2025.10 shape: `theme` modifier with `base`; `mode` modifier with `light`, `dark` reserved).
+> - `build-tokens.mjs`: for each theme (× mode `light`) build `packages/ui/src/styles/generated/themes/<name>.css` (`:root`, `outputReferences`) and `themes/<name>.json` (`{ vars: { "--ds-…": resolved }, refs: { "--ds-semantic": "--ds-primitive" } }`). Drop the old single `tokens.css`/`tokens.json`, or keep them as Base aliases only if a script still needs them; decide and record.
+> - `build-foundations.mjs`: `foundations.css` = `theme.css` only (bridge + recipes, no values); copy the theme CSS/JSON to `dist/themes/`. Playground and Storybook import `themes/base.css` as well.
+> - `validate-tokens`: every theme defines exactly Base's themeable keys (completeness, D-048); semantics alias primitives only.
+> - `check-tokens`, `test-token-propagation`, `contrast` run per theme.
+> - A unit/script test builds a temporary second theme (scratch copy) and shows it validates, builds and gets checked for contrast.
 
-**You do:** Create the Vercel project with root `apps/site`, then deploy.
-**Done when:** The site is live; the page uses both channels (check the imports); clicking shows the alert.
+**Done when:** `pnpm check` is green. Base resolved values equal today's `tokens.json` (show the diff check). The temporary theme test passes.
 
-### S11: QA and accessibility (45 min)
+### S15: New token categories and semantic roles (60 min)
 
 **Prompt:**
 
-> S11. Add Playwright to apps/site: smoke test against the preview URL (env var): exactly one h1, headings in order, primary Button via keyboard (Tab to focus, focus ring visible, Enter triggers the dialog "Button clicked"; handle it with `page.once('dialog')`), secondary button works, @axe-core/playwright reports no violations, viewport 320px has no horizontal scroll, 200% zoom keeps content readable. Run it, fix issues at the right tier (token → recipe → component → site), and add the test to CI against a local `next start`.
+> S15. Add the themeable categories every new component needs; Base values reproduce today's look or sensible neutral defaults.
+>
+> - **Typography:** `font.family.{heading,body}`; type roles use heading (display, h1–h3) or body; `.ds-type-*` recipes read each role's own family var instead of `font-ds-sans`.
+> - **Elevation:** shadow tokens `elevation.{raised,overlay}` (DTCG `shadow`).
+> - **Motion:** `motion.duration.{fast,normal}`, `motion.easing.{standard,emphasized}` (DTCG `duration`, `cubicBezier`); a recipe or bridge entry so components use them, and `prefers-reduced-motion` respected.
+> - **Shape:** `radius.{control,card,pill}` roles, `border-width.{default,strong}`.
+> - **Density / layout:** extend `space.*` (8, 12, 16, 24 …), `layout.gap.{xs,sm,md,lg,xl}`, `layout.section-padding.{sm,md,lg}`, `layout.gutter`, `layout.container.{sm,md,lg,xl}` widths, `layout.sidebar-width`.
+> - **Colour roles:** `surface.{subtle,raised,inverse,brand}`, `text.{link,link-hover,on-brand}`, `border.{strong,control}`, `input.{bg,border,border-hover,placeholder}`, `feedback.danger.{fg,border,bg}`, `overlay.scrim`.
+> - Move the contrast pairs to `tokens/contrast-pairs.json`. `contrast.mjs` reads it per theme. Add input border 3:1, danger text 4.5:1, link 4.5:1, text on surface.subtle/brand/inverse.
+> - `validate-tokens` learns `shadow`, `duration`, `cubicBezier`.
+> - `theme.css` bridge: `--shadow-ds-*`, `--container-ds-*`, `--spacing-ds-*` (layout), `--radius-ds-*`, `--ease-ds-*`, new colours. Extend `ds-classes` generation and the `cn` tailwind-merge config wherever a new `ds-` class could be misgrouped (check `shadow-ds-*` and `text-ds-link`). Add the new classes to `playground:check`.
 
-**You do:** A 5-minute manual pass with the keyboard only, plus your browser zoom at 200%. Note it in PROGRESS.md.
-**Done when:** Playwright and axe are green, and your manual pass is recorded. This covers **Gates B and C**. Open PR `m5-site` (Purander merges).
+**Done when:** `pnpm check` is green; every contrast pair passes for Base; `playground:check` finds the new classes.
+
+### S16: 0.2.0 release prep (45 min)
+
+**You do first:** approve `radix-ui` (pre-approved here).
+
+**Prompt:**
+
+> S16. Prepare `@puranderdua/ui@0.2.0`.
+>
+> - Button: `Slot` from `radix-ui` instead of `@radix-ui/react-slot`; update `docs/provenance/button.md`; tests stay green.
+> - `package.json` `exports`: `.`, `./foundations.css`, `./themes/*.css`, `./themes/*.json`, `./contrast-pairs.json`, `./package.json`; `files` and `sideEffects` updated.
+> - Package README: install, Tailwind setup = `@import "tailwindcss"; @import "@puranderdua/ui/foundations.css"; @import "@puranderdua/ui/themes/base.css"; @source …`, theme list, live-switching note (JSON maps).
+> - Version 0.2.0. CHANGELOG: breaking (foundations has no values; import a theme), registry retired, new tokens.
+> - `pnpm pack`, then a throwaway Next app in the scratchpad: install the tarball, render Text/Heading/Button with foundations + base theme, `next build`, and check the built CSS has the tokens. Do NOT publish.
+
+**You do:** `cd packages/ui && npm publish --access public`; check `npm view @puranderdua/ui version` shows 0.2.0.
+**Done when:** the tarball app builds and npm shows 0.2.0.
+
+### S17: Showcase shell (60 min)
+
+**Prompt:**
+
+> S17. Start the showcase in `apps/site` (D-045).
+>
+> - Bump `@puranderdua/ui` to `0.2.0` (pinned). `globals.css` imports foundations + `themes/base.css`.
+> - Routes: `/components` (category index with short descriptions) and `/components/[category]` (`generateStaticParams` for typography, layout, forms, actions, display).
+> - A shared `Example` component: live preview, code snippet (static string next to the example; no runtime parsing), npm import line.
+> - Pages: Typography (every Text/Heading variant, `as` vs variant) and Actions (Button variants × sizes × disabled, asChild link). Other categories show a "Coming in 0.x" state.
+> - Site header nav: Home, Components (later Playground).
+> - E2E: axe 0 violations and heading order on `/components` and each built category page; 320px has no horizontal scroll.
+
+**Done when:** site build and e2e are green; record in PROGRESS that the package upgrade path 0.1.0 → 0.2.0 worked (parking-lot item). Push and open PR `m7-foundations` (Purander merges and redeploys the site).
 
 ---
 
-## M6 Docs and release
+## M8 Layout + Actions → 0.3.0
 
-### S12: Storybook, Penpot, release (60 min)
+### S18: Container, Grid, Stack, Cluster (60 min)
 
-**Prompt (Storybook part, cuttable):**
+**Prompt:**
 
-> S12a. Add `apps/docs` Storybook (React + Vite, Tailwind v4 via `@tailwindcss/vite`, imports package foundations.css) with stories: Text (all variants), Heading (all variants, `as` vs variant demo), Button (primary/secondary × sm/md × default/disabled) + a11y addon. Add a `build-storybook` script.
+> S18. In `packages/ui` add layout components (arrow consts, `as` prop with a typed element union, static variant maps, layout tokens only):
+>
+> - `Container`: `size` sm | md | lg | xl | full (container tokens), horizontal gutter.
+> - `Grid`: `cols` 1 | 2 | 3 | 4 | 6 | 12 with responsive static maps (stack on small screens), `minItemWidth` auto-fit mode from a token, `gap`.
+> - `Stack`: vertical, `gap`, `align`.
+> - `Cluster`: wrapping row, `gap`, `justify`, `align`.
+>
+> Tests (element, classes, no dynamic classes, axe), stories, exports.
 
-**You do (Penpot part, cuttable, about 30 min):**
+**Done when:** `pnpm check` is green.
 
-- In hosted Penpot, import `tokens/` JSON in the Tokens panel.
-- Build one board with the type specimen and Button states (default/hover/focus/disabled × 2 variants × 2 sizes).
-- Compare it side by side with the live site and Storybook, and note any differences in PROGRESS.md.
+### S19: Section, Split, Sidebar (60 min)
 
-**Prompt (release part):**
+**Prompt:**
 
-> S12b. Write the root README (what this is, 4 tiers diagram, install via npm, install via registry, Tailwind setup, links), `CHANGELOG.md` for 0.1.0, release notes in `docs/releases/v0.1.0.md` (scope, evidence links, known gaps), and a retro section in PROGRESS.md (time per session, what broke, next slice: Release 1 = colors + light/dark theming).
+> S19. Add `Section` (full-width band: `tone` canvas | subtle | inverse | brand, `padding` sm | md | lg, optional inner Container size; text colours follow the tone), `Split` (two columns; `ratio` 1:1 | 1:2 | 2:1; `reverse`; stacks under `md`; `align`) and `Sidebar` (aside + content; `side` start | end; width token; collapses under a breakpoint; content keeps a minimum width). Tests, stories, exports. Add contrast pairs for text on each Section tone if not already covered.
 
-**You do:** Review and merge PR `m6-release`, run `git tag v0.1.0 && git push --tags`, and create a GitHub Release.
-**Done when:** Every Goal item at the top of this file is checked.
+**Done when:** `pnpm check` is green; stories show each layout at 320px and desktop.
+
+### S20: Link + 0.3.0 prep (50 min)
+
+**You do first:** approve `lucide-react` (pre-approved here).
+
+**Prompt:**
+
+> S20. Add `Link`: `variant` inline | standalone, `asChild` (for `next/link`, via `radix-ui` Slot), `external` adds `target="_blank" rel="noopener noreferrer"`, a lucide `ExternalLink` icon (aria-hidden) and visually hidden "(opens in a new tab)"; link colours from `text.link*`; focus ring recipe; underline rules (inline always underlined). Tests (asChild, external, keyboard, axe), story, export. Then release prep: version 0.3.0, CHANGELOG, README component list, tarball check. Do NOT publish.
+
+**You do:** `npm publish`; check 0.3.0.
+**Done when:** tests are green and npm shows 0.3.0.
+
+### S21: Showcase Layout + Actions (45 min)
+
+**Prompt:**
+
+> S21. Site → `@puranderdua/ui@0.3.0`. Build the Layout page (each layout with a visible demo frame and code) and add Link (inline, standalone, external, with `next/link` via asChild) to the Actions page. Use package layout components for the site's own page structure where they fit. E2E: layout page has no horizontal scroll at 320px; Link is reachable and activates by keyboard; axe clean.
+
+**Done when:** site build and e2e are green. Push and open PR `m8-layout`.
 
 ---
 
-## After Release 0 (from blueprint section 5)
+## M9 Forms → 0.4.0
 
-| Release | Adds                                           |
-| ------- | ---------------------------------------------- |
-| 1       | Full color palette, surfaces, light/dark theme |
-| 2       | Spacing/layout primitives, Stack, Container    |
-| 3       | IconButton, Link                               |
-| 4       | Forms                                          |
-| 5       | Navigation, overlays, feedback                 |
+### S22: Client boundary + Label, Field, Input (60 min)
 
-Each release follows the same session pattern: tokens → recipes → components → registry item → site.
+**Prompt:**
+
+> S22. First, the client boundary: make the package build keep `"use client"` on client components (tsup multiple entries or a directive-preserving esbuild plugin; research and record the choice). Prove it with a throwaway Next app (tarball): a Server Component page imports Text (stays server) and a client component (works). Then add `Label` (wraps Text label role), `Field` (label + control + description + error; ids via `useId`, `aria-describedby`, `aria-invalid`, `required` marker) and `Input` (sizes sm | md from control tokens, `input.*` tokens, invalid state from `feedback.danger`, disabled from `disabled.*`, focus ring). Tests (labels associated, description/error announced, axe), stories, exports.
+
+**Done when:** `pnpm check` is green and the RSC tarball check passes.
+
+### S23: Checkbox + RadioGroup (60 min)
+
+**Prompt:**
+
+> S23. Adapt shadcn new-york-v4 `checkbox` and `radio-group` (import from `radix-ui`, icons from `lucide-react`) into `packages/ui`; provenance docs (`docs/provenance/checkbox.md`, `radio-group.md`) with source URL, date, license and every change. Token-only classes (control border 3:1, checked fill from action.primary, focus ring, disabled, invalid). `"use client"`. Tests: Space toggles, arrow keys move in the group, labels via Field/Label, disabled, axe. Stories, exports.
+
+**Done when:** `pnpm check` is green.
+
+### S24: Select (60 min)
+
+**Prompt:**
+
+> S24. Adapt shadcn new-york-v4 `select` (Trigger, Value, Content, Item, Group, Label, Separator, scroll buttons) on `radix-ui` with lucide icons; provenance doc. Sizes sm | md like Input; `SelectContent` accepts `container` (passed to the Radix Portal) so it renders inside a themed scope; content uses `surface.raised` + `elevation.overlay`. Tests: open with keyboard, arrow/typeahead selection, Escape closes, label association, axe. Stories, exports.
+
+**Done when:** `pnpm check` is green.
+
+### S25: 0.4.0 + showcase Forms (60 min)
+
+**Prompt:**
+
+> S25. Release prep 0.4.0 (CHANGELOG, README, tarball RSC check). Do NOT publish. **After Purander publishes:** site → 0.4.0; Forms page: each control's states, plus a demo form (Field + Input/Select/Checkbox/RadioGroup) with client-side validation messages. E2E: keyboard operation of each control, error messages announced (`aria-describedby`), axe clean.
+
+**You do:** `npm publish` 0.4.0 partway through the session (the AI pauses for it).
+**Done when:** npm shows 0.4.0; site build and e2e are green. Push and open PR `m9-forms`.
+
+---
+
+## M10 Display → 0.5.0
+
+### S26: Card + Tabs (60 min)
+
+**Prompt:**
+
+> S26. `Card` parts: Card (`variant` outline | raised, using `radius.card`, `elevation.raised`, `surface.raised`), CardMedia, CardHeader, CardTitle (Heading underneath, `as` configurable), CardDescription, CardContent, CardFooter. `Tabs`: adapt shadcn new-york-v4 `tabs` on `radix-ui` (List, Trigger, Content; provenance doc; `activationMode` passthrough); token-only classes. Tests (roving focus, arrow keys, Home/End, axe), stories, exports.
+
+**Done when:** `pnpm check` is green.
+
+### S27: Banner (60 min)
+
+**Prompt:**
+
+> S27. `Banner` (full-screen hero):
+>
+> - `height` screen (100svh) | tall; `align` start | center.
+> - `tone` canvas | brand | inverse | gradient (gradient recipe built from brand tokens).
+> - `media` slot for any `<img>`/`next/image` (object-cover) with an `overlay.scrim` layer whose strength keeps text readable; document the contrast assumption.
+> - `video` (src + poster): muted, loop, playsInline. A small client part shows only the poster under `prefers-reduced-motion` and offers a visible pause/play button (WCAG 2.2.2).
+> - Content slot for Heading/Text/Button.
+>
+> Tests (structure, reduced-motion branch with a mocked `matchMedia`, pause button, axe), stories, exports.
+
+**Done when:** `pnpm check` is green.
+
+### S28: 0.5.0 + showcase Display + hardening (60 min)
+
+**Prompt:**
+
+> S28. Release prep 0.5.0. Do NOT publish. **After Purander publishes:** site → 0.5.0; Display page (Card grid, Tabs, Banner variants including video with a small committed or remote sample). Polish the `/components` index (counts, links). Extend `clean-install.sh` to render one form and one display component. E2E/axe across all showcase pages; 320px and 200% zoom checks on Display.
+
+**You do:** `npm publish` 0.5.0 partway through the session.
+**Done when:** npm shows 0.5.0; site build and e2e are green; clean-install passes. Push and open PR `m10-display`.
+
+---
+
+## M11 Themes → 0.6.0
+
+### S29: Theme direction (60 min)
+
+**Prompt:**
+
+> S29. Propose Corporate, Nature and Quirky (D-053). For each, write `tokens/themes/<name>/*.json` with every themeable key:
+>
+> - Palettes as OKLCH-built 50–950 scales, converted to hex.
+> - Heading and body fonts (free Google Fonts).
+> - Radius, border widths, shadows, density (space, control sizes), motion.
+>
+> Starting directions:
+>
+> - **Corporate:** navy/blue, IBM Plex Sans, small radius, crisp shadows, compact.
+> - **Nature:** forest/moss with earth neutrals, Fraunces headings + Nunito Sans body, soft radius, diffuse shadows, relaxed spacing, gentle motion.
+> - **Quirky:** violet + coral accent, Bricolage Grotesque, pill/large radius, offset hard shadows, bouncy easing.
+>
+> Add to `resolver.json`. Storybook: a theme toolbar (`globalTypes` + a decorator that applies `themes/<name>.json` as inline vars on the story root; Storybook loads the theme fonts) and a "Theme specimen" story with every category. Write `docs/themes.md` (rationale, fonts and how consumers load them, contrast table). Contrast must pass for all four themes.
+
+**You do:** review in Storybook (local), then approve or list adjustments in PROGRESS.md.
+**Done when:** `pnpm check` is green for four themes; your feedback is recorded.
+
+### S30: Corporate + Nature final (50 min)
+
+**Prompt:**
+
+> S30. Apply Purander's feedback to Corporate and Nature. Re-run contrast; check every component story in both themes (a11y addon); update `docs/themes.md` with the final values and font-loading snippets (`next/font`, plain `<link>`).
+
+**Done when:** `pnpm check` is green; both themes are signed off in PROGRESS.
+
+### S31: Quirky + theme QA (50 min)
+
+**Prompt:**
+
+> S31. Finalise Quirky from feedback. Do a visual and a11y pass of every story in all four themes; fix at the right tier (theme token → semantic → recipe → component). Record any component that needed a change and why.
+
+**Done when:** `pnpm check` is green; all four themes are signed off.
+
+### S32: 0.6.0 + site theme switcher (60 min)
+
+**Prompt:**
+
+> S32. Release prep 0.6.0 (CHANGELOG, README theme section, tarball check importing a non-Base theme). Do NOT publish. **After Purander publishes:**
+>
+> - Site → 0.6.0. A header theme switcher (client): `import()` the chosen `@puranderdua/ui/themes/<name>.json` (one chunk per theme; only the active one loads) and apply its vars on `<html>`.
+> - Remember the choice and cache the map in localStorage. An inline `<head>` script applies the cached map before paint (no flash).
+> - `next/font` for every theme font, `preload: false` for non-default ones, mapped through the theme's font-family vars.
+> - E2E: axe 0 violations on every showcase page × 4 themes; switching updates a known token's computed value; reload keeps the theme.
+
+**You do:** `npm publish` 0.6.0 partway through the session.
+**Done when:** npm shows 0.6.0; site e2e is green across themes. Push and open PR `m11-themes`.
+
+---
+
+## M12 Theme playground (site only)
+
+### S33: Playground engine (60 min)
+
+**You do first:** approve `culori` and `vitest` for `apps/site` (pre-approved here).
+
+**Prompt:**
+
+> S33. Pure TypeScript engine in `apps/site/src/playground/` (no UI yet):
+>
+> - State = starting theme (one of the four JSON maps) + knobs + per-token overrides.
+> - Knobs: brand colour, accent colour, neutral tint/chroma, heading font, body font (from a curated list of loaded fonts), radius scale, border width, shadow strength, density, motion speed.
+> - Generators: `culori` OKLCH ramps → hex scales; density and radius scale the dimension primitives; shadow strength scales alpha/blur.
+> - Re-resolve semantics through the theme JSON's `refs`; overrides win.
+> - Outputs: resolved var map; a DTCG theme document shaped like `tokens/themes/<name>/`; a CSS string shaped like `themes/<name>.css`.
+> - Contrast: evaluate `@puranderdua/ui/contrast-pairs.json` on the resolved map.
+>
+> Vitest unit tests: ramps are monotonic in lightness, an unchanged state equals the starting theme, overrides win, contrast results match `scripts/contrast.mjs` for Base.
+
+**Done when:** site unit tests and `pnpm check` are green.
+
+### S34: Playground UI (60 min)
+
+**Prompt:**
+
+> S34. `/playground` page (client):
+>
+> - Knob panel built from package form components.
+> - Advanced panel listing every semantic token grouped by category, with colour/dimension inputs.
+> - Preview = a scope element with the resolved vars inline, rendering the showcase examples. Select gets `container` so popovers stay themed.
+> - Contrast badges per pair (pass/fail with ratio).
+> - Start-from-theme picker, reset, and localStorage persistence of the last state.
+> - Every change updates the preview without a reload.
+>
+> E2E: changing the brand colour changes the preview's primary button background; reload keeps the edit; axe clean on the page chrome.
+
+**Done when:** site e2e is green.
+
+### S35: Export + Release 1 wrap-up (60 min)
+
+**Prompt:**
+
+> S35. Export: download/copy DTCG JSON and CSS from the playground. Round-trip test: write an exported theme to a scratch copy of `tokens/themes/custom/`, add it to a scratch resolver, and confirm `build-tokens`, `validate-tokens` (completeness) and contrast pass. Docs: root README (themes, showcase, playground links), CHANGELOG, `docs/releases/v1.md` (scope, evidence, known gaps), and a Release 1 retro in PROGRESS.md (time per session, what broke, next slice: dark mode).
+
+**You do:** review and merge PR `m12-playground`, redeploy the site, and create a GitHub Release for Release 1 (on the `v0.6.0` tag).
+**Done when:** every Goal item at the top of this file is checked.
+
+---
+
+## After Release 1
+
+| Release | Adds                                                                    |
+| ------- | ----------------------------------------------------------------------- |
+| 2       | Dark mode per theme (`mode: dark` sources; switcher gets a mode toggle) |
+| 3       | Textarea, Switch, Dialog, Toast, Tooltip                                |
+| 4       | Navigation (Navbar, Breadcrumb, Pagination), playground share URL       |

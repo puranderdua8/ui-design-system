@@ -8,6 +8,4 @@ allowBuilds:
   unrs-resolver: false
   style-dictionary: false
 minimumReleaseAgeExclude:
-  - "@shadcn/registry@0.2.0"
-  - shadcn@4.22.0
   - "@puranderdua/ui@0.1.0"

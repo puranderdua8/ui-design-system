@@ -3,5 +3,8 @@
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm build-storybook",
-  "outputDirectory": "storybook-static"
+  "outputDirectory": "storybook-static",
+  "git": {
+    "deploymentEnabled": false
+  }
 }

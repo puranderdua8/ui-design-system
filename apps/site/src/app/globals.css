@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../styles/ds-foundations.css";
+@import "@puranderdua/ui/foundations.css";
 @source "../../node_modules/@puranderdua/ui/dist";
 
 /* Map the next/font Inter variable onto the design-system font token. */
