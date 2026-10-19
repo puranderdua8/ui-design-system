@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+Breaking (0.x minor), both only in 0.3.0 for a few days:
+
+- `Split`: the `reverse` prop is removed. Reordering columns visually breaks the keyboard focus order; reorder the children instead.
+- `Sidebar`: the `collapseBelow` prop is removed. `Split` and `Sidebar` now wrap by the width of their container instead of the viewport, so they also stack correctly inside a narrow card, sidebar or dialog. Put horizontal padding on an inner element of a `Split` column so the 1:2 and 2:1 ratios stay exact.
+
+Changed:
+
+- `Grid`, `Stack` and `Cluster` set `role="list"` when rendered as `ul` or `ol` (Safari + VoiceOver drops list semantics after the Tailwind reset).
+- `Button` and `Link` use the `.ds-transition` recipe, so they respect `prefers-reduced-motion`; `Button` uses `.ds-border`.
+- `Link external` keeps a caller's `rel` tokens (for example `nofollow`) and adds `noopener noreferrer`.
+
 ## 0.3.0 — 2026-10-19
 
 Added:
@@ -9,7 +22,7 @@ Added:
 - `Link`: `variant` inline | standalone, `asChild`, `external` (new tab with icon and hidden hint), link colours from `text.link*`.
 - Dependency `lucide-react` (icons).
 
-No breaking changes.
+No breaking changes to the components from 0.2.0. Custom themes written against 0.2.0 must add the three `layout.item-min.*` tokens (`validate-tokens` enforces this for themes in this repo).
 
 ## 0.2.0 — 2026-10-19
 

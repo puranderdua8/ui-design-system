@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
 
 export const linkVariants = cva(
-  "rounded-ds-control text-ds-link hover:text-ds-link-hover transition-colors ds-focus-ring",
+  "rounded-ds-control text-ds-link hover:text-ds-link-hover ds-transition ds-focus-ring",
   {
     variants: {
       variant: {
@@ -37,14 +37,22 @@ export const Link = ({
   ...props
 }: LinkProps) => {
   const Comp = asChild ? Slot.Root : "a";
-  const externalProps = external
-    ? { target: "_blank", rel: "noopener noreferrer" }
-    : undefined;
+  // Keep a caller's rel tokens (e.g. nofollow) next to the ones a new tab needs.
+  const rel = external
+    ? [
+        ...new Set([
+          ...(props.rel?.split(/\s+/).filter(Boolean) ?? []),
+          "noopener",
+          "noreferrer",
+        ]),
+      ].join(" ")
+    : props.rel;
 
   return (
     <Comp
       {...(props as object)}
-      {...externalProps}
+      {...(external ? { target: "_blank" } : undefined)}
+      rel={rel}
       data-slot="link"
       data-variant={variant ?? "inline"}
       className={cn(linkVariants({ variant }), className)}
@@ -53,11 +61,12 @@ export const Link = ({
       <Slot.Slottable>{children}</Slot.Slottable>
       {external ? (
         <>
+          {/* The space sits before the icon so the underline does not trail past it. */}{" "}
           <ExternalLink
             aria-hidden="true"
             focusable="false"
-            className="ml-1 inline-block size-4 align-text-bottom"
-          />{" "}
+            className="inline-block size-4 align-text-bottom"
+          />
           <span className="sr-only">(opens in a new tab)</span>
         </>
       ) : null}

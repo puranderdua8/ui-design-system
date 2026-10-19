@@ -50,14 +50,14 @@ export const Hero = () => (
 - `Button`: `variant` primary | secondary; `size` sm | md; `asChild`; `type="button"` by default.
 - `Link`: `variant` inline (always underlined) | standalone (underlined on hover and focus); `asChild` (for `next/link`); `external` adds `target="_blank"`, `rel="noopener noreferrer"`, an icon and a hidden "(opens in a new tab)".
 
-Layout (0.3.0), all with a typed `as`:
+Layout (0.3.0), all with a typed `as`. `Grid`, `Stack` and `Cluster` add `role="list"` to a `ul` or `ol`:
 
 - `Container`: `size` sm to xl | full; `gutter`.
 - `Grid`: `cols` (responsive) or `minItemWidth` (auto-fit); `gap`.
 - `Stack`: vertical flow with `gap`, `align`. `Cluster`: wrapping row with `gap`, `justify`, `align`.
 - `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; optional inner `Container`.
-- `Split`: two columns 1:1, 1:2 or 2:1; `reverse`; stacks below `md`.
-- `Sidebar`: `sidebar` slot, `side`, `collapseBelow`.
+- `Split`: two columns 1:1, 1:2 or 2:1; stacks when its container is too narrow (not the viewport). Put padding on an inner element so the ratio stays exact.
+- `Sidebar`: `sidebar` slot, `side`; the content wraps below the aside when it would be narrower than half the row.
 
 Type a `ref` from the same element you pass to `as`, and prefer callback refs.
 

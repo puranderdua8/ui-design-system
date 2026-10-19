@@ -5,12 +5,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
 import { Section, sectionPaddingClasses, sectionToneClasses } from "./section";
-import {
-  Split,
-  splitAlignClasses,
-  splitRatioClasses,
-  splitReverseClasses,
-} from "./split";
+import { Split, splitAlignClasses, splitRatioClasses } from "./split";
 import {
   Sidebar,
   sidebarAsideClasses,
@@ -45,6 +40,10 @@ const refChecks = () => {
   <Section tone="danger" />;
   // @ts-expect-error `ratio` is a closed union
   <Split ratio="1:3" />;
+  // @ts-expect-error reordering is visual only and breaks focus order
+  <Split reverse />;
+  // @ts-expect-error the layout follows the container width instead
+  <Sidebar sidebar="x" collapseBelow="lg" />;
   // @ts-expect-error the sidebar slot is required
   <Sidebar />;
 };
@@ -121,36 +120,24 @@ describe("Section", () => {
 });
 
 describe("Split", () => {
-  it("is a one-column grid under md with a gap and stretch", () => {
+  it("wraps by its own width, with a gap and stretch", () => {
     render(<Split>x</Split>);
     const cls = screen.getByText("x").className;
-    expect(cls).toContain("grid");
-    expect(cls).toContain("grid-cols-1");
-    expect(cls).toContain("md:grid-cols-2");
+    expect(cls).toContain("ds-split");
     expect(cls).toContain("gap-ds-gap-lg");
     expect(cls).toContain("items-stretch");
+    expect(cls).not.toMatch(/(^| )(sm|md|lg):/);
   });
 
-  it("1:2 and 2:1 span the wider child over two of three tracks", () => {
+  it("1:2 and 2:1 add their ratio recipe", () => {
     render(
       <>
         <Split ratio="1:2">a</Split>
         <Split ratio="2:1">b</Split>
       </>,
     );
-    expect(screen.getByText("a").className).toContain(
-      "md:[&>:last-child]:col-span-2",
-    );
-    expect(screen.getByText("b").className).toContain(
-      "md:[&>:first-child]:col-span-2",
-    );
-  });
-
-  it("reverse only reorders from md up", () => {
-    render(<Split reverse>x</Split>);
-    const cls = screen.getByText("x").className;
-    expect(cls).toContain("md:[&>:first-child]:order-2");
-    expect(cls).toContain("md:[&>:last-child]:order-1");
+    expect(screen.getByText("a").className).toContain("ds-split-1-2");
+    expect(screen.getByText("b").className).toContain("ds-split-2-1");
   });
 
   it("align and as", () => {
@@ -166,35 +153,30 @@ describe("Split", () => {
 });
 
 describe("Sidebar", () => {
-  it("renders aside then content with the sidebar width token", () => {
+  it("renders aside then content on the sidebar width token", () => {
     render(<Sidebar sidebar={<span>side</span>}>main</Sidebar>);
     const aside = screen.getByText("side").parentElement!;
     const content = screen.getByText("main");
     expect(aside.tagName).toBe("ASIDE");
-    expect(aside.className).toContain("md:w-ds-sidebar");
-    expect(aside.className).toContain("md:shrink-0");
+    expect(aside.className).toContain("basis-ds-sidebar");
     expect(aside.nextElementSibling).toBe(content);
-    expect(content.className).toContain("min-w-0");
-    expect(content.className).toContain("md:min-w-1/2");
+    expect(content.className).toContain("min-w-1/2");
+    expect(content.className).toContain("basis-0");
   });
 
-  it("stacks below the breakpoint and is a row from it", () => {
-    render(<Sidebar sidebar="s">x</Sidebar>);
-    const root = screen.getByText("x").parentElement!;
-    expect(root.className).toContain("flex-col");
-    expect(root.className).toContain("md:flex-row");
+  it("wraps by its own width; side=end reverses the row", () => {
+    const { rerender } = render(<Sidebar sidebar="s">x</Sidebar>);
+    let root = screen.getByText("x").parentElement!;
+    expect(root.className).toContain("flex-wrap");
     expect(root.className).not.toContain("flex-row-reverse");
-  });
-
-  it("side=end reverses the row, collapseBelow=lg moves the breakpoint", () => {
-    render(
-      <Sidebar sidebar="s" side="end" collapseBelow="lg">
+    expect(root.className).not.toMatch(/(^| )(sm|md|lg):/);
+    rerender(
+      <Sidebar sidebar="s" side="end">
         x
       </Sidebar>,
     );
-    const root = screen.getByText("x").parentElement!;
-    expect(root.className).toContain("lg:flex-row-reverse");
-    expect(root.className).not.toContain("md:");
+    root = screen.getByText("x").parentElement!;
+    expect(root.className).toContain("flex-row-reverse");
   });
 
   it("sidebarAs swaps the aside element", () => {
@@ -213,10 +195,9 @@ describe("static class maps", () => {
     ...Object.values(sectionPaddingClasses),
     ...Object.values(splitRatioClasses),
     ...Object.values(splitAlignClasses),
-    splitReverseClasses,
-    ...Object.values(sidebarSideClasses).flatMap((m) => Object.values(m)),
-    ...Object.values(sidebarAsideClasses),
-    ...Object.values(sidebarContentClasses),
+    ...Object.values(sidebarSideClasses),
+    sidebarAsideClasses,
+    sidebarContentClasses,
   ];
 
   it("contain only literal class names (no template placeholders)", () => {
@@ -227,6 +208,8 @@ describe("static class maps", () => {
     for (const t of ["sm", "md", "lg"])
       expect(themeCss).toContain(`--spacing-ds-section-${t}:`);
     expect(themeCss).toContain("--spacing-ds-sidebar:");
+    for (const r of [".ds-split ", ".ds-split-1-2 ", ".ds-split-2-1 "])
+      expect(themeCss).toContain(r);
     for (const c of [
       "--color-ds-canvas:",
       "--color-ds-surface-subtle:",
@@ -244,7 +227,7 @@ describe("a11y", () => {
     const { container } = render(
       <main>
         <Section tone="inverse" container="lg" aria-label="intro">
-          <Split ratio="1:2" reverse>
+          <Split ratio="1:2">
             <p>one</p>
             <p>two</p>
           </Split>

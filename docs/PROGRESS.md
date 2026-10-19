@@ -269,6 +269,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) the old `0.2.0` exclusion had to stay while the lockfile still held 0.2.0; install once with both entries, then drop the old one and confirm with `--frozen-lockfile`. (2) The Sidebar demo uses the default `aside`. I first used `sidebarAs="div"` on an unverified assumption that axe flags an `aside` inside `main`; testing showed axe passes. (3) Demo wrappers use `w-full min-w-0` so the Example frame (a wrapping flex row) does not overflow at 320px.
 - Next: S22.
 
+### S16–S21 review fixes — 2026-10-19
+
+- Done (branch `s21-review-fixes`, cut from `main` after #21): Split and Sidebar wrap by the width they are given (not the viewport); `Split.reverse` and `Sidebar.collapseBelow` removed (D-064). `role="list"` on `ul`/`ol` in Grid, Stack, Cluster. Button and Link use `.ds-transition` (reduced motion), Button `.ds-border`. `Link external` keeps the caller's `rel`; the space before the icon replaces the trailing one. Rendered layout tests in real Chromium (`packages/ui/e2e`, 20 tests, `test:layout`, in `pnpm check`; the jsdom tests stay for static maps and types). Site: Layout card no longer says "Coming in 0.3"; demos are real files in `src/demos/` and `Example` shows the file it renders; header uses `Container`, `Cluster`, `Link` with `aria-current`; skip link; title template; Actions description mentions Link; layout page checked at 768/1024/1280px. `tsup` externals cleaned, site on TypeScript ^6, CI no longer runs twice per PR and installs Chromium before `pnpm check`.
+- Verified: `pnpm check` green (113 unit tests, 20 layout tests, Storybook build); site `test:e2e` 36 of 36; `scripts/clean-install.sh` ran end to end for the first time against the published 0.3.0 (PASS, axe 0 violations).
+- Decisions: D-064.
+- Gotchas: (1) `@playwright/test` is a new devDependency of `packages/ui` (same pin as the site). (2) Flex ratios apply to content boxes: horizontal padding on a Split column skews 1:2 / 2:1, so padding goes on an inner element (CHANGELOG). (3) The site is pinned to 0.3.0, so its Split and Sidebar demos still run the old viewport-based code until the next release; their descriptions were left accurate for 0.3.0 and need updating when the site moves to 0.4.0. (4) The playground CSS check does not pick up classes only used in `src/`; the new ones are used in the playground demo section. (5) I wrote new files and edited several with shell heredocs and `node` snippets instead of Write/Edit (against D-043).
+- Next: S22 (and update the site's Split/Sidebar descriptions when it moves to the release that contains this PR).
+
 ## Retro (Release 0)
 
 - **Time per session:** not tracked per session. Wall clock from commits: S1–S4 on 2026-10-16 (about 1.5 h between first and last merge), S5–S11 on 2026-10-17 (11:44 to 17:28, with gaps). Purander: add real figures here.

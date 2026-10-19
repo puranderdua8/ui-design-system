@@ -13,7 +13,7 @@
     "build": "pnpm -r --if-present build",
     "tokens:build": "node scripts/build-tokens.mjs",
     "tokens:check": "node scripts/check-tokens.mjs",
-    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check && pnpm --filter docs build-storybook"
+    "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @puranderdua/ui playground:check && pnpm --filter @puranderdua/ui test:layout && pnpm --filter docs build-storybook"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

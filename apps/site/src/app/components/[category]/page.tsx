@@ -17,7 +17,7 @@ export const generateMetadata = async ({
 }: PageProps): Promise<Metadata> => {
   const { category } = await params;
   const found = categories.find((c) => c.slug === category);
-  return { title: `${found?.title ?? "Components"} — Purander Dua` };
+  return { title: found?.title ?? "Components" };
 };
 
 const CategoryPage = async ({ params }: PageProps) => {
@@ -27,7 +27,7 @@ const CategoryPage = async ({ params }: PageProps) => {
   const Content = categoryContent[found.slug];
 
   return (
-    <main className="py-12">
+    <main id="main" tabIndex={-1} className="py-ds-section-sm">
       <Container size="lg">
         <Stack gap="lg">
           <Heading as="h1" variant="h1">

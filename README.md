@@ -55,7 +55,7 @@ Release 1 ([plan](docs/PLAN.md)):
 3. Three themes (Corporate, Nature, Quirky) alongside the default Base. A consumer ships one theme.
 4. A theme playground with live preview and DTCG/CSS export.
 
-Releases go out as npm minors 0.2.0 → 0.6.0.
+Releases go out as npm minors 0.2.0 → 0.6.0; 0.3.0 is the latest (see [CHANGELOG](CHANGELOG.md)).
 
 ## Develop
 

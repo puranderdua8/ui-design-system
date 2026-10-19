@@ -1,6 +1,6 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
-import { gapClasses, type LayoutGap } from "@/lib/layout";
+import { gapClasses, listRole, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
 export type GridCols = 1 | 2 | 3 | 4 | 6 | 12;
@@ -44,6 +44,7 @@ export const Grid = ({
   const Comp: React.ElementType = as;
   return (
     <Comp
+      role={listRole(as)}
       {...(props as object)}
       data-slot="grid"
       className={cn(

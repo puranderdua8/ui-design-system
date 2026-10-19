@@ -1,17 +1,41 @@
-import Link from "next/link";
+"use client";
 
-export const SiteHeader = () => (
-  <header className="border-b border-ds-border">
-    <nav
-      aria-label="Main"
-      className="mx-auto flex w-full max-w-4xl items-center gap-6 px-4 py-4 sm:px-6"
-    >
-      <Link href="/" className="ds-type-label ds-focus-ring">
-        Home
-      </Link>
-      <Link href="/components" className="ds-type-label ds-focus-ring">
-        Components
-      </Link>
-    </nav>
-  </header>
-);
+import NextLink from "next/link";
+import { usePathname } from "next/navigation";
+import { Cluster, Container, Link } from "@puranderdua/ui";
+
+const items = [
+  { href: "/", label: "Home" },
+  { href: "/components", label: "Components" },
+] as const;
+
+const isCurrent = (pathname: string, href: string) =>
+  href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+export const SiteHeader = () => {
+  const pathname = usePathname();
+  return (
+    <header className="border-b border-ds-border py-ds-gap-md">
+      <Container size="lg">
+        <nav aria-label="Main">
+          <Cluster as="ul" gap="lg">
+            {items.map(({ href, label }) => (
+              <li key={href}>
+                <Link asChild variant="standalone">
+                  <NextLink
+                    href={href}
+                    aria-current={
+                      isCurrent(pathname, href) ? "page" : undefined
+                    }
+                  >
+                    {label}
+                  </NextLink>
+                </Link>
+              </li>
+            ))}
+          </Cluster>
+        </nav>
+      </Container>
+    </header>
+  );
+};

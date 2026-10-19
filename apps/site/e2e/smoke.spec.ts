@@ -19,10 +19,14 @@ test("has exactly one h1 and headings in order", async ({ page }) => {
 
 test("primary button works from the keyboard", async ({ page }) => {
   const primary = page.getByRole("button", { name: "Get in touch" });
-  // Two header links (Home, Components) come first in the tab order.
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
+  // The skip link and the header links come first in the tab order.
+  for (
+    let i = 0;
+    i < 10 && !(await primary.evaluate((el) => el === document.activeElement));
+    i++
+  ) {
+    await page.keyboard.press("Tab");
+  }
   await expect(primary).toBeFocused();
 
   const ring = await primary.evaluate((el) => {

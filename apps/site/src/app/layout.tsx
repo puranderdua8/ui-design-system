@@ -11,7 +11,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Purander Dua — Design systems",
+  title: {
+    default: "Purander Dua — Design systems",
+    template: "%s — Purander Dua",
+  },
   description:
     "Portfolio of Purander Dua, built with its own token-driven design system.",
 };
@@ -19,6 +22,12 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <html lang="en" className={inter.variable}>
     <body className="min-h-screen">
+      <a
+        href="#main"
+        className="sr-only ds-focus-ring text-ds-link focus:not-sr-only focus:absolute focus:top-ds-gap-sm focus:left-ds-gutter focus:z-10 focus:bg-ds-canvas focus:px-ds-gap-md focus:py-ds-gap-sm"
+      >
+        Skip to content
+      </a>
       <SiteHeader />
       {children}
     </body>

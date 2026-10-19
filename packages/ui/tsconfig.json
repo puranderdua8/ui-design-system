@@ -3,5 +3,12 @@
   "compilerOptions": {
     "paths": { "@/*": ["./src/*"] }
   },
-  "include": ["src", "playground", "test", "vitest.config.ts"]
+  "include": [
+    "src",
+    "playground",
+    "test",
+    "vitest.config.ts",
+    "e2e/fixture",
+    "e2e/*.spec.ts"
+  ]
 }
