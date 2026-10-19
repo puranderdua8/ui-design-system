@@ -1,11 +1,10 @@
 # ui-design-system
 
-A small, token-driven design system: **Text**, **Heading** and **Button** for React 19 and Tailwind CSS v4. One token source, two ways to consume it.
+A small, token-driven design system: **Text**, **Heading** and **Button** for React 19 and Tailwind CSS v4, distributed as one npm package. Release 1 is in progress (see [Roadmap](#roadmap)).
 
 - Site: https://ui-design-system-beta.vercel.app/
 - Storybook: https://ui-design-system-storybook-mu.vercel.app/
 - npm package: [`@puranderdua/ui`](https://www.npmjs.com/package/@puranderdua/ui)
-- shadcn registry (namespace `@puranderdua`): https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`)
 
 ## How it is built: four tiers
 
@@ -41,33 +40,32 @@ import { Button, Heading, Text } from "@puranderdua/ui";
 
 Full usage notes: [`packages/ui/README.md`](packages/ui/README.md).
 
-## Install via the shadcn registry
+From 0.2.0, `foundations.css` carries no token values: you also import one theme, e.g. `@import "@puranderdua/ui/themes/base.css";` (D-056).
 
-Add the registry to `components.json`:
+## shadcn registry (retired)
 
-```json
-{
-  "registries": {
-    "@puranderdua": "https://ui-design-system-registry.vercel.app/r/v0.1.0/{name}.json"
-  }
-}
-```
-
-```bash
-npx shadcn@4.22.0 add @puranderdua/ds-typography @puranderdua/ds-button
-```
-
-This copies the source into your project (and `ds-foundations`, `ds-utils`, `ds-types` as dependencies). Details: [`docs/registry.md`](docs/registry.md).
+Release 0 also shipped a shadcn registry. Release 1 retires it: the npm package is the only source of truth for components (D-055). The registry files leave the repo in S13.
 
 ## Tailwind setup
 
-Tailwind v4 only, configured through CSS (`@theme`); there is no `tailwind.config.js`. Components use static class names and semantic tokens, so Tailwind must scan the package (npm route) or your copied files (registry route). See [`docs/styling-rules.md`](docs/styling-rules.md).
+Tailwind v4 only, configured through CSS (`@theme`); there is no `tailwind.config.js`. Components use static class names and semantic tokens, so Tailwind must scan the package (`@source`). See [`docs/styling-rules.md`](docs/styling-rules.md).
+
+## Roadmap
+
+Release 1 ([plan](docs/PLAN.md)):
+
+1. A single npm channel.
+2. A component showcase by category on the site: Typography, Layout, Forms, Actions, Display.
+3. Three themes (Corporate, Nature, Quirky) alongside the default Base. A consumer ships one theme.
+4. A theme playground with live preview and DTCG/CSS export.
+
+Releases go out as npm minors 0.2.0 → 0.6.0.
 
 ## Develop
 
 ```bash
 pnpm install
-pnpm check                          # lint, tokens, types, tests, builds, registry, Storybook
+pnpm check                          # lint, tokens, types, tests, builds, Storybook
 pnpm --filter docs storybook        # Storybook on :6006
 ```
 
@@ -75,13 +73,13 @@ pnpm --filter docs storybook        # Storybook on :6006
 | --------------- | ------------------------------------------ |
 | `tokens/`       | DTCG source                                |
 | `packages/ui/`  | the npm package                            |
-| `apps/registry` | generated shadcn registry (Vercel)         |
-| `apps/site`     | portfolio site (consumer of both routes)   |
+| `apps/registry` | retired shadcn registry (removed in S13)   |
+| `apps/site`     | portfolio site, showcase and playground    |
 | `apps/docs`     | Storybook                                  |
 | `docs/`         | plan, progress, decisions, evidence, notes |
 
 ## Links
 
-[Progress and retro](docs/PROGRESS.md) · [Decisions](docs/DECISIONS.md) · [Changelog](CHANGELOG.md) · [v0.1.0 release notes](docs/releases/v0.1.0.md) · [Clean-install evidence](docs/evidence/clean-install-2026-10-17.md)
+[Plan](docs/PLAN.md) · [Progress and retro](docs/PROGRESS.md) · [Decisions](docs/DECISIONS.md) · [Changelog](CHANGELOG.md) · [v0.1.0 release notes](docs/releases/v0.1.0.md) · [Clean-install evidence](docs/evidence/clean-install-2026-10-17.md)
 
 MIT. Button is adapted from shadcn/ui (MIT); see [`docs/provenance/button.md`](docs/provenance/button.md).

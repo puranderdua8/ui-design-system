@@ -4,8 +4,9 @@
 
 ## Current state
 
-- **Current milestone:** M6 Docs and release, branch `m6-release`
-- **Next session:** S12 Storybook, Penpot, release (S12a Storybook, S12b release docs)
+- **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
+- **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-foundations` (cut from `main` 2026-10-19; holds the Release 1 planning commit)
+- **Next session:** S13 Remove the registry
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -18,7 +19,7 @@
 
 - GitHub: https://github.com/puranderdua8/ui-design-system
 - npm: https://www.npmjs.com/package/@puranderdua/ui
-- Registry: https://ui-design-system-registry.vercel.app (items at `/r/v0.1.0/{name}.json`; the root path is a 404 by design)
+- Registry (being retired, D-055; removed from the repo in S13, Vercel project paused or deleted by Purander): https://ui-design-system-registry.vercel.app
 - Site: https://ui-design-system-beta.vercel.app/
 - Storybook: https://ui-design-system-storybook-mu.vercel.app/ (local: `pnpm --filter docs storybook`)
 
@@ -38,6 +39,36 @@
 | S10 Portfolio site                       | M5        | ☑      |
 | S11 QA and accessibility                 | M5        | ☑      |
 | S12 Storybook, Penpot, release           | M6        | ◐      |
+
+S12: Storybook and release docs are done; the optional Penpot board was not made (parking lot).
+
+### Release 1
+
+| Session                                     | Milestone | Status |
+| ------------------------------------------- | --------- | ------ |
+| S13 Remove the registry                     | M7        | ☐      |
+| S14 Theme architecture                      | M7        | ☐      |
+| S15 New token categories and semantic roles | M7        | ☐      |
+| S16 0.2.0 release prep                      | M7        | ☐      |
+| S17 Showcase shell                          | M7        | ☐      |
+| S18 Container, Grid, Stack, Cluster         | M8        | ☐      |
+| S19 Section, Split, Sidebar                 | M8        | ☐      |
+| S20 Link + 0.3.0 prep                       | M8        | ☐      |
+| S21 Showcase Layout + Actions               | M8        | ☐      |
+| S22 Client boundary + Label, Field, Input   | M9        | ☐      |
+| S23 Checkbox + RadioGroup                   | M9        | ☐      |
+| S24 Select                                  | M9        | ☐      |
+| S25 0.4.0 + showcase Forms                  | M9        | ☐      |
+| S26 Card + Tabs                             | M10       | ☐      |
+| S27 Banner                                  | M10       | ☐      |
+| S28 0.5.0 + showcase Display + hardening    | M10       | ☐      |
+| S29 Theme direction                         | M11       | ☐      |
+| S30 Corporate + Nature final                | M11       | ☐      |
+| S31 Quirky + theme QA                       | M11       | ☐      |
+| S32 0.6.0 + site theme switcher             | M11       | ☐      |
+| S33 Playground engine                       | M12       | ☐      |
+| S34 Playground UI                           | M12       | ☐      |
+| S35 Export + Release 1 wrap-up              | M12       | ☐      |
 
 ## Log
 
@@ -169,7 +200,7 @@
   - PR #9 was merged before the last S10/S11 commits were pushed; they were carried onto `m6-release`.
   - React 18 `forwardRef` crept in twice and was removed in review (D-033).
 - **What worked:** reviews by an independent session caught real bugs in S2/S3, S5, S8, S10; the clean-install script found issues the repo-local tests could not.
-- **Next slice, Release 1:** colours plus light/dark theming (semantic layer with modes), update-path checks (registry 0.1.1, package upgrade), axe in Storybook CI, hosted Storybook, more components.
+- **Next slice, Release 1 (as of 2026-10-17; replaced by the plan of 2026-10-19 in `docs/PLAN.md`):** colours plus light/dark theming (semantic layer with modes), update-path checks (registry 0.1.1, package upgrade), axe in Storybook CI, hosted Storybook, more components.
 
 ### Storybook hosting — 2026-10-17
 
@@ -181,8 +212,20 @@
 - Site: `SITE_URL=https://ui-design-system-beta.vercel.app pnpm --filter site test:e2e` passed (6 of 6: heading order, keyboard, secondary link, axe 0 violations, 320px, 200% zoom).
 - Storybook: https://ui-design-system-storybook-mu.vercel.app/ returns 200 for `/` and `/iframe.html`.
 
+### R1 planning — 2026-10-19
+
+- Done: analysed the repo and researched the DTCG Resolver Module 2025.10, shadcn's move to the unified `radix-ui` package, and customizable `<select>` support (Chromium-only, so Select uses Radix). Agreed scope with Purander through Q&A. Wrote the Release 1 plan (`docs/PLAN.md`, S13–S35, M7–M12) and archived Release 0's plan to `docs/plans/release-0.md`. Updated CLAUDE.md, README and this file. Cut `m7-foundations` from `main` and carried over `b3d234a` (live URLs; PR #11 had squash-merged only the Vercel pin).
+- Decisions: D-043 (native file tools), D-044 to D-056 (Release 1 scope, site-hosted showcase, one theme per consumer with JSON-map live switching, resolver manifest with reserved dark mode, theme completeness, `radix-ui` + `lucide-react`, release rhythm, Storybook theme toolbar, playground, theme direction, plan archive, registry retired, values out of `foundations.css`).
+- Gotchas found while planning: (1) with `outputReferences`, a semantic var declared on `:root` does not re-resolve when a descendant overrides a primitive, so live switching uses fully resolved maps. (2) Media queries can't read custom properties, so breakpoints are shared. (3) Radix portals render outside a scoped theme, so portal components need `container`. (4) tsup's single bundle strips `"use client"`, which S22 must solve. (5) Style Dictionary support for the DTCG resolver is unverified, so our build resolves the manifest.
+- Next: S13 Remove the registry, on `m7-foundations`.
+
 ## Parking lot (out of scope, later)
 
-- Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).
-- Update-path checks for the registry: build a v0.1.1, point a consumer at it and confirm `shadcn add` shows the change and an edited file is kept (S9 only covers re-adding the same version).
-- Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds.
+- ~~Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).~~ Checked in S6: no change. Themes (M11) define their own palettes.
+- ~~Update-path checks for the registry~~ Dropped: registry retired (D-055).
+- Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds. Happens in S17 (site 0.1.0 → 0.2.0); record it there.
+- Dark mode values per theme (the `mode` modifier is reserved, D-047). Planned for Release 2.
+- More components: Textarea, Switch, Dialog, Toast, Tooltip, navigation.
+- Playground share URL (not in Release 1, D-052).
+- Penpot boards (Release 0 S12 optional, not done); later one board per theme.
+- axe in Storybook CI (the a11y addon's `test: "error"` only runs in the test runner).
