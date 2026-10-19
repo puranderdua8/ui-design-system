@@ -266,7 +266,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Done (branch `s21-showcase-layout-actions`, cut from synced `main` after #20 merged): `apps/site` pinned to `@puranderdua/ui@0.3.0` (and the `minimumReleaseAgeExclude` entry). Layout page: an `Example` (demo frame plus code) for Container, Grid, Stack, Cluster, Section, Split and Sidebar. Actions page: Link inline, standalone, external and `next/link` via `asChild`. The category page now uses `Container` and `Stack` for its own structure. E2E: Link external attributes and accessible name, `next/link` activated by keyboard, inline link underlined and reachable by Tab (28 tests total; the layout page is in the existing 320px, axe and heading-order loops).
 - Verified: site lint, typecheck, build and `test:e2e` (28 of 28) green.
 - Decisions: none new.
-- Gotchas: (1) the old `0.2.0` exclusion had to stay while the lockfile still held 0.2.0; install once with both entries, then drop the old one and confirm with `--frozen-lockfile`. (2) The Sidebar demo uses `sidebarAs="div"`: an `aside` nested in `main` fails axe's top-level complementary landmark rule. (3) Demo wrappers use `w-full min-w-0` so the Example frame (a wrapping flex row) does not overflow at 320px.
+- Gotchas: (1) the old `0.2.0` exclusion had to stay while the lockfile still held 0.2.0; install once with both entries, then drop the old one and confirm with `--frozen-lockfile`. (2) The Sidebar demo uses the default `aside`. I first used `sidebarAs="div"` on an unverified assumption that axe flags an `aside` inside `main`; testing showed axe passes. (3) Demo wrappers use `w-full min-w-0` so the Example frame (a wrapping flex row) does not overflow at 320px.
 - Next: S22.
 
 ## Retro (Release 0)

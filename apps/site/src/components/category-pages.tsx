@@ -307,12 +307,12 @@ const Layout = () => (
       title="Sidebar"
       description="A fixed-width aside beside flexible content. It stacks below the md breakpoint."
       importLine={layoutImport("Sidebar")}
-      code={`<Sidebar sidebarAs="div" sidebar={<Box>Sidebar</Box>} gap="sm">
+      code={`<Sidebar sidebar={<Box>Sidebar</Box>} gap="sm">
   <Box>Content</Box>
 </Sidebar>`}
     >
       <div className="w-full min-w-0">
-        <Sidebar sidebarAs="div" sidebar={<Box>Sidebar</Box>} gap="sm">
+        <Sidebar sidebar={<Box>Sidebar</Box>} gap="sm">
           <Box>Content</Box>
         </Sidebar>
       </div>
