@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S16 0.2.0 release prep
+- **Next session:** S17 Showcase shell (after Purander publishes 0.2.0)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -49,7 +49,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S13 Remove the registry                     | M7        | ☑      |
 | S14 Theme architecture                      | M7        | ☑      |
 | S15 New token categories and semantic roles | M7        | ☑      |
-| S16 0.2.0 release prep                      | M7        | ☐      |
+| S16 0.2.0 release prep                      | M7        | ◐      |
 | S17 Showcase shell                          | M7        | ☐      |
 | S18 Container, Grid, Stack, Cluster         | M8        | ☐      |
 | S19 Section, Split, Sidebar                 | M8        | ☐      |
@@ -218,6 +218,15 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 - Done (branch `m7-review-fixes`): `clean-install.sh` missing-space bug in `edit_css` and the `themes/base.css` import; package README and `docs/styling-rules.md` describe the theme import; `ds-classes.ts` generation moved from `build-foundations.mjs` to a new `scripts/build-classes.mjs` that runs before tsup (`build-foundations` still runs after, because tsup cleans `dist`); `contrast.mjs` error explains alpha colours; 7 more contrast pairs (border.control/raised, input.border-hover/subtle, danger fg and border on subtle and raised); propagation test covers shadows (elevation lines are literals); `.claude` ignored by Prettier and ESLint; z-index mention removed from CLAUDE.md/PLAN; D-057 reordered; old evidence file marked historical.
 - Still open for later sessions: S17 site must move off `font-ds-sans`/`--ds-font-family-sans` on upgrade; S16 CHANGELOG must flag the breaking changes; S20 Link needs a non-colour cue; Button should adopt `.ds-transition`/`.ds-border`. `clean-install.sh` still not run end to end.
+
+### S16 — 0.2.0 release prep — 2026-10-19
+
+- Done (branch `s16-release-prep`, cut from `origin/main`): Button uses `Slot.Root` from `radix-ui` (dependency swapped, tsup external added, provenance updated); `contrast-pairs.json` now ships in the package (`build-foundations` copies it; `./contrast-pairs.json` export); version 0.2.0; package README gained a Themes section and the live-switching note; CHANGELOG 0.2.0 lists the breaking changes (no values in `foundations.css`, `sans` → `body`/`heading`, `control.radius` → `radius.control`, registry retired) and additions.
+- Verified: `pnpm check` green (56 tests). `pnpm pack` tarball holds dist (index, d.ts, foundations.css, contrast-pairs.json, themes/base.css|json), README, package.json. A throwaway Next 16.4.2 app in the scratchpad installed the tarball, rendered Text/Heading/Button (including `asChild`) with foundations + base theme, `next build` passed, and the built CSS contains the tokens (`--ds-color-brand-600`, elevation, heading family, radius, `ds-type-lead`, `ds-focus-ring`, `text-ds-control`); the `contrast-pairs.json` (44 pairs) and `themes/base.json` (184 vars) exports resolve.
+- Decisions: D-060.
+- Gotchas: the `radix-ui` umbrella grew `pnpm-lock.yaml` a lot (about 70 packages) but only the Slot code is bundled-in-use; it stays external. `sideEffects` and `files` needed no change (`dist` and `*.css` already cover the new files). Did not publish.
+- Purander: `cd packages/ui && npm publish --access public`, then `npm view @puranderdua/ui version` should show 0.2.0; tag after the milestone PR merges. Then mark S16 ☑.
+- Next: S17 (site moves 0.1.0 → 0.2.0 and must drop `font-ds-sans`/`--ds-font-family-sans`).
 
 ## Retro (Release 0)
 
