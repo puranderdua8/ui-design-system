@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M9 Forms, branch `s22-client-boundary-form-basics` (cut from synced `main` 2026-10-19 after #22)
-- **Next session:** S23 Checkbox + RadioGroup
+- **Current milestone:** M9 Forms, branch `s23-checkbox-radiogroup` (cut from synced `main` 2026-10-19 after #23)
+- **Next session:** S24 Select
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -56,7 +56,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S20 Link + 0.3.0 prep                       | M8        | ☑      |
 | S21 Showcase Layout + Actions               | M8        | ☑      |
 | S22 Client boundary + Label, Field, Input   | M9        | ☑      |
-| S23 Checkbox + RadioGroup                   | M9        | ☐      |
+| S23 Checkbox + RadioGroup                   | M9        | ☑      |
 | S24 Select                                  | M9        | ☐      |
 | S25 0.4.0 + showcase Forms                  | M9        | ☐      |
 | S26 Card + Tabs                             | M10       | ☐      |
@@ -284,6 +284,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-065.
 - Gotchas: (1) A single bundle strips directives, and per-component entries alone are not enough: `index` imported the shared chunks directly and skipped the entry files, and Input would have bundled its own copy of Field's context. The plugin fixes both. (2) `check-rsc.sh` needs network (create-next-app, npm), so it is not part of `pnpm check`; run it before releases (S25). (3) Text ends up in the client bundle through Label inside Field, but the page only sees it as a server-rendered element, which is what the check asserts. (4) The Playground CSS check does not cover the new Input classes. (5) I appended the `index.ts` exports with a shell heredoc (against D-043); everything else used Write/Edit. (6) Not published or released; 0.4.0 is S25.
 - Next: S23 Checkbox + RadioGroup.
+
+### S23 — Checkbox + RadioGroup — 2026-10-19
+
+- Done (branch `s23-checkbox-radiogroup`, cut from synced `main` after #23 merged): `Checkbox` (checked, indeterminate, invalid, disabled) and `RadioGroup` + `RadioGroupItem`, adapted from shadcn new-york-v4 on `radix-ui` and `lucide-react` with token-only classes; provenance docs `docs/provenance/checkbox.md` and `radio-group.md`. Both read the `Field` context; `Field` gained `labelId` so a radio group is named by the Field label. 12 tests in `choice.test.tsx` (Space toggles, Label click, indeterminate, disabled, Field wiring, arrow keys with disabled item skipped, axe; 139 total), stories `Components/Checkbox` and `Components/RadioGroup`, exports.
+- Verified: `pnpm check` exit 0 (139 unit, layout tests, Storybook build); `dist/components/checkbox.js` and `radio-group.js` start with `"use client"`.
+- Decisions: D-066.
+- Gotchas: (1) Radix selects a focused radio on arrow keys only while the key is held, so the test holds the key. (2) `ElementProps` only accepts intrinsic tags; Radix components use `ComponentPropsWithoutRef` plus `StrictRef`. (3) Upstream commit for both files is the same as Button's (`c257f68`). (4) I patched the test and one provenance line with `node`/`sed` instead of Edit (against D-043). (5) The RSC tarball check was not rerun (not in `pnpm check`; run in S25 before 0.4.0). (6) The Playground CSS check does not cover the new classes.
+- Next: S24 Select.
 
 ## Retro (Release 0)
 

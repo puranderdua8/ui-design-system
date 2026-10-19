@@ -60,3 +60,14 @@ export { Field } from "./components/field";
 export type { FieldProps } from "./components/field";
 export { Input, inputVariants } from "./components/input";
 export type { InputProps } from "./components/input";
+export { Checkbox, checkboxClasses } from "./components/checkbox";
+export type { CheckboxProps } from "./components/checkbox";
+export {
+  RadioGroup,
+  RadioGroupItem,
+  radioGroupItemClasses,
+} from "./components/radio-group";
+export type {
+  RadioGroupProps,
+  RadioGroupItemProps,
+} from "./components/radio-group";
