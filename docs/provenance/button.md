@@ -8,17 +8,17 @@
 
 ## Dependencies
 
-| Package                    | Why                                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------------ |
-| `class-variance-authority` | variant maps (as upstream)                                                                 |
-| `@radix-ui/react-slot`     | `asChild`. Upstream imports `Slot` from the `radix-ui` umbrella; we use the single package |
-| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                                                               |
+| Package                    | Why                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| `class-variance-authority` | variant maps (as upstream)                                                            |
+| `radix-ui`                 | `asChild` via `Slot.Root`, imported from the unified package as upstream does (D-049) |
+| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                                                          |
 
 ## Changes from upstream
 
 1. **Variants:** `default | destructive | outline | secondary | ghost | link` → `primary | secondary`. Default `primary`.
 2. **Sizes:** `default | xs | sm | lg | icon*` → `sm | md`. Default `md`.
-3. **Colours, radius, height, padding, font size:** shadcn utilities (`bg-primary`, `rounded-md`, `h-9`, `px-4`, `text-sm`) → `ds` token utilities (`bg-ds-primary`, `rounded-ds-control`, `h-ds-control-md`, `px-ds-control-px-md`, `text-ds-control-md`, `font-ds-sans`). `font-medium` is kept (no control weight token).
+3. **Colours, radius, height, padding, font size:** shadcn utilities (`bg-primary`, `rounded-md`, `h-9`, `px-4`, `text-sm`) → `ds` token utilities (`bg-ds-primary`, `rounded-ds-control`, `h-ds-control-md`, `px-ds-control-px-md`, `text-ds-control-md`, `font-ds-body`). `font-medium` is kept (no control weight token).
 4. **States:** hover/active per variant from `action.*` tokens; disabled uses `disabled.*` tokens instead of `opacity-50`.
 5. **Focus:** upstream `focus-visible:ring-[3px] ring-ring/50` (arbitrary value, opacity) → `.ds-focus-ring` recipe (outline from `focus.ring*` tokens).
 6. **Removed:** dark-mode classes, `aria-invalid` styles, `shadow-xs`, `has-[>svg]` padding tweaks, `[&_svg:not([class*='size-'])]:size-4`.

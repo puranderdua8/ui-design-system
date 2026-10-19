@@ -1,6 +1,6 @@
 // Writes packages/ui/dist/foundations.css (hand-written theme.css: Tailwind
 // bridge + recipes, no token values, D-056) and copies the generated theme
-// files to dist/themes/. No `@import "tailwindcss"` inside: consumers import
+// files to dist/themes/ and contrast-pairs.json to dist/. No `@import "tailwindcss"` inside: consumers import
 // Tailwind themselves (D-005). Runs after tsup, which cleans dist.
 // (The `cn()` class lists come from scripts/build-classes.mjs, before tsup.)
 import {
@@ -34,4 +34,9 @@ if (!existsSync(themesSrc)) {
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, css);
 cpSync(themesSrc, resolve(dirname(out), "themes"), { recursive: true });
+// Ships the WCAG pairs the playground checks live (D-052, D-060).
+cpSync(
+  resolve(root, "tokens/contrast-pairs.json"),
+  resolve(dirname(out), "contrast-pairs.json"),
+);
 console.log(`foundations.css written (${css.length} bytes)`);

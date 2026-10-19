@@ -19,6 +19,16 @@ Import Tailwind first, then the foundations (theme bridge and recipes, no token 
 @source "../node_modules/@puranderdua/ui/dist";
 ```
 
+## Themes
+
+| Theme  | Import                            | Status          |
+| ------ | --------------------------------- | --------------- |
+| `base` | `@puranderdua/ui/themes/base.css` | shipped (0.2.0) |
+
+Corporate, Nature and Quirky are planned (0.6.0). Import exactly one theme CSS file; that is all a consumer ships.
+
+**Live switching** (a theme switcher, Storybook, a playground): every theme also ships as `@puranderdua/ui/themes/<name>.json`, a fully resolved map `{ vars, refs }`. Apply `vars` as inline CSS custom properties on `<html>` (or a scope element) to switch themes without loading another stylesheet. `@puranderdua/ui/contrast-pairs.json` lists the WCAG pairs each theme must pass.
+
 ## Use
 
 ```tsx
