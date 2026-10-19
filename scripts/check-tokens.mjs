@@ -1,5 +1,6 @@
 // tokens:check = validate source, rebuild and diff against committed output,
-// run the contrast check, then the primitive-change propagation self-test.
+// run the contrast check per theme, then the primitive-change propagation and
+// second-theme self-tests.
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -29,7 +30,7 @@ tmp = mkdtempSync(join(tmpdir(), "ds-tokens-"));
 try {
   await buildTokens(tmp);
   const stale = [];
-  const files = new Set([...readdirSync(tmp), ...safeList(committed)]);
+  const files = new Set([...listFiles(tmp), ...listFiles(committed)]);
   for (const f of [...files].sort()) {
     if (read(join(tmp, f)) !== read(join(committed, f))) stale.push(f);
   }
@@ -41,15 +42,21 @@ try {
     process.exit(1);
   }
   console.log("tokens:check: generated output matches source");
-  run("contrast.mjs", join(tmp, "tokens.json"));
+  run("contrast.mjs", ...listFiles(join(tmp, "themes"), ".json"));
   run("test-token-propagation.mjs");
+  run("test-second-theme.mjs");
 } finally {
   rmSync(tmp, { recursive: true, force: true });
 }
 
-function safeList(dir) {
+// Files under dir (relative paths), optionally only with one extension;
+// with an extension the paths are absolute, ready to pass to a script.
+function listFiles(dir, ext) {
   try {
-    return readdirSync(dir);
+    const all = readdirSync(dir, { recursive: true, withFileTypes: true })
+      .filter((d) => d.isFile() && (!ext || d.name.endsWith(ext)))
+      .map((d) => join(d.parentPath, d.name));
+    return ext ? all.sort() : all.map((p) => p.slice(dir.length + 1));
   } catch {
     return [];
   }

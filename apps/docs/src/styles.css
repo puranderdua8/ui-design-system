@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@puranderdua/ui/foundations.css";
+@import "@puranderdua/ui/themes/base.css";
 @source "../node_modules/@puranderdua/ui/dist";
 
 body {

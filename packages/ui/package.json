@@ -27,6 +27,8 @@
       "import": "./dist/index.js"
     },
     "./foundations.css": "./dist/foundations.css",
+    "./themes/*.css": "./dist/themes/*.css",
+    "./themes/*.json": "./dist/themes/*.json",
     "./package.json": "./package.json"
   },
   "files": [

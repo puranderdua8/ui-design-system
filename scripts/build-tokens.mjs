@@ -1,16 +1,21 @@
-// Builds generated token output from the DTCG source in tokens/.
-//   packages/ui/src/styles/generated/tokens.css   :root vars, prefix --ds-
-//   packages/ui/src/styles/generated/tokens.json  flat name -> value map
+// Builds generated token output per theme from the DTCG source in tokens/,
+// following tokens/resolver.json (theme x mode light).
+//   <outDir>/themes/<name>.css   :root vars, prefix --ds-, references kept
+//   <outDir>/themes/<name>.json  { vars: resolved map, refs: semantic -> primitive }
+// Shared primitives (breakpoints) are validated, not emitted.
 // Usage: node scripts/build-tokens.mjs [outDir]
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import StyleDictionary from "style-dictionary";
 import { fileHeader, formattedVariables } from "style-dictionary/utils";
+import { loadResolver } from "./lib/resolver.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_OUT = join(root, "packages/ui/src/styles/generated");
 
 const FORMAT = "css/variables-ds";
+const MAP_FORMAT = "json/theme-map";
+const ALIAS = /^\{([^{}]+)\}$/;
 
 // css/variables with two tweaks: expanded typography properties carry no
 // comment (they would all repeat the composite's description), and space
@@ -48,43 +53,56 @@ StyleDictionary.registerFormat({
   },
 });
 
+// Fully resolved var map (live switching applies it as inline CSS vars), plus
+// the alias graph for tooling: semantic var -> the primitive var it points to.
+StyleDictionary.registerFormat({
+  name: MAP_FORMAT,
+  format: ({ dictionary }) => {
+    const vars = {};
+    const refs = {};
+    for (const t of dictionary.allTokens) {
+      vars[`--${t.name}`] = t.$value;
+      const m =
+        typeof t.original.$value === "string" && ALIAS.exec(t.original.$value);
+      if (m) refs[`--${t.name}`] = `--ds-${m[1].replaceAll(".", "-")}`;
+    }
+    return `${JSON.stringify({ vars, refs }, null, 2)}\n`;
+  },
+});
+
+// Builds every theme in the manifest; returns the output dir and theme names.
 export async function buildTokens(
   outDir = DEFAULT_OUT,
   tokensDir = join(root, "tokens"),
 ) {
   const buildPath = resolve(outDir) + "/";
-  const sd = new StyleDictionary({
-    usesDtcg: true,
-    source: [
-      join(tokensDir, "primitives/**/*.json"),
-      join(tokensDir, "semantic/**/*.json"),
-    ],
-    // Typography composites become per-property tokens, e.g.
-    // --ds-type-body-font-size.
-    expand: { include: ["typography"] },
-    log: { verbosity: "silent", warnings: "error" },
-    platforms: {
-      css: {
-        prefix: "ds",
-        transformGroup: "css",
-        buildPath,
-        files: [
-          {
-            destination: "tokens.css",
-            format: FORMAT,
-            options: { outputReferences: true, selector: ":root" },
-          },
-        ],
+  const { themes, semantic } = loadResolver(tokensDir);
+  for (const [name, sources] of Object.entries(themes)) {
+    const sd = new StyleDictionary({
+      usesDtcg: true,
+      source: [...sources, ...semantic],
+      // Typography composites become per-property tokens, e.g.
+      // --ds-type-body-font-size.
+      expand: { include: ["typography"] },
+      log: { verbosity: "silent", warnings: "error" },
+      platforms: {
+        css: {
+          prefix: "ds",
+          transformGroup: "css",
+          buildPath: buildPath + "themes/",
+          files: [
+            {
+              destination: `${name}.css`,
+              format: FORMAT,
+              options: { outputReferences: true, selector: ":root" },
+            },
+            { destination: `${name}.json`, format: MAP_FORMAT },
+          ],
+        },
       },
-      json: {
-        prefix: "ds",
-        transformGroup: "css",
-        buildPath,
-        files: [{ destination: "tokens.json", format: "json/flat" }],
-      },
-    },
-  });
-  await sd.buildAllPlatforms();
+    });
+    await sd.buildAllPlatforms();
+  }
   return buildPath;
 }
 

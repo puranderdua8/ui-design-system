@@ -1,6 +1,6 @@
 /*
  * Tier 3: Tailwind v4 bridge + recipes (hand-written).
- * Maps semantic `--ds-*` variables (generated/tokens.css) into Tailwind
+ * Maps semantic `--ds-*` variables (generated/themes/<name>.css) into Tailwind
  * namespaces. `inline` makes utilities reference the token var directly, so a
  * token change flows through without a Tailwind rebuild of the value.
  * Primitives are never mapped here: components use semantic tokens only.

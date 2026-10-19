@@ -1,0 +1,46 @@
+{
+  "name": "@puranderdua/ui tokens",
+  "version": "2025.10",
+  "description": "DTCG Resolver Module (2025.10) manifest. scripts/build-tokens.mjs resolves it: one output per theme, for each built mode. The mode modifier reserves dark; only light is built for now (D-047).",
+  "sets": {
+    "shared": {
+      "description": "Non-themeable primitives, validated but not emitted.",
+      "sources": [{ "$ref": "primitives/breakpoints.json" }]
+    },
+    "semantic": {
+      "description": "Role contract. Aliases only; identical for every theme.",
+      "sources": [
+        { "$ref": "semantic/color.json" },
+        { "$ref": "semantic/control.json" },
+        { "$ref": "semantic/typography.json" }
+      ]
+    }
+  },
+  "modifiers": {
+    "theme": {
+      "description": "Themeable primitives. Every theme defines exactly Base's keys (D-048).",
+      "default": "base",
+      "contexts": {
+        "base": [
+          { "$ref": "themes/base/color.json" },
+          { "$ref": "themes/base/dimension.json" },
+          { "$ref": "themes/base/typography.json" }
+        ]
+      }
+    },
+    "mode": {
+      "description": "Light only for now; dark is reserved and has no sources yet.",
+      "default": "light",
+      "contexts": {
+        "light": [],
+        "dark": []
+      }
+    }
+  },
+  "resolutionOrder": [
+    { "$ref": "#/sets/shared" },
+    { "$ref": "#/modifiers/theme" },
+    { "$ref": "#/sets/semantic" },
+    { "$ref": "#/modifiers/mode" }
+  ]
+}
