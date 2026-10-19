@@ -67,8 +67,8 @@ importers:
   apps/site:
     dependencies:
       '@puranderdua/ui':
-        specifier: 0.2.0
-        version: 0.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: 0.3.0
+        version: 0.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       next:
         specifier: 16.4.2
         version: 16.4.2(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.54.2)(@types/node@20.19.43)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1279,8 +1279,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@puranderdua/ui@0.2.0':
-    resolution: {integrity: sha512-Fg8jqA5wrDqlmo4ErSyqBrwIkGtgFhjPXZLqWScHge620ImNz4uzEav5qGG8xc+wLBasq0hlUrlN08xd6f5hxw==}
+  '@puranderdua/ui@0.3.0':
+    resolution: {integrity: sha512-nnjaecpImlKbwMybonAtmukyAzHksCfux0VcWX+b5N60CoDSKw78rgXKfbfzx4srL9sEK4EaNaT+DNiv4+cZDA==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -6016,10 +6016,11 @@ snapshots:
     dependencies:
       playwright: 1.54.2
 
-  '@puranderdua/ui@0.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@puranderdua/ui@0.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       class-variance-authority: 0.7.1
       clsx: 2.1.1
+      lucide-react: 1.59.0(@types/react@19.3.0)(react@19.3.0)
       radix-ui: 1.8.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
@@ -9619,6 +9620,12 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  lucide-react@1.59.0(@types/react@19.3.0)(react@19.3.0):
+    dependencies:
+      react: 19.3.0
+    optionalDependencies:
+      '@types/react': 19.3.0
 
   lucide-react@1.59.0(@types/react@19.3.0)(react@19.3.1):
     dependencies:
