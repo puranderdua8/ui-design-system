@@ -22,7 +22,7 @@ Four tiers, one source of truth:
 
 ```
 tokens/
-  primitives/               shared, non-themeable DTCG (breakpoints, z-index)
+  primitives/               shared, non-themeable DTCG (breakpoints)
   themes/<theme>/           themeable DTCG per theme (from S14)
   semantic/                 role contract (aliases only)
   resolver.json             theme/mode manifest (from S14)

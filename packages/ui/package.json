@@ -39,7 +39,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "tsup && node ../../scripts/build-foundations.mjs",
+    "build": "node ../../scripts/build-classes.mjs && tsup && node ../../scripts/build-foundations.mjs",
     "playground:dev": "pnpm build && vite playground",
     "playground:check": "pnpm build && vite build playground && node playground/verify-css.mjs",
     "test": "vitest run",

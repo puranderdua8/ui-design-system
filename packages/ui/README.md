@@ -10,11 +10,12 @@ npm install @puranderdua/ui react react-dom tailwindcss
 
 ## Tailwind setup
 
-Import Tailwind first, then the foundations (tokens, theme bridge, recipes), and tell Tailwind to scan the package so it generates the component classes. In your global CSS (adjust the `@source` path to where your CSS file lives):
+Import Tailwind first, then the foundations (theme bridge and recipes, no token values), then exactly one theme (the token values), and tell Tailwind to scan the package so it generates the component classes. In your global CSS (adjust the `@source` path to where your CSS file lives):
 
 ```css
 @import "tailwindcss";
 @import "@puranderdua/ui/foundations.css";
+@import "@puranderdua/ui/themes/base.css";
 @source "../node_modules/@puranderdua/ui/dist";
 ```
 

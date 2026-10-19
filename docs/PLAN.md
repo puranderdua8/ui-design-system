@@ -55,7 +55,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 
 **Theme model (D-046).**
 
-- Source: shared non-themeable primitives in `tokens/primitives/` (breakpoints, z-index); themeable primitives in `tokens/themes/<theme>/*.json`; the role contract in `tokens/semantic/` (aliases only).
+- Source: shared non-themeable primitives in `tokens/primitives/` (breakpoints); themeable primitives in `tokens/themes/<theme>/*.json`; the role contract in `tokens/semantic/` (aliases only).
 - Manifest: `tokens/resolver.json` follows the DTCG Resolver Module 2025.10 (sets + modifiers). It has a `theme` modifier (base | corporate | nature | quirky) and a `mode` modifier (`light` only; `dark` reserved). `scripts/build-tokens.mjs` resolves it; we don't depend on resolver support in Style Dictionary (unverified).
 - Two outputs per theme from one source:
   - `generated/themes/<name>.css`: `:root { --ds-*: … }` with references kept. A consumer imports exactly one.

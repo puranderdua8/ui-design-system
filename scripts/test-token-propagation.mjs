@@ -21,9 +21,24 @@ import { loadResolver } from "./lib/resolver.mjs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // [file inside themes/<name>/, token path, new value]
+// Optional 4th entry: dependents Style Dictionary writes as literal values
+// instead of var() references (it resolves shadow aliases before transform),
+// so their CSS lines change too.
 const CASES = [
   ["color.json", ["color", "brand", "600"], "#123456"],
   ["typography.json", ["font", "size", "base"], "1.125rem"],
+  [
+    "effects.json",
+    ["shadow", "sm"],
+    {
+      color: "#123456",
+      offsetX: "0px",
+      offsetY: "2px",
+      blur: "4px",
+      spread: "0px",
+    },
+    ["--ds-elevation-raised"],
+  ],
 ];
 
 const tmp = mkdtempSync(join(tmpdir(), "ds-prop-"));
@@ -63,7 +78,7 @@ try {
       return out;
     };
 
-    for (const [file, path, value] of CASES) {
+    for (const [file, path, value, literal = []] of CASES) {
       const name = `--ds-${path.join("-")}`;
       const label = `[${theme}] ${name}`;
       const slug = `${theme}-${path.join("-")}`;
@@ -86,6 +101,7 @@ try {
       );
       const expected = dependents(name);
       expected.add(name);
+      for (const l of literal) expected.add(l);
       const missing = [...expected].filter((k) => !changed.has(k));
       const extra = [...changed].filter((k) => !expected.has(k));
       const cssLines = (c) => c.split("\n");
@@ -99,8 +115,14 @@ try {
         problems.push(`dependents not updated: ${missing.join(", ")}`);
       if (extra.length)
         problems.push(`unrelated tokens changed: ${extra.join(", ")}`);
-      if (cssChanged.length !== 1 || !cssChanged[0].includes(`${name}:`))
-        problems.push(`${theme}.css should change only the ${name} line`);
+      const allowed = [name, ...literal];
+      if (
+        cssChanged.length !== allowed.length ||
+        !allowed.every((n) => cssChanged.some((l) => l.includes(`${n}:`)))
+      )
+        problems.push(
+          `${theme}.css should change only the ${allowed.join(", ")} line(s)`,
+        );
       for (const other of themeNames.filter((t) => t !== theme))
         if (readCss(out, other) !== readCss(baseOut, other))
           problems.push(`theme ${other} changed`);
@@ -110,7 +132,7 @@ try {
         console.error(`FAIL ${label}\n  - ${problems.join("\n  - ")}`);
       } else {
         console.log(
-          `ok   ${label}: ${expected.size - 1} dependent(s) updated in ${theme}.json, 1 line changed in ${theme}.css`,
+          `ok   ${label}: ${expected.size - 1} dependent(s) updated in ${theme}.json, ${allowed.length} line(s) changed in ${theme}.css`,
         );
       }
     }

@@ -1,6 +1,6 @@
 # Clean-install evidence — 2026-10-17
 
-Produced by `scripts/clean-install.sh` against the live registry. Result: **PASS**.
+Produced by `scripts/clean-install.sh` against the live registry. Result: **PASS**. _Historical: the registry channel was retired in S13 (D-055); the script now tests the package only._
 
 ```text
 registry=https://ui-design-system-registry.vercel.app version=0.1.0 shadcn=4.22.0 create-next-app=16.4.2

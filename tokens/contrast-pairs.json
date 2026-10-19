@@ -60,16 +60,22 @@
 
     { "fg": "border.control", "bg": "surface.canvas", "min": "ui" },
     { "fg": "border.control", "bg": "surface.subtle", "min": "ui" },
+    { "fg": "border.control", "bg": "surface.raised", "min": "ui" },
     { "fg": "input.border", "bg": "input.bg", "min": "ui" },
     { "fg": "input.border", "bg": "surface.canvas", "min": "ui" },
     { "fg": "input.border", "bg": "surface.subtle", "min": "ui" },
     { "fg": "input.border-hover", "bg": "input.bg", "min": "ui" },
     { "fg": "input.border-hover", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "input.border-hover", "bg": "surface.subtle", "min": "ui" },
     { "fg": "input.placeholder", "bg": "input.bg", "min": "text" },
 
     { "fg": "feedback.danger.fg", "bg": "surface.canvas", "min": "text" },
+    { "fg": "feedback.danger.fg", "bg": "surface.subtle", "min": "text" },
+    { "fg": "feedback.danger.fg", "bg": "surface.raised", "min": "text" },
     { "fg": "feedback.danger.fg", "bg": "feedback.danger.bg", "min": "text" },
     { "fg": "feedback.danger.border", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "feedback.danger.border", "bg": "surface.subtle", "min": "ui" },
+    { "fg": "feedback.danger.border", "bg": "surface.raised", "min": "ui" },
     { "fg": "feedback.danger.border", "bg": "feedback.danger.bg", "min": "ui" }
   ]
 }

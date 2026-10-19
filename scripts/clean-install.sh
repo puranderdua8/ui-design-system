@@ -137,7 +137,7 @@ new_app app-package
 APP_B="$WORK/app-package"
 cd "$APP_B"
 npm i "@puranderdua/ui@$VERSION"
-edit_css "$APP_B"'css.replace("@import \"tailwindcss\";", "@import \"tailwindcss\";\n@import \"@puranderdua/ui/foundations.css\";\n@source \"../../node_modules/@puranderdua/ui/dist\";")'
+edit_css "$APP_B" 'css.replace("@import \"tailwindcss\";", "@import \"tailwindcss\";\n@import \"@puranderdua/ui/foundations.css\";\n@import \"@puranderdua/ui/themes/base.css\";\n@source \"../../node_modules/@puranderdua/ui/dist\";")'
 cat >src/app/page.tsx <<'TSX'
 import { Button, Heading, Text } from "@puranderdua/ui";
 

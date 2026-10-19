@@ -39,11 +39,12 @@ Add a recipe only when utilities cannot express the composite.
 
 ## Consuming
 
-`foundations.css` contains tokens, the `@theme inline` bridge and recipes. It does **not** import Tailwind. Import it once, from the package (D-055):
+`foundations.css` contains the `@theme inline` bridge and recipes, with no token values (D-056). It does **not** import Tailwind. Import it once, plus exactly one theme, from the package (D-055):
 
 ```css
 @import "tailwindcss";
 @import "@puranderdua/ui/foundations.css";
+@import "@puranderdua/ui/themes/base.css";
 @source "../node_modules/@puranderdua/ui/dist";
 ```
 
