@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S22 Client boundary + Label, Field, Input
+- **Current milestone:** M9 Forms, branch `s22-client-boundary-form-basics` (cut from synced `main` 2026-10-19 after #22)
+- **Next session:** S23 Checkbox + RadioGroup
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -55,7 +55,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S19 Section, Split, Sidebar                 | M8        | ☑      |
 | S20 Link + 0.3.0 prep                       | M8        | ☑      |
 | S21 Showcase Layout + Actions               | M8        | ☑      |
-| S22 Client boundary + Label, Field, Input   | M9        | ☐      |
+| S22 Client boundary + Label, Field, Input   | M9        | ☑      |
 | S23 Checkbox + RadioGroup                   | M9        | ☐      |
 | S24 Select                                  | M9        | ☐      |
 | S25 0.4.0 + showcase Forms                  | M9        | ☐      |
@@ -276,6 +276,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-064.
 - Gotchas: (1) `@playwright/test` is a new devDependency of `packages/ui` (same pin as the site). (2) Flex ratios apply to content boxes: horizontal padding on a Split column skews 1:2 / 2:1, so padding goes on an inner element (CHANGELOG). (3) The site is pinned to 0.3.0, so its Split and Sidebar demos still run the old viewport-based code until the next release; their descriptions were left accurate for 0.3.0 and need updating when the site moves to 0.4.0. (4) The playground CSS check does not pick up classes only used in `src/`; the new ones are used in the playground demo section. (5) I wrote new files and edited several with shell heredocs and `node` snippets instead of Write/Edit (against D-043).
 - Next: S22 (and update the site's Split/Sidebar descriptions when it moves to the release that contains this PR).
+
+### S22 — Client boundary + Label, Field, Input — 2026-10-19
+
+- Done (branch `s22-client-boundary-form-basics`, cut from synced `main`): the build keeps `"use client"` (D-065): each component file is a tsup entry and an esbuild plugin makes component-to-component imports external, so `field.js` and `input.js` carry the directive and `index.js`, Text, Heading, Button, Link and the layout components do not. `Label` (Text label role, optional `*` marker), `Field` (label, description, error, required; `useId`, `aria-describedby`, `aria-invalid`, context) and `Input` (sm | md from control tokens, `input.*`, `feedback.danger`, `disabled.*`, focus ring) with 14 tests in `form.test.tsx` (labels associated, description and error announced, required, ids unique, refs, axe; 127 total), stories `Components/Field` and `Components/Input`, exports. `scripts/check-rsc.sh` (`pnpm check:rsc`).
+- Verified: `pnpm check` green (127 unit, 20 layout tests, Storybook build). `scripts/check-rsc.sh` PASS: a Server Component page imports Heading, Text, Field, Input from the packed tarball in a fresh Next 16.4.2 app; `next build` passes, SSR markup has the Field wiring, and the RSC payload lists Field and Input as client references while Heading and Text are plain `h1`/`p` elements.
+- Decisions: D-065.
+- Gotchas: (1) A single bundle strips directives, and per-component entries alone are not enough: `index` imported the shared chunks directly and skipped the entry files, and Input would have bundled its own copy of Field's context. The plugin fixes both. (2) `check-rsc.sh` needs network (create-next-app, npm), so it is not part of `pnpm check`; run it before releases (S25). (3) Text ends up in the client bundle through Label inside Field, but the page only sees it as a server-rendered element, which is what the check asserts. (4) The Playground CSS check does not cover the new Input classes. (5) I appended the `index.ts` exports with a shell heredoc (against D-043); everything else used Write/Edit. (6) Not published or released; 0.4.0 is S25.
+- Next: S23 Checkbox + RadioGroup.
 
 ## Retro (Release 0)
 
