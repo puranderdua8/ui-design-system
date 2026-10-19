@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 — unreleased
+## 0.3.0 — 2026-10-19
 
 Added:
 
@@ -11,7 +11,7 @@ Added:
 
 No breaking changes.
 
-## 0.2.0 — unreleased
+## 0.2.0 — 2026-10-19
 
 Breaking (0.x minor):
 
