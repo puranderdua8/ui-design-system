@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S17 Showcase shell (after Purander publishes 0.2.0)
+- **Next session:** S18 Container, Grid, Stack, Cluster
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -50,7 +50,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S14 Theme architecture                      | M7        | ☑      |
 | S15 New token categories and semantic roles | M7        | ☑      |
 | S16 0.2.0 release prep                      | M7        | ☑      |
-| S17 Showcase shell                          | M7        | ☐      |
+| S17 Showcase shell                          | M7        | ☑      |
 | S18 Container, Grid, Stack, Cluster         | M8        | ☐      |
 | S19 Section, Split, Sidebar                 | M8        | ☐      |
 | S20 Link + 0.3.0 prep                       | M8        | ☐      |
@@ -228,6 +228,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Published by Purander on 2026-10-19: `@puranderdua/ui@0.2.0` (`npm view` shows 0.2.0). The first attempt failed with a misleading E404 because the npm login had expired (`npm whoami` gave 401); `npm login` fixed it. Tag after the milestone PR merges.
 - Next: S17 (site moves 0.1.0 → 0.2.0 and must drop `font-ds-sans`/`--ds-font-family-sans`).
 
+### S17 — Showcase shell — 2026-10-19
+
+- Done (branch `s17-showcase-shell`, cut from `main`): `apps/site` pinned to `@puranderdua/ui@0.2.0` (and the `minimumReleaseAgeExclude` entry); `globals.css` imports `foundations.css` + `themes/base.css` and maps Inter onto `--ds-font-family-body|heading`, body uses `font-ds-body`. Routes `/components` and `/components/[category]` (`generateStaticParams`, `dynamicParams = false`) from `src/lib/categories.ts`; `Example` (preview, static code string, import line); `SiteHeader` (Home, Components); Typography and Actions pages; layout, forms, display show "Coming in 0.x". E2E `showcase.spec.ts`: heading order, axe, 320px for all six showcase paths, plus a nav test.
+- Verified: site lint, typecheck, build and `test:e2e` (25 of 25) green. **Package upgrade path 0.1.0 → 0.2.0 worked**: only the site CSS needed changes (theme import, font vars).
+- Decisions: none new.
+- Gotchas: the header added two links before the page content, so the smoke test's keyboard check now tabs three times. A Heading demo inside an `Example` (h2 section) must use h3 or the heading-order test fails. I used `sed` once for the version bump (against D-043). Rebased onto `main` after S16 merged (#16). `pnpm check` lint step fails only on the git-excluded `.claude/worktrees/` checkout (known); prettier on `apps docs`, tokens:check, typecheck and 56 package tests are green.
+- Next: S18.
+
 ## Retro (Release 0)
 
 - **Time per session:** not tracked per session. Wall clock from commits: S1–S4 on 2026-10-16 (about 1.5 h between first and last merge), S5–S11 on 2026-10-17 (11:44 to 17:28, with gaps). Purander: add real figures here.
@@ -262,7 +270,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 - ~~Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).~~ Checked in S6: no change. Themes (M11) define their own palettes.
 - ~~Update-path checks for the registry~~ Dropped: registry retired (D-055).
-- Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds. Happens in S17 (site 0.1.0 → 0.2.0); record it there.
+- ~~Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds.~~ Done in S17 (site 0.1.0 → 0.2.0).
 - Dark mode values per theme (the `mode` modifier is reserved, D-047). Planned for Release 2.
 - More components: Textarea, Switch, Dialog, Toast, Tooltip, navigation.
 - Playground share URL (not in Release 1, D-052).
