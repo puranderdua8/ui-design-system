@@ -43,6 +43,41 @@ for (const path of paths) {
   });
 }
 
+test.describe("Link examples", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/components/actions");
+  });
+
+  test("external link is announced and opens safely", async ({ page }) => {
+    const link = page.getByRole("link", {
+      name: "@puranderdua/ui on npm (opens in a new tab)",
+    });
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", /noopener/);
+  });
+
+  test("next/link example activates by keyboard", async ({ page }) => {
+    const link = page.getByRole("link", { name: "Forms (coming soon)" });
+    await link.focus();
+    await expect(link).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/components\/forms$/);
+  });
+
+  test("inline link is reachable with Tab and underlined", async ({ page }) => {
+    const link = page.getByRole("link", { name: "component overview" });
+    await expect(link).toHaveCSS("text-decoration-line", "underline");
+    for (
+      let i = 0;
+      i < 20 && !(await link.evaluate((el) => el === document.activeElement));
+      i++
+    ) {
+      await page.keyboard.press("Tab");
+    }
+    await expect(link).toBeFocused();
+  });
+});
+
 test("header nav reaches the showcase", async ({ page }) => {
   await page.goto("/");
   await page

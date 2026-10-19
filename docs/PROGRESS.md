@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S21 Showcase Layout + Actions (0.3.0 is published)
+- **Next session:** S22 Client boundary + Label, Field, Input
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -54,7 +54,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S18 Container, Grid, Stack, Cluster         | M8        | ☑      |
 | S19 Section, Split, Sidebar                 | M8        | ☑      |
 | S20 Link + 0.3.0 prep                       | M8        | ☑      |
-| S21 Showcase Layout + Actions               | M8        | ☐      |
+| S21 Showcase Layout + Actions               | M8        | ☑      |
 | S22 Client boundary + Label, Field, Input   | M9        | ☐      |
 | S23 Checkbox + RadioGroup                   | M9        | ☐      |
 | S24 Select                                  | M9        | ☐      |
@@ -260,6 +260,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) The accessible name was "Example(opens in a new tab)" with the space inside the `sr-only` span; the space is now a separate text node before the span. (2) With `asChild`, two children (content plus icon) make Slot throw, so `children` always goes through `Slot.Slottable`. (3) Vite warns that the `"use client"` directive in lucide's files may not be preserved when bundling (Storybook build only, harmless). S22 owns the client boundary. (4) I did not tarball-install into a throwaway Next app (only inspected the tarball). (5) The site is on 0.2.0 and does not use Link yet (S21).
 - Published by Purander on 2026-10-19: `@puranderdua/ui@0.3.0`. Tag after the milestone PR merges.
 - Next: S21 (site moves to 0.3.0, Layout page, Link on Actions).
+
+### S21 — Showcase Layout + Actions — 2026-10-19
+
+- Done (branch `s21-showcase-layout-actions`, cut from synced `main` after #20 merged): `apps/site` pinned to `@puranderdua/ui@0.3.0` (and the `minimumReleaseAgeExclude` entry). Layout page: an `Example` (demo frame plus code) for Container, Grid, Stack, Cluster, Section, Split and Sidebar. Actions page: Link inline, standalone, external and `next/link` via `asChild`. The category page now uses `Container` and `Stack` for its own structure. E2E: Link external attributes and accessible name, `next/link` activated by keyboard, inline link underlined and reachable by Tab (28 tests total; the layout page is in the existing 320px, axe and heading-order loops).
+- Verified: site lint, typecheck, build and `test:e2e` (28 of 28) green.
+- Decisions: none new.
+- Gotchas: (1) the old `0.2.0` exclusion had to stay while the lockfile still held 0.2.0; install once with both entries, then drop the old one and confirm with `--frozen-lockfile`. (2) The Sidebar demo uses `sidebarAs="div"`: an `aside` nested in `main` fails axe's top-level complementary landmark rule. (3) Demo wrappers use `w-full min-w-0` so the Example frame (a wrapping flex row) does not overflow at 320px.
+- Next: S22.
 
 ## Retro (Release 0)
 

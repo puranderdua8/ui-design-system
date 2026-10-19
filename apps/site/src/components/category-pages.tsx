@@ -1,6 +1,18 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
-import { Button, Heading, Text } from "@puranderdua/ui";
+import NextLink from "next/link";
+import {
+  Button,
+  Cluster,
+  Container,
+  Grid,
+  Heading,
+  Link,
+  Section,
+  Sidebar,
+  Split,
+  Stack,
+  Text,
+} from "@puranderdua/ui";
 import { Example } from "@/components/example";
 import type { CategorySlug } from "@/lib/categories";
 
@@ -114,13 +126,207 @@ const Actions = () => (
 </Button>`}
     >
       <Button variant="secondary" asChild>
-        <Link href="/components">All components</Link>
+        <NextLink href="/components">All components</NextLink>
       </Button>
+    </Example>
+  </>
+);
+
+const linkImport = 'import { Link } from "@puranderdua/ui";';
+
+const LinkExamples = () => (
+  <>
+    <Example
+      title="Inline link"
+      description="In running text the underline is always on, so the link is not marked by colour alone."
+      importLine={linkImport}
+      code={`<Text>
+  Read the <Link href="/components">component overview</Link> first.
+</Text>`}
+    >
+      <Text>
+        Read the <Link href="/components">component overview</Link> first.
+      </Text>
+    </Example>
+    <Example
+      title="Standalone link"
+      description="For navigation and call-to-action rows. The underline appears on hover and focus."
+      importLine={linkImport}
+      code={`<Link variant="standalone" href="/components/layout">Layout components</Link>`}
+    >
+      <Link variant="standalone" href="/components/layout">
+        Layout components
+      </Link>
+    </Example>
+    <Example
+      title="External link"
+      description="Opens in a new tab with rel set, an icon, and a screen-reader hint."
+      importLine={linkImport}
+      code={`<Link external href="https://www.npmjs.com/package/@puranderdua/ui">
+  @puranderdua/ui on npm
+</Link>`}
+    >
+      <Link external href="https://www.npmjs.com/package/@puranderdua/ui">
+        @puranderdua/ui on npm
+      </Link>
+    </Example>
+    <Example
+      title="With next/link"
+      description="asChild merges the link styles onto next/link, so navigation stays client-side."
+      importLine={`import NextLink from "next/link";\n${linkImport}`}
+      code={`<Link asChild variant="standalone">
+  <NextLink href="/components/forms">Forms (coming soon)</NextLink>
+</Link>`}
+    >
+      <Link asChild variant="standalone">
+        <NextLink href="/components/forms">Forms (coming soon)</NextLink>
+      </Link>
+    </Example>
+  </>
+);
+
+const Box = ({ children }: { children: ReactNode }) => (
+  <div className="rounded-ds-control border border-dashed border-ds-border bg-ds-surface-subtle px-3 py-2 text-sm">
+    {children}
+  </div>
+);
+
+const layoutImport = (names: string) =>
+  `import { ${names} } from "@puranderdua/ui";`;
+
+const Layout = () => (
+  <>
+    <Example
+      title="Container"
+      description="Centres content and caps its width. Sizes run sm to xl, or full."
+      importLine={layoutImport("Container")}
+      code={`<Container size="sm">
+  <Box>sm container</Box>
+</Container>`}
+    >
+      <div className="w-full min-w-0 bg-ds-surface-subtle py-3">
+        <Container size="sm">
+          <Box>sm container</Box>
+        </Container>
+      </div>
+    </Example>
+    <Example
+      title="Grid"
+      description="cols sets a fixed count. minItemWidth fits as many columns as the width allows."
+      importLine={layoutImport("Grid")}
+      code={`<Grid cols={3} gap="sm">…</Grid>
+<Grid minItemWidth="sm" gap="sm">…</Grid>`}
+    >
+      <div className="flex w-full min-w-0 flex-col gap-4">
+        <Grid cols={3} gap="sm">
+          <Box>One</Box>
+          <Box>Two</Box>
+          <Box>Three</Box>
+        </Grid>
+        <Grid minItemWidth="sm" gap="sm">
+          <Box>Fit one</Box>
+          <Box>Fit two</Box>
+          <Box>Fit three</Box>
+          <Box>Fit four</Box>
+        </Grid>
+      </div>
+    </Example>
+    <Example
+      title="Stack"
+      description="Vertical rhythm from the gap tokens."
+      importLine={layoutImport("Stack")}
+      code={`<Stack gap="sm">
+  <Box>First</Box>
+  <Box>Second</Box>
+  <Box>Third</Box>
+</Stack>`}
+    >
+      <div className="w-full min-w-0">
+        <Stack gap="sm">
+          <Box>First</Box>
+          <Box>Second</Box>
+          <Box>Third</Box>
+        </Stack>
+      </div>
+    </Example>
+    <Example
+      title="Cluster"
+      description="Items sit in a row and wrap when the space runs out."
+      importLine={layoutImport("Cluster")}
+      code={`<Cluster gap="sm" justify="between">
+  <Box>Alpha</Box> … <Box>Epsilon</Box>
+</Cluster>`}
+    >
+      <div className="w-full min-w-0">
+        <Cluster gap="sm" justify="between">
+          <Box>Alpha</Box>
+          <Box>Beta</Box>
+          <Box>Gamma</Box>
+          <Box>Delta</Box>
+          <Box>Epsilon</Box>
+        </Cluster>
+      </div>
+    </Example>
+    <Example
+      title="Section"
+      description="A full-width band with a tone and padding from the section tokens."
+      importLine={layoutImport("Section")}
+      code={`<Section tone="subtle" padding="sm" container="sm">
+  <Text>Subtle tone</Text>
+</Section>
+<Section tone="inverse" padding="sm" container="sm">
+  <Text>Inverse tone</Text>
+</Section>`}
+    >
+      <div className="flex w-full min-w-0 flex-col">
+        <Section tone="subtle" padding="sm" container="sm">
+          <Text>Subtle tone</Text>
+        </Section>
+        <Section tone="inverse" padding="sm" container="sm">
+          <Text>Inverse tone</Text>
+        </Section>
+      </div>
+    </Example>
+    <Example
+      title="Split"
+      description="Two columns in a chosen ratio. They stack on narrow screens."
+      importLine={layoutImport("Split")}
+      code={`<Split ratio="1:2" gap="sm">
+  <Box>One part</Box>
+  <Box>Two parts</Box>
+</Split>`}
+    >
+      <div className="w-full min-w-0">
+        <Split ratio="1:2" gap="sm">
+          <Box>One part</Box>
+          <Box>Two parts</Box>
+        </Split>
+      </div>
+    </Example>
+    <Example
+      title="Sidebar"
+      description="A fixed-width aside beside flexible content. It stacks below the md breakpoint."
+      importLine={layoutImport("Sidebar")}
+      code={`<Sidebar sidebarAs="div" sidebar={<Box>Sidebar</Box>} gap="sm">
+  <Box>Content</Box>
+</Sidebar>`}
+    >
+      <div className="w-full min-w-0">
+        <Sidebar sidebarAs="div" sidebar={<Box>Sidebar</Box>} gap="sm">
+          <Box>Content</Box>
+        </Sidebar>
+      </div>
     </Example>
   </>
 );
 
 export const categoryContent: Partial<Record<CategorySlug, () => ReactNode>> = {
   typography: Typography,
-  actions: Actions,
+  layout: Layout,
+  actions: () => (
+    <>
+      <Actions />
+      <LinkExamples />
+    </>
+  ),
 };

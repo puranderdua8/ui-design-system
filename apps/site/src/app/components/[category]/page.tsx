@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Heading, Text } from "@puranderdua/ui";
+import { Container, Heading, Stack, Text } from "@puranderdua/ui";
 import { categoryContent } from "@/components/category-pages";
 import { categories } from "@/lib/categories";
 
@@ -27,18 +27,22 @@ const CategoryPage = async ({ params }: PageProps) => {
   const Content = categoryContent[found.slug];
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-12 sm:px-6">
-      <Heading as="h1" variant="h1">
-        {found.title}
-      </Heading>
-      <Text variant="lead">{found.description}</Text>
-      {Content ? (
-        <Content />
-      ) : (
-        <Text>
-          Coming in {found.since}. These components are not published yet.
-        </Text>
-      )}
+    <main className="py-12">
+      <Container size="lg">
+        <Stack gap="lg">
+          <Heading as="h1" variant="h1">
+            {found.title}
+          </Heading>
+          <Text variant="lead">{found.description}</Text>
+          {Content ? (
+            <Content />
+          ) : (
+            <Text>
+              Coming in {found.since}. These components are not published yet.
+            </Text>
+          )}
+        </Stack>
+      </Container>
     </main>
   );
 };
