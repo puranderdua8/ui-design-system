@@ -195,6 +195,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: none new (D-055 covers it).
 - Gotchas: the site page copy described the two-channel split, so its "Two ways to consume it" section and footer were rewritten to describe one package (placeholder-quality copy, Purander may reword). `docs/provenance/button.md` still says "registry" because it quotes the upstream shadcn path and registry JSON it was fetched from; `docs/PLAN.md` also mentions it (describes this work). `clean-install.sh` passes `bash -n` but was not run end to end (needs network and npm), so the evidence file was not regenerated; shellcheck is not installed locally (CI runs it). `pnpm lint` still warns on the git-excluded `.claude/worktrees/` checkout (known, not in CI); eslint and prettier are clean otherwise.
 - Verified: `pnpm check` steps run individually (tokens, typecheck, 52 tests, build, playground, Storybook) green; `pnpm --filter site test:e2e` 6 of 6.
+- Follow-up: Git deployments disabled for site and docs via `vercel.json` (D-057). Consequence: no Vercel preview checks on PRs; deploy by hand (`vercel --prod` or dashboard redeploy).
 - Next: S14 Theme architecture. Purander: pause or delete the Vercel project `ui-design-system-registry`.
 
 ## Retro (Release 0)
