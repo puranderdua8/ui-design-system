@@ -59,6 +59,20 @@
         "$description": "Widest content width."
       }
     },
+    "item-min": {
+      "sm": {
+        "$value": "{size.item.sm}",
+        "$description": "Narrowest item in an auto-fit grid."
+      },
+      "md": {
+        "$value": "{size.item.md}",
+        "$description": "Default minimum item width in an auto-fit grid."
+      },
+      "lg": {
+        "$value": "{size.item.lg}",
+        "$description": "Wide minimum item width in an auto-fit grid."
+      }
+    },
     "sidebar-width": {
       "$value": "{size.sidebar}",
       "$description": "Width of a sidebar column."

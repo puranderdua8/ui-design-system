@@ -46,6 +46,9 @@
   --ds-size-container-md: 48rem;
   --ds-size-container-lg: 64rem;
   --ds-size-container-xl: 80rem;
+  --ds-size-item-sm: 12rem;
+  --ds-size-item-md: 16rem;
+  --ds-size-item-lg: 20rem;
   --ds-size-sidebar: 16rem;
   --ds-radius-sm: 0.25rem;
   --ds-radius-md: 0.5rem;
@@ -146,6 +149,9 @@
   --ds-layout-container-md: var(--ds-size-container-md); /** Reading content width. */
   --ds-layout-container-lg: var(--ds-size-container-lg); /** Wide content width. */
   --ds-layout-container-xl: var(--ds-size-container-xl); /** Widest content width. */
+  --ds-layout-item-min-sm: var(--ds-size-item-sm); /** Narrowest item in an auto-fit grid. */
+  --ds-layout-item-min-md: var(--ds-size-item-md); /** Default minimum item width in an auto-fit grid. */
+  --ds-layout-item-min-lg: var(--ds-size-item-lg); /** Wide minimum item width in an auto-fit grid. */
   --ds-layout-sidebar-width: var(--ds-size-sidebar); /** Width of a sidebar column. */
   --ds-type-display-font-family: var(--ds-font-family-heading);
   --ds-type-display-font-size: var(--ds-font-size-3xl);

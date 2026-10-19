@@ -16,3 +16,14 @@ export type ElementProps<E extends keyof React.JSX.IntrinsicElements> =
   React.ComponentPropsWithoutRef<E> & {
     ref?: StrictRef<React.ComponentRef<E>>;
   };
+
+type Tag = keyof React.JSX.IntrinsicElements;
+
+/**
+ * Props for a component that renders one of several elements via `as`.
+ * `Default` is used when `as` is omitted; `Others` need an explicit `as`.
+ * Each branch carries that element's native props and ref type.
+ */
+export type AsProps<Default extends Tag, Others extends Tag = never> =
+  | (Default extends Tag ? { as?: Default } & ElementProps<Default> : never)
+  | (Others extends Tag ? { as: Others } & ElementProps<Others> : never);
