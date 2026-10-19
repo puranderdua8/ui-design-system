@@ -30,5 +30,26 @@ export type {
   ClusterAlign,
   ClusterElement,
 } from "./components/cluster";
+export { Section } from "./components/section";
+export type {
+  SectionProps,
+  SectionTone,
+  SectionPadding,
+  SectionElement,
+} from "./components/section";
+export { Split } from "./components/split";
+export type {
+  SplitProps,
+  SplitRatio,
+  SplitAlign,
+  SplitElement,
+} from "./components/split";
+export { Sidebar } from "./components/sidebar";
+export type {
+  SidebarProps,
+  SidebarSide,
+  SidebarCollapse,
+  SidebarAsideElement,
+} from "./components/sidebar";
 export { Button, buttonVariants } from "./components/button";
 export type { ButtonProps } from "./components/button";
