@@ -8,6 +8,8 @@ import { Text } from "./text";
 
 type FieldContextValue = {
   controlId: string;
+  /** Id of the Field's label, for groups that need `aria-labelledby`. */
+  labelId: string;
   describedBy: string | undefined;
   invalid: boolean;
   required: boolean;
@@ -43,6 +45,7 @@ export const Field = ({
 }: FieldProps) => {
   const generated = React.useId();
   const controlId = id ?? `${generated}-control`;
+  const labelId = `${controlId}-label`;
   const descriptionId = `${controlId}-description`;
   const errorId = `${controlId}-error`;
   const hasDescription = description != null && description !== false;
@@ -54,8 +57,8 @@ export const Field = ({
       .join(" ") || undefined;
 
   const value = React.useMemo(
-    () => ({ controlId, describedBy, invalid: hasError, required }),
-    [controlId, describedBy, hasError, required],
+    () => ({ controlId, labelId, describedBy, invalid: hasError, required }),
+    [controlId, labelId, describedBy, hasError, required],
   );
 
   return (
@@ -66,7 +69,7 @@ export const Field = ({
         data-invalid={hasError ? "" : undefined}
         className={cn("flex flex-col gap-ds-gap-xs", className)}
       >
-        <Label htmlFor={controlId} required={required}>
+        <Label id={labelId} htmlFor={controlId} required={required}>
           {label}
         </Label>
         {children}
