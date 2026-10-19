@@ -1,6 +1,6 @@
 # @puranderdua/ui
 
-Token-driven React components: `Text`, `Heading`, `Button`. React 19 and Tailwind CSS v4 only.
+Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`). React 19 and Tailwind CSS v4 only.
 
 ## Install
 
@@ -48,7 +48,17 @@ export const Hero = () => (
 - `Text`: `variant` body | lead | caption | label; `as` p | span | div | label.
 - `Heading`: `variant` display | h1 | h2 | h3; `as` h1 to h6.
 - `Button`: `variant` primary | secondary; `size` sm | md; `asChild`; `type="button"` by default.
+- `Link`: `variant` inline (always underlined) | standalone (underlined on hover and focus); `asChild` (for `next/link`); `external` adds `target="_blank"`, `rel="noopener noreferrer"`, an icon and a hidden "(opens in a new tab)".
+
+Layout (0.3.0), all with a typed `as`:
+
+- `Container`: `size` sm to xl | full; `gutter`.
+- `Grid`: `cols` (responsive) or `minItemWidth` (auto-fit); `gap`.
+- `Stack`: vertical flow with `gap`, `align`. `Cluster`: wrapping row with `gap`, `justify`, `align`.
+- `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; optional inner `Container`.
+- `Split`: two columns 1:1, 1:2 or 2:1; `reverse`; stacks below `md`.
+- `Sidebar`: `sidebar` slot, `side`, `collapseBelow`.
 
 Type a `ref` from the same element you pass to `as`, and prefer callback refs.
 
-MIT. Button is adapted from shadcn/ui (MIT).
+Icons come from `lucide-react` (a dependency). MIT. Button is adapted from shadcn/ui (MIT).
