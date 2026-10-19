@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 — unreleased
+
+Added:
+
+- Layout components: `Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar` (typed `as`, static variant maps, responsive, tokens only).
+- Tokens `size.item.sm|md|lg` → `layout.item-min.*`, and `.ds-grid-fit-*` recipes for `Grid` auto-fit.
+- `Link`: `variant` inline | standalone, `asChild`, `external` (new tab with icon and hidden hint), link colours from `text.link*`.
+- Dependency `lucide-react` (icons).
+
+No breaking changes.
+
 ## 0.2.0 — unreleased
 
 Breaking (0.x minor):

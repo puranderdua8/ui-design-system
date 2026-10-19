@@ -1,6 +1,6 @@
 # ui-design-system
 
-A small, token-driven design system: **Text**, **Heading** and **Button** for React 19 and Tailwind CSS v4, distributed as one npm package. Release 1 is in progress (see [Roadmap](#roadmap)).
+A small, token-driven design system: **Text**, **Heading**, **Button**, **Link** and layout components (**Container**, **Grid**, **Stack**, **Cluster**, **Section**, **Split**, **Sidebar**) for React 19 and Tailwind CSS v4, distributed as one npm package. Release 1 is in progress (see [Roadmap](#roadmap)).
 
 - Site: https://ui-design-system-beta.vercel.app/
 - Storybook: https://ui-design-system-storybook-mu.vercel.app/
@@ -15,7 +15,7 @@ A small, token-driven design system: **Text**, **Heading** and **Button** for Re
         ↓ build (Style Dictionary)
 3. Styles       packages/ui/src/styles/   Tailwind v4 `@theme inline` bridge + type/focus recipes
         ↓ use
-4. Components   packages/ui/src/components/   Text, Heading, Button (semantic tokens only)
+4. Components   packages/ui/src/components/   Text, Heading, Button, Link, layout (semantic tokens only)
 ```
 
 Generated files (`**/generated/**`, `dist/**`) are never edited by hand. Change the source and rebuild.

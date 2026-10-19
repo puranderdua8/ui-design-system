@@ -53,3 +53,5 @@ export type {
 } from "./components/sidebar";
 export { Button, buttonVariants } from "./components/button";
 export type { ButtonProps } from "./components/button";
+export { Link, linkVariants } from "./components/link";
+export type { LinkProps } from "./components/link";

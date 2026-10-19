@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S20 Link + 0.3.0 prep
+- **Next session:** S21 Showcase Layout + Actions (after Purander publishes 0.3.0)
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -53,7 +53,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S17 Showcase shell                          | M7        | ☑      |
 | S18 Container, Grid, Stack, Cluster         | M8        | ☑      |
 | S19 Section, Split, Sidebar                 | M8        | ☑      |
-| S20 Link + 0.3.0 prep                       | M8        | ☐      |
+| S20 Link + 0.3.0 prep                       | M8        | ☑      |
 | S21 Showcase Layout + Actions               | M8        | ☐      |
 | S22 Client boundary + Label, Field, Input   | M9        | ☐      |
 | S23 Checkbox + RadioGroup                   | M9        | ☐      |
@@ -251,6 +251,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-062.
 - Gotchas: contrast pairs for every tone already existed (text.primary on canvas/subtle, text.inverse on inverse, text.on-brand on brand), so none were added; a test asserts they stay listed. A required prop (`sidebar`) must be in Storybook meta `args` or `satisfies Meta` typing breaks per-story overrides. The site is still on 0.2.0 and does not use these yet (release S20, showcase S21).
 - Next: S20 Link + 0.3.0 prep.
+
+### S20 — Link + 0.3.0 prep — 2026-10-19
+
+- Done (branch `s20-link-0.3.0`, cut from synced `main` after #19 merged): `Link` (`variant` inline | standalone, `asChild`, `external`), 11 tests in `link.test.tsx` (asChild, asChild + external, external attributes and hint, keyboard, ref, axe; 108 total), story `Components/Link`, export. Added dependency `lucide-react`. Release prep: version 0.3.0, CHANGELOG 0.3.0 (layout, Link, no breaking changes), README component lists (root and package), D-063.
+- Verified: `pnpm check` green (lint, tokens, typecheck, tests, build, playground, Storybook). `pnpm pack` tarball (0.3.0) holds dist index/d.ts/foundations/themes/contrast-pairs, README, package.json; `lucide-react` is in `dependencies`, the bundle imports it, and the d.ts exports `Link`. Not published.
+- Decisions: D-063.
+- Gotchas: (1) The accessible name was "Example(opens in a new tab)" with the space inside the `sr-only` span; the space is now a separate text node before the span. (2) With `asChild`, two children (content plus icon) make Slot throw, so `children` always goes through `Slot.Slottable`. (3) Vite warns that the `"use client"` directive in lucide's files may not be preserved when bundling (Storybook build only, harmless). S22 owns the client boundary. (4) I did not tarball-install into a throwaway Next app (only inspected the tarball). (5) The site is on 0.2.0 and does not use Link yet (S21).
+- Next: Purander runs `npm publish` for 0.3.0 and checks `npm view @puranderdua/ui version`; then S21 (site moves to 0.3.0, Layout page, Link on Actions).
 
 ## Retro (Release 0)
 
