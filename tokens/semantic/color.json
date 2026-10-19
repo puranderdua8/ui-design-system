@@ -11,7 +11,19 @@
     },
     "inverse": {
       "$value": "{color.white}",
-      "$description": "Text on dark or brand-filled backgrounds."
+      "$description": "Text on dark backgrounds (surface.inverse)."
+    },
+    "link": {
+      "$value": "{color.brand.700}",
+      "$description": "Link text; 4.5:1 on the canvas and subtle surfaces."
+    },
+    "link-hover": {
+      "$value": "{color.brand.800}",
+      "$description": "Link text on hover."
+    },
+    "on-brand": {
+      "$value": "{color.white}",
+      "$description": "Text and icons on surface.brand."
     }
   },
   "surface": {
@@ -19,6 +31,22 @@
     "canvas": {
       "$value": "{color.white}",
       "$description": "Page background."
+    },
+    "subtle": {
+      "$value": "{color.neutral.50}",
+      "$description": "Quiet panel or band behind content, one step off the canvas."
+    },
+    "raised": {
+      "$value": "{color.white}",
+      "$description": "Cards and floating layers; pair with the elevation tokens."
+    },
+    "inverse": {
+      "$value": "{color.neutral.900}",
+      "$description": "Dark surface; text on it uses text.inverse."
+    },
+    "brand": {
+      "$value": "{color.brand.600}",
+      "$description": "Brand-filled surface; text on it uses text.on-brand."
     }
   },
   "border": {
@@ -26,6 +54,57 @@
     "default": {
       "$value": "{color.neutral.300}",
       "$description": "Decorative separators and neutral outlines. Not a control boundary (3:1 not guaranteed)."
+    },
+    "strong": {
+      "$value": "{color.neutral.400}",
+      "$description": "Emphasised separators and outlines. Not a control boundary (3:1 not guaranteed)."
+    },
+    "control": {
+      "$value": "{color.neutral.500}",
+      "$description": "Boundary of an interactive control; meets 3:1 against the canvas."
+    }
+  },
+  "input": {
+    "$type": "color",
+    "bg": {
+      "$value": "{color.white}",
+      "$description": "Text input and select fill."
+    },
+    "border": {
+      "$value": "{color.neutral.500}",
+      "$description": "Input outline; meets 3:1 against the input fill and the canvas."
+    },
+    "border-hover": {
+      "$value": "{color.neutral.700}",
+      "$description": "Input outline on hover."
+    },
+    "placeholder": {
+      "$value": "{color.neutral.600}",
+      "$description": "Placeholder text; 4.5:1 on the input fill."
+    }
+  },
+  "feedback": {
+    "$type": "color",
+    "danger": {
+      "fg": {
+        "$value": "{color.red.700}",
+        "$description": "Error text and icons; 4.5:1 on the canvas and feedback.danger.bg."
+      },
+      "border": {
+        "$value": "{color.red.600}",
+        "$description": "Error outline; meets 3:1 against the canvas and feedback.danger.bg."
+      },
+      "bg": {
+        "$value": "{color.red.50}",
+        "$description": "Error message or field background."
+      }
+    }
+  },
+  "overlay": {
+    "$type": "color",
+    "scrim": {
+      "$value": "{color.scrim}",
+      "$description": "Translucent backdrop behind modal layers (has alpha, so no contrast pair)."
     }
   },
   "action": {

@@ -12,6 +12,9 @@
       "sources": [
         { "$ref": "semantic/color.json" },
         { "$ref": "semantic/control.json" },
+        { "$ref": "semantic/effects.json" },
+        { "$ref": "semantic/layout.json" },
+        { "$ref": "semantic/shape.json" },
         { "$ref": "semantic/typography.json" }
       ]
     }
@@ -24,6 +27,7 @@
         "base": [
           { "$ref": "themes/base/color.json" },
           { "$ref": "themes/base/dimension.json" },
+          { "$ref": "themes/base/effects.json" },
           { "$ref": "themes/base/typography.json" }
         ]
       }

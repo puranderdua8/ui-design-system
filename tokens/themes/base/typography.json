@@ -2,9 +2,13 @@
   "font": {
     "family": {
       "$type": "fontFamily",
-      "sans": {
+      "heading": {
         "$value": "Inter, system-ui, sans-serif",
-        "$description": "Brand font (Inter) with system fallback stack."
+        "$description": "Display and heading font (Inter) with system fallback stack."
+      },
+      "body": {
+        "$value": "Inter, system-ui, sans-serif",
+        "$description": "Body, label and control font (Inter) with system fallback stack."
       }
     },
     "size": {

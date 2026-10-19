@@ -1,0 +1,67 @@
+{
+  "layout": {
+    "$type": "dimension",
+    "gap": {
+      "xs": {
+        "$value": "{space.2}",
+        "$description": "Tightest gap between related items."
+      },
+      "sm": {
+        "$value": "{space.3}",
+        "$description": "Small gap."
+      },
+      "md": {
+        "$value": "{space.4}",
+        "$description": "Default gap."
+      },
+      "lg": {
+        "$value": "{space.6}",
+        "$description": "Large gap between groups."
+      },
+      "xl": {
+        "$value": "{space.8}",
+        "$description": "Largest gap between blocks."
+      }
+    },
+    "section-padding": {
+      "sm": {
+        "$value": "{space.12}",
+        "$description": "Vertical padding of a compact page section."
+      },
+      "md": {
+        "$value": "{space.16}",
+        "$description": "Vertical padding of a standard page section."
+      },
+      "lg": {
+        "$value": "{space.24}",
+        "$description": "Vertical padding of a spacious page section."
+      }
+    },
+    "gutter": {
+      "$value": "{space.4}",
+      "$description": "Horizontal page margin and column gutter."
+    },
+    "container": {
+      "sm": {
+        "$value": "{size.container.sm}",
+        "$description": "Narrow content width."
+      },
+      "md": {
+        "$value": "{size.container.md}",
+        "$description": "Reading content width."
+      },
+      "lg": {
+        "$value": "{size.container.lg}",
+        "$description": "Wide content width."
+      },
+      "xl": {
+        "$value": "{size.container.xl}",
+        "$description": "Widest content width."
+      }
+    },
+    "sidebar-width": {
+      "$value": "{size.sidebar}",
+      "$description": "Width of a sidebar column."
+    }
+  }
+}

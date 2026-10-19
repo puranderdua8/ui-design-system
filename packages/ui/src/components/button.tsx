@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
 
 const base =
-  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border font-ds-sans font-medium rounded-ds-control transition-colors ds-focus-ring " +
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border font-ds-body font-medium rounded-ds-control transition-colors ds-focus-ring " +
   "disabled:pointer-events-none disabled:border-ds-disabled-border disabled:bg-ds-disabled disabled:text-ds-disabled-fg " +
   "[&_svg]:pointer-events-none [&_svg]:shrink-0";
 

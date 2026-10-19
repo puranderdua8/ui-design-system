@@ -4,5 +4,5 @@
 @source "../node_modules/@puranderdua/ui/dist";
 
 body {
-  font-family: var(--ds-font-family-sans);
+  font-family: var(--ds-font-family-body);
 }

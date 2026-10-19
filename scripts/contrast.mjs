@@ -16,28 +16,22 @@ const themePaths =
         .filter((f) => f.endsWith(".json"))
         .sort()
         .map((f) => join(themesDir, f));
-const TEXT = 4.5; // WCAG 1.4.3, normal text
-const UI = 3; // WCAG 1.4.11, non-text (focus ring, control boundaries)
+const MINIMUMS = {
+  text: 4.5, // WCAG 1.4.3, normal text
+  ui: 3, // WCAG 1.4.11, non-text (focus ring, control boundaries)
+};
 
-// [foreground, background, minimum] semantic token names (without --ds-).
-// Not checked on purpose: disabled.* (exempt from WCAG contrast) and
-// border.default (decorative separators, not a control boundary). If a later
-// component uses border.default as the only boundary of an input, add it here
-// at UI.
-const PAIRS = [
-  ["text-primary", "surface-canvas", TEXT],
-  ["text-muted", "surface-canvas", TEXT],
-  ["action-primary-fg", "action-primary-bg", TEXT],
-  ["action-primary-fg", "action-primary-bg-hover", TEXT],
-  ["action-primary-fg", "action-primary-bg-active", TEXT],
-  ["action-secondary-fg", "action-secondary-bg", TEXT],
-  ["action-secondary-fg", "action-secondary-bg-hover", TEXT],
-  ["action-secondary-fg", "action-secondary-bg-active", TEXT],
-  ["focus-ring", "surface-canvas", UI],
-  ["action-secondary-border", "action-secondary-bg", UI],
-  ["action-secondary-border", "action-secondary-bg-hover", UI],
-  ["action-secondary-border", "action-secondary-bg-active", UI],
-];
+// [foreground, background, minimum] as var names without --ds-
+// (text.on-brand -> text-on-brand). The pairs, and what is left out on
+// purpose, live in tokens/contrast-pairs.json.
+const { pairs } = JSON.parse(
+  readFileSync(join(root, "tokens/contrast-pairs.json"), "utf8"),
+);
+const PAIRS = pairs.map(({ fg, bg, min }) => {
+  if (!(min in MINIMUMS))
+    throw new Error(`contrast-pairs.json: unknown min "${min}" for ${fg}`);
+  return [fg.replaceAll(".", "-"), bg.replaceAll(".", "-"), MINIMUMS[min]];
+});
 
 function rgb(hex) {
   const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex);

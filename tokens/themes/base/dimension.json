@@ -19,6 +19,18 @@
     },
     "6": {
       "$value": "1.5rem"
+    },
+    "8": {
+      "$value": "2rem"
+    },
+    "12": {
+      "$value": "3rem"
+    },
+    "16": {
+      "$value": "4rem"
+    },
+    "24": {
+      "$value": "6rem"
     }
   },
   "size": {
@@ -31,7 +43,24 @@
         "$value": "2.5rem"
       }
     },
-    "$description": "Fixed control heights that are not on the spacing scale (D-018)."
+    "container": {
+      "sm": {
+        "$value": "40rem"
+      },
+      "md": {
+        "$value": "48rem"
+      },
+      "lg": {
+        "$value": "64rem"
+      },
+      "xl": {
+        "$value": "80rem"
+      }
+    },
+    "sidebar": {
+      "$value": "16rem"
+    },
+    "$description": "Fixed sizes that are not on the spacing scale: control heights (D-018), container widths, sidebar width."
   },
   "radius": {
     "$type": "dimension",
@@ -41,12 +70,21 @@
     "md": {
       "$value": "0.5rem"
     },
+    "lg": {
+      "$value": "0.75rem"
+    },
+    "full": {
+      "$value": "9999px"
+    },
     "$description": "Corner radii."
   },
   "border-width": {
     "$type": "dimension",
-    "default": {
+    "1": {
       "$value": "1px"
+    },
+    "2": {
+      "$value": "2px"
     },
     "$description": "Border thickness."
   },

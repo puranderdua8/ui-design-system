@@ -3,3 +3,11 @@
 export const dsFontSizes: string[] = ["ds-display", "ds-h1", "ds-h2", "ds-h3", "ds-body", "ds-lead", "ds-caption", "ds-label", "ds-control-sm", "ds-control-md"];
 /** `.ds-type-<role>` recipe classes (each sets family, size, weight, leading, tracking). */
 export const dsTypeRecipes: string[] = ["ds-type-display", "ds-type-h1", "ds-type-h2", "ds-type-h3", "ds-type-body", "ds-type-lead", "ds-type-caption", "ds-type-label"];
+/** Values per tailwind-merge theme key (shadow, radius, container, spacing, ease). */
+export const dsThemeValues: Record<string, string[]> = {
+  shadow: ["ds-raised", "ds-overlay"],
+  radius: ["ds-control", "ds-card", "ds-pill"],
+  container: ["ds-sm", "ds-md", "ds-lg", "ds-xl"],
+  spacing: ["ds-control-sm", "ds-control-md", "ds-control-px-sm", "ds-control-px-md", "ds-gap-xs", "ds-gap-sm", "ds-gap-md", "ds-gap-lg", "ds-gap-xl", "ds-section-sm", "ds-section-md", "ds-section-lg", "ds-gutter", "ds-sidebar"],
+  ease: ["ds-standard", "ds-emphasized"],
+};

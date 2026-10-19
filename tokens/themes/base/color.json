@@ -5,6 +5,22 @@
       "$value": "#ffffff",
       "$description": "Pure white; page canvas and inverse text."
     },
+    "scrim": {
+      "$value": "#0d0f12b3",
+      "$description": "Neutral 950 at 70% opacity; the backdrop behind overlays."
+    },
+    "red": {
+      "$description": "Error and danger scale.",
+      "50": {
+        "$value": "#fdf1f0"
+      },
+      "600": {
+        "$value": "#c0352b"
+      },
+      "700": {
+        "$value": "#9f2a22"
+      }
+    },
     "brand": {
       "$description": "Achromatic scale built around the primary #595959 (brand.600).",
       "50": {

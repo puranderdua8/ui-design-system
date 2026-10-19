@@ -1,0 +1,75 @@
+{
+  "description": "WCAG pairs checked for every theme by scripts/contrast.mjs. fg and bg are semantic colour tokens. min is \"text\" (4.5:1, WCAG 1.4.3) or \"ui\" (3:1, WCAG 1.4.11). Not checked on purpose: disabled.* (exempt), border.default and border.strong (decorative), overlay.scrim (has alpha). Add a pair whenever a component puts one of these colours on another.",
+  "pairs": [
+    { "fg": "text.primary", "bg": "surface.canvas", "min": "text" },
+    { "fg": "text.primary", "bg": "surface.subtle", "min": "text" },
+    { "fg": "text.primary", "bg": "surface.raised", "min": "text" },
+    { "fg": "text.muted", "bg": "surface.canvas", "min": "text" },
+    { "fg": "text.muted", "bg": "surface.subtle", "min": "text" },
+    { "fg": "text.muted", "bg": "surface.raised", "min": "text" },
+    { "fg": "text.inverse", "bg": "surface.inverse", "min": "text" },
+    { "fg": "text.on-brand", "bg": "surface.brand", "min": "text" },
+    { "fg": "text.link", "bg": "surface.canvas", "min": "text" },
+    { "fg": "text.link", "bg": "surface.subtle", "min": "text" },
+    { "fg": "text.link", "bg": "surface.raised", "min": "text" },
+    { "fg": "text.link-hover", "bg": "surface.canvas", "min": "text" },
+    { "fg": "text.link-hover", "bg": "surface.subtle", "min": "text" },
+    { "fg": "text.link-hover", "bg": "surface.raised", "min": "text" },
+
+    { "fg": "action.primary.fg", "bg": "action.primary.bg", "min": "text" },
+    {
+      "fg": "action.primary.fg",
+      "bg": "action.primary.bg-hover",
+      "min": "text"
+    },
+    {
+      "fg": "action.primary.fg",
+      "bg": "action.primary.bg-active",
+      "min": "text"
+    },
+    { "fg": "action.secondary.fg", "bg": "action.secondary.bg", "min": "text" },
+    {
+      "fg": "action.secondary.fg",
+      "bg": "action.secondary.bg-hover",
+      "min": "text"
+    },
+    {
+      "fg": "action.secondary.fg",
+      "bg": "action.secondary.bg-active",
+      "min": "text"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "action.secondary.bg",
+      "min": "ui"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "action.secondary.bg-hover",
+      "min": "ui"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "action.secondary.bg-active",
+      "min": "ui"
+    },
+
+    { "fg": "focus.ring", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "focus.ring", "bg": "surface.subtle", "min": "ui" },
+    { "fg": "focus.ring", "bg": "surface.raised", "min": "ui" },
+
+    { "fg": "border.control", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "border.control", "bg": "surface.subtle", "min": "ui" },
+    { "fg": "input.border", "bg": "input.bg", "min": "ui" },
+    { "fg": "input.border", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "input.border", "bg": "surface.subtle", "min": "ui" },
+    { "fg": "input.border-hover", "bg": "input.bg", "min": "ui" },
+    { "fg": "input.border-hover", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "input.placeholder", "bg": "input.bg", "min": "text" },
+
+    { "fg": "feedback.danger.fg", "bg": "surface.canvas", "min": "text" },
+    { "fg": "feedback.danger.fg", "bg": "feedback.danger.bg", "min": "text" },
+    { "fg": "feedback.danger.border", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "feedback.danger.border", "bg": "feedback.danger.bg", "min": "ui" }
+  ]
+}

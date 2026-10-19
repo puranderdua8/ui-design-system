@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-themes` (cut from `main` 2026-10-19 after `m7-foundations` merged as #12)
-- **Next session:** S15 New token categories and semantic roles
+- **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
+- **Next session:** S16 0.2.0 release prep
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -48,7 +48,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | ------------------------------------------- | --------- | ------ |
 | S13 Remove the registry                     | M7        | ☑      |
 | S14 Theme architecture                      | M7        | ☑      |
-| S15 New token categories and semantic roles | M7        | ☐      |
+| S15 New token categories and semantic roles | M7        | ☑      |
 | S16 0.2.0 release prep                      | M7        | ☐      |
 | S17 Showcase shell                          | M7        | ☐      |
 | S18 Container, Grid, Stack, Cluster         | M8        | ☐      |
@@ -205,6 +205,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-058.
 - Gotchas: I edited several scripts with `node` heredocs instead of native tools (against D-043); Purander stopped me, and the rest used Edit/Write. The site still uses pinned 0.1.0 (its own `foundations.css` with values), so it is unaffected until S17. Breakpoints are not in any CSS yet.
 - Next: S15.
+
+### S15 — New token categories and semantic roles — 2026-10-19
+
+- Done: Base primitives for every new category (`themes/base/effects.json` new; `color`, `dimension`, `typography` extended) and semantics in `semantic/{color,effects,layout,shape,typography}.json` (76 semantic tokens, was 35 + 4 groups): heading/body families, elevation, motion, radius/border-width roles, layout gaps/section padding/gutter/containers/sidebar, surface/text/border/input/feedback/overlay colours. `validate-tokens` learns `shadow`, `duration`, `cubicBezier` and 8-digit hex; `tokens/contrast-pairs.json` (38 pairs, was 12) is read by `contrast.mjs` per theme and validated against the semantic colours. `theme.css`: bridge for all new colours, `--shadow/--container/--spacing/--radius/--ease-ds-*`, `font-ds-heading|body`, `.ds-type-*` read their own family var, new recipes `.ds-border*` and `.ds-transition*` (reduced motion). `build-foundations` also generates `dsThemeValues`; `cn()` feeds it to tailwind-merge `theme`. `playground:check` now looks for 83 classes (new ones used in a playground demo section).
+- Verified: `tokens:check` (all 38 pairs pass for Base, no token adjustments needed), typecheck, 56 tests (4 new `cn` tests: shadow, link colours, radius/container/spacing/ease, font families), `pnpm build`, `playground:check`, `build-storybook`, eslint and prettier (excluding `.claude/`) all green.
+- Decisions: D-059.
+- Gotchas: (1) Style Dictionary reports a "collision" when a group-level `$type` is declared in both a primitive and a semantic file for the same top-level group (`radius`, `border-width`); semantic shape tokens carry `$type` per leaf. (2) Primitive `border-width.default` became `border-width.1` so the semantic `border-width.default` can exist. (3) SD resolves shadow aliases before transform, so `--ds-elevation-*` are literal values in the CSS, not `var()` refs (JSON map unaffected); the propagation self-test does not cover shadows. (4) `ds-classes.ts` is tracked and written by `build-foundations`, which runs after tsup: after adding a new export, run `node scripts/build-foundations.mjs` once before `pnpm build`. (5) `font-ds-sans` and `--ds-font-family-sans` are gone; Button uses `font-ds-body`, Storybook styles use `--ds-font-family-body`. `apps/site` still maps Inter onto `--ds-font-family-sans` but is pinned to 0.1.0 until S17. (6) I briefly used `sed` (a build-script debug toggle, reverted, no diff) against D-043.
+- Next: S16 0.2.0 release prep. `contrast-pairs.json` is not yet shipped in the package (the playground in S34 wants it; decide in S16).
 
 ## Retro (Release 0)
 
