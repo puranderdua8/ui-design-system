@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M7 Single channel + theme-ready tokens, branch `m7-tokens` (cut from `main` 2026-10-19 after `m7-themes` merged as #13)
-- **Next session:** S18 Container, Grid, Stack, Cluster
+- **Next session:** S19 Section, Split, Sidebar
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -51,7 +51,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S15 New token categories and semantic roles | M7        | ☑      |
 | S16 0.2.0 release prep                      | M7        | ☑      |
 | S17 Showcase shell                          | M7        | ☑      |
-| S18 Container, Grid, Stack, Cluster         | M8        | ☐      |
+| S18 Container, Grid, Stack, Cluster         | M8        | ☑      |
 | S19 Section, Split, Sidebar                 | M8        | ☐      |
 | S20 Link + 0.3.0 prep                       | M8        | ☐      |
 | S21 Showcase Layout + Actions               | M8        | ☐      |
@@ -235,6 +235,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: none new.
 - Gotchas: the header added two links before the page content, so the smoke test's keyboard check now tabs three times. A Heading demo inside an `Example` (h2 section) must use h3 or the heading-order test fails. I used `sed` once for the version bump (against D-043). Rebased onto `main` after S16 merged (#16). `pnpm check` lint step fails only on the git-excluded `.claude/worktrees/` checkout (known); prettier on `apps docs`, tokens:check, typecheck and 56 package tests are green.
 - Next: S18.
+
+### S18 — Container, Grid, Stack, Cluster — 2026-10-19
+
+- Done (branch `s18-layout-primitives`, cut from synced `main` after #17 merged): `Container` (size sm–xl/full, gutter), `Grid` (`cols` 1/2/3/4/6/12 responsive maps, `minItemWidth` auto-fit, `gap`), `Stack` (gap, align), `Cluster` (gap, justify, align), each with a typed `as` union and per-element ref type via new `AsProps` in `lib/types.ts`; shared gap map in `lib/layout.ts`. New tokens `size.item.sm|md|lg` (12/16/20rem) → `layout.item-min.*`, plus `.ds-grid-fit-*` recipes in `theme.css`. 19 new tests (`layout.test.tsx`: elements, classes, ref types, static maps, bridge tokens, axe; 75 total). Stories under `Layout/` in Storybook.
+- Verified: `pnpm check` green (lint, tokens, typecheck, tests, build, playground, Storybook).
+- Decisions: D-061.
+- Gotchas: the grid-fit recipes needed new tokens because the plan had no min-item-width token. I appended `AsProps` to `types.ts` with a shell heredoc (against D-043); everything else used Write/Edit. The site is pinned to 0.2.0 and does not use these yet (release in S20, showcase in S21). The playground check does not grep the layout classes.
+- Next: S19.
 
 ## Retro (Release 0)
 

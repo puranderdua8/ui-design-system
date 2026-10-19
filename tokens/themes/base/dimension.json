@@ -57,6 +57,17 @@
         "$value": "80rem"
       }
     },
+    "item": {
+      "sm": {
+        "$value": "12rem"
+      },
+      "md": {
+        "$value": "16rem"
+      },
+      "lg": {
+        "$value": "20rem"
+      }
+    },
     "sidebar": {
       "$value": "16rem"
     },
