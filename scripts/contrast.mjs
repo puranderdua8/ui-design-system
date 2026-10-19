@@ -36,7 +36,9 @@ const PAIRS = pairs.map(({ fg, bg, min }) => {
 function rgb(hex) {
   const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex);
   if (!m)
-    throw new Error(`unsupported color "${hex}" (expected #rgb or #rrggbb)`);
+    throw new Error(
+      `unsupported color "${hex}" (expected #rgb or #rrggbb; colours with alpha cannot be contrast-checked)`,
+    );
   const h = m[1].length === 3 ? [...m[1]].map((c) => c + c).join("") : m[1];
   const n = parseInt(h, 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
