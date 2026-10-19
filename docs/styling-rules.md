@@ -41,4 +41,4 @@ Add a recipe only when utilities cannot express the composite.
 
 ## Build
 
-`pnpm --filter @puranderdua/ui build` concatenates `generated/tokens.css` + `theme.css` into `packages/ui/dist/foundations.css` (`scripts/build-foundations.mjs`). `pnpm --filter @puranderdua/ui playground:check` builds the throwaway Vite playground and fails if any class it uses is missing from the production CSS.
+`pnpm --filter @puranderdua/ui build` writes `theme.css` (bridge + recipes, no token values) to `packages/ui/dist/foundations.css` and copies `generated/themes/*` to `dist/themes/` (`scripts/build-foundations.mjs`). Import one `themes/<name>.css` after `foundations.css` (the playground and Storybook use `themes/base.css`). `pnpm --filter @puranderdua/ui playground:check` builds the throwaway Vite playground and fails if any class it uses is missing from the production CSS.

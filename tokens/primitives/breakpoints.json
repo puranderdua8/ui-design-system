@@ -1,0 +1,21 @@
+{
+  "breakpoint": {
+    "$type": "dimension",
+    "$description": "Shared, never themed (media queries cannot read custom properties). Match Tailwind v4's defaults. Not emitted or bridged yet.",
+    "sm": {
+      "$value": "40rem"
+    },
+    "md": {
+      "$value": "48rem"
+    },
+    "lg": {
+      "$value": "64rem"
+    },
+    "xl": {
+      "$value": "80rem"
+    },
+    "2xl": {
+      "$value": "96rem"
+    }
+  }
+}

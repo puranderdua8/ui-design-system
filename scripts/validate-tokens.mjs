@@ -1,14 +1,19 @@
-// Sanity checks for the DTCG token source in tokens/.
+// Sanity checks for the DTCG token source in tokens/ (or the dir in argv[2]).
+// - tokens/resolver.json lists the sources; every token file is listed
 // - every token has $value and an (own or inherited) $type
 // - primitives hold raw values in the right format for their $type
-// - aliases resolve to existing tokens of the matching $type
+// - every theme defines exactly Base's themeable keys, with the same types (D-048)
+// - aliases resolve to existing tokens of the matching $type, in every theme
 // - semantic tokens alias primitives only (no raw values, no semantic -> semantic)
 // - semantic tokens carry a $description
 import { readdirSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadResolver } from "./lib/resolver.mjs";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..", "tokens");
+const root =
+  process.argv[2] ??
+  join(dirname(fileURLToPath(import.meta.url)), "..", "tokens");
 const TYPES = new Set([
   "color",
   "dimension",
@@ -44,18 +49,18 @@ const FORMAT_HINT = {
 const ALIAS = /^\{([^{}]+)\}$/;
 
 const errors = [];
-const fail = (msg) => errors.push(msg);
+// Semantic checks repeat per theme; report each distinct problem once.
+const fail = (msg) => {
+  if (!errors.includes(msg)) errors.push(msg);
+};
 
-function collect(tier) {
-  const dir = join(root, tier);
+function collect(files) {
   const tokens = new Map();
-  for (const file of readdirSync(dir)
-    .filter((f) => f.endsWith(".json"))
-    .sort()) {
-    const where = `${tier}/${file}`;
+  for (const file of files) {
+    const where = relative(root, file);
     let json;
     try {
-      json = JSON.parse(readFileSync(join(dir, file), "utf8"));
+      json = JSON.parse(readFileSync(file, "utf8"));
     } catch (e) {
       fail(`${where}: invalid JSON (${e.message})`);
       continue;
@@ -118,14 +123,76 @@ function leaves(token) {
   return [{ part: null, type: token.type, value: token.value }];
 }
 
-const primitives = collect("primitives");
-const semantic = collect("semantic");
+let resolver;
+try {
+  resolver = loadResolver(root);
+} catch (e) {
+  console.error(`validate-tokens: ${e.message}`);
+  process.exit(1);
+}
 
-for (const name of semantic.keys())
-  if (primitives.has(name))
-    fail(`token ${name} exists in both primitives and semantic`);
+// Every .json under tokens/ (except the manifest) must be reachable from it.
+const listed = new Set([
+  ...resolver.shared,
+  ...resolver.semantic,
+  ...Object.values(resolver.themes).flat(),
+]);
+const onDisk = readdirSync(root, { recursive: true })
+  .filter((f) => f.endsWith(".json") && f !== "resolver.json")
+  .map((f) => join(root, f));
+for (const f of onDisk)
+  if (!listed.has(f))
+    fail(`${relative(root, f)} is not listed in resolver.json`);
+for (const f of listed)
+  if (!onDisk.includes(f))
+    fail(`resolver.json lists missing file ${relative(root, f)}`);
 
-for (const token of primitives.values()) {
+const shared = collect(resolver.shared);
+const semantic = collect(resolver.semantic);
+const themed = Object.fromEntries(
+  Object.entries(resolver.themes).map(([name, files]) => [
+    name,
+    collect(files),
+  ]),
+);
+
+for (const [name, prims] of Object.entries(themed))
+  for (const k of shared.keys())
+    if (prims.has(k))
+      fail(`theme ${name}: ${k} also exists in shared primitives`);
+
+// Completeness (D-048): same keys and types as Base in every theme.
+const base = themed[resolver.defaultTheme];
+for (const [name, prims] of Object.entries(themed)) {
+  if (name === resolver.defaultTheme) continue;
+  for (const [k, t] of base)
+    if (!prims.has(k))
+      fail(
+        `theme ${name} is missing ${k} (defined in ${resolver.defaultTheme})`,
+      );
+    else if (prims.get(k).type !== t.type)
+      fail(
+        `theme ${name}: ${k} is ${prims.get(k).type}, ${resolver.defaultTheme} has ${t.type}`,
+      );
+  for (const k of prims.keys())
+    if (!base.has(k))
+      fail(
+        `theme ${name} defines ${k}, which ${resolver.defaultTheme} does not`,
+      );
+}
+
+for (const [themeName, themePrims] of Object.entries(themed)) {
+  const primitives = new Map([...shared, ...themePrims]);
+  for (const token of primitives.values()) checkPrimitive(token);
+  const where = Object.keys(themed).length > 1 ? ` (theme ${themeName})` : "";
+  for (const name of semantic.keys())
+    if (primitives.has(name))
+      fail(`token ${name} exists in both primitives and semantic${where}`);
+  for (const token of semantic.values())
+    checkSemantic(token, primitives, where);
+}
+
+function checkPrimitive(token) {
   for (const { part, type, value } of leaves(token)) {
     if (typeof value === "string" && ALIAS.test(value)) {
       fail(
@@ -141,7 +208,7 @@ for (const token of primitives.values()) {
   }
 }
 
-for (const token of semantic.values()) {
+function checkSemantic(token, primitives, where) {
   if (typeof token.description !== "string" || token.description.trim() === "")
     fail(`${token.where}: semantic ${token.name} needs a $description`);
   for (const { part, type, value } of leaves(token)) {
@@ -159,7 +226,7 @@ for (const token of semantic.values()) {
         `${token.where}: ${label} aliases semantic token ${m[1]} (primitives only)`,
       );
     else if (!target)
-      fail(`${token.where}: ${label} aliases missing token ${m[1]}`);
+      fail(`${token.where}: ${label} aliases missing token ${m[1]}${where}`);
     else if (type && target.type !== type)
       fail(
         `${token.where}: ${label} is ${type} but aliases ${m[1]} which is ${target.type}`,
@@ -173,5 +240,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(
-  `validate-tokens: OK (${primitives.size} primitives, ${semantic.size} semantic)`,
+  `validate-tokens: OK (${Object.keys(themed).length} theme(s), ${themed[resolver.defaultTheme].size} themeable + ${shared.size} shared primitives, ${semantic.size} semantic)`,
 );
