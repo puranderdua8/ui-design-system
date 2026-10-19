@@ -1,6 +1,6 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
-import { gapClasses, type LayoutGap } from "@/lib/layout";
+import { gapClasses, listRole, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
 export type StackAlign = "start" | "center" | "end" | "stretch";
@@ -30,6 +30,7 @@ export const Stack = ({
   const Comp: React.ElementType = as;
   return (
     <Comp
+      role={listRole(as)}
       {...(props as object)}
       data-slot="stack"
       className={cn(

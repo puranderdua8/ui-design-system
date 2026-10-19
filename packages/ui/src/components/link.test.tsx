@@ -55,6 +55,32 @@ describe("Link", () => {
     );
   });
 
+  it("external keeps the caller's rel tokens and does not repeat its own", () => {
+    render(
+      <Link href="https://example.com" external rel="nofollow noopener">
+        Example
+      </Link>,
+    );
+    const rel = screen.getByRole("link").getAttribute("rel")!.split(" ");
+    expect(rel.sort()).toEqual(["nofollow", "noopener", "noreferrer"]);
+  });
+
+  it("a non-external link keeps its own rel", () => {
+    render(
+      <Link href="/a" rel="nofollow">
+        Go
+      </Link>,
+    );
+    expect(screen.getByRole("link").getAttribute("rel")).toBe("nofollow");
+  });
+
+  it("uses the motion recipe, not a fixed transition", () => {
+    render(<Link href="/a">Go</Link>);
+    const cls = screen.getByRole("link").className;
+    expect(cls).toContain("ds-transition");
+    expect(cls).not.toContain("transition-colors");
+  });
+
   it("asChild merges props onto the child element", () => {
     const Custom = ({
       to,

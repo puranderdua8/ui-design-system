@@ -10,7 +10,7 @@ const Pane = ({ children }: { children: React.ReactNode }) => (
 const meta = {
   title: "Layout/Split",
   component: Split,
-  args: { ratio: "1:1", reverse: false, align: "stretch", gap: "lg" },
+  args: { ratio: "1:1", align: "stretch", gap: "lg" },
   argTypes: {
     ratio: { control: "inline-radio", options: ["1:1", "1:2", "2:1"] },
     align: {
@@ -18,7 +18,6 @@ const meta = {
       options: ["start", "center", "end", "stretch"],
     },
     gap: { control: "inline-radio", options: ["xs", "sm", "md", "lg", "xl"] },
-    reverse: { control: "boolean" },
   },
   render: (args) => (
     <Split {...args}>
@@ -42,10 +41,6 @@ export const Ratios: Story = {
           <Pane>ratio {ratio}: second</Pane>
         </Split>
       ))}
-      <Split reverse ratio="1:2">
-        <Pane>reverse: first in DOM, shown second</Pane>
-        <Pane>reverse: second in DOM, shown first</Pane>
-      </Split>
     </Stack>
   ),
 };
@@ -69,7 +64,7 @@ export const Aligned: Story = {
   ),
 };
 
-/** Under `md` the columns stack in DOM order, reversed or not. */
+/** In a narrow container the columns stack in DOM order. */
 export const Narrow320: Story = {
   ...Ratios,
   globals: { viewport: { value: "narrow" } },

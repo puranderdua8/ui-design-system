@@ -32,14 +32,12 @@ const meta = {
   component: Sidebar,
   args: {
     side: "start",
-    collapseBelow: "md",
     gap: "lg",
     sidebar: <Links />,
     sidebarAs: "nav",
   },
   argTypes: {
     side: { control: "inline-radio", options: ["start", "end"] },
-    collapseBelow: { control: "inline-radio", options: ["md", "lg"] },
     gap: { control: "inline-radio", options: ["xs", "sm", "md", "lg", "xl"] },
   },
   render: (args) => (
@@ -66,15 +64,18 @@ export const Sides: Story = {
   ),
 };
 
-export const CollapseAtLarge: Story = {
+/** The layout follows the width it is given, so a narrow frame stacks it on any screen. */
+export const InNarrowFrame: Story = {
   render: () => (
-    <Sidebar collapseBelow="lg" sidebar={<Links />} sidebarAs="nav">
-      <Content />
-    </Sidebar>
+    <div className="w-80 max-w-full">
+      <Sidebar sidebar={<Links />} sidebarAs="nav">
+        <Content />
+      </Sidebar>
+    </div>
   ),
 };
 
-/** Under the breakpoint the aside stacks above the content. */
+/** When the row is too narrow the aside stacks above the content. */
 export const Narrow320: Story = {
   ...Sides,
   globals: { viewport: { value: "narrow" } },

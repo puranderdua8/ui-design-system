@@ -3,7 +3,11 @@ import { Cta } from "@/components/cta";
 
 const Home = () => {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col gap-16 px-4 py-12 sm:px-6 sm:py-20">
+    <main
+      id="main"
+      tabIndex={-1}
+      className="mx-auto flex w-full max-w-2xl flex-col gap-16 px-4 py-12 sm:px-6 sm:py-20"
+    >
       <header className="flex flex-col gap-6">
         <Text as="span" variant="caption" className="text-ds-text-muted">
           Portfolio · Design systems

@@ -10,7 +10,7 @@ export const categories = [
     slug: "layout",
     title: "Layout",
     description: "Container, Grid, Stack, Cluster, Section, Split and Sidebar.",
-    since: "0.3",
+    since: null,
   },
   {
     slug: "forms",
@@ -21,7 +21,8 @@ export const categories = [
   {
     slug: "actions",
     title: "Actions",
-    description: "Button variants and sizes, and a button that renders a link.",
+    description:
+      "Button variants and sizes, a button that renders a link, and Link itself.",
     since: null,
   },
   {

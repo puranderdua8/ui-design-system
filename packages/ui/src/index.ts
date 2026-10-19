@@ -48,7 +48,6 @@ export { Sidebar } from "./components/sidebar";
 export type {
   SidebarProps,
   SidebarSide,
-  SidebarCollapse,
   SidebarAsideElement,
 } from "./components/sidebar";
 export { Button, buttonVariants } from "./components/button";

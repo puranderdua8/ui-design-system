@@ -78,6 +78,78 @@ test.describe("Link examples", () => {
   });
 });
 
+test.describe("index and navigation", () => {
+  test("only unreleased categories say 'Coming in'", async ({ page }) => {
+    await page.goto("/components");
+    const cards = page
+      .getByRole("listitem")
+      .filter({ has: page.getByRole("heading", { level: 2 }) });
+    await expect(cards).toHaveCount(5);
+    for (const name of ["Typography", "Layout", "Actions"]) {
+      const card = cards.filter({ has: page.getByRole("heading", { name }) });
+      await expect(card).not.toContainText("Coming in");
+    }
+    for (const name of ["Forms", "Display"]) {
+      const card = cards.filter({ has: page.getByRole("heading", { name }) });
+      await expect(card).toContainText("Coming in");
+    }
+  });
+
+  test("the current page is marked in the header", async ({ page }) => {
+    await page.goto("/components/layout");
+    const nav = page.getByRole("navigation", { name: "Main" });
+    await expect(nav.getByRole("link", { name: "Components" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await expect(nav.getByRole("link", { name: "Home" })).not.toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
+  test("the skip link moves focus to the main content", async ({ page }) => {
+    await page.goto("/components");
+    await page.keyboard.press("Tab");
+    const skip = page.getByRole("link", { name: "Skip to content" });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeInViewport();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/#main$/);
+    await expect(page.locator("main")).toBeFocused();
+  });
+
+  test("page titles use the site template", async ({ page }) => {
+    await page.goto("/components/layout");
+    await expect(page).toHaveTitle("Layout — Purander Dua");
+  });
+});
+
+test.describe("demo source", () => {
+  test("the code shown is the code that rendered", async ({ page }) => {
+    await page.goto("/components/layout");
+    const code = page.getByRole("region", { name: "Grid code" });
+    await expect(code).toContainText(
+      'import { Grid, Stack } from "@puranderdua/ui"',
+    );
+    await expect(code).toContainText('<Grid cols={3} gap="sm">');
+  });
+});
+
+for (const width of [768, 1024, 1280]) {
+  test(`layout page has no horizontal scroll at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/components/layout");
+    const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+    expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+  });
+}
+
 test("header nav reaches the showcase", async ({ page }) => {
   await page.goto("/");
   await page

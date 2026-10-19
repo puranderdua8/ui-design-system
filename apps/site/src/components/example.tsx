@@ -1,37 +1,53 @@
-import type { ReactNode } from "react";
-import { Heading, Text } from "@puranderdua/ui";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import type { ComponentType } from "react";
+import { Cluster, Heading, Stack, Text } from "@puranderdua/ui";
 
 type ExampleProps = {
   title: string;
   description?: string;
-  /** Static source shown next to the live preview. Written by hand, never parsed. */
-  code: string;
-  /** The npm import line, e.g. `import { Button } from "@puranderdua/ui";`. */
-  importLine: string;
-  children: ReactNode;
+  /** Demo file under `src/demos/` without the extension, e.g. `layout/grid`. */
+  demo: string;
+  /** The demo component. Its source file is shown below the preview, so the two cannot drift. */
+  Demo: ComponentType;
+  /** Let the demo use the full width of the frame instead of sitting in a wrapping row. */
+  fill?: boolean;
 };
+
+const frame = "ds-border rounded-ds-card border-ds-border p-ds-gap-lg";
+
+/** Read at build time (static pages), so the shown code is the code that rendered. */
+const readDemo = (name: string) =>
+  readFileSync(join(process.cwd(), "src/demos", `${name}.tsx`), "utf8").trim();
 
 export const Example = ({
   title,
   description,
-  code,
-  importLine,
-  children,
+  demo,
+  Demo,
+  fill = false,
 }: ExampleProps) => (
-  <section className="flex flex-col gap-4">
+  <Stack as="section" gap="md">
     <Heading as="h2" variant="h3">
       {title}
     </Heading>
     {description ? <Text>{description}</Text> : null}
-    <div className="flex flex-wrap items-center gap-4 rounded-ds-control border border-ds-border p-6">
-      {children}
-    </div>
+    {fill ? (
+      <div className={frame}>
+        <Demo />
+      </div>
+    ) : (
+      <Cluster gap="md" className={frame}>
+        <Demo />
+      </Cluster>
+    )}
     <pre
+      role="region"
       tabIndex={0}
       aria-label={`${title} code`}
-      className="overflow-x-auto rounded-ds-control bg-ds-surface-subtle p-4 text-sm"
+      className="overflow-x-auto rounded-ds-card bg-ds-surface-subtle p-ds-gap-md font-mono ds-type-caption"
     >
-      <code>{`${importLine}\n\n${code}`}</code>
+      <code>{readDemo(demo)}</code>
     </pre>
-  </section>
+  </Stack>
 );

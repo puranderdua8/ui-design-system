@@ -235,6 +235,28 @@
     );
   }
 
+  /* Split: two columns that stack when their container is too narrow.
+     Each column has basis 0 and a minimum of its share of item-min.md, so the
+     row wraps by the width it is given (not the viewport) and the columns
+     keep the exact ratio while they fit. `min(100%, …)` stops a column from
+     overflowing a container narrower than its minimum. */
+  .ds-split {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .ds-split > * {
+    flex: 1 1 0;
+    min-width: min(100%, var(--ds-layout-item-min-md));
+  }
+  .ds-split-1-2 > :last-child {
+    flex-grow: 2;
+    min-width: min(100%, calc(var(--ds-layout-item-min-md) * 2));
+  }
+  .ds-split-2-1 > :first-child {
+    flex-grow: 2;
+    min-width: min(100%, calc(var(--ds-layout-item-min-md) * 2));
+  }
+
   /* Keyboard focus ring from the focus.ring-* tokens (width and offset have
      no Tailwind namespace, so a recipe keeps them out of arbitrary values). */
   .ds-focus-ring:focus-visible {

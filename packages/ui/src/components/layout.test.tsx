@@ -162,6 +162,31 @@ describe("Cluster", () => {
   });
 });
 
+describe("list semantics", () => {
+  it.each([
+    ["Grid", <Grid as="ul" key="g" />],
+    ["Stack", <Stack as="ol" key="s" />],
+    ["Cluster", <Cluster as="ul" key="c" />],
+  ])("%s as a list keeps its role after the list reset", (_name, el) => {
+    const { container } = render(el);
+    expect(container.firstElementChild?.getAttribute("role")).toBe("list");
+  });
+
+  it("adds no role to other elements and lets the caller override it", () => {
+    const { container } = render(
+      <>
+        <Stack />
+        <Stack as="nav" />
+        <Stack as="ul" role="presentation" />
+      </>,
+    );
+    const roles = Array.from(container.children).map((el) =>
+      el.getAttribute("role"),
+    );
+    expect(roles).toEqual([null, null, "presentation"]);
+  });
+});
+
 describe("static class maps", () => {
   const maps = [
     ...Object.values(gapClasses),

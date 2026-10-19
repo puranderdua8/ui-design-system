@@ -128,7 +128,19 @@ function App() {
         </div>
         <div className="bg-ds-surface-subtle py-ds-section-sm">
           <div className="flex gap-ds-gap-xl">
-            <div className="w-ds-sidebar">sidebar width</div>
+            <div className="flex flex-wrap">
+              <div className="grow basis-ds-sidebar">sidebar width</div>
+              <div className="grow-999 basis-0 min-w-1/2">content</div>
+            </div>
+            <div className="ds-split ds-split-1-2">
+              <div>one</div>
+              <div>two</div>
+            </div>
+            <div className="ds-split ds-split-2-1">
+              <div>two</div>
+              <div>one</div>
+            </div>
+            <div className="ds-grid-fit-md">fit</div>
             <div className="max-w-ds-sm">container sm</div>
             <div className="max-w-ds-lg">container lg</div>
             <div className="max-w-ds-xl">container xl</div>
