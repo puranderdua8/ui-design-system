@@ -49,7 +49,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S13 Remove the registry                     | M7        | ☑      |
 | S14 Theme architecture                      | M7        | ☑      |
 | S15 New token categories and semantic roles | M7        | ☑      |
-| S16 0.2.0 release prep                      | M7        | ◐      |
+| S16 0.2.0 release prep                      | M7        | ☑      |
 | S17 Showcase shell                          | M7        | ☐      |
 | S18 Container, Grid, Stack, Cluster         | M8        | ☐      |
 | S19 Section, Split, Sidebar                 | M8        | ☐      |
@@ -225,7 +225,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `pnpm check` green (56 tests). `pnpm pack` tarball holds dist (index, d.ts, foundations.css, contrast-pairs.json, themes/base.css|json), README, package.json. A throwaway Next 16.4.2 app in the scratchpad installed the tarball, rendered Text/Heading/Button (including `asChild`) with foundations + base theme, `next build` passed, and the built CSS contains the tokens (`--ds-color-brand-600`, elevation, heading family, radius, `ds-type-lead`, `ds-focus-ring`, `text-ds-control`); the `contrast-pairs.json` (44 pairs) and `themes/base.json` (184 vars) exports resolve.
 - Decisions: D-060.
 - Gotchas: the `radix-ui` umbrella grew `pnpm-lock.yaml` a lot (about 70 packages) but only the Slot code is bundled-in-use; it stays external. `sideEffects` and `files` needed no change (`dist` and `*.css` already cover the new files). Did not publish.
-- Purander: `cd packages/ui && npm publish --access public`, then `npm view @puranderdua/ui version` should show 0.2.0; tag after the milestone PR merges. Then mark S16 ☑.
+- Published by Purander on 2026-10-19: `@puranderdua/ui@0.2.0` (`npm view` shows 0.2.0). The first attempt failed with a misleading E404 because the npm login had expired (`npm whoami` gave 401); `npm login` fixed it. Tag after the milestone PR merges.
 - Next: S17 (site moves 0.1.0 → 0.2.0 and must drop `font-ds-sans`/`--ds-font-family-sans`).
 
 ## Retro (Release 0)
