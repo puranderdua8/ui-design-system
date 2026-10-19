@@ -6,7 +6,7 @@ import {
   dsTypeRecipes,
 } from "./generated/ds-classes";
 
-// All lists are generated from theme.css (scripts/build-foundations.mjs).
+// All lists are generated from theme.css (scripts/build-classes.mjs).
 // - `text-ds-<size>` must count as a font size, not a colour, or it would
 //   clash with `text-ds-text`.
 // - `ds-type-*` recipes are one group, so a later recipe (e.g. from
