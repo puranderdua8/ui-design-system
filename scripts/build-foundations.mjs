@@ -37,6 +37,32 @@ if (!sizes.length || !recipes.length) {
   console.error("theme.css: no --text-ds-* sizes or .ds-type-* recipes found.");
   process.exit(1);
 }
+// Bridge namespaces that tailwind-merge sorts by value shape (T-shirt sizes,
+// numbers). Without these, `shadow-ds-raised` reads as a shadow colour,
+// `max-w-ds-md` and `rounded-ds-card` go ungrouped, and a later `shadow-md`
+// would not replace them. Keys are tailwind-merge theme keys.
+const THEME_NAMESPACES = {
+  shadow: "shadow",
+  radius: "radius",
+  container: "container",
+  spacing: "spacing",
+  ease: "ease",
+};
+const themeValues = Object.fromEntries(
+  Object.entries(THEME_NAMESPACES).map(([key, ns]) => [
+    key,
+    [...theme.matchAll(new RegExp(`--${ns}-(ds-[a-z0-9-]+):`, "g"))].map(
+      (m) => m[1],
+    ),
+  ]),
+);
+for (const [key, values] of Object.entries(themeValues))
+  if (!values.length) {
+    console.error(
+      `theme.css: no --${THEME_NAMESPACES[key]}-ds-* entries found.`,
+    );
+    process.exit(1);
+  }
 const list = (xs) => `[${xs.map((x) => JSON.stringify(x)).join(", ")}]`;
 const classesFile = resolve(
   root,
@@ -50,6 +76,12 @@ writeFileSync(
 export const dsFontSizes: string[] = ${list(sizes)};
 /** \`.ds-type-<role>\` recipe classes (each sets family, size, weight, leading, tracking). */
 export const dsTypeRecipes: string[] = ${list(recipes)};
+/** Values per tailwind-merge theme key (shadow, radius, container, spacing, ease). */
+export const dsThemeValues: Record<string, string[]> = {
+${Object.entries(themeValues)
+  .map(([key, values]) => `  ${key}: ${list(values)},`)
+  .join("\n")}
+};
 `,
 );
 

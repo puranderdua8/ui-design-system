@@ -28,10 +28,6 @@
         "$value": "{font.size.base}",
         "$description": "Medium control label size."
       }
-    },
-    "radius": {
-      "$value": "{radius.md}",
-      "$description": "Corner radius shared by controls."
     }
   }
 }

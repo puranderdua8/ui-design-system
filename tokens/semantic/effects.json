@@ -1,0 +1,37 @@
+{
+  "elevation": {
+    "$type": "shadow",
+    "raised": {
+      "$value": "{shadow.sm}",
+      "$description": "Shadow of raised surfaces such as cards."
+    },
+    "overlay": {
+      "$value": "{shadow.lg}",
+      "$description": "Shadow of floating layers: menus, popovers, dialogs."
+    }
+  },
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$value": "{duration.100}",
+        "$description": "Quick feedback: hover, press, focus."
+      },
+      "normal": {
+        "$value": "{duration.200}",
+        "$description": "Standard transitions: open, close, expand."
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard": {
+        "$value": "{easing.in-out}",
+        "$description": "Default curve for most transitions."
+      },
+      "emphasized": {
+        "$value": "{easing.out-strong}",
+        "$description": "Decisive curve for elements entering the screen."
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
     "$type": "typography",
     "display": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.heading}",
         "fontSize": "{font.size.3xl}",
         "fontWeight": "{font.weight.bold}",
         "lineHeight": "{font.line-height.tight}",
@@ -13,7 +13,7 @@
     },
     "h1": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.heading}",
         "fontSize": "{font.size.2xl}",
         "fontWeight": "{font.weight.bold}",
         "lineHeight": "{font.line-height.tight}",
@@ -23,7 +23,7 @@
     },
     "h2": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.heading}",
         "fontSize": "{font.size.xl}",
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{font.line-height.tight}",
@@ -33,7 +33,7 @@
     },
     "h3": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.heading}",
         "fontSize": "{font.size.lg}",
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{font.line-height.tight}",
@@ -43,7 +43,7 @@
     },
     "body": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.body}",
         "fontSize": "{font.size.base}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{font.line-height.normal}",
@@ -53,7 +53,7 @@
     },
     "lead": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.body}",
         "fontSize": "{font.size.lg}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{font.line-height.relaxed}",
@@ -63,7 +63,7 @@
     },
     "caption": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.body}",
         "fontSize": "{font.size.xs}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{font.line-height.normal}",
@@ -73,7 +73,7 @@
     },
     "label": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "{font.family.body}",
         "fontSize": "{font.size.sm}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{font.line-height.normal}",

@@ -6,6 +6,7 @@
 // - aliases resolve to existing tokens of the matching $type, in every theme
 // - semantic tokens alias primitives only (no raw values, no semantic -> semantic)
 // - semantic tokens carry a $description
+// - contrast-pairs.json only names semantic colour tokens
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,10 +17,13 @@ const root =
   join(dirname(fileURLToPath(import.meta.url)), "..", "tokens");
 const TYPES = new Set([
   "color",
+  "cubicBezier",
   "dimension",
+  "duration",
   "fontFamily",
   "fontWeight",
   "number",
+  "shadow",
   "typography",
 ]);
 // Type each typography composite property must alias.
@@ -31,22 +35,51 @@ const PART_TYPES = {
   letterSpacing: "dimension",
 };
 // Raw value formats for primitives.
+const isColor = (v) =>
+  typeof v === "string" && /^#[0-9a-f]{6}([0-9a-f]{2})?$/i.test(v);
+const isDimension = (v) =>
+  typeof v === "string" && /^-?(\d+|\d*\.\d+)(rem|em|px)$/.test(v);
+const isUnit = (v) => typeof v === "number" && v >= 0 && v <= 1;
+// One shadow layer; a token may hold a single layer or an array of layers.
+const isShadowLayer = (v) =>
+  v !== null &&
+  typeof v === "object" &&
+  !Array.isArray(v) &&
+  Object.keys(v).sort().join() === "blur,color,offsetX,offsetY,spread" &&
+  isColor(v.color) &&
+  [v.offsetX, v.offsetY, v.blur, v.spread].every(isDimension);
 const VALUE_CHECKS = {
-  color: (v) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v),
-  dimension: (v) =>
-    typeof v === "string" && /^-?(\d+|\d*\.\d+)(rem|em|px)$/.test(v),
+  color: isColor,
+  cubicBezier: (v) =>
+    Array.isArray(v) &&
+    v.length === 4 &&
+    v.every((n) => typeof n === "number" && Number.isFinite(n)) &&
+    isUnit(v[0]) &&
+    isUnit(v[2]),
+  dimension: isDimension,
+  duration: (v) => typeof v === "string" && /^(\d+|\d*\.\d+)(ms|s)$/.test(v),
   fontWeight: (v) => Number.isInteger(v) && v >= 1 && v <= 1000,
   number: (v) => typeof v === "number" && Number.isFinite(v),
   fontFamily: (v) => typeof v === "string" && v.trim() !== "",
+  shadow: (v) =>
+    Array.isArray(v)
+      ? v.length > 0 && v.every(isShadowLayer)
+      : isShadowLayer(v),
 };
 const FORMAT_HINT = {
-  color: "#rrggbb",
+  color: "#rrggbb or #rrggbbaa",
+  cubicBezier: "[x1, y1, x2, y2] with x1 and x2 between 0 and 1",
   dimension: "a number with rem, em or px",
+  duration: "a number with ms or s",
   fontWeight: "an integer 1-1000",
   number: "a finite number",
   fontFamily: "a non-empty font stack",
+  shadow:
+    "{ color, offsetX, offsetY, blur, spread } (or an array of those) with raw values",
 };
 const ALIAS = /^\{([^{}]+)\}$/;
+// JSON files in tokens/ that are not token sources.
+const MANIFESTS = ["resolver.json", "contrast-pairs.json"];
 
 const errors = [];
 // Semantic checks repeat per theme; report each distinct problem once.
@@ -138,7 +171,7 @@ const listed = new Set([
   ...Object.values(resolver.themes).flat(),
 ]);
 const onDisk = readdirSync(root, { recursive: true })
-  .filter((f) => f.endsWith(".json") && f !== "resolver.json")
+  .filter((f) => f.endsWith(".json") && !MANIFESTS.includes(f))
   .map((f) => join(root, f));
 for (const f of onDisk)
   if (!listed.has(f))
@@ -190,6 +223,24 @@ for (const [themeName, themePrims] of Object.entries(themed)) {
       fail(`token ${name} exists in both primitives and semantic${where}`);
   for (const token of semantic.values())
     checkSemantic(token, primitives, where);
+}
+
+// contrast-pairs.json: every fg/bg is an existing semantic colour token.
+try {
+  const { pairs } = JSON.parse(
+    readFileSync(join(root, "contrast-pairs.json"), "utf8"),
+  );
+  if (!Array.isArray(pairs) || !pairs.length)
+    fail("contrast-pairs.json: needs a non-empty pairs array");
+  for (const { fg, bg, min } of pairs ?? []) {
+    for (const name of [fg, bg])
+      if (semantic.get(name)?.type !== "color")
+        fail(`contrast-pairs.json: ${name} is not a semantic colour token`);
+    if (min !== "text" && min !== "ui")
+      fail(`contrast-pairs.json: ${fg} on ${bg} has min "${min}"`);
+  }
+} catch (e) {
+  fail(`contrast-pairs.json: ${e.message}`);
 }
 
 function checkPrimitive(token) {

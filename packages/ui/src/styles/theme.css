@@ -11,8 +11,30 @@
   --color-ds-text: var(--ds-text-primary);
   --color-ds-text-muted: var(--ds-text-muted);
   --color-ds-text-inverse: var(--ds-text-inverse);
+  --color-ds-link: var(--ds-text-link);
+  --color-ds-link-hover: var(--ds-text-link-hover);
+  --color-ds-on-brand: var(--ds-text-on-brand);
+
   --color-ds-canvas: var(--ds-surface-canvas);
+  --color-ds-surface-subtle: var(--ds-surface-subtle);
+  --color-ds-surface-raised: var(--ds-surface-raised);
+  --color-ds-surface-inverse: var(--ds-surface-inverse);
+  --color-ds-surface-brand: var(--ds-surface-brand);
+
   --color-ds-border: var(--ds-border-default);
+  --color-ds-border-strong: var(--ds-border-strong);
+  --color-ds-border-control: var(--ds-border-control);
+
+  --color-ds-input: var(--ds-input-bg);
+  --color-ds-input-border: var(--ds-input-border);
+  --color-ds-input-border-hover: var(--ds-input-border-hover);
+  --color-ds-placeholder: var(--ds-input-placeholder);
+
+  --color-ds-danger-fg: var(--ds-feedback-danger-fg);
+  --color-ds-danger-border: var(--ds-feedback-danger-border);
+  --color-ds-danger-bg: var(--ds-feedback-danger-bg);
+
+  --color-ds-scrim: var(--ds-overlay-scrim);
 
   --color-ds-primary: var(--ds-action-primary-bg);
   --color-ds-primary-hover: var(--ds-action-primary-bg-hover);
@@ -31,8 +53,9 @@
   --color-ds-disabled-fg: var(--ds-disabled-fg);
   --color-ds-disabled-border: var(--ds-disabled-border);
 
-  /* Font family: font-ds-sans */
-  --font-ds-sans: var(--ds-font-family-sans);
+  /* Font families: font-ds-heading, font-ds-body */
+  --font-ds-heading: var(--ds-font-family-heading);
+  --font-ds-body: var(--ds-font-family-body);
 
   /* Type roles: text-ds-<role> sets size; companions set line-height,
      weight and letter-spacing. */
@@ -80,14 +103,44 @@
   --text-ds-control-sm: var(--ds-control-sm-font-size);
   --text-ds-control-md: var(--ds-control-md-font-size);
 
-  /* Radius: rounded-ds-control */
-  --radius-ds-control: var(--ds-control-radius);
+  /* Radius: rounded-ds-control, rounded-ds-card, rounded-ds-pill */
+  --radius-ds-control: var(--ds-radius-control);
+  --radius-ds-card: var(--ds-radius-card);
+  --radius-ds-pill: var(--ds-radius-pill);
 
-  /* Spacing namespace, control metrics only: h-ds-control-md, px-ds-control-sm */
+  /* Elevation: shadow-ds-raised, shadow-ds-overlay */
+  --shadow-ds-raised: var(--ds-elevation-raised);
+  --shadow-ds-overlay: var(--ds-elevation-overlay);
+
+  /* Easing: ease-ds-standard, ease-ds-emphasized (durations: see the
+     .ds-transition recipes, Tailwind has no duration namespace) */
+  --ease-ds-standard: var(--ds-motion-easing-standard);
+  --ease-ds-emphasized: var(--ds-motion-easing-emphasized);
+
+  /* Container widths: max-w-ds-sm ... max-w-ds-xl */
+  --container-ds-sm: var(--ds-layout-container-sm);
+  --container-ds-md: var(--ds-layout-container-md);
+  --container-ds-lg: var(--ds-layout-container-lg);
+  --container-ds-xl: var(--ds-layout-container-xl);
+
+  /* Spacing namespace, control metrics: h-ds-control-md, px-ds-control-px-md */
   --spacing-ds-control-sm: var(--ds-control-sm-height);
   --spacing-ds-control-md: var(--ds-control-md-height);
   --spacing-ds-control-px-sm: var(--ds-control-sm-padding-x);
   --spacing-ds-control-px-md: var(--ds-control-md-padding-x);
+
+  /* Spacing namespace, layout: gap-ds-gap-md, py-ds-section-md, px-ds-gutter,
+     w-ds-sidebar */
+  --spacing-ds-gap-xs: var(--ds-layout-gap-xs);
+  --spacing-ds-gap-sm: var(--ds-layout-gap-sm);
+  --spacing-ds-gap-md: var(--ds-layout-gap-md);
+  --spacing-ds-gap-lg: var(--ds-layout-gap-lg);
+  --spacing-ds-gap-xl: var(--ds-layout-gap-xl);
+  --spacing-ds-section-sm: var(--ds-layout-section-padding-sm);
+  --spacing-ds-section-md: var(--ds-layout-section-padding-md);
+  --spacing-ds-section-lg: var(--ds-layout-section-padding-lg);
+  --spacing-ds-gutter: var(--ds-layout-gutter);
+  --spacing-ds-sidebar: var(--ds-layout-sidebar-width);
 }
 
 /*
@@ -95,30 +148,70 @@
  * `@apply` is allowed here and nowhere else (docs/styling-rules.md).
  */
 @layer components {
-  /* One class per type role: family + size + weight + line-height + tracking. */
+  /* One class per type role: family + size + weight + line-height + tracking.
+     Each role reads its own family var (heading or body, set by the theme). */
   .ds-type-display {
-    @apply font-ds-sans text-ds-display;
+    font-family: var(--ds-type-display-font-family);
+    @apply text-ds-display;
   }
   .ds-type-h1 {
-    @apply font-ds-sans text-ds-h1;
+    font-family: var(--ds-type-h1-font-family);
+    @apply text-ds-h1;
   }
   .ds-type-h2 {
-    @apply font-ds-sans text-ds-h2;
+    font-family: var(--ds-type-h2-font-family);
+    @apply text-ds-h2;
   }
   .ds-type-h3 {
-    @apply font-ds-sans text-ds-h3;
+    font-family: var(--ds-type-h3-font-family);
+    @apply text-ds-h3;
   }
   .ds-type-body {
-    @apply font-ds-sans text-ds-body;
+    font-family: var(--ds-type-body-font-family);
+    @apply text-ds-body;
   }
   .ds-type-lead {
-    @apply font-ds-sans text-ds-lead;
+    font-family: var(--ds-type-lead-font-family);
+    @apply text-ds-lead;
   }
   .ds-type-caption {
-    @apply font-ds-sans text-ds-caption;
+    font-family: var(--ds-type-caption-font-family);
+    @apply text-ds-caption;
   }
   .ds-type-label {
-    @apply font-ds-sans text-ds-label;
+    font-family: var(--ds-type-label-font-family);
+    @apply text-ds-label;
+  }
+
+  /* Border thickness from the border-width.* tokens (Tailwind's border-<n>
+     utilities take fixed pixel values). Colour comes from border-ds-*. */
+  .ds-border {
+    border-style: solid;
+    border-width: var(--ds-border-width-default);
+  }
+  .ds-border-strong {
+    border-style: solid;
+    border-width: var(--ds-border-width-strong);
+  }
+
+  /* Transitions from the motion.* tokens. Reduced motion removes them. */
+  .ds-transition {
+    transition-property:
+      color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: var(--ds-motion-duration-normal);
+    transition-timing-function: var(--ds-motion-easing-standard);
+  }
+  .ds-transition-fast {
+    transition-property:
+      color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: var(--ds-motion-duration-fast);
+    transition-timing-function: var(--ds-motion-easing-standard);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-transition,
+    .ds-transition-fast {
+      transition-duration: 0s;
+    }
   }
 
   /* Keyboard focus ring from the focus.ring-* tokens (width and offset have
