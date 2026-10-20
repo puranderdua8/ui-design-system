@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M9 Forms, branch `s24-select` (cut from synced `main` 2026-10-20 after #24)
-- **Next session:** S25 0.4.0 + showcase Forms
+- **Current milestone:** M9 Forms, branch `s25-release-0.4.0-showcase-forms` (cut from synced `main` 2026-10-20 after S24 merged)
+- **Next session:** S26 Card + Tabs
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -58,7 +58,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S22 Client boundary + Label, Field, Input   | M9        | ☑      |
 | S23 Checkbox + RadioGroup                   | M9        | ☑      |
 | S24 Select                                  | M9        | ☑      |
-| S25 0.4.0 + showcase Forms                  | M9        | ☐      |
+| S25 0.4.0 + showcase Forms                  | M9        | ☑      |
 | S26 Card + Tabs                             | M10       | ☐      |
 | S27 Banner                                  | M10       | ☐      |
 | S28 0.5.0 + showcase Display + hardening    | M10       | ☐      |
@@ -300,6 +300,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-067.
 - Gotchas: (1) jsdom needs `hasPointerCapture`, `scrollIntoView` and `ResizeObserver` stubs for Radix Select. (2) axe's `region` rule fires on the portalled list in the test page; disabled for that check only. (3) Default position is `popper`, not upstream's `item-aligned`. (4) RSC tarball check not rerun (S25 before 0.4.0). (5) The Playground CSS check does not cover the new classes. (6) The upstream commit hash for select was not looked up; the provenance doc says so.
 - Next: S25 0.4.0 + showcase Forms.
+
+### S25 — 0.4.0 + showcase Forms — 2026-10-20
+
+- Done (branch `s25-release-0.4.0-showcase-forms`, cut from synced `main`): release prep 0.4.0 (version, CHANGELOG, both READMEs); `scripts/check-rsc.sh` PASS and `dist/components/{checkbox,radio-group,select}.js` keep `"use client"`. Purander published 0.4.0 (`npm view` shows 0.4.0). Site pinned to 0.4.0 (lockfile verified with `--frozen-lockfile` after dropping the 0.3.0 exclusion). Forms page: Input, Checkbox, RadioGroup and Select states, plus a client-validated form (email, country Select, contact RadioGroup, terms Checkbox) in `src/demos/forms/`. Forms category no longer says "Coming in". Split and Sidebar descriptions now describe container-width wrapping (D-064). E2E `forms.spec.ts`: keyboard operation of each control, errors announced and linked by `aria-describedby`, axe clean with errors showing and with a Select open (45 tests total).
+- Verified: `pnpm check` exit 0; site build and `test:e2e` 45 of 45 (run twice).
+- Decisions: none new.
+- Gotchas: (1) Radix aria-hides the rest of the page while a Select is open, so axe flags the off-screen skip link (`aria-hidden-focus`); the open-Select axe test is scoped to the listbox and disables `region`. (2) Keyboard tests wait for `networkidle` (hydration); the RadioGroup test was flaky without it. (3) The static invalid examples on the page are also `role="alert"`, so the form tests scope alerts to the `form`. (4) `check-rsc.sh` only imports Field and Input; the other controls are covered by the `use client` check on `dist`. (5) I edited one e2e file with a `node -e` snippet instead of Edit (against D-043).
+- Next: S26 Card + Tabs. Purander: tag v0.4.0 after the milestone PR merges.
 
 ## Retro (Release 0)
 

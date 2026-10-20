@@ -16,7 +16,7 @@ export const categories = [
     slug: "forms",
     title: "Forms",
     description: "Label, Field, Input, Checkbox, RadioGroup and Select.",
-    since: "0.4",
+    since: null,
   },
   {
     slug: "actions",

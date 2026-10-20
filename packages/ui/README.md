@@ -1,6 +1,6 @@
 # @puranderdua/ui
 
-Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`). React 19 and Tailwind CSS v4 only.
+Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Input`, `Checkbox`, `RadioGroup`, `Select`). React 19 and Tailwind CSS v4 only.
 
 ## Install
 
@@ -58,6 +58,13 @@ Layout (0.3.0), all with a typed `as`. `Grid`, `Stack` and `Cluster` add `role="
 - `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; optional inner `Container`.
 - `Split`: two columns 1:1, 1:2 or 2:1; stacks when its container is too narrow (not the viewport). Put padding on an inner element so the ratio stays exact.
 - `Sidebar`: `sidebar` slot, `side`; the content wraps below the aside when it would be narrower than half the row.
+
+Forms (0.4.0). The controls are client components; a Server Component page can still import them:
+
+- `Field`: wraps one control with `label`, `description`, `error` and `required`; wires ids, `aria-describedby` and `aria-invalid` to the control inside it.
+- `Label`: the label text style, with an optional required marker. `Input`: `size` sm | md; invalid and disabled states.
+- `Checkbox`: checked, indeterminate, invalid, disabled. `RadioGroup` with `RadioGroupItem`: arrow keys move between items.
+- `Select` with `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `SelectGroup`, `SelectLabel`, `SelectSeparator`: `SelectContent` takes a `container` so the list renders inside a themed scope.
 
 Type a `ref` from the same element you pass to `as`, and prefer callback refs.
 

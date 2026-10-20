@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — 2026-10-20
+
+Added (forms):
+
+- `Label`, `Field` (label, control, description, error, required marker; ids via `useId`, `aria-describedby`, `aria-invalid`) and `Input` (sm | md).
+- `Checkbox` (checked, indeterminate, invalid, disabled) and `RadioGroup` + `RadioGroupItem`, adapted from shadcn/ui new-york-v4 on `radix-ui`.
+- `Select` with `SelectTrigger` (sm | md), `SelectValue`, `SelectContent` (`container` prop for the Radix Portal), `SelectGroup`, `SelectLabel`, `SelectItem`, `SelectSeparator` and scroll buttons, adapted from shadcn/ui new-york-v4.
+- Form controls read the nearest `Field` for their id, `required`, invalid state and description.
+- The build keeps `"use client"` on client components (one entry per component), so Server Components can import `Text`, `Heading`, `Field`, `Input` and the rest directly (D-065).
 
 Breaking (0.x minor), both only in 0.3.0 for a few days:
 
