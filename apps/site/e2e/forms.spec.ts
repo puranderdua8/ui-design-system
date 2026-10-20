@@ -29,12 +29,18 @@ test.describe("keyboard operation", () => {
   }) => {
     const free = page.getByRole("radio", { name: "Free" });
     await free.focus();
-    await page.keyboard.press("ArrowDown");
+    // Radix checks a radio on arrow keys only while the key is still down when
+    // focus lands (it moves focus on a timeout), so hold the key; `press`
+    // releases it too early on a slow runner.
+    await page.keyboard.down("ArrowDown");
     const team = page.getByRole("radio", { name: "Team" });
     await expect(team).toBeFocused();
     await expect(team).toBeChecked();
-    await page.keyboard.press("ArrowDown");
+    await page.keyboard.up("ArrowDown");
+    await page.keyboard.down("ArrowDown");
     await expect(free).toBeFocused();
+    await expect(free).toBeChecked();
+    await page.keyboard.up("ArrowDown");
   });
 
   test("Select opens with the keyboard and picks an option", async ({
