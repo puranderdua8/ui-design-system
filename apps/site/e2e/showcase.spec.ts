@@ -57,7 +57,7 @@ test.describe("Link examples", () => {
   });
 
   test("next/link example activates by keyboard", async ({ page }) => {
-    const link = page.getByRole("link", { name: "Forms (coming soon)" });
+    const link = page.getByRole("link", { name: "Forms" });
     await link.focus();
     await expect(link).toBeFocused();
     await page.keyboard.press("Enter");
@@ -85,14 +85,14 @@ test.describe("index and navigation", () => {
       .getByRole("listitem")
       .filter({ has: page.getByRole("heading", { level: 2 }) });
     await expect(cards).toHaveCount(5);
-    for (const name of ["Typography", "Layout", "Actions"]) {
+    for (const name of ["Typography", "Layout", "Forms", "Actions"]) {
       const card = cards.filter({ has: page.getByRole("heading", { name }) });
       await expect(card).not.toContainText("Coming in");
     }
-    for (const name of ["Forms", "Display"]) {
-      const card = cards.filter({ has: page.getByRole("heading", { name }) });
-      await expect(card).toContainText("Coming in");
-    }
+    const display = cards.filter({
+      has: page.getByRole("heading", { name: "Display" }),
+    });
+    await expect(display).toContainText("Coming in");
   });
 
   test("the current page is marked in the header", async ({ page }) => {

@@ -12,6 +12,11 @@ import { Demo as LinkExternal } from "@/demos/actions/link-external";
 import { Demo as LinkInline } from "@/demos/actions/link-inline";
 import { Demo as LinkNext } from "@/demos/actions/link-next";
 import { Demo as LinkStandalone } from "@/demos/actions/link-standalone";
+import { Demo as CheckboxStates } from "@/demos/forms/checkbox-states";
+import { Demo as InputStates } from "@/demos/forms/input-states";
+import { Demo as RadioGroupDemo } from "@/demos/forms/radio-group";
+import { Demo as SelectStates } from "@/demos/forms/select-states";
+import { Demo as SignupForm } from "@/demos/forms/signup-form";
 import { Demo as ClusterDemo } from "@/demos/layout/cluster";
 import { Demo as ContainerDemo } from "@/demos/layout/container";
 import { Demo as GridDemo } from "@/demos/layout/grid";
@@ -90,6 +95,43 @@ const Actions = () => (
   </>
 );
 
+const Forms = () => (
+  <>
+    <Example
+      title="Input"
+      description="Sizes, required, invalid and disabled. Field links the label, help text and error to the control."
+      demo="forms/input-states"
+      Demo={InputStates}
+      fill
+    />
+    <Example
+      title="Checkbox"
+      demo="forms/checkbox-states"
+      Demo={CheckboxStates}
+    />
+    <Example
+      title="RadioGroup"
+      demo="forms/radio-group"
+      Demo={RadioGroupDemo}
+      fill
+    />
+    <Example
+      title="Select"
+      description="Built on Radix Select. The list takes a container, so it can render inside a themed scope."
+      demo="forms/select-states"
+      Demo={SelectStates}
+      fill
+    />
+    <Example
+      title="Form with validation"
+      description="Submit it empty to see the errors. Each message is linked to its control with aria-describedby and announced when it appears."
+      demo="forms/signup-form"
+      Demo={SignupForm}
+      fill
+    />
+  </>
+);
+
 const Layout = () => (
   <>
     <Text variant="caption" className="text-ds-text-muted">
@@ -133,14 +175,14 @@ const Layout = () => (
     />
     <Example
       title="Split"
-      description="Two columns in a chosen ratio. They stack on narrow screens."
+      description="Two columns in a chosen ratio. They stack when their container is too narrow."
       demo="layout/split"
       Demo={SplitDemo}
       fill
     />
     <Example
       title="Sidebar"
-      description="A fixed-width aside beside flexible content. It stacks below the md breakpoint."
+      description="A fixed-width aside beside flexible content. The content wraps below the aside when it would get too narrow."
       demo="layout/sidebar"
       Demo={SidebarDemo}
       fill
@@ -151,5 +193,6 @@ const Layout = () => (
 export const categoryContent: Partial<Record<CategorySlug, () => ReactNode>> = {
   typography: Typography,
   layout: Layout,
+  forms: Forms,
   actions: Actions,
 };
