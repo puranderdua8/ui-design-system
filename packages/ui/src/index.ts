@@ -71,3 +71,27 @@ export type {
   RadioGroupProps,
   RadioGroupItemProps,
 } from "./components/radio-group";
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  selectTriggerVariants,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from "./components/select";
+export type {
+  SelectProps,
+  SelectGroupProps,
+  SelectValueProps,
+  SelectTriggerProps,
+  SelectContentProps,
+  SelectLabelProps,
+  SelectItemProps,
+  SelectSeparatorProps,
+  SelectScrollButtonProps,
+} from "./components/select";

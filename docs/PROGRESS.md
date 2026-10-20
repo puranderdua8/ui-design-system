@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M9 Forms, branch `s23-checkbox-radiogroup` (cut from synced `main` 2026-10-19 after #23)
-- **Next session:** S24 Select
+- **Current milestone:** M9 Forms, branch `s24-select` (cut from synced `main` 2026-10-20 after #24)
+- **Next session:** S25 0.4.0 + showcase Forms
 - **Blockers:** none
 
 ## Brand (filled in S1)
@@ -57,7 +57,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S21 Showcase Layout + Actions               | M8        | ☑      |
 | S22 Client boundary + Label, Field, Input   | M9        | ☑      |
 | S23 Checkbox + RadioGroup                   | M9        | ☑      |
-| S24 Select                                  | M9        | ☐      |
+| S24 Select                                  | M9        | ☑      |
 | S25 0.4.0 + showcase Forms                  | M9        | ☐      |
 | S26 Card + Tabs                             | M10       | ☐      |
 | S27 Banner                                  | M10       | ☐      |
@@ -292,6 +292,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-066.
 - Gotchas: (1) Radix selects a focused radio on arrow keys only while the key is held, so the test holds the key. (2) `ElementProps` only accepts intrinsic tags; Radix components use `ComponentPropsWithoutRef` plus `StrictRef`. (3) Upstream commit for both files is the same as Button's (`c257f68`). (4) I patched the test and one provenance line with `node`/`sed` instead of Edit (against D-043). (5) The RSC tarball check was not rerun (not in `pnpm check`; run in S25 before 0.4.0). (6) The Playground CSS check does not cover the new classes.
 - Next: S24 Select.
+
+### S24 — Select — 2026-10-20
+
+- Done (branch `s24-select`, cut from synced `main` after #24 merged): `Select`, `SelectTrigger` (sm | md, Input classes), `SelectValue`, `SelectContent` (`container` prop for the Portal, `surface.raised` + `elevation.overlay`), `SelectGroup`, `SelectLabel`, `SelectItem`, `SelectSeparator`, scroll buttons, adapted from shadcn new-york-v4 (`docs/provenance/select.md`). Field wiring (id, required, invalid, describedby). 10 tests in `select.test.tsx` (keyboard open, arrows skipping disabled, typeahead, Escape, Field/Label naming, disabled, `container`, token classes, axe closed and open; 149 total), story `Components/Select`, exports.
+- Verified: `pnpm check` exit 0 (149 unit tests, layout tests, Storybook build); `dist/components/select.js` starts with `"use client"`.
+- Decisions: D-067.
+- Gotchas: (1) jsdom needs `hasPointerCapture`, `scrollIntoView` and `ResizeObserver` stubs for Radix Select. (2) axe's `region` rule fires on the portalled list in the test page; disabled for that check only. (3) Default position is `popper`, not upstream's `item-aligned`. (4) RSC tarball check not rerun (S25 before 0.4.0). (5) The Playground CSS check does not cover the new classes. (6) The upstream commit hash for select was not looked up; the provenance doc says so.
+- Next: S25 0.4.0 + showcase Forms.
 
 ## Retro (Release 0)
 
