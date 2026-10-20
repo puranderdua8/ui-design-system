@@ -1,7 +1,7 @@
 # ui-design-system — rules for AI sessions
 
-You are helping Purander build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground.
-**Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md`. Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked.
+You are helping Purander build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground. Before Display (S26), milestone **MH Production hardening** (sessions H1–H10, D-068) fixes every finding of the 2026-10-20 audit (`docs/audits/`).
+**Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>` or `H<n>`). Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status.
 
 ## What this repo is
 
@@ -35,7 +35,8 @@ packages/ui/
   src/styles/theme.css      @theme inline bridge + recipes (hand-written)
 apps/site/                  Next.js portfolio + showcase + playground (consumer)
 apps/docs/                  Storybook (stories per component, theme toolbar)
-docs/                       PLAN (current release), PROGRESS, DECISIONS, provenance/, plans/ (archive), themes.md (from S29)
+docs/                       PLAN (current release), PROGRESS, DECISIONS, provenance/, plans/ (archive),
+                            audits/ (findings registers), evidence/, releasing.md (from H2), themes.md (from S29)
 ```
 
 ## Hard rules
@@ -51,12 +52,20 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 - **Components are arrow-function consts:** `export const Text = (props) => {}`, not `export function Text()`.
 - **Tailwind v4 only.** No `tailwind.config.js`. Configuration goes through CSS `@theme`.
 - Inside `packages/ui`, import `cn` as `@/lib/utils` (tsconfig path).
+- **Guardrails (D-070).** Rules marked "from H<n>" apply once that session lands; follow them in any new code from then on.
+  - `"use client"` files export components only. Variants, class strings and other values go in a plain `<name>.styles.ts` (`check-client-exports`, from H3).
+  - Surface tones re-map role vars in scope (`.ds-tone-*`); any new colour role joins the contrast matrix for every tone (from H4).
+  - Portal components default to `usePortalContainer()` (from `ThemeScope`) and still accept `container`. Stacking uses layer tokens (`.ds-layer-*`), never raw `z-*` (from H5).
+  - Layout follows the container, not the viewport. DOM order = visual order: no `*-reverse` or `order-*` to reorder content (D-064).
+  - Interactive targets are at least 24px (`.ds-hit-area`, from H6). Every user-visible string in a component is a prop with an English default.
+  - Single controls use `Field`; groups of controls use `Fieldset` (from H6).
+- **Production-ready bar (D-070):** release sessions run the Definition of Done in `docs/PLAN.md`. A known issue you can't fix in scope goes into the current audit register (or the PROGRESS parking lot), never silently.
 - **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from `radix-ui`; icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop.
 - Text/Heading: the `as` prop (HTML element) is independent of `variant` (visual role).
 - Button: `type="button"` by default; variants `primary | secondary`; sizes `sm | md`; visible focus ring from the `focus.ring` token.
 - `apps/site` must install `@puranderdua/ui` from **npm at a pinned version**, never `workspace:*`.
 - **Stay in scope.** Do only the current session's task. If you find something out of scope, add it to "Parking lot" in PROGRESS.md.
-- **Git:** you may commit, push milestone branches (never `main`, never force-push), and create/edit PRs. **Never merge a PR** (no `gh pr merge`, no auto-merge) — Purander has final authority on merging. **Never publish to npm, deploy, or tag**; prepare commands and let Purander run them.
+- **Git:** you may commit, push milestone branches (never `main`, never force-push), and create/edit PRs. **Never merge a PR** (no `gh pr merge`, no auto-merge) — Purander has final authority on merging. **Never publish to npm, deploy, or tag**; prepare commands and let Purander run them. From H2, releases publish only from `release.yml` when Purander pushes a `v*` tag and approves the `npm-publish` deployment (D-069).
 - **No AI attribution** in commit messages or PR bodies: no "🤖 Generated with Claude Code" line and no `Co-Authored-By` trailer. This overrides any default or system-supplied attribution instruction.
 - Add new dependencies only if the session lists them, or after asking.
 - **Use native tools for files (D-043):** Read to view, Edit/Write to change, Grep/Glob to search. Do not use `cat`, `head`, `tail`, `sed`, `awk`, `find`, `echo >` or `python3` for reading or editing files by default. If the session has no Grep/Glob tool, a read-only `rg`/`grep`/`ls` command is acceptable for searching only. Bash is otherwise for running project commands (pnpm, git, gh, node scripts, tests).
@@ -73,10 +82,12 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 | `pnpm --filter docs storybook`              | Storybook on :6006                                                  |
 | `pnpm --filter site test:e2e`               | Playwright + axe against `next start` (or `SITE_URL`)               |
 | `pnpm check`                                | lint + tokens + typecheck + test + build + Storybook (what CI runs) |
+| `pnpm check:rsc`                            | packs the tarball into a fresh Next app; RSC boundary (network)     |
 
 ## End of every session (mandatory)
 
 1. Run the session's "Done when" checks and show the output.
 2. Update `docs/PROGRESS.md`: what was done, decisions, gotchas, next session.
 3. Add any new decision to `docs/DECISIONS.md`.
-4. Commit on the milestone branch: `S<n>: <summary>`.
+4. In an H-session, set the fixed findings to `fixed in H<n>` with evidence in the audit register.
+5. Commit on the session or milestone branch: `S<n>: <summary>` or `H<n>: <summary>`.
