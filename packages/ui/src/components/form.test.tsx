@@ -60,10 +60,10 @@ describe("Input", () => {
     await user.type(screen.getByRole("textbox", { name: "B" }), "hi");
     expect(onChange).toHaveBeenCalledTimes(2);
     expect(
-      (screen.getByRole("textbox", { name: "B" }) as HTMLInputElement).value,
+      screen.getByRole<HTMLInputElement>("textbox", { name: "B" }).value,
     ).toBe("");
     expect(
-      (screen.getByRole("textbox", { name: "B" }) as HTMLInputElement).disabled,
+      screen.getByRole<HTMLInputElement>("textbox", { name: "B" }).disabled,
     ).toBe(true);
   });
 

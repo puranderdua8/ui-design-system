@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import type { AsProps } from "@/lib/types";
 import { Container, type ContainerSize } from "./container";
 
@@ -40,23 +40,19 @@ export const Section = ({
   children,
   ...props
 }: SectionProps) => {
-  const Comp: React.ElementType = as;
-  return (
-    <Comp
-      {...(props as object)}
-      data-slot="section"
-      className={cn(
-        "w-full",
-        sectionToneClasses[tone],
-        sectionPaddingClasses[padding],
-        className,
-      )}
-    >
-      {container ? (
-        <Container size={container}>{children}</Container>
-      ) : (
-        children
-      )}
-    </Comp>
-  );
+  return renderAs(as, {
+    ...props,
+    "data-slot": "section",
+    className: cn(
+      "w-full",
+      sectionToneClasses[tone],
+      sectionPaddingClasses[padding],
+      className,
+    ),
+    children: container ? (
+      <Container size={container}>{children}</Container>
+    ) : (
+      children
+    ),
+  });
 };

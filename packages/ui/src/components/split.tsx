@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import { gapClasses, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
@@ -44,17 +44,14 @@ export const Split = ({
   className,
   ...props
 }: SplitProps) => {
-  const Comp: React.ElementType = as;
-  return (
-    <Comp
-      {...(props as object)}
-      data-slot="split"
-      className={cn(
-        splitRatioClasses[ratio],
-        splitAlignClasses[align],
-        gapClasses[gap],
-        className,
-      )}
-    />
-  );
+  return renderAs(as, {
+    ...props,
+    "data-slot": "split",
+    className: cn(
+      splitRatioClasses[ratio],
+      splitAlignClasses[align],
+      gapClasses[gap],
+      className,
+    ),
+  });
 };

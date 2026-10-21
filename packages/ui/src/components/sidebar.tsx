@@ -1,5 +1,6 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import { gapClasses, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
@@ -49,23 +50,21 @@ export const Sidebar = ({
   children,
   ...props
 }: SidebarProps) => {
-  const Comp: React.ElementType = as;
-  const Aside: React.ElementType = sidebarAs;
-  return (
-    <Comp
-      {...(props as object)}
-      data-slot="sidebar"
-      className={cn(sidebarSideClasses[side], gapClasses[gap], className)}
-    >
-      <Aside
-        data-slot="sidebar-aside"
-        className={cn(sidebarAsideClasses, sidebarClassName)}
-      >
-        {sidebar}
-      </Aside>
-      <div data-slot="sidebar-content" className={sidebarContentClasses}>
-        {children}
-      </div>
-    </Comp>
-  );
+  return renderAs(as, {
+    ...props,
+    "data-slot": "sidebar",
+    className: cn(sidebarSideClasses[side], gapClasses[gap], className),
+    children: (
+      <>
+        {renderAs(sidebarAs, {
+          "data-slot": "sidebar-aside",
+          className: cn(sidebarAsideClasses, sidebarClassName),
+          children: sidebar,
+        })}
+        <div data-slot="sidebar-content" className={sidebarContentClasses}>
+          {children}
+        </div>
+      </>
+    ),
+  });
 };

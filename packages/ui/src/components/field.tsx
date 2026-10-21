@@ -18,7 +18,7 @@ type FieldContextValue = {
 const FieldContext = React.createContext<FieldContextValue | null>(null);
 
 /** Wiring a `Field` gives its control (id, description, error, required). */
-export const useFieldContext = () => React.useContext(FieldContext);
+export const useFieldContext = () => React.use(FieldContext);
 
 export type FieldProps = Omit<ElementProps<"div">, "children"> & {
   label: React.ReactNode;
@@ -43,8 +43,8 @@ export const Field = ({
   children,
   ...props
 }: FieldProps) => {
-  const generated = React.useId();
-  const controlId = id ?? `${generated}-control`;
+  const generatedId = React.useId();
+  const controlId = id ?? `${generatedId}-control`;
   const labelId = `${controlId}-label`;
   const descriptionId = `${controlId}-description`;
   const errorId = `${controlId}-error`;
@@ -62,7 +62,7 @@ export const Field = ({
   );
 
   return (
-    <FieldContext.Provider value={value}>
+    <FieldContext value={value}>
       <div
         {...props}
         data-slot="field"
@@ -90,6 +90,6 @@ export const Field = ({
           </Text>
         ) : null}
       </div>
-    </FieldContext.Provider>
+    </FieldContext>
   );
 };

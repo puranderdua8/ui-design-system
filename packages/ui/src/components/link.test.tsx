@@ -84,9 +84,12 @@ describe("Link", () => {
   it("asChild merges props onto the child element", () => {
     const Custom = ({
       to,
+      children,
       ...props
     }: { to: string } & React.ComponentProps<"a">) => (
-      <a data-custom="yes" href={to} {...props} />
+      <a data-custom="yes" href={to} {...props}>
+        {children}
+      </a>
     );
     render(
       <Link asChild>

@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import { gapClasses, listRole, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
@@ -41,18 +41,15 @@ export const Grid = ({
   className,
   ...props
 }: GridProps) => {
-  const Comp: React.ElementType = as;
-  return (
-    <Comp
-      role={listRole(as)}
-      {...(props as object)}
-      data-slot="grid"
-      className={cn(
-        "grid",
-        minItemWidth ? gridFitClasses[minItemWidth] : gridColsClasses[cols],
-        gapClasses[gap],
-        className,
-      )}
-    />
-  );
+  return renderAs(as, {
+    role: listRole(as),
+    ...props,
+    "data-slot": "grid",
+    className: cn(
+      "grid",
+      minItemWidth ? gridFitClasses[minItemWidth] : gridColsClasses[cols],
+      gapClasses[gap],
+      className,
+    ),
+  });
 };
