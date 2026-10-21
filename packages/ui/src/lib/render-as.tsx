@@ -1,4 +1,3 @@
-import { createElement, type ReactElement, type ReactNode } from "react";
 import type * as React from "react";
 
 /** Tags a component may render through `as`. */
@@ -13,15 +12,16 @@ export type RenderAsTag = keyof React.JSX.IntrinsicElements;
  */
 export type RenderAsProps = Record<string, unknown> & {
   className?: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
 };
 
 /**
  * Renders the element named by the dynamic `as` tag. TypeScript cannot relate
- * a props type to a tag chosen at run time, so the tag is widened to `string`
- * here, once, and no component needs an assertion (see `render-as.test.tsx`).
- * It returns an element rather than a component, so nothing is created during
- * render (`react-hooks/static-components`).
+ * a props type to a tag chosen at run time, so the tag is widened to
+ * `ElementType` here, once, and no component needs an assertion (see
+ * `render-as.test.tsx`).
  */
-export const renderAs = (as: RenderAsTag, props: RenderAsProps): ReactElement =>
-  createElement(as as string, props);
+export const renderAs = (as: RenderAsTag, props: RenderAsProps) => {
+  const Comp = as as React.ElementType;
+  return <Comp {...props} />;
+};
