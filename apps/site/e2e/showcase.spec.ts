@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { tabKey } from "./keys";
 
 const paths = [
   "/components",
@@ -64,7 +65,10 @@ test.describe("Link examples", () => {
     await expect(page).toHaveURL(/\/components\/forms$/);
   });
 
-  test("inline link is reachable with Tab and underlined", async ({ page }) => {
+  test("inline link is reachable with Tab and underlined", async ({
+    page,
+    browserName,
+  }) => {
     const link = page.getByRole("link", { name: "component overview" });
     await expect(link).toHaveCSS("text-decoration-line", "underline");
     for (
@@ -72,7 +76,7 @@ test.describe("Link examples", () => {
       i < 20 && !(await link.evaluate((el) => el === document.activeElement));
       i++
     ) {
-      await page.keyboard.press("Tab");
+      await page.keyboard.press(tabKey(browserName));
     }
     await expect(link).toBeFocused();
   });
@@ -108,9 +112,12 @@ test.describe("index and navigation", () => {
     );
   });
 
-  test("the skip link moves focus to the main content", async ({ page }) => {
+  test("the skip link moves focus to the main content", async ({
+    page,
+    browserName,
+  }) => {
     await page.goto("/components");
-    await page.keyboard.press("Tab");
+    await page.keyboard.press(tabKey(browserName));
     const skip = page.getByRole("link", { name: "Skip to content" });
     await expect(skip).toBeFocused();
     await expect(skip).toBeInViewport();
