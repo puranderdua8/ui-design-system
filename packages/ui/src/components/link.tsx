@@ -50,7 +50,7 @@ export const Link = ({
 
   return (
     <Comp
-      {...(props as object)}
+      {...props}
       {...(external ? { target: "_blank" } : undefined)}
       rel={rel}
       data-slot="link"

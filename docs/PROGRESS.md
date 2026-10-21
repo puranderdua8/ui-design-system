@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H1 Lint and type guardrails. S26 Card + Tabs starts only after H10 signs off.
+- **Next session:** H2 CI, supply chain and release workflow. S26 Card + Tabs starts only after H10 signs off.
 - **Blockers:** none. H2 needs Purander to create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`, written in H2).
 
 ## Brand (filled in S1)
@@ -59,7 +59,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S23 Checkbox + RadioGroup                   | M9        | ☑      |
 | S24 Select                                  | M9        | ☑      |
 | S25 0.4.0 + showcase Forms                  | M9        | ☑      |
-| H1 Lint and type guardrails                 | MH        | ☐      |
+| H1 Lint and type guardrails                 | MH        | ☑      |
 | H2 CI, supply chain, release workflow       | MH        | ☐      |
 | H3 Client boundary + form bug fixes         | MH        | ☐      |
 | H4 Tone-aware tokens + contrast matrix      | MH        | ☐      |
@@ -326,6 +326,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-068 (hardening first, H-numbering, 0.5.0, later releases shift), D-069 (tag-triggered publish with provenance), D-070 (production-ready bar and guardrails).
 - Gotchas: the first review said there was no Label story; there is one (`Components/Field → LabelOnly`). The Display category on the site still says "Coming in 0.5" until H9.
 - Next: H1. Purander: merge this plan PR first; before H2, be ready to create the `npm-publish` environment and the npm trusted publisher.
+
+### H1 — Lint and type guardrails — 2026-10-21
+
+- Done (branch `h1-lint-type-guardrails`, cut from `origin/main` after #27): root dev deps `eslint-plugin-react-hooks` 7, `eslint-plugin-jsx-a11y` 6 (strict), `@eslint-react/eslint-plugin` 5; `eslint.config.mjs` scopes them to `packages/ui/src` and `apps/docs/src`, with typed linting (`recommendedTypeChecked`, `projectService`) on `packages/ui/src`. Fixed every finding (Field: `use`, `<FieldContext>` as provider, id name; four test assertions; one test anchor); no rule turned off. `renderAs(as, props)` (`src/lib/render-as.ts` + `render-as.test.tsx`) replaces the casts; Button and Link needed none. `verbatimModuleSyntax` and `exactOptionalPropertyTypes` adopted in `tsconfig.base.json` (no source changes needed). D-043 PreToolUse hook: `.claude/settings.json` + `.claude/hooks/block-file-bash.mjs` (+ tests). Audit F03, F31, F32, F41 set to fixed.
+- Verified: `pnpm check` exit 0 (151 unit tests, layout tests, Storybook build). A temporary file with a conditional `useId` and `<div onClick>` failed lint with 4 errors (rules-of-hooks ×2, click-events-have-key-events, no-static-element-interactions); the same file in `apps/docs/src` also failed; both reverted. The hook blocked `cat package.json` live, and later my own `tail <file>` and `sed`.
+- Decisions: D-071.
+- Gotchas: (1) `eslint-plugin-jsx-a11y` 6.10 declares peer `eslint ^9`; it works with ESLint 10 here (pnpm warns). (2) A helper that returns a component (`renderAs(as)` → `<Comp>`) fails `react-hooks/static-components` and `@eslint-react/static-components`, so `renderAs` returns an element via `createElement`. (3) `apps/site` has its own tsconfig and does not use the new flags. (4) A stale ignored `apps/site/.next` (from a branch with an `rsc-probe` page) broke site typecheck; deleted. (5) The hook allows `head`/`tail` only as a pipe filter (`pnpm check 2>&1 | tail -40`); read logs with Read. A new hook only applies after settings reload (it was live in this session at once). (6) `.claude/settings.local.json` (git-ignored, Purander's) still has old `sed`/`python3`/`awk` allow rules; the hook's deny wins.
+- Next: H2.
 
 ## Retro (Release 0)
 

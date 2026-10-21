@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import { gapClasses, listRole, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
@@ -27,18 +27,15 @@ export const Stack = ({
   className,
   ...props
 }: StackProps) => {
-  const Comp: React.ElementType = as;
-  return (
-    <Comp
-      role={listRole(as)}
-      {...(props as object)}
-      data-slot="stack"
-      className={cn(
-        "flex flex-col",
-        gapClasses[gap],
-        stackAlignClasses[align],
-        className,
-      )}
-    />
-  );
+  return renderAs(as, {
+    role: listRole(as),
+    ...props,
+    "data-slot": "stack",
+    className: cn(
+      "flex flex-col",
+      gapClasses[gap],
+      stackAlignClasses[align],
+      className,
+    ),
+  });
 };

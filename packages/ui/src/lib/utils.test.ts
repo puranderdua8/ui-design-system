@@ -71,7 +71,8 @@ describe("cn", () => {
 
   it("generated class lists match theme.css (run `pnpm build` if this fails)", async () => {
     // No @types/node in this package, so type the two Node bits we need locally.
-    const { readFileSync } = (await import("node:fs" as string)) as {
+    const nodeFs: string = "node:fs";
+    const { readFileSync } = (await import(nodeFs)) as {
       readFileSync: (path: string, encoding: string) => string;
     };
     const dir = (import.meta as unknown as { dirname: string }).dirname;

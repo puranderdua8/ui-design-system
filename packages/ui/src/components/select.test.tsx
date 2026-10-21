@@ -158,7 +158,7 @@ describe("Select", () => {
   it("does not open when disabled", async () => {
     const user = userEvent.setup();
     render(<Fruit disabled />);
-    const trigger = screen.getByRole("combobox") as HTMLButtonElement;
+    const trigger = screen.getByRole<HTMLButtonElement>("combobox");
     expect(trigger.disabled).toBe(true);
     await user.click(trigger);
     expect(screen.queryByRole("listbox")).toBeNull();

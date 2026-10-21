@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import type { AsProps } from "@/lib/types";
 
 export type ContainerSize = "sm" | "md" | "lg" | "xl" | "full";
@@ -26,16 +26,13 @@ export const Container = ({
   className,
   ...props
 }: ContainerProps) => {
-  const Comp: React.ElementType = as;
-  return (
-    <Comp
-      {...(props as object)}
-      data-slot="container"
-      className={cn(
-        "mx-auto w-full px-ds-gutter",
-        containerSizeClasses[size],
-        className,
-      )}
-    />
-  );
+  return renderAs(as, {
+    ...props,
+    "data-slot": "container",
+    className: cn(
+      "mx-auto w-full px-ds-gutter",
+      containerSizeClasses[size],
+      className,
+    ),
+  });
 };

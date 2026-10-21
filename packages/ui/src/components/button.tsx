@@ -43,7 +43,7 @@ export const Button = ({
     <Comp
       // Default `type="button"` only on a real <button>; asChild may be a link.
       type={asChild ? type : (type ?? "button")}
-      {...(props as object)}
+      {...props}
       data-slot="button"
       data-variant={variant ?? "primary"}
       data-size={size ?? "md"}

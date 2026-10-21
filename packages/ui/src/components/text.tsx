@@ -1,6 +1,6 @@
-import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { renderAs } from "@/lib/render-as";
 import type { ElementProps } from "@/lib/types";
 
 export const textVariants = cva("", {
@@ -32,14 +32,11 @@ export type TextProps = TextStyleProps &
   );
 
 export const Text = ({ as = "p", variant, className, ...props }: TextProps) => {
-  // Widened internally for the dynamic tag; the public `TextProps` union
-  // enforces the per-element props and ref type at the call site.
-  const Comp: React.ElementType = as;
-  return (
-    <Comp
-      {...(props as object)}
-      data-slot="text"
-      className={cn(textVariants({ variant }), className)}
-    />
-  );
+  // The public `TextProps` union enforces the per-element props and ref type
+  // at the call site; `renderAs` widens them for the dynamic tag.
+  return renderAs(as, {
+    ...props,
+    "data-slot": "text",
+    className: cn(textVariants({ variant }), className),
+  });
 };
