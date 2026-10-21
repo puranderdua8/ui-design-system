@@ -5,9 +5,9 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M9 Forms, branch `s25-release-0.4.0-showcase-forms` (cut from synced `main` 2026-10-20 after S24 merged)
-- **Next session:** S26 Card + Tabs
-- **Blockers:** none
+- **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
+- **Next session:** H1 Lint and type guardrails. S26 Card + Tabs starts only after H10 signs off.
+- **Blockers:** none. H2 needs Purander to create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`, written in H2).
 
 ## Brand (filled in S1)
 
@@ -59,13 +59,23 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S23 Checkbox + RadioGroup                   | M9        | ☑      |
 | S24 Select                                  | M9        | ☑      |
 | S25 0.4.0 + showcase Forms                  | M9        | ☑      |
+| H1 Lint and type guardrails                 | MH        | ☐      |
+| H2 CI, supply chain, release workflow       | MH        | ☐      |
+| H3 Client boundary + form bug fixes         | MH        | ☐      |
+| H4 Tone-aware tokens + contrast matrix      | MH        | ☐      |
+| H5 Overlay foundation (layers, ThemeScope)  | MH        | ☐      |
+| H6 Component API + accessibility            | MH        | ☐      |
+| H7 Storybook a11y gate + CSS coverage       | MH        | ☐      |
+| H8 0.5.0 release prep                       | MH        | ☐      |
+| H9 Site production readiness                | MH        | ☐      |
+| H10 Production-readiness sign-off           | MH        | ☐      |
 | S26 Card + Tabs                             | M10       | ☐      |
 | S27 Banner                                  | M10       | ☐      |
-| S28 0.5.0 + showcase Display + hardening    | M10       | ☐      |
+| S28 0.6.0 + showcase Display + hardening    | M10       | ☐      |
 | S29 Theme direction                         | M11       | ☐      |
 | S30 Corporate + Nature final                | M11       | ☐      |
 | S31 Quirky + theme QA                       | M11       | ☐      |
-| S32 0.6.0 + site theme switcher             | M11       | ☐      |
+| S32 0.7.0 + site theme switcher             | M11       | ☐      |
 | S33 Playground engine                       | M12       | ☐      |
 | S34 Playground UI                           | M12       | ☐      |
 | S35 Export + Release 1 wrap-up              | M12       | ☐      |
@@ -309,6 +319,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) Radix aria-hides the rest of the page while a Select is open, so axe flags the off-screen skip link (`aria-hidden-focus`); the open-Select axe test is scoped to the listbox and disables `region`. (2) Keyboard tests wait for `networkidle` (hydration); the RadioGroup test was flaky without it. (3) The static invalid examples on the page are also `role="alert"`, so the form tests scope alerts to the `form`. (4) `check-rsc.sh` only imports Field and Input; the other controls are covered by the `use client` check on `dist`. (5) I edited one e2e file with a `node -e` snippet instead of Edit (against D-043).
 - Next: S26 Card + Tabs. Purander: tag v0.4.0 after the milestone PR merges.
 
+### Production-readiness review and MH plan — 2026-10-20
+
+- Done (branch `mh-hardening-plan`, cut from synced `main` after #26): two reviews of S22–S25 and then the whole repo (React, TS, a11y, security, semantic HTML, architecture, system design). 5 blockers, 36 other findings, recorded with evidence in `docs/audits/2026-10-20-production-readiness.md` (F01–F41). Planned milestone MH (H1–H10) in `docs/PLAN.md`: guardrails, Definition of Done, release workflow, H-session prompts; S26–S35 updated (versions +1 minor, tag-based releases, ThemeScope, tone matrix). CLAUDE.md updated.
+- Verified by running: `next build` of a Server Component calling `inputVariants()` from 0.4.0 fails (F01); focus ring on `surface.brand` is 1:1 (F02, from `themes/base.json`); `pnpm audit --prod` has 1 high (Playwright, F06); built CSS puts `aria-invalid:` after `disabled:` (F28). `pnpm check` was green on `main`.
+- Decisions: D-068 (hardening first, H-numbering, 0.5.0, later releases shift), D-069 (tag-triggered publish with provenance), D-070 (production-ready bar and guardrails).
+- Gotchas: the first review said there was no Label story; there is one (`Components/Field → LabelOnly`). The Display category on the site still says "Coming in 0.5" until H9.
+- Next: H1. Purander: merge this plan PR first; before H2, be ready to create the `npm-publish` environment and the npm trusted publisher.
+
 ## Retro (Release 0)
 
 - **Time per session:** not tracked per session. Wall clock from commits: S1–S4 on 2026-10-16 (about 1.5 h between first and last merge), S5–S11 on 2026-10-17 (11:44 to 17:28, with gaps). Purander: add real figures here.
@@ -348,4 +366,6 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - More components: Textarea, Switch, Dialog, Toast, Tooltip, navigation.
 - Playground share URL (not in Release 1, D-052).
 - Penpot boards (Release 0 S12 optional, not done); later one board per theme.
-- axe in Storybook CI (the a11y addon's `test: "error"` only runs in the test runner).
+- axe in Storybook CI (the a11y addon's `test: "error"` only runs in the test runner). Planned in H7 (audit F21).
+- Playground CSS check misses classes used only in `src/` (noted S21–S24). Planned in H7 (audit F39).
+- Everything else found on 2026-10-20 lives in `docs/audits/2026-10-20-production-readiness.md`, not here.
