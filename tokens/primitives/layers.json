@@ -1,0 +1,38 @@
+{
+  "layer": {
+    "$type": "number",
+    "$description": "Stacking scale (z-index). Shared, never themed. Emitted once into foundations.css as --ds-layer-* with .ds-layer-* recipes. Components use the recipes, never raw z-* (D-075). Overlays are portalled, so they sit above in-flow layers by value.",
+    "base": {
+      "$value": 0,
+      "$description": "In-flow content."
+    },
+    "sticky": {
+      "$value": 100,
+      "$description": "Sticky headers and rails."
+    },
+    "dropdown": {
+      "$value": 200,
+      "$description": "Popovers and listboxes (Select)."
+    },
+    "overlay": {
+      "$value": 300,
+      "$description": "Scrims behind modal surfaces."
+    },
+    "modal": {
+      "$value": 400,
+      "$description": "Dialogs and sheets."
+    },
+    "toast": {
+      "$value": 500,
+      "$description": "Notifications above modals."
+    },
+    "tooltip": {
+      "$value": 600,
+      "$description": "Tooltips above everything transient."
+    },
+    "skip-link": {
+      "$value": 700,
+      "$description": "Skip links, always reachable."
+    }
+  }
+}

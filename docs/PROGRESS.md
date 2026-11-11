@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H5 Overlay foundation (layers, ThemeScope). S26 Card + Tabs starts only after H10 signs off.
+- **Next session:** H6 Component API + accessibility. S26 Card + Tabs starts only after H10 signs off.
 - **Blockers:** none for H5. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
@@ -63,7 +63,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H2 CI, supply chain, release workflow       | MH        | ☑      |
 | H3 Client boundary + form bug fixes         | MH        | ☑      |
 | H4 Tone-aware tokens + contrast matrix      | MH        | ☑      |
-| H5 Overlay foundation (layers, ThemeScope)  | MH        | ☐      |
+| H5 Overlay foundation (layers, ThemeScope)  | MH        | ☑      |
 | H6 Component API + accessibility            | MH        | ☐      |
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☐      |
 | H8 0.5.0 release prep                       | MH        | ☐      |
@@ -358,6 +358,13 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `pnpm check` exit 0 (165 unit tests, 75 layout tests in Chromium, Firefox and WebKit, Storybook build). Planted the F02 bug (`on-brand.focus-ring` = brand.600): `contrast.mjs` fails at 1.00:1; removed one recipe line: `check-tone-recipes` exits 1; with the old Section classes the new layout test fails on inverse and brand (text 1:1 and 2.41:1) in Chromium. All reverted.
 - Decisions: D-074.
 - Gotchas: (1) Syncing to `main` brought a Dependabot bump to Playwright 1.65; the cached 1.57 browsers no longer launched, so I ran `playwright install chromium firefox webkit` (Purander approved; `PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.playwright.dev`). (2) Tones do not nest (D-074 point 5). (3) Danger feedback is not re-mapped inside dark tones (excluded with a reason). (4) Custom themes (S29+) get tone values for free only if they use the same primitive names; completeness already enforces that.- Next: H5. Also not done here: Storybook and the site do not yet show a tone gallery (Section stories may want one in H7).
+
+### H5 — Overlay foundation — 2026-11-11
+
+- Done (branch `h5-overlay-foundation`, cut from `origin/main` after #36): shared `tokens/primitives/layers.json` (8 layers, type `number`, in the resolver's shared set); `build-tokens` writes `generated/layers.css` (`--ds-layer-*`), `build-foundations` puts it at the top of `dist/foundations.css`; `.ds-layer-*` recipes in `theme.css`; `cn()` has a `ds-layer` group that also replaces a raw `z-*` (`build-classes` emits `dsLayerRecipes`). `ThemeScope` (client: `theme`, `vars`, div props, `ref`) sets inline vars and `data-ds-theme` and is the portal container; `usePortalContainer()` exported. `SelectContent` uses `container ?? scope ?? document.body` and `ds-layer-dropdown` (was `z-50`). 9 tests in `overlay.test.tsx`. Audit F15 fixed; F16 partly (site skip link in H9).
+- Decisions: D-075. CLAUDE.md and PLAN "Cross-cutting design" updated.
+- Gotchas: (1) layers are shared, so they are not in theme files and a consumer needs no extra import; the e2e fixture imports `generated/layers.css` next to `theme.css` because it uses package source. (2) The scoped-vars test checks the inline vars on the scope that contains the list; jsdom does not compute custom-property inheritance. (3) Dialog, Tooltip and Toast must use `container ?? usePortalContainer()` and a layer recipe.
+- Next: H6.
 
 ## Retro (Release 0)
 

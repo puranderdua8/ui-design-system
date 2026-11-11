@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
 import { useFieldContext } from "./field";
 import { selectTriggerVariants } from "./select.styles";
+import { usePortalContainer } from "./theme-scope";
 
 export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
 
@@ -79,7 +80,10 @@ export const SelectTrigger = ({
 export type SelectContentProps = React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.Content
 > & {
-  /** Element the list is portalled into. Pass a themed scope so the list inherits its theme. */
+  /**
+   * Element the list is portalled into. Defaults to the nearest `ThemeScope`,
+   * then `document.body`; an explicit value wins.
+   */
   container?: HTMLElement | null;
   ref?: StrictRef<HTMLDivElement>;
 };
@@ -91,34 +95,37 @@ export const SelectContent = ({
   position = "popper",
   align = "center",
   ...props
-}: SelectContentProps) => (
-  <SelectPrimitive.Portal container={container}>
-    <SelectPrimitive.Content
-      {...props}
-      data-slot="select-content"
-      position={position}
-      align={align}
-      className={cn(
-        "relative z-50 max-h-(--radix-select-content-available-height) min-w-32 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto ds-border border-ds-border bg-ds-surface-raised font-ds-body text-ds-text shadow-ds-overlay rounded-ds-control",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-        className,
-      )}
-    >
-      <SelectScrollUpButton />
-      <SelectPrimitive.Viewport
+}: SelectContentProps) => {
+  const scope = usePortalContainer();
+  return (
+    <SelectPrimitive.Portal container={container ?? scope}>
+      <SelectPrimitive.Content
+        {...props}
+        data-slot="select-content"
+        position={position}
+        align={align}
         className={cn(
-          "p-1",
+          "relative ds-layer-dropdown max-h-(--radix-select-content-available-height) min-w-32 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto ds-border border-ds-border bg-ds-surface-raised font-ds-body text-ds-text shadow-ds-overlay rounded-ds-control",
           position === "popper" &&
-            "w-full min-w-(--radix-select-trigger-width) scroll-my-1",
+            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+          className,
         )}
       >
-        {children}
-      </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
-    </SelectPrimitive.Content>
-  </SelectPrimitive.Portal>
-);
+        <SelectScrollUpButton />
+        <SelectPrimitive.Viewport
+          className={cn(
+            "p-1",
+            position === "popper" &&
+              "w-full min-w-(--radix-select-trigger-width) scroll-my-1",
+          )}
+        >
+          {children}
+        </SelectPrimitive.Viewport>
+        <SelectScrollDownButton />
+      </SelectPrimitive.Content>
+    </SelectPrimitive.Portal>
+  );
+};
 
 export type SelectLabelProps = React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.Label

@@ -4,8 +4,11 @@
   "description": "DTCG Resolver Module (2025.10) manifest. scripts/build-tokens.mjs resolves it: one output per theme, for each built mode. The mode modifier reserves dark; only light is built for now (D-047).",
   "sets": {
     "shared": {
-      "description": "Non-themeable primitives, validated but not emitted.",
-      "sources": [{ "$ref": "primitives/breakpoints.json" }]
+      "description": "Non-themeable primitives. Breakpoints are validated only; layers are emitted once into foundations.css.",
+      "sources": [
+        { "$ref": "primitives/breakpoints.json" },
+        { "$ref": "primitives/layers.json" }
+      ]
     },
     "semantic": {
       "description": "Role contract. Aliases only; identical for every theme.",

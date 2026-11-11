@@ -214,6 +214,33 @@
     }
   }
 
+  /* Stacking from the shared layer.* scale (never raw z-*, D-075). A layer
+     only takes effect on a positioned element. */
+  .ds-layer-base {
+    z-index: var(--ds-layer-base);
+  }
+  .ds-layer-sticky {
+    z-index: var(--ds-layer-sticky);
+  }
+  .ds-layer-dropdown {
+    z-index: var(--ds-layer-dropdown);
+  }
+  .ds-layer-overlay {
+    z-index: var(--ds-layer-overlay);
+  }
+  .ds-layer-modal {
+    z-index: var(--ds-layer-modal);
+  }
+  .ds-layer-toast {
+    z-index: var(--ds-layer-toast);
+  }
+  .ds-layer-tooltip {
+    z-index: var(--ds-layer-tooltip);
+  }
+  .ds-layer-skip-link {
+    z-index: var(--ds-layer-skip-link);
+  }
+
   /* Auto-fit grid columns from the layout.item-min.* tokens. `min(100%, …)`
      keeps one column from overflowing a narrow container. */
   .ds-grid-fit-sm {

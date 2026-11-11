@@ -1,0 +1,14 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --ds-layer-base: 0;
+  --ds-layer-sticky: 100;
+  --ds-layer-dropdown: 200;
+  --ds-layer-overlay: 300;
+  --ds-layer-modal: 400;
+  --ds-layer-toast: 500;
+  --ds-layer-tooltip: 600;
+  --ds-layer-skip-link: 700;
+}

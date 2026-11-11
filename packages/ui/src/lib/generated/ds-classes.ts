@@ -5,6 +5,8 @@ export const dsFontSizes: string[] = ["ds-display", "ds-h1", "ds-h2", "ds-h3", "
 export const dsTypeRecipes: string[] = ["ds-type-display", "ds-type-h1", "ds-type-h2", "ds-type-h3", "ds-type-body", "ds-type-lead", "ds-type-caption", "ds-type-label"];
 /** `.ds-tone-<name>` recipe classes (one tone applies at a time). */
 export const dsToneRecipes: string[] = ["ds-tone-canvas", "ds-tone-subtle", "ds-tone-inverse", "ds-tone-brand"];
+/** `.ds-layer-<name>` recipe classes (stacking scale from layers.json). */
+export const dsLayerRecipes: string[] = ["ds-layer-base", "ds-layer-sticky", "ds-layer-dropdown", "ds-layer-overlay", "ds-layer-modal", "ds-layer-toast", "ds-layer-tooltip", "ds-layer-skip-link"];
 /** Values per tailwind-merge theme key (shadow, radius, container, spacing, ease). */
 export const dsThemeValues: Record<string, string[]> = {
   shadow: ["ds-raised", "ds-overlay"],
