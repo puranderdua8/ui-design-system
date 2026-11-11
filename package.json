@@ -17,7 +17,7 @@
     "check": "pnpm lint && pnpm tokens:check && pnpm typecheck && pnpm test && pnpm build && node scripts/check-client-exports.mjs && pnpm --filter @puranderdua/ui playground:check && pnpm --filter @puranderdua/ui test:layout && pnpm --filter docs build-storybook"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^5.28.2",
+    "@eslint-react/eslint-plugin": "^5.28.8",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.12.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -25,6 +25,6 @@
     "prettier": "^3.9.10",
     "style-dictionary": "^4.4.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.2"
+    "typescript-eslint": "^8.72.1"
   }
 }
