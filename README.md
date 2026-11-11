@@ -34,6 +34,8 @@ In your global CSS (adjust the `@source` path to where the file lives):
 @source "../node_modules/@puranderdua/ui/dist";
 ```
 
+Other layouts (monorepo, hoisted dependencies) and how to verify the path against your built CSS are in the package README.
+
 ```tsx
 import { Button, Heading, Text } from "@puranderdua/ui";
 ```

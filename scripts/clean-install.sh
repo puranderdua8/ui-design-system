@@ -7,6 +7,8 @@
 #
 # Usage: scripts/clean-install.sh
 # Env:   VERSION, CNA_VERSION (pinned defaults),
+#        TARBALL=<abs path to a packed .tgz> installs that instead of the npm release
+#        (pre-release check: pnpm --filter @puranderdua/ui pack),
 #        KEEP=1 keeps the temp dir, EVIDENCE=<file.md> writes the sanitized log.
 set -euo pipefail
 
@@ -136,7 +138,7 @@ step "create-next-app $CNA_VERSION (TypeScript, Tailwind, App Router, src dir, n
 new_app app-package
 APP_B="$WORK/app-package"
 cd "$APP_B"
-npm i "@puranderdua/ui@$VERSION"
+npm i "${TARBALL:-@puranderdua/ui@$VERSION}"
 edit_css "$APP_B" 'css.replace("@import \"tailwindcss\";", "@import \"tailwindcss\";\n@import \"@puranderdua/ui/foundations.css\";\n@import \"@puranderdua/ui/themes/base.css\";\n@source \"../../node_modules/@puranderdua/ui/dist\";")'
 cat >src/app/page.tsx <<'TSX'
 import { Button, Heading, Text } from "@puranderdua/ui";

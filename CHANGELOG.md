@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.5.0 — 2026-11-11
+
+Production-hardening release (milestone MH, findings in `docs/audits/2026-10-20-production-readiness.md`).
+
+**Breaking (0.x minor):**
+
+- `Sidebar side="end"` now renders the content first and the aside after it (DOM order is visual order, no `flex-row-reverse`). When the row wraps, the aside is below the content instead of above it.
+- `Grid` with `cols` renders a wrapper `div` (the `@container`) around the grid element, so it follows its own width, not the viewport. `as`, `ref`, `role`, `className` and other props stay on the grid; `container.firstElementChild` is no longer the list.
+- `Link`: the `focusable` prop is removed; `externalLabel` replaces the hard-coded hint text.
+- New tokens that **custom themes must define** (`validate-tokens` enforces this in this repo): the tone roles in `tokens/semantic/tone.json` (`on-inverse.*`, `on-brand.*`, used by `.ds-tone-*`), and `control.target-min` (from primitive `size.target.min`). Layers are shared and not themed, so themes need nothing for them.
+- `Section` tones (inverse, brand) re-map role variables through `.ds-tone-*` recipes instead of fixed text classes. Tones do not nest.
+
+**Migration:**
+
+1. Custom themes: copy the `on-inverse.*` and `on-brand.*` tokens and `size.target.min` from `themes/base`, then adjust values until `contrast-pairs.json` passes (it now checks every role in every tone).
+2. `Sidebar side="end"`: check any CSS or test that assumed the aside comes first in the DOM; use `sidebarProps` for `aria-label` and `id`.
+3. `Grid cols`: update selectors or tests that read the grid as the first child.
+4. `Link`: delete `focusable`; pass `externalLabel` to translate "(opens in a new tab)".
+5. Replace raw `z-*` utilities on overlays with the `.ds-layer-*` recipes (`cn()` replaces a raw `z-*` with a layer class).
+
+**Added:**
+
+- `ThemeScope` (applies a theme's vars to a subtree and is the portal container) and `usePortalContainer()`. `SelectContent` portals into the nearest scope (`container` still wins), falling back to `document.body`.
+- Layer scale (`--ds-layer-*`, `.ds-layer-*`) shipped in `foundations.css`.
+- Tone-aware roles and the `.ds-tone-canvas|subtle|inverse|brand` recipes; `contrast-pairs.json` gains contexts, roles and exclusions.
+- `Fieldset` and `useFieldsetContext` (group of controls: `<fieldset>` + `<legend>`, description, error, required); `RadioGroup` reads it.
+- `Field layout="inline"` (control first, label beside it, for a Checkbox).
+- `Link externalLabel`; `useFieldContext` is exported; a `default` export condition.
+- `.ds-hit-area`: Checkbox and RadioGroupItem keep a 16px visual with a 24px target.
+- `Sidebar sidebarProps`.
+
+**Fixed:**
+
+- F01: `inputVariants`, `checkboxClasses`, `radioGroupItemClasses` and `selectTriggerVariants` can be called from a Server Component (moved to `*.styles.ts`; the barrel is unchanged).
+- F13: `RadioGroup` invalid state comes through the group.
+- F14: Checkbox icons follow `data-state`.
+- F27: `Field description=""` no longer renders an empty described-by.
+- F28: `aria-invalid` styles no longer override disabled (`aria-invalid:enabled:`).
+- F02: focus ring and text on inverse and brand surfaces meet contrast.
+
 ## 0.4.0 — 2026-10-20
 
 Added (forms):

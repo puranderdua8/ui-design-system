@@ -19,6 +19,23 @@ Import Tailwind first, then the foundations (theme bridge and recipes, no token 
 @source "../node_modules/@puranderdua/ui/dist";
 ```
 
+The `@source` path is relative to the CSS file that contains it, and the package's location depends on your package manager's layout:
+
+| Setup                                | `@source` (CSS file in `src/`)                                                         |
+| ------------------------------------ | -------------------------------------------------------------------------------------- |
+| npm, yarn classic, pnpm (single app) | `../node_modules/@puranderdua/ui/dist`                                                 |
+| Monorepo, dependencies hoisted       | the path to the root `node_modules`, e.g. `../../../node_modules/@puranderdua/ui/dist` |
+| Yarn Plug'n'Play (no `node_modules`) | use `nodeLinker: node-modules`; there is no folder to scan otherwise                   |
+| Package in the same workspace        | `../../packages/ui/dist` (build it first)                                              |
+
+You can also point `@source` at the whole package folder (`@source "../node_modules/@puranderdua/ui"`): it scans a little more but survives a change in the `dist` layout.
+
+**Verify it worked.** Build your app and search the built CSS for a class only the package uses, for example `ds-focus-ring` or `text-ds-control-md`. If it is missing, the `@source` path points at the wrong folder (Tailwind does not warn about a path that matches nothing).
+
+```bash
+grep -l "ds-focus-ring" .next/static/css/*.css   # Next.js; use your build output folder
+```
+
 ## Themes
 
 | Theme  | Import                            | Status          |
@@ -66,6 +83,14 @@ Forms (0.4.0). The controls are client components; a Server Component page can s
 - `Label`: the label text style, with an optional required marker. `Input`: `size` sm | md; invalid and disabled states.
 - `Checkbox`: checked, indeterminate, invalid, disabled. `RadioGroup` with `RadioGroupItem`: arrow keys move between items. Both keep a 16px visual with a pointer target of at least `control.target-min` (24px, WCAG 2.2 SC 2.5.8) through the `.ds-hit-area` recipe.
 - `Select` with `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `SelectGroup`, `SelectLabel`, `SelectSeparator`: `SelectContent` takes a `container` so the list renders inside a themed scope.
+
+**Field or Fieldset?** One control with one label: `Field`. A group of related controls (radio group, list of checkboxes) with one question: `Fieldset`.
+
+Theme scopes and portals (0.5.0):
+
+- `ThemeScope` applies a theme's `vars` (or `theme={json}`) to a subtree and sets `data-ds-theme`. It is also the portal container: portal components render into `container ?? usePortalContainer()` (the nearest `ThemeScope`), falling back to `document.body`, so an open `Select` list keeps the scope's theme. An explicit `container` prop always wins.
+- Stacking uses the shared layer scale (`--ds-layer-*`, `.ds-layer-*`: base, sticky, dropdown, overlay, modal, toast, tooltip, skip-link). Use these recipes, not raw `z-*`.
+- `Section` tones (`.ds-tone-*`) re-map the colour roles in scope, so links, focus rings and controls stay readable on inverse and brand surfaces. Tones do not nest.
 
 Type a `ref` from the same element you pass to `as`, and prefer callback refs.
 
