@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H7 Storybook a11y gate + CSS coverage. S26 Card + Tabs starts only after H10 signs off.
+- **Next session:** H8 0.5.0 release prep. S26 Card + Tabs starts only after H10 signs off.
 - **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
@@ -65,7 +65,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H4 Tone-aware tokens + contrast matrix      | MH        | ☑      |
 | H5 Overlay foundation (layers, ThemeScope)  | MH        | ☑      |
 | H6 Component API + accessibility            | MH        | ☑      |
-| H7 Storybook a11y gate + CSS coverage       | MH        | ☐      |
+| H7 Storybook a11y gate + CSS coverage       | MH        | ☑      |
 | H8 0.5.0 release prep                       | MH        | ☐      |
 | H9 Site production readiness                | MH        | ☐      |
 | H10 Production-readiness sign-off           | MH        | ☐      |
@@ -374,6 +374,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) The site is pinned to 0.4.0, so its signup demo (RadioGroup in a `Field`, terms Checkbox with a stacked label) and its Grid demos still run the old code; they move in H9 when the site takes 0.5.0. (2) A `cols` Grid now has an extra wrapper `div`: `container.firstElementChild` is no longer the list. Listed for the 0.5.0 CHANGELOG (H8). (3) WebKit on macOS Tabs to buttons only with Option+Tab, so the new tab-order layout test picks the key the way `apps/site/e2e/keys.ts` does. (4) The hook D-043 blocked `cat`, `sed`, `head`; the D-076 row went in with Edit.
 - Next: H7.
 
+### H7 — Storybook a11y gate and CSS coverage — 2026-11-11
+
+- Done (branch `h7-production-hardening`, cut from `origin/main` after #38): `apps/docs` runs every story as a Vitest browser test (`@storybook/addon-vitest`, `vitest.config.ts`, Chromium); `pnpm --filter docs test:stories` is in `pnpm check` (so CI) and `a11y.test: "error"` now fails it. First run caught a real `landmark-unique` violation (two unnamed `nav` in the Sidebar `Sides` story), fixed in the story. `verify-css.mjs` reads the `ds-` classes from `dist/components/*.js` (81) and the playground CSS scans that folder. New stories: `Foundations/ThemeScope` (Select portals into the scope, play function), `Section → TonesWithActions` (links and buttons on all four tones). Fieldset and Field inline stories already existed from H6. `ThemeScope` `vars` now accepts numbers (the package's own JSON map did not typecheck). Audit F21 and F39 set to `fixed in H7`; "axe in Storybook CI" and the playground-CSS item removed from the parking lot.
+- Verified: `pnpm check` exit 0 (story tests 90 of 90, layout tests, Storybook build). Planted an unnamed `<button>` story: `test:stories` failed with `button-name`, exit 1, then removed. Planted `bg-ds-planted-missing` in Button: `playground:check` failed, then restored.
+- Decisions: D-077.
+- Gotchas: (1) Radix aria-hides the page while a Select list is open, so a story that opens one closes it before the test ends. (2) My first revert of the planted class dropped a trailing space in Button's class string, which fused `ds-focus-ring` with `disabled:…` and broke 12 tone layout tests in three browsers; `git checkout` restored it. (3) New dev deps in `apps/docs`: `@storybook/addon-vitest`, `vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `playwright` (all pinned to the versions already in the repo). (4) Story tests need Chromium locally (`playwright install chromium`).
+- Next: H8.
+
 ## Retro (Release 0)
 
 - **Time per session:** not tracked per session. Wall clock from commits: S1–S4 on 2026-10-16 (about 1.5 h between first and last merge), S5–S11 on 2026-10-17 (11:44 to 17:28, with gaps). Purander: add real figures here.
@@ -413,7 +421,5 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - More components: Textarea, Switch, Dialog, Toast, Tooltip, navigation.
 - Playground share URL (not in Release 1, D-052).
 - Penpot boards (Release 0 S12 optional, not done); later one board per theme.
-- axe in Storybook CI (the a11y addon's `test: "error"` only runs in the test runner). Planned in H7 (audit F21).
-- Playground CSS check misses classes used only in `src/` (noted S21–S24). Planned in H7 (audit F39).
 - Tones do not nest (D-074): S26 Card needs a surface that restores the base roles inside an inverse or brand Section (e.g. a `.ds-tone-raised` reset, or `on-canvas.*` tokens). Decide in S26.
 - Everything else found on 2026-10-20 lives in `docs/audits/2026-10-20-production-readiness.md`, not here.

@@ -80,6 +80,7 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 | `pnpm --filter @puranderdua/ui test:layout` | rendered layout tests in Chromium (Playwright, package source)      |
 | `pnpm --filter @puranderdua/ui build`       | tsup → dist, plus foundations and theme files                       |
 | `pnpm --filter docs storybook`              | Storybook on :6006                                                  |
+| `pnpm --filter docs test:stories`           | every story as a browser test; axe violations fail (Chromium)       |
 | `pnpm --filter site test:e2e`               | Playwright + axe against `next start` (or `SITE_URL`)               |
 | `pnpm check`                                | lint + tokens + typecheck + test + build + Storybook (what CI runs) |
 | `pnpm check:rsc`                            | packs the tarball into a fresh Next app; RSC boundary (network)     |
