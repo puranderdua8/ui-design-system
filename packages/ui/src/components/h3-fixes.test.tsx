@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Checkbox } from "./checkbox";
 import { Field } from "./field";
+import { Fieldset } from "./fieldset";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import * as api from "../index";
 
@@ -48,11 +49,11 @@ describe("H3: server-safe style exports (F01)", () => {
 describe("H3: radio invalid style via the group (F13)", () => {
   it("the group is a `group` and the item reads group aria-invalid", () => {
     render(
-      <Field label="Contact" error="Pick one">
+      <Fieldset legend="Contact" error="Pick one">
         <RadioGroup>
           <RadioGroupItem value="a" aria-label="A" />
         </RadioGroup>
-      </Field>,
+      </Fieldset>,
     );
     const group = screen.getByRole("radiogroup");
     expect(group.getAttribute("aria-invalid")).toBe("true");

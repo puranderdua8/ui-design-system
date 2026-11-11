@@ -12,6 +12,6 @@ export const dsThemeValues: Record<string, string[]> = {
   shadow: ["ds-raised", "ds-overlay"],
   radius: ["ds-control", "ds-card", "ds-pill"],
   container: ["ds-sm", "ds-md", "ds-lg", "ds-xl"],
-  spacing: ["ds-control-sm", "ds-control-md", "ds-control-px-sm", "ds-control-px-md", "ds-gap-xs", "ds-gap-sm", "ds-gap-md", "ds-gap-lg", "ds-gap-xl", "ds-section-sm", "ds-section-md", "ds-section-lg", "ds-gutter", "ds-sidebar"],
+  spacing: ["ds-control-sm", "ds-control-md", "ds-control-px-sm", "ds-control-px-md", "ds-target-min", "ds-gap-xs", "ds-gap-sm", "ds-gap-md", "ds-gap-lg", "ds-gap-xl", "ds-section-sm", "ds-section-md", "ds-section-lg", "ds-gutter", "ds-sidebar"],
   ease: ["ds-standard", "ds-emphasized"],
 };

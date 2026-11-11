@@ -7,6 +7,8 @@ import {
   Container,
   Grid,
   Link,
+  RadioGroup,
+  RadioGroupItem,
   Section,
   Sidebar,
   Split,
@@ -59,6 +61,27 @@ const cases: Record<string, ReactNode> = {
     <Sidebar side="end" sidebar={<Box id="a" />}>
       <Box id="b" />
     </Sidebar>
+  ),
+  // Focusable content so tab order can be compared with the visual order (F10).
+  // Buttons, because WebKit on macOS does not Tab to links by default.
+  "sidebar-start-focus": (
+    <Sidebar sidebar={<button id="a">a</button>}>
+      <button id="b">b</button>
+    </Sidebar>
+  ),
+  "sidebar-end-focus": (
+    <Sidebar side="end" sidebar={<button id="a">a</button>}>
+      <button id="b">b</button>
+    </Sidebar>
+  ),
+  targets: (
+    // Padded so a point just outside either control is still inside the page.
+    <Cluster gap="lg" style={{ padding: 24 }}>
+      <Checkbox aria-label="check" data-testid="check" />
+      <RadioGroup>
+        <RadioGroupItem value="r" aria-label="radio" data-testid="radio" />
+      </RadioGroup>
+    </Cluster>
   ),
   "grid-cols-3": (
     <Grid cols={3} gap="sm">

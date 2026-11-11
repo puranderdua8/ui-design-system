@@ -27,17 +27,26 @@ export type FieldProps = Omit<ElementProps<"div">, "children"> & {
   /** Error message. Marks the control invalid and is announced when it appears. */
   error?: React.ReactNode;
   required?: boolean;
+  /**
+   * `stacked` puts the label above the control. `inline` puts the control first
+   * and the label beside it (a Checkbox); description and error stay below.
+   * The DOM follows the visual order in both layouts.
+   */
+  layout?: FieldLayout;
   /** Fixes the control's id (otherwise generated with `useId`). */
   id?: string;
-  /** One form control, such as `Input`. */
+  /** One form control, such as `Input`. For a group of controls use `Fieldset`. */
   children: React.ReactNode;
 };
+
+export type FieldLayout = "stacked" | "inline";
 
 export const Field = ({
   label,
   description,
   error,
   required = false,
+  layout = "stacked",
   id,
   className,
   children,
@@ -62,18 +71,32 @@ export const Field = ({
     [controlId, labelId, describedBy, hasError, required],
   );
 
+  const labelElement = (
+    <Label id={labelId} htmlFor={controlId} required={required}>
+      {label}
+    </Label>
+  );
+
   return (
     <FieldContext value={value}>
       <div
         {...props}
         data-slot="field"
+        data-layout={layout}
         data-invalid={hasError ? "" : undefined}
         className={cn("flex flex-col gap-ds-gap-xs", className)}
       >
-        <Label id={labelId} htmlFor={controlId} required={required}>
-          {label}
-        </Label>
-        {children}
+        {layout === "inline" ? (
+          <div className="flex items-center gap-ds-gap-sm">
+            {children}
+            {labelElement}
+          </div>
+        ) : (
+          <>
+            {labelElement}
+            {children}
+          </>
+        )}
         {hasDescription ? (
           <Text as="p" variant="caption" id={descriptionId}>
             {description}

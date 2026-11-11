@@ -6,13 +6,19 @@ import { CircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
 import { useFieldContext } from "./field";
+import { useFieldsetContext } from "./fieldset";
 import { radioGroupItemClasses } from "./radio-group.styles";
 
 export type RadioGroupProps = React.ComponentPropsWithoutRef<
   typeof RadioGroupPrimitive.Root
 > & { ref?: StrictRef<HTMLDivElement> };
 
-/** Group of radios. Inside a `Field` it is named by the Field's label. */
+/**
+ * Group of radios. Put it in a `Fieldset`: the legend names it and the
+ * Fieldset's invalid and required state reach it. A `Field` is for one control,
+ * so a RadioGroup inside one still works but warns in development (its label
+ * would point at a `div`, which a `<label>` cannot label).
+ */
 export const RadioGroup = ({
   id,
   required,
@@ -23,18 +29,31 @@ export const RadioGroup = ({
   ...props
 }: RadioGroupProps) => {
   const field = useFieldContext();
+  const fieldset = useFieldsetContext();
+  const wrongParent = field != null && fieldset == null;
+
+  React.useEffect(() => {
+    if (wrongParent && process.env.NODE_ENV !== "production") {
+      console.warn(
+        "@puranderdua/ui: RadioGroup is inside a Field. A Field labels one control; use a Fieldset (legend, description, error) for a group of radios.",
+      );
+    }
+  }, [wrongParent]);
+
+  const source = fieldset ?? field;
   const describedBy =
-    [field?.describedBy, ariaDescribedBy].filter(Boolean).join(" ") ||
-    undefined;
+    [fieldset ? undefined : field?.describedBy, ariaDescribedBy]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
   return (
     <RadioGroupPrimitive.Root
       {...props}
-      id={id ?? field?.controlId}
-      required={required ?? field?.required}
-      aria-invalid={ariaInvalid ?? (field?.invalid ? true : undefined)}
+      id={id ?? (fieldset ? undefined : field?.controlId)}
+      required={required ?? source?.required}
+      aria-invalid={ariaInvalid ?? (source?.invalid ? true : undefined)}
       aria-describedby={describedBy}
-      aria-labelledby={ariaLabelledBy ?? field?.labelId}
+      aria-labelledby={ariaLabelledBy ?? fieldset?.legendId ?? field?.labelId}
       data-slot="radio-group"
       className={cn("group grid gap-ds-gap-sm", className)}
     />

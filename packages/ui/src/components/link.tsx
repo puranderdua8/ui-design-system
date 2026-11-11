@@ -26,12 +26,15 @@ export type LinkProps = VariantProps<typeof linkVariants> &
     asChild?: boolean;
     /** Opens in a new tab: adds `target`, `rel`, an icon and a screen-reader hint. */
     external?: boolean;
+    /** Screen-reader hint added to an `external` link. Translate it for other languages. */
+    externalLabel?: string;
   };
 
 export const Link = ({
   variant,
   asChild = false,
   external = false,
+  externalLabel = "(opens in a new tab)",
   className,
   children,
   ...props
@@ -64,10 +67,9 @@ export const Link = ({
           {/* The space sits before the icon so the underline does not trail past it. */}{" "}
           <ExternalLink
             aria-hidden="true"
-            focusable="false"
             className="inline-block size-4 align-text-bottom"
           />
-          <span className="sr-only">(opens in a new tab)</span>
+          <span className="sr-only">{externalLabel}</span>
         </>
       ) : null}
     </Comp>

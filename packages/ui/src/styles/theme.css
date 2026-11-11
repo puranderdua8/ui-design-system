@@ -128,6 +128,7 @@
   --spacing-ds-control-md: var(--ds-control-md-height);
   --spacing-ds-control-px-sm: var(--ds-control-sm-padding-x);
   --spacing-ds-control-px-md: var(--ds-control-md-padding-x);
+  --spacing-ds-target-min: var(--ds-control-target-min);
 
   /* Spacing namespace, layout: gap-ds-gap-md, py-ds-section-md, px-ds-gutter,
      w-ds-sidebar */
@@ -344,6 +345,22 @@
     --ds-action-secondary-border: var(--ds-on-brand-action-secondary-border);
     background-color: var(--ds-surface-brand);
     color: var(--ds-text-primary);
+  }
+
+  /* Pointer target of at least control.target-min (WCAG 2.2 SC 2.5.8) around a
+     smaller visual: an invisible ::after centred on the control, never smaller
+     than the control itself. Clicks on it reach the control. */
+  .ds-hit-area {
+    position: relative;
+  }
+  .ds-hit-area::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--ds-control-target-min));
+    height: max(100%, var(--ds-control-target-min));
+    transform: translate(-50%, -50%);
   }
 
   /* Keyboard focus ring from the focus.ring-* tokens (width and offset have

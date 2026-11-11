@@ -55,6 +55,23 @@ describe("Link", () => {
     );
   });
 
+  it("externalLabel replaces the screen-reader hint (F30) and the icon has no focusable attribute (F37)", () => {
+    render(
+      <Link
+        href="https://example.com"
+        external
+        externalLabel="(öffnet in neuem Tab)"
+      >
+        Beispiel
+      </Link>,
+    );
+    const el = screen.getByRole("link", {
+      name: "Beispiel (öffnet in neuem Tab)",
+    });
+    expect(el.textContent).not.toContain("opens in a new tab");
+    expect(el.querySelector("svg")?.hasAttribute("focusable")).toBe(false);
+  });
+
   it("external keeps the caller's rel tokens and does not repeat its own", () => {
     render(
       <Link href="https://example.com" external rel="nofollow noopener">
