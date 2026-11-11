@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H8 0.5.0 release prep. S26 Card + Tabs starts only after H10 signs off.
+- **Next session:** H9 site production readiness (after Purander merges the H8 PR, tags `v0.5.0` and approves the `npm-publish` deployment). S26 Card + Tabs starts only after H10 signs off.
 - **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
@@ -66,7 +66,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H5 Overlay foundation (layers, ThemeScope)  | MH        | ☑      |
 | H6 Component API + accessibility            | MH        | ☑      |
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☑      |
-| H8 0.5.0 release prep                       | MH        | ☐      |
+| H8 0.5.0 release prep                       | MH        | ☑      |
 | H9 Site production readiness                | MH        | ☐      |
 | H10 Production-readiness sign-off           | MH        | ☐      |
 | S26 Card + Tabs                             | M10       | ☐      |
@@ -381,6 +381,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-077.
 - Gotchas: (1) Radix aria-hides the page while a Select list is open, so a story that opens one closes it before the test ends. (2) My first revert of the planted class dropped a trailing space in Button's class string, which fused `ds-focus-ring` with `disabled:…` and broke 12 tone layout tests in three browsers; `git checkout` restored it. (3) New dev deps in `apps/docs`: `@storybook/addon-vitest`, `vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `playwright` (all pinned to the versions already in the repo). (4) Story tests need Chromium locally (`playwright install chromium`).
 - Next: H8.
+
+### H8 — 0.5.0 release prep — 2026-11-11
+
+- Done (branch `h8-production-hardening`, cut from `origin/main` after #39): version 0.5.0 and a new package description; CHANGELOG 0.5.0 (Breaking, Migration, Added, Fixed); package README (ThemeScope and portals, layers, tones, Field vs Fieldset, `@source` per layout with a built-CSS check), root README link; `clean-install.sh` takes `TARBALL=` (D-078). Audit F35 and F40 set to `fixed in H8`.
+- Verified (Definition of Done, against the packed 0.5.0 tarball): `pnpm check` exit 0; `pnpm check:rsc` PASS; `TARBALL=… scripts/clean-install.sh` PASS (build, CSS has the classes and tokens, axe 0 violations); site `test:e2e` 135 of 135 in three browsers; `pnpm audit --prod --audit-level high` clean. Nothing published or tagged.
+- Decisions: D-078.
+- Gotchas: (1) The security-header test in the Definition of Done does not exist yet: it arrives in H9 with the headers, so the DoD item is open until then (H10 re-runs it). (2) My first `pnpm check` looked green through `tail`, but the lint step had failed on Prettier in two docs files; always read the exit code. (3) `clean-install.sh` piped through `tail` seemed to hang because the `next start` child kept the pipe open; run it unpiped or in the background. (4) The site still runs 0.4.0 until H9.
+- Next: Purander: merge the PR, push tag `v0.5.0` on `main`, approve the `npm-publish` deployment (needs the `npm-publish` environment and npm trusted publisher), then check `npm view @puranderdua/ui version` and provenance. Then H9.
 
 ## Retro (Release 0)
 
