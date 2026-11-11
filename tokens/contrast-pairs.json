@@ -1,5 +1,5 @@
 {
-  "description": "WCAG pairs checked for every theme by scripts/contrast.mjs. fg and bg are semantic colour tokens. min is \"text\" (4.5:1, WCAG 1.4.3) or \"ui\" (3:1, WCAG 1.4.11). Not checked on purpose: disabled.* (exempt), border.default and border.strong (decorative), overlay.scrim (has alpha). Add a pair whenever a component puts one of these colours on another.",
+  "description": "WCAG pairs checked for every theme by scripts/contrast.mjs. fg and bg are semantic colour tokens. min is \"text\" (4.5:1, WCAG 1.4.3) or \"ui\" (3:1, WCAG 1.4.11). Not checked on purpose: disabled.* (exempt), border.default and border.strong (decorative), overlay.scrim (has alpha). Add a pair whenever a component puts one of these colours on another. Pairs are fixed fg/bg checks (also used for the raised surface and form feedback); tone-dependent checks live in contexts and roles below.",
   "pairs": [
     { "fg": "text.primary", "bg": "surface.canvas", "min": "text" },
     { "fg": "text.primary", "bg": "surface.subtle", "min": "text" },
@@ -77,5 +77,137 @@
     { "fg": "feedback.danger.border", "bg": "surface.subtle", "min": "ui" },
     { "fg": "feedback.danger.border", "bg": "surface.raised", "min": "ui" },
     { "fg": "feedback.danger.border", "bg": "feedback.danger.bg", "min": "ui" }
+  ],
+
+  "contextsDescription": "Surface tones (.ds-tone-* in theme.css). Each context has a surface and a map from a base role to the token that replaces it inside that tone. scripts/contrast.mjs expands every context x every role per theme: a role's fg and bg (bg defaults to the tone surface) are looked up in the map first, so a tone checks the roles a component actually sees there. scripts/check-tone-recipes.mjs fails if a recipe in theme.css re-points anything other than this map. Add a role here when a component puts a new colour role on a tone surface; add a context when a new .ds-tone-* recipe appears.",
+  "contexts": {
+    "canvas": { "surface": "surface.canvas", "map": {} },
+    "subtle": { "surface": "surface.subtle", "map": {} },
+    "inverse": {
+      "surface": "surface.inverse",
+      "map": {
+        "text.primary": "text.inverse",
+        "text.muted": "on-inverse.text-muted",
+        "text.link": "on-inverse.link",
+        "text.link-hover": "on-inverse.link-hover",
+        "focus.ring": "on-inverse.focus-ring",
+        "border.control": "on-inverse.border-control",
+        "action.primary.bg": "on-inverse.action.primary.bg",
+        "action.primary.bg-hover": "on-inverse.action.primary.bg-hover",
+        "action.primary.bg-active": "on-inverse.action.primary.bg-active",
+        "action.primary.fg": "on-inverse.action.primary.fg",
+        "action.secondary.bg": "on-inverse.action.secondary.bg",
+        "action.secondary.bg-hover": "on-inverse.action.secondary.bg-hover",
+        "action.secondary.bg-active": "on-inverse.action.secondary.bg-active",
+        "action.secondary.fg": "on-inverse.action.secondary.fg",
+        "action.secondary.border": "on-inverse.action.secondary.border"
+      }
+    },
+    "brand": {
+      "surface": "surface.brand",
+      "map": {
+        "text.primary": "text.on-brand",
+        "text.muted": "on-brand.text-muted",
+        "text.link": "on-brand.link",
+        "text.link-hover": "on-brand.link-hover",
+        "focus.ring": "on-brand.focus-ring",
+        "border.control": "on-brand.border-control",
+        "action.primary.bg": "on-brand.action.primary.bg",
+        "action.primary.bg-hover": "on-brand.action.primary.bg-hover",
+        "action.primary.bg-active": "on-brand.action.primary.bg-active",
+        "action.primary.fg": "on-brand.action.primary.fg",
+        "action.secondary.bg": "on-brand.action.secondary.bg",
+        "action.secondary.bg-hover": "on-brand.action.secondary.bg-hover",
+        "action.secondary.bg-active": "on-brand.action.secondary.bg-active",
+        "action.secondary.fg": "on-brand.action.secondary.fg",
+        "action.secondary.border": "on-brand.action.secondary.border"
+      }
+    }
+  },
+  "roles": [
+    { "fg": "text.primary", "min": "text" },
+    { "fg": "text.muted", "min": "text" },
+    { "fg": "text.link", "min": "text" },
+    { "fg": "text.link-hover", "min": "text" },
+    { "fg": "focus.ring", "min": "ui" },
+    { "fg": "border.control", "min": "ui" },
+    { "fg": "input.bg", "min": "ui" },
+    { "fg": "feedback.danger.fg", "min": "text" },
+    { "fg": "feedback.danger.border", "min": "ui" },
+
+    { "fg": "action.primary.bg", "min": "ui" },
+    { "fg": "action.primary.bg-hover", "min": "ui" },
+    { "fg": "action.primary.bg-active", "min": "ui" },
+    { "fg": "action.primary.fg", "bg": "action.primary.bg", "min": "text" },
+    {
+      "fg": "action.primary.fg",
+      "bg": "action.primary.bg-hover",
+      "min": "text"
+    },
+    {
+      "fg": "action.primary.fg",
+      "bg": "action.primary.bg-active",
+      "min": "text"
+    },
+
+    { "fg": "action.secondary.border", "min": "ui" },
+    { "fg": "action.secondary.fg", "bg": "action.secondary.bg", "min": "text" },
+    {
+      "fg": "action.secondary.fg",
+      "bg": "action.secondary.bg-hover",
+      "min": "text"
+    },
+    {
+      "fg": "action.secondary.fg",
+      "bg": "action.secondary.bg-active",
+      "min": "text"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "action.secondary.bg",
+      "min": "ui"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "action.secondary.bg-hover",
+      "min": "ui"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "action.secondary.bg-active",
+      "min": "ui"
+    }
+  ],
+  "exclusions": [
+    {
+      "context": "canvas",
+      "fg": "input.bg",
+      "reason": "The input fill is the canvas colour; the control boundary is input.border, checked in pairs."
+    },
+    {
+      "context": "subtle",
+      "fg": "input.bg",
+      "reason": "The input fill is not meant to stand out from a subtle surface; the control boundary is input.border, checked in pairs."
+    },
+    {
+      "context": "inverse",
+      "fg": "feedback.danger.fg",
+      "reason": "Not re-mapped for dark tones yet (no on-inverse danger tokens). Put Field errors on a canvas, subtle or raised surface."
+    },
+    {
+      "context": "inverse",
+      "fg": "feedback.danger.border",
+      "reason": "Not re-mapped for dark tones yet (see feedback.danger.fg)."
+    },
+    {
+      "context": "brand",
+      "fg": "feedback.danger.fg",
+      "reason": "Not re-mapped for dark tones yet (no on-brand danger tokens). Put Field errors on a canvas, subtle or raised surface."
+    },
+    {
+      "context": "brand",
+      "fg": "feedback.danger.border",
+      "reason": "Not re-mapped for dark tones yet (see feedback.danger.fg)."
+    }
   ]
 }

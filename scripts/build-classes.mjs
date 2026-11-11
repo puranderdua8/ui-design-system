@@ -18,8 +18,13 @@ const sizes = [...theme.matchAll(/--text-ds-([a-z0-9]+(?:-[a-z0-9]+)?):/g)]
 const recipes = [...theme.matchAll(/^\s*\.(ds-type-[a-z0-9-]+)\s*\{/gm)].map(
   (m) => m[1],
 );
-if (!sizes.length || !recipes.length) {
-  console.error("theme.css: no --text-ds-* sizes or .ds-type-* recipes found.");
+const toneRecipes = [
+  ...theme.matchAll(/^\s*\.(ds-tone-[a-z0-9-]+)\s*\{/gm),
+].map((m) => m[1]);
+if (!sizes.length || !recipes.length || !toneRecipes.length) {
+  console.error(
+    "theme.css: no --text-ds-* sizes, .ds-type-* or .ds-tone-* recipes found.",
+  );
   process.exit(1);
 }
 // Bridge namespaces that tailwind-merge sorts by value shape (T-shirt sizes,
@@ -61,6 +66,8 @@ writeFileSync(
 export const dsFontSizes: string[] = ${list(sizes)};
 /** \`.ds-type-<role>\` recipe classes (each sets family, size, weight, leading, tracking). */
 export const dsTypeRecipes: string[] = ${list(recipes)};
+/** \`.ds-tone-<name>\` recipe classes (one tone applies at a time). */
+export const dsToneRecipes: string[] = ${list(toneRecipes)};
 /** Values per tailwind-merge theme key (shadow, radius, container, spacing, ease). */
 export const dsThemeValues: Record<string, string[]> = {
 ${Object.entries(themeValues)

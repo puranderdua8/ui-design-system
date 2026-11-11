@@ -1,0 +1,132 @@
+{
+  "on-inverse": {
+    "$type": "color",
+    "text-muted": {
+      "$value": "{color.neutral.300}",
+      "$description": "Secondary text inside a .ds-tone-inverse scope; replaces text.muted there."
+    },
+    "link": {
+      "$value": "{color.brand.200}",
+      "$description": "Link text inside a .ds-tone-inverse scope; replaces text.link there."
+    },
+    "link-hover": {
+      "$value": "{color.white}",
+      "$description": "Link text on hover inside a .ds-tone-inverse scope."
+    },
+    "focus-ring": {
+      "$value": "{color.white}",
+      "$description": "Keyboard focus ring inside a .ds-tone-inverse scope; 3:1 against surface.inverse."
+    },
+    "border-control": {
+      "$value": "{color.neutral.400}",
+      "$description": "Control boundary (checkbox, radio) inside a .ds-tone-inverse scope; 3:1 against surface.inverse."
+    },
+    "action": {
+      "primary": {
+        "bg": {
+          "$value": "{color.white}",
+          "$description": "Primary action fill inside a .ds-tone-inverse scope; 3:1 against surface.inverse."
+        },
+        "bg-hover": {
+          "$value": "{color.brand.100}",
+          "$description": "Primary action fill on hover inside a .ds-tone-inverse scope."
+        },
+        "bg-active": {
+          "$value": "{color.brand.200}",
+          "$description": "Primary action fill when pressed inside a .ds-tone-inverse scope."
+        },
+        "fg": {
+          "$value": "{color.neutral.900}",
+          "$description": "Text and icons on the primary action fill inside a .ds-tone-inverse scope."
+        }
+      },
+      "secondary": {
+        "bg": {
+          "$value": "{color.neutral.900}",
+          "$description": "Secondary action fill inside a .ds-tone-inverse scope (same as the surface, so the button reads as an outline)."
+        },
+        "bg-hover": {
+          "$value": "{color.neutral.800}",
+          "$description": "Secondary action fill on hover inside a .ds-tone-inverse scope."
+        },
+        "bg-active": {
+          "$value": "{color.neutral.700}",
+          "$description": "Secondary action fill when pressed inside a .ds-tone-inverse scope."
+        },
+        "fg": {
+          "$value": "{color.white}",
+          "$description": "Text and icons on the secondary action fill inside a .ds-tone-inverse scope."
+        },
+        "border": {
+          "$value": "{color.neutral.400}",
+          "$description": "Secondary action outline inside a .ds-tone-inverse scope; 3:1 against its fills and the surface."
+        }
+      }
+    }
+  },
+  "on-brand": {
+    "$type": "color",
+    "text-muted": {
+      "$value": "{color.brand.100}",
+      "$description": "Secondary text inside a .ds-tone-brand scope; replaces text.muted there."
+    },
+    "link": {
+      "$value": "{color.white}",
+      "$description": "Link text inside a .ds-tone-brand scope; replaces text.link there."
+    },
+    "link-hover": {
+      "$value": "{color.brand.100}",
+      "$description": "Link text on hover inside a .ds-tone-brand scope."
+    },
+    "focus-ring": {
+      "$value": "{color.white}",
+      "$description": "Keyboard focus ring inside a .ds-tone-brand scope; 3:1 against surface.brand."
+    },
+    "border-control": {
+      "$value": "{color.brand.200}",
+      "$description": "Control boundary (checkbox, radio) inside a .ds-tone-brand scope; 3:1 against surface.brand."
+    },
+    "action": {
+      "primary": {
+        "bg": {
+          "$value": "{color.white}",
+          "$description": "Primary action fill inside a .ds-tone-brand scope; 3:1 against surface.brand."
+        },
+        "bg-hover": {
+          "$value": "{color.brand.100}",
+          "$description": "Primary action fill on hover inside a .ds-tone-brand scope."
+        },
+        "bg-active": {
+          "$value": "{color.brand.200}",
+          "$description": "Primary action fill when pressed inside a .ds-tone-brand scope."
+        },
+        "fg": {
+          "$value": "{color.brand.700}",
+          "$description": "Text and icons on the primary action fill inside a .ds-tone-brand scope."
+        }
+      },
+      "secondary": {
+        "bg": {
+          "$value": "{color.brand.600}",
+          "$description": "Secondary action fill inside a .ds-tone-brand scope (same as the surface, so the button reads as an outline)."
+        },
+        "bg-hover": {
+          "$value": "{color.brand.700}",
+          "$description": "Secondary action fill on hover inside a .ds-tone-brand scope."
+        },
+        "bg-active": {
+          "$value": "{color.brand.800}",
+          "$description": "Secondary action fill when pressed inside a .ds-tone-brand scope."
+        },
+        "fg": {
+          "$value": "{color.white}",
+          "$description": "Text and icons on the secondary action fill inside a .ds-tone-brand scope."
+        },
+        "border": {
+          "$value": "{color.brand.200}",
+          "$description": "Secondary action outline inside a .ds-tone-brand scope; 3:1 against its fills and the surface."
+        }
+      }
+    }
+  }
+}

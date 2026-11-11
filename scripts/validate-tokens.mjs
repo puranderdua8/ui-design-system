@@ -226,18 +226,71 @@ for (const [themeName, themePrims] of Object.entries(themed)) {
 }
 
 // contrast-pairs.json: every fg/bg is an existing semantic colour token.
+// Also the tone matrix: contexts (surface + role replacements), roles, and
+// exclusions with a reason.
 try {
-  const { pairs } = JSON.parse(
+  const { pairs, contexts, roles, exclusions } = JSON.parse(
     readFileSync(join(root, "contrast-pairs.json"), "utf8"),
   );
+  const colour = (name, where) => {
+    if (semantic.get(name)?.type !== "color")
+      fail(
+        `contrast-pairs.json: ${where} ${name} is not a semantic colour token`,
+      );
+  };
+  const minOk = (min, where) => {
+    if (min !== "text" && min !== "ui")
+      fail(`contrast-pairs.json: ${where} has min "${min}"`);
+  };
   if (!Array.isArray(pairs) || !pairs.length)
     fail("contrast-pairs.json: needs a non-empty pairs array");
   for (const { fg, bg, min } of pairs ?? []) {
-    for (const name of [fg, bg])
-      if (semantic.get(name)?.type !== "color")
-        fail(`contrast-pairs.json: ${name} is not a semantic colour token`);
-    if (min !== "text" && min !== "ui")
-      fail(`contrast-pairs.json: ${fg} on ${bg} has min "${min}"`);
+    colour(fg, "pair fg");
+    colour(bg, "pair bg");
+    minOk(min, `${fg} on ${bg}`);
+  }
+
+  const isObject = (v) =>
+    v !== null && typeof v === "object" && !Array.isArray(v);
+  if (!isObject(contexts) || !Object.keys(contexts).length)
+    fail("contrast-pairs.json: needs a non-empty contexts object");
+  if (!Array.isArray(roles) || !roles.length)
+    fail("contrast-pairs.json: needs a non-empty roles array");
+  const roleNames = new Set();
+  for (const { fg, bg, min } of roles ?? []) {
+    colour(fg, "role fg");
+    if (bg !== undefined) colour(bg, "role bg");
+    minOk(min, `role ${fg}`);
+    roleNames.add(fg);
+    if (bg !== undefined) roleNames.add(bg);
+  }
+  for (const [name, ctx] of Object.entries(contexts ?? {})) {
+    if (!isObject(ctx) || !isObject(ctx.map)) {
+      fail(`contrast-pairs.json: context ${name} needs a surface and a map`);
+      continue;
+    }
+    colour(ctx.surface, `context ${name} surface`);
+    for (const [role, replacement] of Object.entries(ctx.map)) {
+      colour(role, `context ${name} map key`);
+      colour(replacement, `context ${name} map value`);
+      if (!roleNames.has(role))
+        fail(
+          `contrast-pairs.json: context ${name} replaces ${role}, which no role uses`,
+        );
+    }
+  }
+  const unbound = new Set(
+    roles?.filter((r) => r.bg === undefined).map((r) => r.fg),
+  );
+  for (const { context, fg, reason } of exclusions ?? []) {
+    if (!(context in (contexts ?? {})))
+      fail(`contrast-pairs.json: exclusion names unknown context ${context}`);
+    if (!unbound.has(fg))
+      fail(
+        `contrast-pairs.json: exclusion ${context}/${fg} must name a role without a bg`,
+      );
+    if (typeof reason !== "string" || reason.trim() === "")
+      fail(`contrast-pairs.json: exclusion ${context}/${fg} needs a reason`);
   }
 } catch (e) {
   fail(`contrast-pairs.json: ${e.message}`);
