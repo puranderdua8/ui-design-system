@@ -1,6 +1,10 @@
 {
   "control": {
     "$type": "dimension",
+    "target-min": {
+      "$value": "{size.target.min}",
+      "$description": "Smallest pointer target for any interactive control. Small visuals (checkbox, radio) extend their hit area to this with .ds-hit-area."
+    },
     "sm": {
       "height": {
         "$value": "{size.control.sm}",

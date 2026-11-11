@@ -57,7 +57,16 @@ export type { LinkProps } from "./components/link";
 export { Label } from "./components/label";
 export type { LabelProps } from "./components/label";
 export { Field, useFieldContext } from "./components/field";
-export type { FieldProps, FieldContextValue } from "./components/field";
+export type {
+  FieldProps,
+  FieldLayout,
+  FieldContextValue,
+} from "./components/field";
+export { Fieldset, useFieldsetContext } from "./components/fieldset";
+export type {
+  FieldsetProps,
+  FieldsetContextValue,
+} from "./components/fieldset";
 export { Input } from "./components/input";
 export { inputVariants } from "./components/input.styles";
 export type { InputProps } from "./components/input";

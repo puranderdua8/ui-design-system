@@ -146,12 +146,44 @@ test.describe("Sidebar", () => {
     expect(a.width).toBeCloseTo(420, 0);
   });
 
-  test("the aside stays first when stacked on either side", async ({
+  test("stacked, the aside is above the content for start and below it for end", async ({
     page,
   }) => {
+    await open(page, "sidebar-start", 420);
+    let [a, b] = [await rect(page, "a"), await rect(page, "b")];
+    expect(stacked(a, b)).toBe(true);
     await open(page, "sidebar-end", 420);
-    const [a, b] = [await rect(page, "a"), await rect(page, "b")];
-    expect(a.y).toBeLessThan(b.y);
+    [a, b] = [await rect(page, "a"), await rect(page, "b")];
+    expect(stacked(b, a)).toBe(true);
+  });
+
+  test("tab order matches the visual order on both sides (F10)", async ({
+    page,
+    browserName,
+  }) => {
+    // Safari on macOS only Tabs to buttons with Option+Tab (same as apps/site/e2e/keys.ts).
+    const tabKey =
+      browserName === "webkit" && process.platform === "darwin"
+        ? "Alt+Tab"
+        : "Tab";
+    const order = async (name: string, w: number) => {
+      await open(page, name, w);
+      // Some browsers spend the first Tab on their own chrome, so press Tab
+      // until both buttons have had focus and keep the order they got it in.
+      const seen: string[] = [];
+      for (let i = 0; i < 6 && seen.length < 2; i++) {
+        await page.keyboard.press(tabKey);
+        const id = await page.evaluate(() => document.activeElement?.id ?? "");
+        if (id && !seen.includes(id)) seen.push(id);
+      }
+      return seen;
+    };
+    // Wide: start is aside then content, end is content then aside (left to right).
+    expect(await order("sidebar-start-focus", 900)).toEqual(["a", "b"]);
+    expect(await order("sidebar-end-focus", 900)).toEqual(["b", "a"]);
+    // Narrow: start is aside above content, end is content above aside (top to bottom).
+    expect(await order("sidebar-start-focus", 420)).toEqual(["a", "b"]);
+    expect(await order("sidebar-end-focus", 420)).toEqual(["b", "a"]);
   });
 
   test("a long word in the content does not overflow", async ({ page }) => {
@@ -166,21 +198,39 @@ test.describe("Sidebar", () => {
 });
 
 test.describe("Grid", () => {
-  test("cols=3 is one column on a phone and three on a desktop", async ({
+  test("cols=3 follows the container width, not the viewport (F17)", async ({
     page,
   }) => {
-    await page.setViewportSize({ width: 360, height: 640 });
-    await open(page, "grid-cols-3");
+    // The viewport stays 1280px wide; only the frame changes.
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await open(page, "grid-cols-3", 300);
     expect(stacked(await rect(page, "a"), await rect(page, "b"))).toBe(true);
 
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await open(page, "grid-cols-3");
-    const [a, b, c] = [
+    await open(page, "grid-cols-3", 500);
+    let [a, b, c] = [
+      await rect(page, "a"),
+      await rect(page, "b"),
+      await rect(page, "c"),
+    ];
+    expect(sideBySide(a, b)).toBe(true); // two columns: c wraps
+    expect(stacked(a, c)).toBe(true);
+
+    await open(page, "grid-cols-3", 900);
+    [a, b, c] = [
       await rect(page, "a"),
       await rect(page, "b"),
       await rect(page, "c"),
     ];
     expect(sideBySide(a, b) && sideBySide(b, c)).toBe(true);
+  });
+
+  test("a small phone viewport with a wide frame still gets the wide layout", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 360, height: 640 });
+    await open(page, "grid-cols-3", 900);
+    const [a, b] = [await rect(page, "a"), await rect(page, "b")];
+    expect(sideBySide(a, b)).toBe(true);
   });
 
   test("minItemWidth fits as many columns as the container allows", async ({
@@ -374,6 +424,45 @@ test.describe("surface tones (F02)", () => {
     expect(await linkColour("subtle")).toBe(canvas);
     expect(await linkColour("inverse")).not.toBe(canvas);
     expect(await linkColour("brand")).not.toBe(canvas);
+  });
+});
+
+test.describe("target size (F12)", () => {
+  test("Checkbox and RadioGroupItem have a pointer target of at least control.target-min", async ({
+    page,
+  }) => {
+    await open(page, "targets");
+    const min = await px(page, "var(--ds-control-target-min)");
+    expect(min).toBeGreaterThanOrEqual(24);
+    for (const id of ["check", "radio"]) {
+      const el = page.getByTestId(id);
+      const visual = await rect(page, id);
+      expect(visual.width).toBeLessThan(min); // the visual stays small
+      const after = await el.evaluate((node) => {
+        const s = getComputedStyle(node, "::after");
+        return { w: parseFloat(s.width), h: parseFloat(s.height) };
+      });
+      expect(after.w, `${id} hit width`).toBeGreaterThanOrEqual(min - 0.5);
+      expect(after.h, `${id} hit height`).toBeGreaterThanOrEqual(min - 0.5);
+
+      // A point just outside the 16px box but inside the 24px target reaches the control.
+      const cx = visual.x + visual.width / 2;
+      const cy = visual.y + visual.height / 2;
+      const inset = (min - visual.width) / 2 - 1;
+      for (const [dx, dy] of [
+        [visual.width / 2 + inset, 0],
+        [-(visual.width / 2 + inset), 0],
+        [0, visual.height / 2 + inset],
+        [0, -(visual.height / 2 + inset)],
+      ] as const) {
+        const hit = await page.evaluate(
+          ([x, y]) =>
+            document.elementFromPoint(x!, y!)?.getAttribute("data-testid"),
+          [cx + dx, cy + dy] as const,
+        );
+        expect(hit, `${id} at ${dx},${dy}`).toBe(id);
+      }
+    }
   });
 });
 

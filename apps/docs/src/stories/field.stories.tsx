@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Field, Input, Label, Stack } from "@puranderdua/ui";
+import { Checkbox, Field, Input, Label, Stack } from "@puranderdua/ui";
 
 const meta = {
   title: "Components/Field",
@@ -24,6 +24,18 @@ export const WithError: Story = {
 };
 export const Disabled: Story = {
   args: { children: <Input disabled placeholder="you@example.com" /> },
+};
+
+/** `layout="inline"`: control first, label beside it; description and error below. */
+export const InlineCheckbox: Story = {
+  args: {
+    layout: "inline",
+    label: "I accept the terms",
+    description: "You can read them in full first.",
+    error: "You must accept to continue.",
+    required: true,
+    children: <Checkbox />,
+  },
 };
 
 /** Label on its own, for controls that are not wrapped in a Field. */

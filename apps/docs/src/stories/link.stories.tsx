@@ -20,6 +20,16 @@ export const External: Story = {
   args: { href: "https://example.com", external: true, children: "Example" },
 };
 
+/** `externalLabel` translates the screen-reader hint. */
+export const ExternalTranslated: Story = {
+  args: {
+    href: "https://example.com",
+    external: true,
+    externalLabel: "(öffnet in neuem Tab)",
+    children: "Beispiel",
+  },
+};
+
 /** Inline links stay underlined, so they never rely on colour alone. */
 export const InText: Story = {
   render: () => (

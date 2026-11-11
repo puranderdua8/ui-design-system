@@ -6,8 +6,8 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H6 Component API + accessibility. S26 Card + Tabs starts only after H10 signs off.
-- **Blockers:** none for H5. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
+- **Next session:** H7 Storybook a11y gate + CSS coverage. S26 Card + Tabs starts only after H10 signs off.
+- **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
 
@@ -64,7 +64,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H3 Client boundary + form bug fixes         | MH        | ☑      |
 | H4 Tone-aware tokens + contrast matrix      | MH        | ☑      |
 | H5 Overlay foundation (layers, ThemeScope)  | MH        | ☑      |
-| H6 Component API + accessibility            | MH        | ☐      |
+| H6 Component API + accessibility            | MH        | ☑      |
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☐      |
 | H8 0.5.0 release prep                       | MH        | ☐      |
 | H9 Site production readiness                | MH        | ☐      |
@@ -365,6 +365,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-075. CLAUDE.md and PLAN "Cross-cutting design" updated.
 - Gotchas: (1) layers are shared, so they are not in theme files and a consumer needs no extra import; the e2e fixture imports `generated/layers.css` next to `theme.css` because it uses package source. (2) The scoped-vars test checks the inline vars on the scope that contains the list; jsdom does not compute custom-property inheritance. (3) Dialog, Tooltip and Toast must use `container ?? usePortalContainer()` and a layer recipe.
 - Next: H6.
+
+### H6 — Component API and accessibility — 2026-11-11
+
+- Done (branch `h6-forms-hit-areas`, cut from `origin/main` after #37): `Sidebar side="end"` renders content then aside (no `flex-row-reverse`), `sidebarProps` on the aside; `Grid cols` uses container-query variants inside an `@container` wrapper (`minItemWidth` needs none); token `size.target.min` → `control.target-min` and `.ds-hit-area` (Checkbox, RadioGroupItem); `Field layout="inline"`; new `Fieldset` (`useFieldsetContext`), `RadioGroup` reads it and warns in development inside a `Field`; `Link externalLabel`, `focusable` removed. Stories (Fieldset new; InFieldset, InlineCheckbox, NamedAsides, ExternalTranslated), README lists, exports. Audit F10, F11, F12, F17, F26, F30, F37, F38 set to `fixed in H6`.
+- Verified: `pnpm check` exit 0 (184 unit tests, 84 layout tests in Chromium, Firefox and WebKit, `check-client-exports` 7 client files, Storybook build). `pnpm check:rsc` (network) was not rerun; the new `fieldset.tsx` is covered by the `"use client"` export check only.
+- Decisions: D-076.
+- Gotchas: (1) The site is pinned to 0.4.0, so its signup demo (RadioGroup in a `Field`, terms Checkbox with a stacked label) and its Grid demos still run the old code; they move in H9 when the site takes 0.5.0. (2) A `cols` Grid now has an extra wrapper `div`: `container.firstElementChild` is no longer the list. Listed for the 0.5.0 CHANGELOG (H8). (3) WebKit on macOS Tabs to buttons only with Option+Tab, so the new tab-order layout test picks the key the way `apps/site/e2e/keys.ts` does. (4) The hook D-043 blocked `cat`, `sed`, `head`; the D-076 row went in with Edit.
+- Next: H7.
 
 ## Retro (Release 0)
 

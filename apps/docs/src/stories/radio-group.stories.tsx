@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Cluster,
-  Field,
+  Fieldset,
   Label,
   RadioGroup,
   RadioGroupItem,
@@ -60,12 +60,16 @@ export const Invalid: Story = {
   ),
 };
 
-/** The Field label names the group; description and error are linked. */
-export const InField: Story = {
+/**
+ * A group of radios belongs in a `Fieldset`: the legend names it and the
+ * description and error are linked. (A `Field` labels one control; a RadioGroup
+ * inside one warns in development.)
+ */
+export const InFieldset: Story = {
   args: { "aria-label": undefined, defaultValue: undefined },
   render: (args) => (
-    <Field
-      label="Plan"
+    <Fieldset
+      legend="Plan"
       description="You can change this later."
       error="Choose a plan."
       required
@@ -73,6 +77,6 @@ export const InField: Story = {
       <RadioGroup {...args}>
         <Options />
       </RadioGroup>
-    </Field>
+    </Fieldset>
   ),
 };

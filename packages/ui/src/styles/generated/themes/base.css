@@ -42,6 +42,7 @@
   --ds-space-24: 6rem;
   --ds-size-control-sm: 2rem;
   --ds-size-control-md: 2.5rem;
+  --ds-size-target-min: 1.5rem; /** Smallest pointer target (WCAG 2.2 SC 2.5.8, 24 CSS px). A denser theme may not go below this. */
   --ds-size-container-sm: 40rem;
   --ds-size-container-md: 48rem;
   --ds-size-container-lg: 64rem;
@@ -126,6 +127,7 @@
   --ds-disabled-bg: var(--ds-color-neutral-100); /** Disabled control fill. */
   --ds-disabled-fg: var(--ds-color-neutral-500); /** Disabled control text (exempt from contrast requirements). */
   --ds-disabled-border: var(--ds-color-neutral-200); /** Disabled control outline. */
+  --ds-control-target-min: var(--ds-size-target-min); /** Smallest pointer target for any interactive control. Small visuals (checkbox, radio) extend their hit area to this with .ds-hit-area. */
   --ds-control-sm-height: var(--ds-size-control-sm); /** Small control height. */
   --ds-control-sm-padding-x: var(--ds-space-3); /** Small control horizontal padding. */
   --ds-control-sm-font-size: var(--ds-font-size-sm); /** Small control label size. */

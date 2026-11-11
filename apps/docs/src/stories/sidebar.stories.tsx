@@ -64,6 +64,33 @@ export const Sides: Story = {
   ),
 };
 
+/**
+ * `side="end"` puts the content first in the DOM, so tab and reading order match
+ * what you see; stacked, the aside sits below the content. `sidebarProps` names
+ * each aside, so two of them are distinct landmarks.
+ */
+export const NamedAsides: Story = {
+  render: () => (
+    <Stack gap="xl">
+      <Sidebar
+        sidebar={<Links />}
+        sidebarAs="aside"
+        sidebarProps={{ "aria-label": "Filters" }}
+      >
+        <Content />
+      </Sidebar>
+      <Sidebar
+        side="end"
+        sidebar={<Links />}
+        sidebarAs="aside"
+        sidebarProps={{ "aria-label": "Related" }}
+      >
+        <Content />
+      </Sidebar>
+    </Stack>
+  ),
+};
+
 /** The layout follows the width it is given, so a narrow frame stacks it on any screen. */
 export const InNarrowFrame: Story = {
   render: () => (

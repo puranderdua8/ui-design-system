@@ -89,14 +89,35 @@ describe("Grid", () => {
   });
 
   it.each([2, 3, 4, 6, 12] as const)(
-    "cols=%s starts at one column and widens responsively",
+    "cols=%s starts at one column and widens with the container, not the viewport",
     (cols) => {
       render(<Grid cols={cols}>x{cols}</Grid>);
       const cls = screen.getByText(`x${cols}`).className;
       expect(cls).toContain("grid-cols-1");
-      expect(cls).toMatch(new RegExp(`(md|lg):grid-cols-${cols}\\b`));
+      expect(cls).toMatch(new RegExp(`@[a-z0-9]+:grid-cols-${cols}\\b`));
+      expect(cls).not.toMatch(/(^| )(sm|md|lg|xl):grid-cols/);
     },
   );
+
+  it("wraps a column-count grid in an @container; as, role and data-slot stay on the grid", () => {
+    render(
+      <Grid as="ul" cols={3} aria-label="list">
+        <li>item</li>
+      </Grid>,
+    );
+    const grid = screen.getByRole("list");
+    expect(grid.dataset.slot).toBe("grid");
+    expect(grid.parentElement?.dataset.slot).toBe("grid-container");
+    expect(grid.parentElement?.className).toContain("@container");
+    expect(grid.className).not.toContain("@container");
+  });
+
+  it("auto-fit mode needs no wrapper", () => {
+    render(<Grid minItemWidth="md">x</Grid>);
+    expect(screen.getByText("x").parentElement?.dataset.slot).not.toBe(
+      "grid-container",
+    );
+  });
 
   it("minItemWidth switches to the auto-fit recipe and drops the column map", () => {
     render(
@@ -169,7 +190,10 @@ describe("list semantics", () => {
     ["Cluster", <Cluster as="ul" key="c" />],
   ])("%s as a list keeps its role after the list reset", (_name, el) => {
     const { container } = render(el);
-    expect(container.firstElementChild?.getAttribute("role")).toBe("list");
+    // Grid with a column count has an @container wrapper; the list is inside it.
+    expect(container.querySelector("ul, ol")?.getAttribute("role")).toBe(
+      "list",
+    );
   });
 
   it("adds no role to other elements and lets the caller override it", () => {

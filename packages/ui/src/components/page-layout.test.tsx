@@ -191,11 +191,11 @@ describe("Sidebar", () => {
     expect(content.className).toContain("basis-0");
   });
 
-  it("wraps by its own width; side=end reverses the row", () => {
+  it("wraps by its own width and never reorders with CSS", () => {
     const { rerender } = render(<Sidebar sidebar="s">x</Sidebar>);
     let root = screen.getByText("x").parentElement!;
     expect(root.className).toContain("flex-wrap");
-    expect(root.className).not.toContain("flex-row-reverse");
+    expect(root.className).not.toMatch(/reverse|(^| )order-/);
     expect(root.className).not.toMatch(/(^| )(sm|md|lg):/);
     rerender(
       <Sidebar sidebar="s" side="end">
@@ -203,7 +203,51 @@ describe("Sidebar", () => {
       </Sidebar>,
     );
     root = screen.getByText("x").parentElement!;
-    expect(root.className).toContain("flex-row-reverse");
+    expect(root.className).not.toMatch(/reverse|(^| )order-/);
+  });
+
+  it("side=end renders the content first and the aside after it (DOM order = visual order)", () => {
+    render(
+      <>
+        <Sidebar sidebar={<span>start-aside</span>}>start-content</Sidebar>
+        <Sidebar side="end" sidebar={<span>end-aside</span>}>
+          end-content
+        </Sidebar>
+      </>,
+    );
+    const follows = (a: string, b: string) =>
+      Boolean(
+        screen.getByText(a).compareDocumentPosition(screen.getByText(b)) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    expect(follows("start-aside", "start-content")).toBe(true);
+    expect(follows("end-content", "end-aside")).toBe(true);
+  });
+
+  it("sidebarProps reach the aside, so two sidebars can be named", async () => {
+    const { container } = render(
+      <main>
+        <Sidebar
+          sidebar="a"
+          sidebarProps={{ "aria-label": "Filters", id: "filters" }}
+        >
+          x
+        </Sidebar>
+        <Sidebar
+          sidebar="b"
+          sidebarClassName="p-1"
+          sidebarProps={{ "aria-label": "Related", className: "p-2" }}
+        >
+          y
+        </Sidebar>
+      </main>,
+    );
+    const filters = screen.getByRole("complementary", { name: "Filters" });
+    expect(filters.id).toBe("filters");
+    const related = screen.getByRole("complementary", { name: "Related" });
+    expect(related.className).toContain("basis-ds-sidebar");
+    expect(related.className).toContain("p-2");
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("sidebarAs swaps the aside element", () => {

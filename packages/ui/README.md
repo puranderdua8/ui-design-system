@@ -1,6 +1,6 @@
 # @puranderdua/ui
 
-Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Input`, `Checkbox`, `RadioGroup`, `Select`). React 19 and Tailwind CSS v4 only.
+Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Fieldset`, `Input`, `Checkbox`, `RadioGroup`, `Select`). React 19 and Tailwind CSS v4 only.
 
 ## Install
 
@@ -48,22 +48,23 @@ export const Hero = () => (
 - `Text`: `variant` body | lead | caption | label; `as` p | span | div | label.
 - `Heading`: `variant` display | h1 | h2 | h3; `as` h1 to h6.
 - `Button`: `variant` primary | secondary; `size` sm | md; `asChild`; `type="button"` by default.
-- `Link`: `variant` inline (always underlined) | standalone (underlined on hover and focus); `asChild` (for `next/link`); `external` adds `target="_blank"`, `rel="noopener noreferrer"`, an icon and a hidden "(opens in a new tab)".
+- `Link`: `variant` inline (always underlined) | standalone (underlined on hover and focus); `asChild` (for `next/link`); `external` adds `target="_blank"`, `rel="noopener noreferrer"`, an icon and a hidden hint, "(opens in a new tab)" by default; set `externalLabel` to translate it.
 
 Layout (0.3.0), all with a typed `as`. `Grid`, `Stack` and `Cluster` add `role="list"` to a `ul` or `ol`:
 
 - `Container`: `size` sm to xl | full; `gutter`.
-- `Grid`: `cols` (responsive) or `minItemWidth` (auto-fit); `gap`.
+- `Grid`: `cols` or `minItemWidth` (auto-fit); `gap`. Both follow the Grid's own width (container queries), not the viewport. A `cols` Grid renders a wrapper `div` (the `@container`) around the grid; `as`, `ref`, `role`, `className` and other props stay on the grid itself.
 - `Stack`: vertical flow with `gap`, `align`. `Cluster`: wrapping row with `gap`, `justify`, `align`.
 - `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; optional inner `Container`.
 - `Split`: two columns 1:1, 1:2 or 2:1; stacks when its container is too narrow (not the viewport). Put padding on an inner element so the ratio stays exact.
-- `Sidebar`: `sidebar` slot, `side`; the content wraps below the aside when it would be narrower than half the row.
+- `Sidebar`: `sidebar` slot, `side`; the content wraps below the aside when it would be narrower than half the row. DOM order is visual order: for `side="end"` the content comes first and the aside after it (stacked, the aside is below). `sidebarProps` goes on the aside (`aria-label`, `id`); name each aside when a page has more than one.
 
 Forms (0.4.0). The controls are client components; a Server Component page can still import them:
 
-- `Field`: wraps one control with `label`, `description`, `error` and `required`; wires ids, `aria-describedby` and `aria-invalid` to the control inside it.
+- `Field`: wraps one control with `label`, `description`, `error` and `required`; wires ids, `aria-describedby` and `aria-invalid` to the control inside it. `layout="inline"` puts the control first and the label beside it (a Checkbox).
+- `Fieldset`: wraps a group of controls (`RadioGroup`, a list of checkboxes) in `<fieldset>` and `<legend>` with `description`, `error` and `required`. A `RadioGroup` takes its name, invalid and required state from it. Do not put a `RadioGroup` in a `Field` (it warns in development).
 - `Label`: the label text style, with an optional required marker. `Input`: `size` sm | md; invalid and disabled states.
-- `Checkbox`: checked, indeterminate, invalid, disabled. `RadioGroup` with `RadioGroupItem`: arrow keys move between items.
+- `Checkbox`: checked, indeterminate, invalid, disabled. `RadioGroup` with `RadioGroupItem`: arrow keys move between items. Both keep a 16px visual with a pointer target of at least `control.target-min` (24px, WCAG 2.2 SC 2.5.8) through the `.ds-hit-area` recipe.
 - `Select` with `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `SelectGroup`, `SelectLabel`, `SelectSeparator`: `SelectContent` takes a `container` so the list renders inside a themed scope.
 
 Type a `ref` from the same element you pass to `as`, and prefer callback refs.

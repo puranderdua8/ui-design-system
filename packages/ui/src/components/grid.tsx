@@ -6,15 +6,23 @@ import type { AsProps } from "@/lib/types";
 export type GridCols = 1 | 2 | 3 | 4 | 6 | 12;
 export type GridMinItemWidth = "sm" | "md" | "lg";
 
-/** Fixed column counts. Every map starts at one column on small screens. */
+/**
+ * Fixed column counts. Every map starts at one column and adds columns as the
+ * Grid's own container grows (Tailwind v4 container queries, `@sm:` = 24rem,
+ * `@md:` = 28rem, `@2xl:` = 42rem, …), not as the viewport grows (F17, D-064).
+ * The queries need the `@container` wrapper that `Grid` renders around the grid.
+ */
 export const gridColsClasses: Record<GridCols, string> = {
   1: "grid-cols-1",
-  2: "grid-cols-1 md:grid-cols-2",
-  3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-  4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
-  6: "grid-cols-1 sm:grid-cols-3 lg:grid-cols-6",
-  12: "grid-cols-1 sm:grid-cols-6 lg:grid-cols-12",
+  2: "grid-cols-1 @md:grid-cols-2",
+  3: "grid-cols-1 @md:grid-cols-2 @2xl:grid-cols-3",
+  4: "grid-cols-1 @sm:grid-cols-2 @3xl:grid-cols-4",
+  6: "grid-cols-1 @sm:grid-cols-3 @4xl:grid-cols-6",
+  12: "grid-cols-1 @sm:grid-cols-6 @5xl:grid-cols-12",
 };
+
+/** The element that is the query container for `gridColsClasses`. */
+export const gridContainerClasses = "@container";
 
 /** Auto-fit columns from the `layout.item-min.*` tokens (recipes in theme.css). */
 export const gridFitClasses: Record<GridMinItemWidth, string> = {
@@ -41,7 +49,7 @@ export const Grid = ({
   className,
   ...props
 }: GridProps) => {
-  return renderAs(as, {
+  const grid = renderAs(as, {
     role: listRole(as),
     ...props,
     "data-slot": "grid",
@@ -52,4 +60,15 @@ export const Grid = ({
       className,
     ),
   });
+
+  // Auto-fit already follows the container, so it needs no wrapper. A column
+  // count needs one, because a container query cannot style its own container.
+  // `as`, `ref`, `role` and every other prop stay on the grid itself.
+  return minItemWidth ? (
+    grid
+  ) : (
+    <div data-slot="grid-container" className={gridContainerClasses}>
+      {grid}
+    </div>
+  );
 };
