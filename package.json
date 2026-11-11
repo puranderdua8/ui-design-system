@@ -23,7 +23,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "^3.9.10",
-    "style-dictionary": "^4.4.0",
+    "style-dictionary": "^5.8.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.2"
   }
