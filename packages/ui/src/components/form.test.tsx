@@ -4,7 +4,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { Field } from "./field";
-import { Input, inputVariants } from "./input";
+import { Input } from "./input";
+import { inputVariants } from "./input.styles";
 import { Label } from "./label";
 
 describe("Label", () => {
@@ -72,7 +73,9 @@ describe("Input", () => {
     const el = screen.getByRole("textbox");
     expect(el.getAttribute("aria-invalid")).toBe("true");
     expect(el.getAttribute("aria-describedby")).toBe("note");
-    expect(el.className).toContain("aria-invalid:border-ds-danger-border");
+    expect(el.className).toContain(
+      "aria-invalid:enabled:border-ds-danger-border",
+    );
   });
 
   it("types a callback ref as HTMLInputElement", () => {

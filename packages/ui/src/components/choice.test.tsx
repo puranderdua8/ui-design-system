@@ -78,7 +78,7 @@ describe("Checkbox", () => {
     expect(cls).toContain("data-[state=checked]:bg-ds-primary");
     expect(cls).toContain("ds-focus-ring");
     expect(cls).toContain("disabled:bg-ds-disabled");
-    expect(cls).toContain("aria-invalid:border-ds-danger-border");
+    expect(cls).toContain("aria-invalid:enabled:border-ds-danger-border");
   });
 
   it("has no axe violations", async () => {

@@ -6,8 +6,8 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H3 Client boundary + form bug fixes. S26 Card + Tabs starts only after H10 signs off.
-- **Blockers:** none for H3. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
+- **Next session:** H4 Tone-aware tokens + contrast matrix. S26 Card + Tabs starts only after H10 signs off.
+- **Blockers:** none for H4. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
 
@@ -61,7 +61,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S25 0.4.0 + showcase Forms                  | M9        | ☑      |
 | H1 Lint and type guardrails                 | MH        | ☑      |
 | H2 CI, supply chain, release workflow       | MH        | ☑      |
-| H3 Client boundary + form bug fixes         | MH        | ☐      |
+| H3 Client boundary + form bug fixes         | MH        | ☑      |
 | H4 Tone-aware tokens + contrast matrix      | MH        | ☐      |
 | H5 Overlay foundation (layers, ThemeScope)  | MH        | ☐      |
 | H6 Component API + accessibility            | MH        | ☐      |
@@ -342,6 +342,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-072.
 - Gotchas: (1) WebKit on macOS skips links and buttons on Tab (Safari default, Option+Tab reaches them); three site tests failed only there, so `e2e/keys.ts` uses Option+Tab for WebKit on darwin. (2) Playwright 1.57's browser install hung during extraction under Node 26; Node 22 worked. (3) This network's DNS could not resolve `playwright.download.prss.microsoft.com`; `PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.playwright.dev` worked. A killed install leaves a stale `~/Library/Caches/ms-playwright/__dirlock` that blocks the next one. (4) Not verified: the workflows on GitHub (CI green in all three browsers is shown by the PR run), and `release.yml` end to end (needs the environment, trusted publisher and a tag). (5) `actionlint` and `shellcheck` were installed with brew.
 - Next: H3. Purander: create the `npm-publish` environment and add the npm trusted publisher (`docs/releasing.md`) before H8.
+
+### H3 — Client boundary and form bug fixes — 2026-11-11
+
+- Done (branch `h3-client-boundary-form-fixes`, cut from `origin/main` after #29): `inputVariants`, `checkboxClasses`, `radioGroupItemClasses`, `selectTriggerVariants` moved to plain `*.styles.ts` (tsup entries, no directive; public API unchanged). `scripts/check-client-exports.mjs` in `pnpm check` after build. `check-rsc.sh` asserts directives on all five client components and renders a Server Component page that calls every server-safe export. Fixes: radio invalid via the group (F13), checkbox icons from `data-state` (F14), `description=""` (F27), `aria-invalid:enabled:` so disabled wins (F28), `useFieldContext` exported (F19), `default` export condition (F18). 12 new tests in `h3-fixes.test.tsx`. Audit F01, F13, F14, F18, F19, F27, F28 and the F36 script part set to fixed.
+- Verified: `pnpm check` completed (163 unit tests, Storybook build); `pnpm check:rsc` PASS; a planted `export const plantedVariants` in `input.tsx` made `check-client-exports` exit 1 (then removed); `shellcheck` clean.
+- Decisions: D-073.
+- Gotchas: (1) I wrote the tests after the fixes, so I did not watch them fail first as the plan asked. (2) `check-client-exports` allows `use…` hooks as well as components, so `useFieldContext` can stay in `field.tsx`. (3) Hook D-043 blocks `cat`/`tail` on files and zsh needs quoted globs. (4) CSS-order for F28 is not tested in a browser; `:enabled` removes the conflict by construction.
+- Next: H4.
 
 ## Retro (Release 0)
 

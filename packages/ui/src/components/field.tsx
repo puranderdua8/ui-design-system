@@ -6,7 +6,7 @@ import type { ElementProps } from "@/lib/types";
 import { Label } from "./label";
 import { Text } from "./text";
 
-type FieldContextValue = {
+export type FieldContextValue = {
   controlId: string;
   /** Id of the Field's label, for groups that need `aria-labelledby`. */
   labelId: string;
@@ -48,7 +48,8 @@ export const Field = ({
   const labelId = `${controlId}-label`;
   const descriptionId = `${controlId}-description`;
   const errorId = `${controlId}-error`;
-  const hasDescription = description != null && description !== false;
+  const hasDescription =
+    description != null && description !== false && description !== "";
   const hasError = error != null && error !== false && error !== "";
 
   const describedBy =
