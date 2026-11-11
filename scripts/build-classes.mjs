@@ -21,9 +21,17 @@ const recipes = [...theme.matchAll(/^\s*\.(ds-type-[a-z0-9-]+)\s*\{/gm)].map(
 const toneRecipes = [
   ...theme.matchAll(/^\s*\.(ds-tone-[a-z0-9-]+)\s*\{/gm),
 ].map((m) => m[1]);
-if (!sizes.length || !recipes.length || !toneRecipes.length) {
+const layerRecipes = [
+  ...theme.matchAll(/^\s*\.(ds-layer-[a-z0-9-]+)\s*\{/gm),
+].map((m) => m[1]);
+if (
+  !sizes.length ||
+  !recipes.length ||
+  !toneRecipes.length ||
+  !layerRecipes.length
+) {
   console.error(
-    "theme.css: no --text-ds-* sizes, .ds-type-* or .ds-tone-* recipes found.",
+    "theme.css: no --text-ds-* sizes, .ds-type-*, .ds-tone-* or .ds-layer-* recipes found.",
   );
   process.exit(1);
 }
@@ -68,6 +76,8 @@ export const dsFontSizes: string[] = ${list(sizes)};
 export const dsTypeRecipes: string[] = ${list(recipes)};
 /** \`.ds-tone-<name>\` recipe classes (one tone applies at a time). */
 export const dsToneRecipes: string[] = ${list(toneRecipes)};
+/** \`.ds-layer-<name>\` recipe classes (stacking scale from layers.json). */
+export const dsLayerRecipes: string[] = ${list(layerRecipes)};
 /** Values per tailwind-merge theme key (shadow, radius, container, spacing, ease). */
 export const dsThemeValues: Record<string, string[]> = {
 ${Object.entries(themeValues)

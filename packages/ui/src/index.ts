@@ -82,6 +82,8 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from "./components/select";
+export { ThemeScope, usePortalContainer } from "./components/theme-scope";
+export type { ThemeScopeProps } from "./components/theme-scope";
 export { selectTriggerVariants } from "./components/select.styles";
 export type {
   SelectProps,

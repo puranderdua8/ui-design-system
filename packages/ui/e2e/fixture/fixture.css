@@ -1,5 +1,6 @@
 /* Real layout fixture for the Playwright tests: package source, not dist. */
 @import "tailwindcss";
+@import "../../src/styles/generated/layers.css";
 @import "../../src/styles/theme.css";
 @import "../../src/styles/generated/themes/base.css";
 @source "../../src";

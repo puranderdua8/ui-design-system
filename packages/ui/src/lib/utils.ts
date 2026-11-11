@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 import {
   dsFontSizes,
+  dsLayerRecipes,
   dsThemeValues,
   dsToneRecipes,
   dsTypeRecipes,
@@ -18,15 +19,18 @@ import {
 //   colour) and a later `shadow-md` replaces it.
 // - `ds-tone-*` recipes are one group, so a tone from `className` replaces the
 //   tone a component set.
-const twMerge = extendTailwindMerge<"ds-type" | "ds-tone">({
+// - `ds-layer-*` recipes are one group, and replace a raw `z-*` utility.
+const twMerge = extendTailwindMerge<"ds-type" | "ds-tone" | "ds-layer">({
   extend: {
     theme: dsThemeValues,
     classGroups: {
       "font-size": [{ text: dsFontSizes }],
       "ds-type": dsTypeRecipes,
       "ds-tone": dsToneRecipes,
+      "ds-layer": dsLayerRecipes,
     },
     conflictingClassGroups: {
+      "ds-layer": ["z"],
       "ds-type": [
         "font-size",
         "font-weight",

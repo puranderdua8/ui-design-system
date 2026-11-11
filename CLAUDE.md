@@ -55,12 +55,12 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 - **Guardrails (D-070).** Rules marked "from H<n>" apply once that session lands; follow them in any new code from then on.
   - `"use client"` files export components only. Variants, class strings and other values go in a plain `<name>.styles.ts` (`check-client-exports`, from H3).
   - Surface tones re-map role vars in scope (`.ds-tone-*`); any new colour role joins the contrast matrix for every tone (from H4).
-  - Portal components default to `usePortalContainer()` (from `ThemeScope`) and still accept `container`. Stacking uses layer tokens (`.ds-layer-*`), never raw `z-*` (from H5).
+  - Portal components portal into `container ?? usePortalContainer()` (the nearest `ThemeScope`), falling back to `document.body`. Stacking uses the shared layer tokens (`tokens/primitives/layers.json`, `.ds-layer-*` recipes), never raw `z-*` (H5, D-075).
   - Layout follows the container, not the viewport. DOM order = visual order: no `*-reverse` or `order-*` to reorder content (D-064).
   - Interactive targets are at least 24px (`.ds-hit-area`, from H6). Every user-visible string in a component is a prop with an English default.
   - Single controls use `Field`; groups of controls use `Fieldset` (from H6).
 - **Production-ready bar (D-070):** release sessions run the Definition of Done in `docs/PLAN.md`. A known issue you can't fix in scope goes into the current audit register (or the PROGRESS parking lot), never silently.
-- **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from `radix-ui`; icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop.
+- **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from `radix-ui`; icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop (it wins over `ThemeScope`).
 - Text/Heading: the `as` prop (HTML element) is independent of `variant` (visual role).
 - Button: `type="button"` by default; variants `primary | secondary`; sizes `sm | md`; visible focus ring from the `focus.ring` token.
 - `apps/site` must install `@puranderdua/ui` from **npm at a pinned version**, never `workspace:*`.

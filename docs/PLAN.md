@@ -81,13 +81,13 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 
 - Interactive components are adapted from shadcn new-york-v4 source on the unified `radix-ui` package, each with a provenance doc in `docs/provenance/`. Icons come from `lucide-react`.
 - Client components start with `"use client"`, and the package build must keep it.
-- Portal components (Select) accept a `container` prop, so the playground's scoped preview can theme them. From H5 they default to the nearest `ThemeScope` (`usePortalContainer()`), and an explicit `container` still wins.
+- Portal components (Select) accept a `container` prop, so the playground's scoped preview can theme them. They default to the nearest `ThemeScope` (`usePortalContainer()`, H5, D-075), then `document.body`, and an explicit `container` still wins.
 
 **Guardrails (D-070).** These came out of the 2026-10-20 audit. Each is enforced by a check where one is listed; the session that introduces it is in brackets.
 
 1. **Client modules export components only.** Variants, class strings and other values live in a plain `<name>.styles.ts` that server code can import. `scripts/check-client-exports.mjs` fails otherwise (H3).
 2. **Tones re-map roles in scope.** A surface tone (`.ds-tone-*`) re-points the role vars components use (link, focus ring, actions, control border). Contrast is a generated matrix of every surface/tone × every role, per theme (H4).
-3. **Portals and stacking.** Portal components read `usePortalContainer()`; stacking only uses the layer tokens (`.ds-layer-*`), never raw `z-*` (H5).
+3. **Portals and stacking.** Portal components read `usePortalContainer()`; stacking only uses the layer tokens (`.ds-layer-*`, from the shared `tokens/primitives/layers.json`), never raw `z-*` (H5, D-075).
 4. **Container-first layout.** Layout components respond to the width they are given (flex wrapping or container queries), never the viewport (D-064, H6).
 5. **DOM order = visual order.** No `*-reverse` or `order-*` to reorder content (D-064, H6).
 6. **Targets ≥ 24px.** Every interactive control has at least a 24px target (`control.target-min` + `.ds-hit-area`) (H6).

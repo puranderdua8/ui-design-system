@@ -2,8 +2,10 @@
 // following tokens/resolver.json (theme x mode light).
 //   <outDir>/themes/<name>.css   :root vars, prefix --ds-, references kept
 //   <outDir>/themes/<name>.json  { vars: resolved map, refs: semantic -> primitive }
-// Shared primitives (breakpoints) are validated, not emitted.
+//   <outDir>/layers.css          shared stacking scale --ds-layer-* (not per theme)
+// Other shared primitives (breakpoints) are validated, not emitted.
 // Usage: node scripts/build-tokens.mjs [outDir]
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import StyleDictionary from "style-dictionary";
@@ -76,7 +78,7 @@ export async function buildTokens(
   tokensDir = join(root, "tokens"),
 ) {
   const buildPath = resolve(outDir) + "/";
-  const { themes, semantic } = loadResolver(tokensDir);
+  const { themes, semantic, shared } = loadResolver(tokensDir);
   for (const [name, sources] of Object.entries(themes)) {
     const sd = new StyleDictionary({
       usesDtcg: true,
@@ -103,7 +105,24 @@ export async function buildTokens(
     });
     await sd.buildAllPlatforms();
   }
+  writeLayers(shared, buildPath);
   return buildPath;
+}
+
+// Shared (non-themeable) stacking scale: one `layers.css` with --ds-layer-*.
+// foundations.css includes it; themes never carry it (D-075).
+function writeLayers(shared, buildPath) {
+  const file = shared.find((p) => p.endsWith("layers.json"));
+  if (!file) return;
+  const { layer } = JSON.parse(readFileSync(file, "utf8"));
+  const lines = Object.entries(layer)
+    .filter(([key]) => !key.startsWith("$"))
+    .map(([key, token]) => `  --ds-layer-${key}: ${token.$value};`);
+  mkdirSync(buildPath, { recursive: true });
+  writeFileSync(
+    join(buildPath, "layers.css"),
+    `/**\n * Do not edit directly, this file was auto-generated.\n */\n\n:root {\n${lines.join("\n")}\n}\n`,
+  );
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
