@@ -6,8 +6,8 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H2 CI, supply chain and release workflow. S26 Card + Tabs starts only after H10 signs off.
-- **Blockers:** none. H2 needs Purander to create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`, written in H2).
+- **Next session:** H3 Client boundary + form bug fixes. S26 Card + Tabs starts only after H10 signs off.
+- **Blockers:** none for H3. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
 
@@ -60,7 +60,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S24 Select                                  | M9        | ☑      |
 | S25 0.4.0 + showcase Forms                  | M9        | ☑      |
 | H1 Lint and type guardrails                 | MH        | ☑      |
-| H2 CI, supply chain, release workflow       | MH        | ☐      |
+| H2 CI, supply chain, release workflow       | MH        | ☑      |
 | H3 Client boundary + form bug fixes         | MH        | ☐      |
 | H4 Tone-aware tokens + contrast matrix      | MH        | ☐      |
 | H5 Overlay foundation (layers, ThemeScope)  | MH        | ☐      |
@@ -334,6 +334,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-071.
 - Gotchas: (1) `eslint-plugin-jsx-a11y` 6.10 declares peer `eslint ^9`; it works with ESLint 10 here (pnpm warns). (2) A helper that returns a component (`renderAs(as)` → `<Comp>`) fails `react-hooks/static-components` and `@eslint-react/static-components`, so `renderAs` returns an element written in JSX (not `createElement`, per Purander: modern syntax only). (3) `apps/site` has its own tsconfig and does not use the new flags. (4) A stale ignored `apps/site/.next` (from a branch with an `rsc-probe` page) broke site typecheck; deleted. (5) The hook allows `head`/`tail` only as a pipe filter (`pnpm check 2>&1 | tail -40`); read logs with Read. A new hook only applies after settings reload (it was live in this session at once). (6) `.claude/settings.local.json` (git-ignored, Purander's) still has old `sed`/`python3`/`awk` allow rules; the hook's deny wins.
 - Next: H2.
+
+### H2 — CI, supply chain and release workflow — 2026-10-21
+
+- Done (branch `h2-ci-supply-chain`, cut from `origin/main` after #28): `ci.yml` (read-only token, SHA-pinned actions, concurrency, timeouts, `pnpm audit --prod --audit-level high`, three browsers, `check-rsc` job); `release.yml` (`v*` tag, environment `npm-publish`, OIDC, tag guard `scripts/check-release-tag.sh`, `pnpm check`, `check:rsc`, `npm publish --provenance --access public`); `.github/dependabot.yml`; `clean-install.yml` pinned; Playwright 1.54.2 → 1.57.0 in both packages with chromium/firefox/webkit projects, `retries: 0` + `failOnFlakyTests`; `docs/releasing.md`. Audit F04, F05, F06, F20, F22 fixed; F36 CI part fixed (script part stays with H3).
+- Verified: `actionlint` and `shellcheck` clean; the guard fails for `v9.9.9` (exit 1) and passes for `v0.4.0`; `pnpm audit --prod` clean; `pnpm check` exit 0 (60 layout tests now run in 3 browsers); site `test:e2e` 135 of 135 (3 browsers); `pnpm check:rsc` PASS. Nothing published or tagged.
+- Decisions: D-072.
+- Gotchas: (1) WebKit on macOS skips links and buttons on Tab (Safari default, Option+Tab reaches them); three site tests failed only there, so `e2e/keys.ts` uses Option+Tab for WebKit on darwin. (2) Playwright 1.57's browser install hung during extraction under Node 26; Node 22 worked. (3) This network's DNS could not resolve `playwright.download.prss.microsoft.com`; `PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.playwright.dev` worked. A killed install leaves a stale `~/Library/Caches/ms-playwright/__dirlock` that blocks the next one. (4) Not verified: the workflows on GitHub (CI green in all three browsers is shown by the PR run), and `release.yml` end to end (needs the environment, trusted publisher and a tag). (5) `actionlint` and `shellcheck` were installed with brew.
+- Next: H3. Purander: create the `npm-publish` environment and add the npm trusted publisher (`docs/releasing.md`) before H8.
 
 ## Retro (Release 0)
 

@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { tabKey } from "./keys";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -17,7 +18,10 @@ test("has exactly one h1 and headings in order", async ({ page }) => {
   });
 });
 
-test("primary button works from the keyboard", async ({ page }) => {
+test("primary button works from the keyboard", async ({
+  page,
+  browserName,
+}) => {
   const primary = page.getByRole("button", { name: "Get in touch" });
   // The skip link and the header links come first in the tab order.
   for (
@@ -25,7 +29,7 @@ test("primary button works from the keyboard", async ({ page }) => {
     i < 10 && !(await primary.evaluate((el) => el === document.activeElement));
     i++
   ) {
-    await page.keyboard.press("Tab");
+    await page.keyboard.press(tabKey(browserName));
   }
   await expect(primary).toBeFocused();
 
