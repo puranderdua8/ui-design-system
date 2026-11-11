@@ -2,15 +2,19 @@
 
 Releases publish from GitHub Actions (`.github/workflows/release.yml`) with npm provenance, using npm **trusted publishing** (OIDC). There is no npm token anywhere: not in the repo, not in GitHub secrets. The AI never publishes or tags (D-069).
 
+**There is no approval gate (D-079).** The repo is private on a plan that does not offer required reviewers or deployment tag rules, so pushing a `v*` tag starts the publish at once. The remaining protections are: only someone with push access can push a tag, and the npm trusted publisher accepts only this repository, workflow file and environment name. Check the tag twice before you push it. If the repo becomes public or the plan changes, add the protections listed under "Optional hardening".
+
 ## One-time setup (Purander)
 
 ### 1. GitHub environment `npm-publish`
 
-Repo → Settings → Environments → New environment → `npm-publish`.
+Repo → Settings → Environments → New environment → `npm-publish`. It already exists. Leave it with no reviewers, no secrets and no variables. The workflow still names it, because the npm trusted publisher below matches on the environment name.
 
-- **Required reviewers:** add `puranderdua8` (yourself). Tick "Prevent self-review" **off**, since you are the only maintainer.
-- **Deployment branches and tags:** "Selected branches and tags" → Add rule → type **Tag** → pattern `v*`. Remove any branch rule.
-- No secrets and no variables. Leave "Allow administrators to bypass" off.
+#### Optional hardening (needs a public repo or a paid plan)
+
+- **Required reviewers:** add `puranderdua8` and leave "Prevent self-review" off (you are the only maintainer). The run then waits for your approval after you push the tag.
+- **Deployment branches and tags:** "Selected branches and tags" → "Add deployment branch or tag rule" → type **Tag** → pattern `v*`.
+- Turn off "Allow administrators to bypass configured protection rules".
 
 ### 2. npm trusted publisher
 
@@ -41,7 +45,7 @@ Push a tag only when you mean to release. To test the guard without publishing, 
    git push origin v0.5.0
    ```
 
-4. Open the run in the Actions tab and **approve the `npm-publish` deployment**.
+4. Open the run in the Actions tab and watch it. (If you enabled required reviewers, approve the `npm-publish` deployment here.)
 5. The workflow checks the tag against `package.json`, runs `pnpm install --frozen-lockfile`, `pnpm check` and `pnpm check:rsc`, then runs `npm publish --provenance --access public` from `packages/ui`.
 6. Verify: `npm view @puranderdua/ui version` shows the new version, and the package page shows the "Built and signed on GitHub Actions" provenance badge.
 7. The next session pins `apps/site` to that exact version (Dependabot does not bump `@puranderdua/ui`). You redeploy the site.

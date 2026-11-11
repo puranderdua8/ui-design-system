@@ -6,8 +6,8 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H9 site production readiness (after Purander merges the H8 PR, tags `v0.5.0` and approves the `npm-publish` deployment). S26 Card + Tabs starts only after H10 signs off.
-- **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
+- **Next session:** H9 site production readiness (after Purander merges the H8 PR, tags `v0.5.0`; the publish starts at once, there is no approval gate, D-079). S26 Card + Tabs starts only after H10 signs off.
+- **Blockers:** before the first workflow release (0.5.0) Purander must add the npm trusted publisher (`docs/releasing.md`). The `npm-publish` environment exists with no protection rules (private repo, free plan: no required reviewers or tag rules, D-079).
 
 ## Brand (filled in S1)
 
