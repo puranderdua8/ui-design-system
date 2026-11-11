@@ -6,8 +6,8 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H4 Tone-aware tokens + contrast matrix. S26 Card + Tabs starts only after H10 signs off.
-- **Blockers:** none for H4. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
+- **Next session:** H5 Overlay foundation (layers, ThemeScope). S26 Card + Tabs starts only after H10 signs off.
+- **Blockers:** none for H5. Before the first workflow release (0.5.0, H8) Purander must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
 
@@ -62,7 +62,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H1 Lint and type guardrails                 | MH        | ☑      |
 | H2 CI, supply chain, release workflow       | MH        | ☑      |
 | H3 Client boundary + form bug fixes         | MH        | ☑      |
-| H4 Tone-aware tokens + contrast matrix      | MH        | ☐      |
+| H4 Tone-aware tokens + contrast matrix      | MH        | ☑      |
 | H5 Overlay foundation (layers, ThemeScope)  | MH        | ☐      |
 | H6 Component API + accessibility            | MH        | ☐      |
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☐      |
@@ -352,6 +352,13 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - CI follow-ups on PR #31: runners pinned to `ubuntu-24.04` (Playwright 1.57 cannot install on `ubuntu-latest` = 26.04); the site test "Select opens with the keyboard" failed once in Chromium on the CI runner (ArrowDown pressed before Radix moved focus into the list, so "Apple" stayed selected). It now waits for each option to be focused before the next key; 135 of 135 over 5 repeats locally in three browsers. Not reproduced locally before the fix, so the CI confirmation is the real check.
 - Next: H4.
 
+### H4 — Tone-aware tokens and contrast matrix — 2026-11-11
+
+- Done (branch `h4-surface-tones-contrast`, cut from `origin/main` after #31): `tokens/semantic/tone.json` (`on-inverse.*`, `on-brand.*`, 28 tokens, listed in `resolver.json`); `.ds-tone-canvas|subtle|inverse|brand` recipes in `theme.css` re-point the role vars; `Section` uses them; `cn()` has a `ds-tone` group (`build-classes` emits `dsToneRecipes`). `contrast-pairs.json` gains `contexts`, `roles`, `exclusions`; `contrast.mjs` expands them (126 checks per theme); `validate-tokens` checks the shape; new `scripts/check-tone-recipes.mjs` (in `tokens:check`) keeps the CSS and the contexts in step. Audit F02 set to `fixed in H4` with the re-measured values.
+- Verified: `pnpm check` exit 0 (165 unit tests, 75 layout tests in Chromium, Firefox and WebKit, Storybook build). Planted the F02 bug (`on-brand.focus-ring` = brand.600): `contrast.mjs` fails at 1.00:1; removed one recipe line: `check-tone-recipes` exits 1; with the old Section classes the new layout test fails on inverse and brand (text 1:1 and 2.41:1) in Chromium. All reverted.
+- Decisions: D-074.
+- Gotchas: (1) Syncing to `main` brought a Dependabot bump to Playwright 1.65; the cached 1.57 browsers no longer launched, so I ran `playwright install chromium firefox webkit` (Purander approved; `PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.playwright.dev`). (2) Tones do not nest (D-074 point 5). (3) Danger feedback is not re-mapped inside dark tones (excluded with a reason). (4) Custom themes (S29+) get tone values for free only if they use the same primitive names; completeness already enforces that.- Next: H5. Also not done here: Storybook and the site do not yet show a tone gallery (Section stories may want one in H7).
+
 ## Retro (Release 0)
 
 - **Time per session:** not tracked per session. Wall clock from commits: S1–S4 on 2026-10-16 (about 1.5 h between first and last merge), S5–S11 on 2026-10-17 (11:44 to 17:28, with gaps). Purander: add real figures here.
@@ -393,4 +400,5 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Penpot boards (Release 0 S12 optional, not done); later one board per theme.
 - axe in Storybook CI (the a11y addon's `test: "error"` only runs in the test runner). Planned in H7 (audit F21).
 - Playground CSS check misses classes used only in `src/` (noted S21–S24). Planned in H7 (audit F39).
+- Tones do not nest (D-074): S26 Card needs a surface that restores the base roles inside an inverse or brand Section (e.g. a `.ds-tone-raised` reset, or `on-canvas.*` tokens). Decide in S26.
 - Everything else found on 2026-10-20 lives in `docs/audits/2026-10-20-production-readiness.md`, not here.

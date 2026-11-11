@@ -4,7 +4,12 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { Section, sectionPaddingClasses, sectionToneClasses } from "./section";
+import {
+  Section,
+  sectionPaddingClasses,
+  sectionToneClasses,
+  type SectionTone,
+} from "./section";
 import { Split, splitAlignClasses, splitRatioClasses } from "./split";
 import {
   Sidebar,
@@ -22,7 +27,10 @@ const contrastPairs = JSON.parse(
     resolve(__dirname, "../../../../tokens/contrast-pairs.json"),
     "utf8",
   ),
-) as { pairs: { fg: string; bg: string }[] };
+) as {
+  contexts: Record<string, { surface: string }>;
+  roles: { fg: string }[];
+};
 
 // Compile-time checks (tsc, via `pnpm typecheck`).
 const refChecks = () => {
@@ -64,24 +72,32 @@ describe("Section", () => {
   it("defaults to canvas tone and medium padding", () => {
     render(<Section>x</Section>);
     const cls = screen.getByText("x").className;
-    expect(cls).toContain("bg-ds-canvas");
-    expect(cls).toContain("text-ds-text");
+    expect(cls).toContain("ds-tone-canvas");
     expect(cls).toContain("py-ds-section-md");
   });
 
-  it.each([
-    ["subtle", "bg-ds-surface-subtle", "text-ds-text"],
-    ["inverse", "bg-ds-surface-inverse", "text-ds-text-inverse"],
-    ["brand", "bg-ds-surface-brand", "text-ds-on-brand"],
-  ] as const)(
-    "tone=%s sets surface and matching text colour",
-    (tone, bg, fg) => {
+  it.each(["canvas", "subtle", "inverse", "brand"] as const)(
+    "tone=%s uses its .ds-tone-* recipe, which exists in theme.css",
+    (tone) => {
       render(<Section tone={tone}>x</Section>);
       const cls = screen.getByText("x").className;
-      expect(cls).toContain(bg);
-      expect(cls).toContain(fg);
+      expect(cls).toContain(`ds-tone-${tone}`);
+      expect(themeCss).toContain(`.ds-tone-${tone} {`);
+      // The surface and text come from the recipe, not loose utilities.
+      expect(cls).not.toMatch(/\bbg-ds-|\btext-ds-/);
     },
   );
+
+  it("a tone passed through className replaces the Section's tone", () => {
+    render(
+      <Section tone="inverse" className="ds-tone-brand">
+        x
+      </Section>,
+    );
+    const cls = screen.getByText("x").className;
+    expect(cls).toContain("ds-tone-brand");
+    expect(cls).not.toContain("ds-tone-inverse");
+  });
 
   it.each(["sm", "md", "lg"] as const)("padding=%s uses the token", (p) => {
     render(<Section padding={p}>x</Section>);
@@ -109,13 +125,24 @@ describe("Section", () => {
     expect(ref.current?.className).not.toContain("py-ds-section-md");
   });
 
-  it("every tone's text/surface pair is contrast-checked", () => {
-    const has = (fg: string, bg: string) =>
-      contrastPairs.pairs.some((p) => p.fg === fg && p.bg === bg);
-    expect(has("text.primary", "surface.canvas")).toBe(true);
-    expect(has("text.primary", "surface.subtle")).toBe(true);
-    expect(has("text.inverse", "surface.inverse")).toBe(true);
-    expect(has("text.on-brand", "surface.brand")).toBe(true);
+  it("every tone is a contrast context, so every role is checked on it", () => {
+    expect(Object.keys(contrastPairs.contexts).sort()).toEqual(
+      (Object.keys(sectionToneClasses) as SectionTone[]).sort(),
+    );
+    const surfaces = Object.fromEntries(
+      Object.entries(contrastPairs.contexts).map(([k, v]) => [k, v.surface]),
+    );
+    expect(surfaces).toEqual({
+      canvas: "surface.canvas",
+      subtle: "surface.subtle",
+      inverse: "surface.inverse",
+      brand: "surface.brand",
+    });
+    // Links and the focus ring are the roles F02 found broken on dark tones.
+    const roles = contrastPairs.roles.map((r) => r.fg);
+    expect(roles).toContain("text.link");
+    expect(roles).toContain("focus.ring");
+    expect(roles).toContain("action.primary.bg");
   });
 });
 

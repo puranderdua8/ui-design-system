@@ -6,12 +6,16 @@ import { Container, type ContainerSize } from "./container";
 export type SectionTone = "canvas" | "subtle" | "inverse" | "brand";
 export type SectionPadding = "sm" | "md" | "lg";
 
-/** Surface plus the text colour that is contrast-checked on it (contrast-pairs.json). */
+/**
+ * Tone recipes (theme.css): the surface plus the role vars re-pointed inside
+ * it (text, links, focus ring, actions, control border). Every tone x role is
+ * contrast-checked per theme (contrast-pairs.json, D-074).
+ */
 export const sectionToneClasses: Record<SectionTone, string> = {
-  canvas: "bg-ds-canvas text-ds-text",
-  subtle: "bg-ds-surface-subtle text-ds-text",
-  inverse: "bg-ds-surface-inverse text-ds-text-inverse",
-  brand: "bg-ds-surface-brand text-ds-on-brand",
+  canvas: "ds-tone-canvas",
+  subtle: "ds-tone-subtle",
+  inverse: "ds-tone-inverse",
+  brand: "ds-tone-brand",
 };
 
 /** Vertical padding from the `layout.section-padding.*` tokens. */

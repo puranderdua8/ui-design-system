@@ -257,6 +257,68 @@
     min-width: min(100%, calc(var(--ds-layout-item-min-md) * 2));
   }
 
+  /* Surface tones. A tone sets its surface and re-points the role vars that
+     components read (text, link, focus ring, actions, control border), so
+     everything inside follows the surface (D-074). Only the dark tones
+     re-point: canvas and subtle use the base roles. The re-pointed set must
+     match `contexts` in tokens/contrast-pairs.json (check-tone-recipes). */
+  .ds-tone-canvas {
+    background-color: var(--ds-surface-canvas);
+    color: var(--ds-text-primary);
+  }
+  .ds-tone-subtle {
+    background-color: var(--ds-surface-subtle);
+    color: var(--ds-text-primary);
+  }
+  .ds-tone-inverse {
+    --ds-text-primary: var(--ds-text-inverse);
+    --ds-text-muted: var(--ds-on-inverse-text-muted);
+    --ds-text-link: var(--ds-on-inverse-link);
+    --ds-text-link-hover: var(--ds-on-inverse-link-hover);
+    --ds-focus-ring: var(--ds-on-inverse-focus-ring);
+    --ds-border-control: var(--ds-on-inverse-border-control);
+    --ds-action-primary-bg: var(--ds-on-inverse-action-primary-bg);
+    --ds-action-primary-bg-hover: var(--ds-on-inverse-action-primary-bg-hover);
+    --ds-action-primary-bg-active: var(
+      --ds-on-inverse-action-primary-bg-active
+    );
+    --ds-action-primary-fg: var(--ds-on-inverse-action-primary-fg);
+    --ds-action-secondary-bg: var(--ds-on-inverse-action-secondary-bg);
+    --ds-action-secondary-bg-hover: var(
+      --ds-on-inverse-action-secondary-bg-hover
+    );
+    --ds-action-secondary-bg-active: var(
+      --ds-on-inverse-action-secondary-bg-active
+    );
+    --ds-action-secondary-fg: var(--ds-on-inverse-action-secondary-fg);
+    --ds-action-secondary-border: var(--ds-on-inverse-action-secondary-border);
+    background-color: var(--ds-surface-inverse);
+    color: var(--ds-text-primary);
+  }
+  .ds-tone-brand {
+    --ds-text-primary: var(--ds-text-on-brand);
+    --ds-text-muted: var(--ds-on-brand-text-muted);
+    --ds-text-link: var(--ds-on-brand-link);
+    --ds-text-link-hover: var(--ds-on-brand-link-hover);
+    --ds-focus-ring: var(--ds-on-brand-focus-ring);
+    --ds-border-control: var(--ds-on-brand-border-control);
+    --ds-action-primary-bg: var(--ds-on-brand-action-primary-bg);
+    --ds-action-primary-bg-hover: var(--ds-on-brand-action-primary-bg-hover);
+    --ds-action-primary-bg-active: var(--ds-on-brand-action-primary-bg-active);
+    --ds-action-primary-fg: var(--ds-on-brand-action-primary-fg);
+    --ds-action-secondary-bg: var(--ds-on-brand-action-secondary-bg);
+    --ds-action-secondary-bg-hover: var(
+      --ds-on-brand-action-secondary-bg-hover
+    );
+    --ds-action-secondary-bg-active: var(
+      --ds-on-brand-action-secondary-bg-active
+    );
+    --ds-action-secondary-fg: var(--ds-on-brand-action-secondary-fg);
+    --ds-action-secondary-border: var(--ds-on-brand-action-secondary-border);
+    background-color: var(--ds-surface-brand);
+    color: var(--ds-text-primary);
+  }
+
   /* Keyboard focus ring from the focus.ring-* tokens (width and offset have
      no Tailwind namespace, so a recipe keeps them out of arbitrary values). */
   .ds-focus-ring:focus-visible {

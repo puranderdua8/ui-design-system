@@ -153,6 +153,34 @@
   --ds-layout-item-min-md: var(--ds-size-item-md); /** Default minimum item width in an auto-fit grid. */
   --ds-layout-item-min-lg: var(--ds-size-item-lg); /** Wide minimum item width in an auto-fit grid. */
   --ds-layout-sidebar-width: var(--ds-size-sidebar); /** Width of a sidebar column. */
+  --ds-on-inverse-text-muted: var(--ds-color-neutral-300); /** Secondary text inside a .ds-tone-inverse scope; replaces text.muted there. */
+  --ds-on-inverse-link: var(--ds-color-brand-200); /** Link text inside a .ds-tone-inverse scope; replaces text.link there. */
+  --ds-on-inverse-link-hover: var(--ds-color-white); /** Link text on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-focus-ring: var(--ds-color-white); /** Keyboard focus ring inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
+  --ds-on-inverse-border-control: var(--ds-color-neutral-400); /** Control boundary (checkbox, radio) inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
+  --ds-on-inverse-action-primary-bg: var(--ds-color-white); /** Primary action fill inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
+  --ds-on-inverse-action-primary-bg-hover: var(--ds-color-brand-100); /** Primary action fill on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-primary-bg-active: var(--ds-color-brand-200); /** Primary action fill when pressed inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-primary-fg: var(--ds-color-neutral-900); /** Text and icons on the primary action fill inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-bg: var(--ds-color-neutral-900); /** Secondary action fill inside a .ds-tone-inverse scope (same as the surface, so the button reads as an outline). */
+  --ds-on-inverse-action-secondary-bg-hover: var(--ds-color-neutral-800); /** Secondary action fill on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-bg-active: var(--ds-color-neutral-700); /** Secondary action fill when pressed inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-fg: var(--ds-color-white); /** Text and icons on the secondary action fill inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-border: var(--ds-color-neutral-400); /** Secondary action outline inside a .ds-tone-inverse scope; 3:1 against its fills and the surface. */
+  --ds-on-brand-text-muted: var(--ds-color-brand-100); /** Secondary text inside a .ds-tone-brand scope; replaces text.muted there. */
+  --ds-on-brand-link: var(--ds-color-white); /** Link text inside a .ds-tone-brand scope; replaces text.link there. */
+  --ds-on-brand-link-hover: var(--ds-color-brand-100); /** Link text on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-focus-ring: var(--ds-color-white); /** Keyboard focus ring inside a .ds-tone-brand scope; 3:1 against surface.brand. */
+  --ds-on-brand-border-control: var(--ds-color-brand-200); /** Control boundary (checkbox, radio) inside a .ds-tone-brand scope; 3:1 against surface.brand. */
+  --ds-on-brand-action-primary-bg: var(--ds-color-white); /** Primary action fill inside a .ds-tone-brand scope; 3:1 against surface.brand. */
+  --ds-on-brand-action-primary-bg-hover: var(--ds-color-brand-100); /** Primary action fill on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-primary-bg-active: var(--ds-color-brand-200); /** Primary action fill when pressed inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-primary-fg: var(--ds-color-brand-700); /** Text and icons on the primary action fill inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-bg: var(--ds-color-brand-600); /** Secondary action fill inside a .ds-tone-brand scope (same as the surface, so the button reads as an outline). */
+  --ds-on-brand-action-secondary-bg-hover: var(--ds-color-brand-700); /** Secondary action fill on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-bg-active: var(--ds-color-brand-800); /** Secondary action fill when pressed inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-fg: var(--ds-color-white); /** Text and icons on the secondary action fill inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-border: var(--ds-color-brand-200); /** Secondary action outline inside a .ds-tone-brand scope; 3:1 against its fills and the surface. */
   --ds-type-display-font-family: var(--ds-font-family-heading);
   --ds-type-display-font-size: var(--ds-font-size-3xl);
   --ds-type-display-font-weight: var(--ds-font-weight-bold);

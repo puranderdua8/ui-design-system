@@ -2,6 +2,7 @@ import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Button,
+  Checkbox,
   Cluster,
   Container,
   Grid,
@@ -10,6 +11,8 @@ import {
   Sidebar,
   Split,
   Stack,
+  Text,
+  type SectionTone,
 } from "../../src";
 import "./fixture.css";
 
@@ -98,6 +101,31 @@ const cases: Record<string, ReactNode> = {
       <Section tone="canvas" padding="sm" data-testid="canvas">
         <Box id="b" />
       </Section>
+    </>
+  ),
+  // Every tone with the roles a component reads inside it (H4, F02).
+  tones: (
+    <>
+      {(["canvas", "subtle", "inverse", "brand"] as SectionTone[]).map((t) => (
+        <Section key={t} tone={t} padding="sm" data-testid={`tone-${t}`}>
+          <Stack gap="sm">
+            <Text data-testid={`text-${t}`}>Body text</Text>
+            <Text variant="caption" data-testid={`muted-${t}`}>
+              Muted text
+            </Text>
+            <Link href="#x" data-testid={`link-${t}`}>
+              Link
+            </Link>
+            <Cluster gap="sm">
+              <Button data-testid={`primary-${t}`}>Primary</Button>
+              <Button variant="secondary" data-testid={`secondary-${t}`}>
+                Secondary
+              </Button>
+              <Checkbox aria-label={`check ${t}`} data-testid={`check-${t}`} />
+            </Cluster>
+          </Stack>
+        </Section>
+      ))}
     </>
   ),
   controls: (

@@ -24,14 +24,42 @@ const MINIMUMS = {
 // [foreground, background, minimum] as var names without --ds-
 // (text.on-brand -> text-on-brand). The pairs, and what is left out on
 // purpose, live in tokens/contrast-pairs.json.
-const { pairs } = JSON.parse(
+const { pairs, contexts, roles, exclusions } = JSON.parse(
   readFileSync(join(root, "tokens/contrast-pairs.json"), "utf8"),
 );
-const PAIRS = pairs.map(({ fg, bg, min }) => {
+const varName = (token) => token.replaceAll(".", "-");
+const minimum = (min, what) => {
   if (!(min in MINIMUMS))
-    throw new Error(`contrast-pairs.json: unknown min "${min}" for ${fg}`);
-  return [fg.replaceAll(".", "-"), bg.replaceAll(".", "-"), MINIMUMS[min]];
-});
+    throw new Error(`contrast-pairs.json: unknown min "${min}" for ${what}`);
+  return MINIMUMS[min];
+};
+const PAIRS = pairs.map(({ fg, bg, min }) => [
+  varName(fg),
+  varName(bg),
+  minimum(min, fg),
+  "",
+]);
+
+// Tone matrix: every context (a surface plus the role replacements inside it)
+// x every role. A role's fg, and its bg when it has one, go through the
+// context's map first; without a bg the role sits on the tone surface.
+const excluded = new Set(
+  (exclusions ?? []).map(({ context, fg }) => `${context}|${fg}`),
+);
+let skipped = 0;
+for (const [name, { surface, map }] of Object.entries(contexts ?? {}))
+  for (const { fg, bg, min } of roles ?? []) {
+    if (excluded.has(`${name}|${fg}`) && !bg) {
+      skipped++;
+      continue;
+    }
+    PAIRS.push([
+      varName(map[fg] ?? fg),
+      varName(bg ? (map[bg] ?? bg) : surface),
+      minimum(min, fg),
+      ` in ${name}`,
+    ]);
+  }
 
 function rgb(hex) {
   const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex);
@@ -60,11 +88,11 @@ for (const path of themePaths) {
   const theme = basename(path, ".json");
   const { vars } = JSON.parse(readFileSync(path, "utf8"));
   let themeFailed = 0;
-  for (const [fg, bg, min] of PAIRS) {
+  for (const [fg, bg, min, tone] of PAIRS) {
     const f = vars[`--ds-${fg}`];
     const b = vars[`--ds-${bg}`];
     if (!f || !b) {
-      console.error(`FAIL [${theme}] ${fg} on ${bg}: token missing`);
+      console.error(`FAIL [${theme}] ${fg} on ${bg}${tone}: token missing`);
       themeFailed++;
       continue;
     }
@@ -72,14 +100,14 @@ for (const path of themePaths) {
     try {
       r = ratio(f, b);
     } catch (e) {
-      console.error(`FAIL [${theme}] ${fg} on ${bg}: ${e.message}`);
+      console.error(`FAIL [${theme}] ${fg} on ${bg}${tone}: ${e.message}`);
       themeFailed++;
       continue;
     }
     const ok = r >= min;
     if (!ok) themeFailed++;
     console.log(
-      `${ok ? "ok  " : "FAIL"} [${theme}] ${fg} (${f}) on ${bg} (${b}) = ${r.toFixed(2)}:1 (min ${min}:1)`,
+      `${ok ? "ok  " : "FAIL"} [${theme}] ${fg} (${f}) on ${bg} (${b})${tone} = ${r.toFixed(2)}:1 (min ${min}:1)`,
     );
   }
   if (themeFailed)
@@ -88,7 +116,7 @@ for (const path of themePaths) {
     );
   else
     console.log(
-      `contrast [${theme}]: all ${PAIRS.length} pairs meet their minimum`,
+      `contrast [${theme}]: all ${PAIRS.length} pairs meet their minimum (${skipped} tone x role checks excluded on purpose, see contrast-pairs.json)`,
     );
   failed += themeFailed;
 }

@@ -25,6 +25,7 @@ const run = (script, ...args) => {
 };
 
 run("validate-tokens.mjs");
+run("check-tone-recipes.mjs");
 
 tmp = mkdtempSync(join(tmpdir(), "ds-tokens-"));
 try {

@@ -284,6 +284,99 @@ test.describe("Container, Stack, Cluster, Section", () => {
   });
 });
 
+// WCAG relative luminance and contrast from computed `rgb()` strings.
+const channels = (css: string): [number, number, number] => {
+  const m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(css);
+  if (!m) throw new Error(`unexpected computed colour: ${css}`);
+  return [Number(m[1]), Number(m[2]), Number(m[3])];
+};
+const luminance = (css: string) => {
+  const [r, g, b] = channels(css).map((c) => {
+    const s = c / 255;
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  }) as [number, number, number];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a: string, b: string) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [
+    number,
+    number,
+  ];
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+test.describe("surface tones (F02)", () => {
+  for (const tone of ["canvas", "subtle", "inverse", "brand"]) {
+    test(`inside ${tone}, text, link, focus ring and actions meet their minimums`, async ({
+      page,
+    }) => {
+      await open(page, "tones", 600);
+      const style = (id: string, prop: string) =>
+        page
+          .getByTestId(`${id}-${tone}`)
+          .evaluate(
+            (el, p) =>
+              getComputedStyle(el)[p as keyof CSSStyleDeclaration] as string,
+            prop,
+          );
+      const surface = await style("tone", "backgroundColor");
+      const min = { text: 4.5, ui: 3 };
+
+      // Text roles on the surface (4.5:1).
+      for (const id of ["text", "muted", "link"])
+        expect(
+          contrast(await style(id, "color"), surface),
+          `${id} on ${tone}`,
+        ).toBeGreaterThanOrEqual(min.text);
+
+      // The keyboard focus ring (3:1) on the surface, for a link and a button.
+      for (const id of ["link", "primary", "secondary"]) {
+        await page.getByTestId(`${id}-${tone}`).focus();
+        expect(await style(id, "outlineStyle"), `${id} outline`).toBe("solid");
+        expect(
+          contrast(await style(id, "outlineColor"), surface),
+          `focus ring on ${id} in ${tone}`,
+        ).toBeGreaterThanOrEqual(min.ui);
+      }
+
+      // Primary action: its fill is visible on the surface and its label is legible.
+      const primaryBg = await style("primary", "backgroundColor");
+      expect(contrast(primaryBg, surface)).toBeGreaterThanOrEqual(min.ui);
+      expect(
+        contrast(await style("primary", "color"), primaryBg),
+      ).toBeGreaterThanOrEqual(min.text);
+
+      // Secondary action: outline visible on the surface, label legible on its fill.
+      expect(
+        contrast(await style("secondary", "borderTopColor"), surface),
+      ).toBeGreaterThanOrEqual(min.ui);
+      expect(
+        contrast(
+          await style("secondary", "color"),
+          await style("secondary", "backgroundColor"),
+        ),
+      ).toBeGreaterThanOrEqual(min.text);
+
+      // Control boundary (Checkbox) on the surface.
+      expect(
+        contrast(await style("check", "borderTopColor"), surface),
+      ).toBeGreaterThanOrEqual(min.ui);
+    });
+  }
+
+  test("a tone changes the roles, not only the surface", async ({ page }) => {
+    await open(page, "tones", 600);
+    const linkColour = (tone: string) =>
+      page
+        .getByTestId(`link-${tone}`)
+        .evaluate((el) => getComputedStyle(el).color);
+    const canvas = await linkColour("canvas");
+    expect(await linkColour("subtle")).toBe(canvas);
+    expect(await linkColour("inverse")).not.toBe(canvas);
+    expect(await linkColour("brand")).not.toBe(canvas);
+  });
+});
+
 test.describe("motion", () => {
   test("Button and Link transition, and stop under reduced motion", async ({
     page,

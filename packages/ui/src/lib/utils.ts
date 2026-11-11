@@ -3,6 +3,7 @@ import { extendTailwindMerge } from "tailwind-merge";
 import {
   dsFontSizes,
   dsThemeValues,
+  dsToneRecipes,
   dsTypeRecipes,
 } from "./generated/ds-classes";
 
@@ -15,12 +16,15 @@ import {
 // - Shadow, radius, container, spacing and ease names are added to
 //   tailwind-merge's theme, so `shadow-ds-raised` is a shadow (not a shadow
 //   colour) and a later `shadow-md` replaces it.
-const twMerge = extendTailwindMerge<"ds-type">({
+// - `ds-tone-*` recipes are one group, so a tone from `className` replaces the
+//   tone a component set.
+const twMerge = extendTailwindMerge<"ds-type" | "ds-tone">({
   extend: {
     theme: dsThemeValues,
     classGroups: {
       "font-size": [{ text: dsFontSizes }],
       "ds-type": dsTypeRecipes,
+      "ds-tone": dsToneRecipes,
     },
     conflictingClassGroups: {
       "ds-type": [
