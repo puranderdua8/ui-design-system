@@ -349,6 +349,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `pnpm check` completed (163 unit tests, Storybook build); `pnpm check:rsc` PASS; a planted `export const plantedVariants` in `input.tsx` made `check-client-exports` exit 1 (then removed); `shellcheck` clean.
 - Decisions: D-073.
 - Gotchas: (1) I wrote the tests after the fixes, so I did not watch them fail first as the plan asked. (2) `check-client-exports` allows `use…` hooks as well as components, so `useFieldContext` can stay in `field.tsx`. (3) Hook D-043 blocks `cat`/`tail` on files and zsh needs quoted globs. (4) CSS-order for F28 is not tested in a browser; `:enabled` removes the conflict by construction.
+- CI follow-ups on PR #31: runners pinned to `ubuntu-24.04` (Playwright 1.57 cannot install on `ubuntu-latest` = 26.04); the site test "Select opens with the keyboard" failed once in Chromium on the CI runner (ArrowDown pressed before Radix moved focus into the list, so "Apple" stayed selected). It now waits for each option to be focused before the next key; 135 of 135 over 5 repeats locally in three browsers. Not reproduced locally before the fix, so the CI confirmation is the real check.
 - Next: H4.
 
 ## Retro (Release 0)
