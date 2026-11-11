@@ -38,13 +38,17 @@ step "Directives in the packed files"
 mkdir "$WORK/unpacked"
 tar -xzf "$TARBALL" -C "$WORK/unpacked"
 DIST="$WORK/unpacked/package/dist"
-for client in field input; do
+# Every client component (H3, F36): Radix-based and context-based files.
+for client in field input checkbox radio-group select; do
   expect "$DIST/components/$client.js" '"use client"'
 done
-for server in text heading label button link stack grid; do
+# Server-safe files, including the plain `.styles` modules (F01).
+for server in text heading label button link stack grid cluster container section split sidebar \
+  input.styles checkbox.styles radio-group.styles select.styles; do
   reject "$DIST/components/$server.js" '"use client"'
 done
 reject "$DIST/index.js" '"use client"'
+node "$REPO_ROOT/scripts/check-client-exports.mjs" "$DIST"
 
 step "create-next-app $CNA_VERSION and install the tarball"
 (cd "$WORK" && npx --yes "create-next-app@$CNA_VERSION" app --ts --tailwind --app --src-dir --eslint \
@@ -55,15 +59,58 @@ npm i "$TARBALL"
 cat >src/app/page.tsx <<'TSX'
 // A Server Component: no "use client", no hooks. Field and Input are client
 // components inside the package, so they must arrive as client references.
-import { Field, Heading, Input, Text } from "@puranderdua/ui";
+import * as ui from "@puranderdua/ui";
+import {
+  Button, Checkbox, Cluster, Container, Field, Grid, Heading, Input, Link, Label,
+  RadioGroup, RadioGroupItem, Section, Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue, Sidebar, Split, Stack, Text,
+  buttonVariants, checkboxClasses, cn, headingVariants, inputVariants, linkVariants,
+  radioGroupItemClasses, selectTriggerVariants, textVariants,
+} from "@puranderdua/ui";
+
+// Every server-safe export is called here, on the server (F01, F36). If one of
+// them were a client reference, `next build` would fail with "Attempted to call".
+const serverSafe = [
+  buttonVariants({ variant: "primary", size: "md" }),
+  headingVariants({ variant: "display" }),
+  inputVariants({ size: "md" }),
+  linkVariants({ variant: "inline" }),
+  selectTriggerVariants({ size: "md" }),
+  textVariants({ variant: "body" }),
+  cn("a", "b"),
+  checkboxClasses,
+  radioGroupItemClasses,
+];
+
+// A value export that is neither a component nor a hook must be server-safe and
+// belong in the list above: a new one fails here until it is added.
+const known = new Set(["buttonVariants", "headingVariants", "inputVariants", "linkVariants",
+  "selectTriggerVariants", "textVariants", "cn", "checkboxClasses", "radioGroupItemClasses"]);
+const unlisted = Object.keys(ui).filter((k) => !/^[A-Z]/.test(k) && !/^use[A-Z]/.test(k) && !known.has(k));
+if (unlisted.length > 0) throw new Error("Unlisted server-safe exports: " + unlisted.join(", "));
 
 export default function Page() {
   return (
     <main>
       <Heading as="h1" variant="display">RSC check</Heading>
       <Text>Rendered on the server.</Text>
+      <p data-testid="server-safe">{serverSafe.every((v) => typeof v === "string" && v.length > 0) ? "server-safe ok" : "server-safe broken"}</p>
+      <Container><Stack><Cluster><Grid><Section><Split><div>a</div><div>b</div></Split><Sidebar sidebar="s">c</Sidebar></Section></Grid></Cluster></Stack></Container>
+      <Button>Go</Button>
+      <Link href="/">Home</Link>
+      <Label htmlFor="x">Label</Label>
       <Field label="Email" description="Work address." error="Enter a valid email." required>
         <Input />
+      </Field>
+      <Field label="Agree"><Checkbox defaultChecked="indeterminate" /></Field>
+      <Field label="Contact" error="Pick one">
+        <RadioGroup><RadioGroupItem value="a" aria-label="A" /></RadioGroup>
+      </Field>
+      <Field label="Country">
+        <Select>
+          <SelectTrigger><SelectValue placeholder="Pick" /></SelectTrigger>
+          <SelectContent><SelectItem value="in">India</SelectItem></SelectContent>
+        </Select>
       </Field>
     </main>
   );
@@ -88,6 +135,10 @@ expect "$WORK/page.html" 'data-slot="field"'
 expect "$WORK/page.html" 'data-slot="input"'
 expect "$WORK/page.html" 'aria-invalid="true"'
 expect "$WORK/page.html" 'aria-describedby='
+expect "$WORK/page.html" 'server-safe ok'
+# Indeterminate checkbox and invalid radio group wiring render on the server.
+expect "$WORK/page.html" 'aria-checked="mixed"'
+expect "$WORK/page.html" 'role="radiogroup"'
 # In the RSC payload (escaped JSON inside the HTML), Field and Input are client
 # references (`I[id,[chunks],"Name"]`), while Heading and Text are already plain
 # elements: they never became client references.

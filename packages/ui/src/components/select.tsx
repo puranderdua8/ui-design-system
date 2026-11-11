@@ -3,10 +3,11 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { cva, type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
 import { useFieldContext } from "./field";
+import { selectTriggerVariants } from "./select.styles";
 
 export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
 
@@ -32,24 +33,6 @@ export type SelectValueProps = React.ComponentPropsWithoutRef<
 
 export const SelectValue = (props: SelectValueProps) => (
   <SelectPrimitive.Value data-slot="select-value" {...props} />
-);
-
-export const selectTriggerVariants = cva(
-  "flex w-full min-w-0 items-center justify-between gap-ds-gap-xs ds-border bg-ds-input font-ds-body text-ds-text rounded-ds-control whitespace-nowrap ds-transition ds-focus-ring " +
-    "border-ds-input-border hover:border-ds-input-border-hover " +
-    "data-[placeholder]:text-ds-placeholder " +
-    "aria-invalid:border-ds-danger-border " +
-    "disabled:cursor-not-allowed disabled:border-ds-disabled-border disabled:bg-ds-disabled disabled:text-ds-disabled-fg " +
-    "*:data-[slot=select-value]:line-clamp-1 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-  {
-    variants: {
-      size: {
-        sm: "h-ds-control-sm px-ds-control-px-sm text-ds-control-sm",
-        md: "h-ds-control-md px-ds-control-px-md text-ds-control-md",
-      },
-    },
-    defaultVariants: { size: "md" },
-  },
 );
 
 export type SelectTriggerProps = VariantProps<typeof selectTriggerVariants> &

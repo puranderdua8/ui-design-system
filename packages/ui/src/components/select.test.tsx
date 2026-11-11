@@ -192,7 +192,9 @@ describe("Select", () => {
     expect(trigger.getAttribute("data-size")).toBe("sm");
     expect(trigger.className).toContain("h-ds-control-sm");
     expect(trigger.className).toContain("ds-focus-ring");
-    expect(trigger.className).toContain("aria-invalid:border-ds-danger-border");
+    expect(trigger.className).toContain(
+      "aria-invalid:enabled:border-ds-danger-border",
+    );
     expect(trigger.className).toContain("disabled:bg-ds-disabled");
     await user.click(trigger);
     const content = (await screen.findByRole("listbox")).closest(
