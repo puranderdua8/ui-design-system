@@ -1,9 +1,16 @@
-// Fails if the playground's production CSS is missing any class it uses.
+// Fails if the playground's production CSS is missing any `ds-` class the
+// package ships. The class list is read from dist/components/*.js, so coverage
+// does not depend on the playground using a class (H7, F39). The playground CSS
+// scans dist (`@source` in src/index.css), so a class the bridge or the recipes
+// cannot generate shows up here as missing.
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const assets = resolve(dirname(fileURLToPath(import.meta.url)), "dist/assets");
+const here = dirname(fileURLToPath(import.meta.url));
+const assets = resolve(here, "dist/assets");
+const components = resolve(here, "../dist/components");
+
 const file = readdirSync(assets).find((f) => f.endsWith(".css"));
 if (!file) {
   console.error("No built CSS found in playground/dist/assets.");
@@ -11,97 +18,49 @@ if (!file) {
 }
 const css = readFileSync(resolve(assets, file), "utf8");
 
-const roles = ["display", "h1", "h2", "h3", "body", "lead", "caption", "label"];
-const classes = [
-  ...roles.flatMap((r) => [`.ds-type-${r}`, `.text-ds-${r}`]),
-  ".font-ds-heading",
-  ".font-ds-body",
-  ".text-ds-control-sm",
-  ".text-ds-control-md",
-  ".ds-focus-ring:focus-visible",
-  ".h-ds-control-sm",
-  ".h-ds-control-md",
-  ".px-ds-control-px-sm",
-  ".px-ds-control-px-md",
-  ".rounded-ds-control",
-  ".bg-ds-canvas",
-  ".text-ds-text",
-  ".text-ds-text-muted",
-  ".text-ds-text-inverse",
-  ".border-ds-border",
-  ".bg-ds-primary",
-  ".text-ds-primary-fg",
-  ".bg-ds-primary-hover",
-  ".bg-ds-primary-active",
-  ".bg-ds-secondary",
-  ".text-ds-secondary-fg",
-  ".border-ds-secondary-border",
-  ".bg-ds-secondary-hover",
-  ".bg-ds-secondary-active",
-  ".bg-ds-disabled",
-  ".text-ds-disabled-fg",
-  ".border-ds-disabled-border",
-  // S15: colour roles
-  ".bg-ds-surface-subtle",
-  ".bg-ds-surface-raised",
-  ".bg-ds-surface-inverse",
-  ".bg-ds-surface-brand",
-  ".text-ds-link",
-  ".hover:text-ds-link-hover",
-  ".text-ds-on-brand",
-  ".border-ds-border-strong",
-  ".border-ds-border-control",
-  ".bg-ds-input",
-  ".border-ds-input-border",
-  ".hover:border-ds-input-border-hover",
-  ".placeholder:text-ds-placeholder",
-  ".text-ds-danger-fg",
-  ".border-ds-danger-border",
-  ".bg-ds-danger-bg",
-  ".bg-ds-scrim",
-  // S15: shape, elevation, motion
-  ".rounded-ds-card",
-  ".rounded-ds-pill",
-  ".ds-border",
-  ".ds-border-strong",
-  ".shadow-ds-raised",
-  ".hover:shadow-ds-overlay",
-  ".ds-transition",
-  ".ds-transition-fast",
-  ".ease-ds-standard",
-  // S15: layout
-  ".gap-ds-gap-xs",
-  ".gap-ds-gap-sm",
-  ".gap-ds-gap-md",
-  ".gap-ds-gap-lg",
-  ".gap-ds-gap-xl",
-  ".py-ds-section-sm",
-  ".py-ds-section-md",
-  ".py-ds-section-lg",
-  ".px-ds-gutter",
-  ".basis-ds-sidebar",
-  ".grow-999",
-  ".min-w-1\\/2",
-  ".ds-split",
-  ".ds-split-1-2",
-  ".ds-split-2-1",
-  ".ds-grid-fit-md",
-  ".flex-wrap",
-  ".max-w-ds-sm",
-  ".max-w-ds-md",
-  ".max-w-ds-lg",
-  ".max-w-ds-xl",
-];
-// Hover/active variants are emitted with an escaped prefix, e.g. .hover\:bg-ds-primary-hover
-const missing = classes.filter((c) => {
-  const name = c.slice(1).replace(/:focus-visible$/, "");
-  return !css.includes(c) && !css.includes(name.replace(":", "\\:"));
-});
+// Every string literal (", ' or `) in the built component files, split on whitespace.
+const literal =
+  /"((?:[^"\\\n]|\\.)*)"|'((?:[^'\\\n]|\\.)*)'|`((?:[^`\\]|\\.)*)`/g;
+// A class token: optional variants (`hover:`, `data-[state=checked]:`) then a
+// utility. It uses the design system when the utility part starts with `ds-` or
+// has a `-ds-` segment (`bg-ds-primary`, `-mt-ds-gap-sm`, `!ds-border`).
+const classLike = /^[A-Za-z0-9_\-:[\]/.&>*()=%!@#,'"]+$/;
+const isDs = (token) => {
+  // Drop variants: split on colons that are not inside [...]
+  const bare = token.split(/:(?![^[]*\])/).pop() ?? token;
+  // `data-ds-theme` and similar are attribute names, not classes.
+  if (/^(?:data|aria)-/.test(bare)) return false;
+  return /^[!-]?(?:[a-z0-9-]*-)?ds-[a-z0-9]/.test(bare);
+};
+
+const used = new Set();
+for (const name of readdirSync(components).filter((f) => f.endsWith(".js"))) {
+  const source = readFileSync(resolve(components, name), "utf8");
+  for (const m of source.matchAll(literal)) {
+    const text = m[1] ?? m[2] ?? m[3] ?? "";
+    for (const token of text.split(/\s+/)) {
+      if (token && classLike.test(token) && isDs(token)) used.add(token);
+    }
+  }
+}
+
+// Tailwind and the recipes escape every character that is not [A-Za-z0-9_-].
+const escape = (token) => token.replace(/[^A-Za-z0-9_-]/g, (c) => `\\${c}`);
+const missing = [...used].filter((t) => !css.includes(`.${escape(t)}`));
+
+// Variables that must reach the built CSS (themes and bridge).
 const raw = ["--ds-action-primary-bg", "--ds-type-h1-font-size"].filter(
   (v) => !css.includes(v),
 );
+
+if (used.size === 0) {
+  console.error("No ds- classes found in dist/components; the scan is broken.");
+  process.exit(1);
+}
 if (missing.length || raw.length) {
   console.error("Missing from built CSS:", [...missing, ...raw].join(", "));
   process.exit(1);
 }
-console.log(`playground CSS ok: ${classes.length} classes present in ${file}`);
+console.log(
+  `playground CSS ok: ${used.size} classes from dist/components present in ${file}`,
+);

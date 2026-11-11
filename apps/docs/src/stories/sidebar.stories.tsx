@@ -56,7 +56,13 @@ export const Sides: Story = {
   render: () => (
     <Stack gap="xl">
       {(["start", "end"] as const).map((side) => (
-        <Sidebar key={side} side={side} sidebar={<Links />} sidebarAs="nav">
+        <Sidebar
+          key={side}
+          side={side}
+          sidebar={<Links />}
+          sidebarAs="nav"
+          sidebarProps={{ "aria-label": `Links (${side})` }}
+        >
           <Content />
         </Sidebar>
       ))}

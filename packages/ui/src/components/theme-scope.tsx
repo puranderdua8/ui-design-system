@@ -17,7 +17,7 @@ export type ThemeScopeProps = Omit<ElementProps<"div">, "style"> & {
   /** Theme name, written to `data-ds-theme` (for example `nature`). */
   theme: string;
   /** The theme's resolved var map: `vars` from `@puranderdua/ui/themes/<name>.json`. */
-  vars: Record<string, string>;
+  vars: Record<string, string | number>;
   style?: CSSProperties;
 };
 

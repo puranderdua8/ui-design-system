@@ -3,3 +3,5 @@
 @import "../../dist/foundations.css";
 @import "../../dist/themes/base.css";
 @source "../src";
+/* The package's own classes, so verify-css.mjs checks all of them (H7, F39). */
+@source "../../dist/components";

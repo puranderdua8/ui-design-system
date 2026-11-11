@@ -1,5 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Heading, Section, Stack, Text } from "@puranderdua/ui";
+import {
+  Button,
+  Cluster,
+  Heading,
+  Link,
+  Section,
+  Stack,
+  Text,
+} from "@puranderdua/ui";
 
 const Body = ({ label }: { label: string }) => (
   <Stack gap="sm">
@@ -46,6 +54,34 @@ export const Tones: Story = {
       {(["canvas", "subtle", "inverse", "brand"] as const).map((tone) => (
         <Section key={tone} tone={tone} container="md" padding="sm">
           <Body label={`tone="${tone}"`} />
+        </Section>
+      ))}
+    </>
+  ),
+};
+
+/**
+ * Links and buttons keep their contrast on every tone: the tone re-maps the
+ * role vars (`.ds-tone-*`), so Link and Button need no tone prop.
+ */
+export const TonesWithActions: Story = {
+  render: () => (
+    <>
+      {(["canvas", "subtle", "inverse", "brand"] as const).map((tone) => (
+        <Section key={tone} tone={tone} container="md" padding="sm">
+          <Stack gap="sm">
+            <Text>
+              tone="{tone}": read <Link href="#docs">the documentation</Link> or
+              start now.
+            </Text>
+            <Cluster gap="sm">
+              <Button variant="primary">Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Link href="#all" variant="standalone">
+                All components
+              </Link>
+            </Cluster>
+          </Stack>
         </Section>
       ))}
     </>
