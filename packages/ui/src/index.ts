@@ -56,17 +56,16 @@ export { Link, linkVariants } from "./components/link";
 export type { LinkProps } from "./components/link";
 export { Label } from "./components/label";
 export type { LabelProps } from "./components/label";
-export { Field } from "./components/field";
-export type { FieldProps } from "./components/field";
-export { Input, inputVariants } from "./components/input";
+export { Field, useFieldContext } from "./components/field";
+export type { FieldProps, FieldContextValue } from "./components/field";
+export { Input } from "./components/input";
+export { inputVariants } from "./components/input.styles";
 export type { InputProps } from "./components/input";
-export { Checkbox, checkboxClasses } from "./components/checkbox";
+export { Checkbox } from "./components/checkbox";
+export { checkboxClasses } from "./components/checkbox.styles";
 export type { CheckboxProps } from "./components/checkbox";
-export {
-  RadioGroup,
-  RadioGroupItem,
-  radioGroupItemClasses,
-} from "./components/radio-group";
+export { RadioGroup, RadioGroupItem } from "./components/radio-group";
+export { radioGroupItemClasses } from "./components/radio-group.styles";
 export type {
   RadioGroupProps,
   RadioGroupItemProps,
@@ -76,7 +75,6 @@ export {
   SelectGroup,
   SelectValue,
   SelectTrigger,
-  selectTriggerVariants,
   SelectContent,
   SelectLabel,
   SelectItem,
@@ -84,6 +82,7 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from "./components/select";
+export { selectTriggerVariants } from "./components/select.styles";
 export type {
   SelectProps,
   SelectGroupProps,

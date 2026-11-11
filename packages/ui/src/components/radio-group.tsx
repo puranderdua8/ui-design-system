@@ -6,6 +6,7 @@ import { CircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
 import { useFieldContext } from "./field";
+import { radioGroupItemClasses } from "./radio-group.styles";
 
 export type RadioGroupProps = React.ComponentPropsWithoutRef<
   typeof RadioGroupPrimitive.Root
@@ -35,17 +36,10 @@ export const RadioGroup = ({
       aria-describedby={describedBy}
       aria-labelledby={ariaLabelledBy ?? field?.labelId}
       data-slot="radio-group"
-      className={cn("grid gap-ds-gap-sm", className)}
+      className={cn("group grid gap-ds-gap-sm", className)}
     />
   );
 };
-
-export const radioGroupItemClasses =
-  "peer inline-flex aspect-square size-4 shrink-0 items-center justify-center rounded-full ds-border border-ds-border-control bg-ds-input text-ds-primary ds-transition ds-focus-ring " +
-  "hover:border-ds-input-border-hover " +
-  "data-[state=checked]:border-ds-primary " +
-  "aria-invalid:border-ds-danger-border " +
-  "disabled:cursor-not-allowed disabled:border-ds-disabled-border disabled:bg-ds-disabled disabled:text-ds-disabled-fg";
 
 export type RadioGroupItemProps = React.ComponentPropsWithoutRef<
   typeof RadioGroupPrimitive.Item

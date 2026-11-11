@@ -50,7 +50,11 @@ test.describe("keyboard operation", () => {
     await trigger.focus();
     await page.keyboard.press("Enter");
     await expect(page.getByRole("listbox")).toBeVisible();
+    // Radix moves focus into the list on a timeout after it opens. A key pressed
+    // before that lands is lost, so wait for each focus move before the next key.
+    await expect(page.getByRole("option", { name: "Apple" })).toBeFocused();
     await page.keyboard.press("ArrowDown");
+    await expect(page.getByRole("option", { name: "Banana" })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page.getByRole("listbox")).toBeHidden();
     await expect(trigger).toContainText("Banana");

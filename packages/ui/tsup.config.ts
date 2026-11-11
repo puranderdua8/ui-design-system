@@ -35,7 +35,14 @@ const componentsAsExternals: Plugin = {
 };
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/components/*.tsx", "!src/components/*.test.tsx"],
+  // `*.styles.ts` are entries too (H3): plain files, no directive, so the
+  // components and `index` import the same server-safe output file.
+  entry: [
+    "src/index.ts",
+    "src/components/*.tsx",
+    "src/components/*.styles.ts",
+    "!src/components/*.test.tsx",
+  ],
   format: ["esm"],
   dts: { entry: ["src/index.ts"] },
   splitting: true,

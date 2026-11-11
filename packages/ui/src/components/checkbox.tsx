@@ -6,14 +6,7 @@ import { CheckIcon, MinusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
 import { useFieldContext } from "./field";
-
-export const checkboxClasses =
-  "peer inline-flex size-4 shrink-0 items-center justify-center rounded-ds-control ds-border border-ds-border-control bg-ds-input text-ds-primary-fg ds-transition ds-focus-ring " +
-  "hover:border-ds-input-border-hover " +
-  "data-[state=checked]:border-ds-primary data-[state=checked]:bg-ds-primary " +
-  "data-[state=indeterminate]:border-ds-primary data-[state=indeterminate]:bg-ds-primary " +
-  "aria-invalid:border-ds-danger-border " +
-  "disabled:cursor-not-allowed disabled:border-ds-disabled-border disabled:bg-ds-disabled disabled:text-ds-disabled-fg";
+import { checkboxClasses } from "./checkbox.styles";
 
 export type CheckboxProps = React.ComponentPropsWithoutRef<
   typeof CheckboxPrimitive.Root
@@ -49,11 +42,15 @@ export const Checkbox = ({
         data-slot="checkbox-indicator"
         className="flex items-center justify-center text-current"
       >
-        {checked === "indeterminate" ? (
-          <MinusIcon aria-hidden="true" className="size-3.5" />
-        ) : (
-          <CheckIcon aria-hidden="true" className="size-3.5" />
-        )}
+        {/* Both icons are rendered; `data-state` picks one, so it also works uncontrolled (F14). */}
+        <CheckIcon
+          aria-hidden="true"
+          className="size-3.5 group-data-[state=indeterminate]/checkbox:hidden"
+        />
+        <MinusIcon
+          aria-hidden="true"
+          className="hidden size-3.5 group-data-[state=indeterminate]/checkbox:block"
+        />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
