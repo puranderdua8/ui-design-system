@@ -20,9 +20,13 @@ export default defineConfig({
   webServer: process.env.SITE_URL
     ? undefined
     : {
-        command: "pnpm start --port 3100",
+        // The CSP header list is fixed at build time, so the local build that leaves out
+        // `upgrade-insecure-requests` (WebKit would upgrade http://localhost to https) is
+        // made here, not taken from an earlier `next build`. Production builds never set it.
+        command: "pnpm build && pnpm start --port 3100",
+        env: { SITE_ALLOW_HTTP: "1" },
         url: "http://localhost:3100",
         reuseExistingServer: !process.env.CI,
-        timeout: 60_000,
+        timeout: 180_000,
       },
 });

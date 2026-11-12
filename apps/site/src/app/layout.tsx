@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { siteName, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,26 +12,31 @@ const inter = Inter({
   display: "swap",
 });
 
+const description =
+  "A design system portfolio, built with its own token-driven components.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "UI Design System",
-    template: "%s — UI Design System",
+    default: siteName,
+    template: `%s — ${siteName}`,
   },
-  description:
-    "A design system portfolio, built with its own token-driven components.",
+  description,
+  openGraph: { title: siteName, description, siteName, type: "website" },
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <html lang="en" className={inter.variable}>
-    <body className="min-h-screen">
+    <body className="flex min-h-screen flex-col">
       <a
         href="#main"
-        className="sr-only ds-focus-ring text-ds-link focus:not-sr-only focus:absolute focus:top-ds-gap-sm focus:left-ds-gutter focus:z-10 focus:bg-ds-canvas focus:px-ds-gap-md focus:py-ds-gap-sm"
+        className="sr-only ds-focus-ring ds-layer-skip-link text-ds-link focus:not-sr-only focus:absolute focus:top-ds-gap-sm focus:left-ds-gutter focus:bg-ds-canvas focus:px-ds-gap-md focus:py-ds-gap-sm"
       >
         Skip to content
       </a>
       <SiteHeader />
-      {children}
+      <div className="flex-1">{children}</div>
+      <SiteFooter />
     </body>
   </html>
 );

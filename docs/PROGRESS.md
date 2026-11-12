@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H9 site production readiness (after the maintainer merges the H8 PR, tags `v0.5.0` and approves the `npm-publish` deployment). S26 Card + Tabs starts only after H10 signs off.
+- **Next session:** H10 production-readiness sign-off (after the maintainer merges the H9 PR and redeploys the site). S26 Card + Tabs starts only after H10 signs off.
 - **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) the maintainer must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
@@ -67,7 +67,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H6 Component API + accessibility            | MH        | ☑      |
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☑      |
 | H8 0.5.0 release prep                       | MH        | ☑      |
-| H9 Site production readiness                | MH        | ☐      |
+| H9 Site production readiness                | MH        | ☑      |
 | H10 Production-readiness sign-off           | MH        | ☐      |
 | S26 Card + Tabs                             | M10       | ☐      |
 | S27 Banner                                  | M10       | ☐      |
@@ -389,6 +389,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-078.
 - Gotchas: (1) The security-header test in the Definition of Done does not exist yet: it arrives in H9 with the headers, so the DoD item is open until then (H10 re-runs it). (2) My first `pnpm check` looked green through `tail`, but the lint step had failed on Prettier in two docs files; always read the exit code. (3) `clean-install.sh` piped through `tail` seemed to hang because the `next start` child kept the pipe open; run it unpiped or in the background. (4) The site still runs 0.4.0 until H9.
 - Next: the maintainer: merge the PR, push tag `v0.5.0` on `main`, approve the `npm-publish` deployment (needs the `npm-publish` environment and npm trusted publisher), then check `npm view @puranderdua/ui version` and provenance. Then H9.
+
+### H9 — Site production readiness — 2026-11-12
+
+- Done (branch `h9`, cut from `origin/main` after #41): `apps/site` pinned to `@puranderdua/ui@0.5.0` (and its `minimumReleaseAgeExclude` entry), `@types/node ^22`, Display says "Coming in 0.6". `next.config.ts`: `poweredByHeader: false`, CSP, HSTS, Referrer-Policy, Permissions-Policy, nosniff on every route. New `not-found.tsx`, `error.tsx`, `metadataBase` (`src/lib/site.ts`), `opengraph-image.tsx`, `robots.ts`, `sitemap.ts`. Layout: `SiteFooter` outside `<main>`, skip link on `.ds-layer-skip-link`, current header link underlined and bold, `isCurrent` fixed. Home rebuilt from Container/Stack/Cluster with `<section>`; `Cta` deleted, "Get in touch" is a `Button asChild` link to GitHub. Typed `demos` registry, `Example demo={name}`. Showcase adopts Fieldset (RadioGroup), inline Field (Checkbox). Signup demo: always-present status region, focus to first invalid control, errors clear on change. New `e2e/production.spec.ts`. Audit F07, F08, F09, F16 (site half), F23, F24, F25, F29, F33, F34 set to fixed.
+- Verified: `pnpm check` exit 0; site `test:e2e` 168 of 168 in Chromium, Firefox and WebKit. Not yet run against production (needs the redeploy).
+- Decisions: D-079.
+- Gotchas: (1) WebKit upgrades `http://localhost` to https under `upgrade-insecure-requests`, so no asset loaded and 19 WebKit tests timed out; the e2e web server now builds with `SITE_ALLOW_HTTP=1` (D-079). (2) A stale `next start` on port 3100 (from my own debug run) made the first fix look ineffective; Playwright reuses an existing server locally, so check `lsof -i :3100`. (3) `import.meta.dirname` is undefined under Turbopack; `fileURLToPath(import.meta.url)` works. (4) The Sidebar demo needed no code change. (5) `pnpm prettier --write` was needed on five new files before `pnpm check` passed.
+- Next: the maintainer: merge the PR, redeploy the site (`vercel --prod` or dashboard), run `SITE_URL=<prod> pnpm --filter site test:e2e` (this also checks `upgrade-insecure-requests` over https). Then H10.
 
 ## Retro (Release 0)
 

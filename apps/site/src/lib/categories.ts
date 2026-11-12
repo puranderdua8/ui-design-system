@@ -29,7 +29,7 @@ export const categories = [
     slug: "display",
     title: "Display",
     description: "Card, Tabs and Banner.",
-    since: "0.5",
+    since: "0.6",
   },
 ] as const;
 
