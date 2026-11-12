@@ -2,6 +2,16 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
+const allowHttp = process.env.SITE_ALLOW_HTTP === "1";
+
+// The flag is for the local e2e build only. A deployed build (Vercel sets VERCEL) must
+// never ship without `upgrade-insecure-requests`, so fail the build instead.
+if (allowHttp && process.env.VERCEL) {
+  throw new Error(
+    "SITE_ALLOW_HTTP=1 is set on Vercel. It removes upgrade-insecure-requests from the CSP and is only for the local e2e build. Remove it from the project's environment variables.",
+  );
+}
+
 /**
  * Why `'unsafe-inline'` for scripts and not nonces: a nonce is generated per
  * request, which forces every page to render dynamically. The site is fully
@@ -22,7 +32,7 @@ const csp = [
   // WebKit upgrades http://localhost requests to https, so no script or style would load
   // in a local `next start` (the e2e run). The e2e build sets SITE_ALLOW_HTTP=1 to leave
   // the directive out (headers are fixed at build time); production never sets it.
-  ...(process.env.SITE_ALLOW_HTTP === "1" ? [] : ["upgrade-insecure-requests"]),
+  ...(allowHttp ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
 const securityHeaders = [

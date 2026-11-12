@@ -57,6 +57,11 @@ scripts/check-release-tag.sh v9.9.9 packages/ui/package.json   # fails, exit 1
 scripts/check-release-tag.sh "v$(node -p "require('./packages/ui/package.json').version")" packages/ui/package.json   # passes
 ```
 
+## Site e2e (local and production)
+
+- **Local:** `pnpm --filter site test:e2e` builds the site itself with `SITE_ALLOW_HTTP=1` and starts it on port 3100. The flag drops `upgrade-insecure-requests` from the CSP, because WebKit upgrades `http://localhost` to https and no asset would load (D-079). The build fails if the flag is set on Vercel. Stop anything already listening on 3100 first (`lsof -i :3100`); the run starts a fresh server and fails if the port is busy.
+- **Deployed:** `SITE_URL=<url> pnpm --filter site test:e2e` tests that URL and starts nothing. Over https the header test also requires `upgrade-insecure-requests`, so this is the check that production ships it. A preview needs Vercel Deployment Protection off for Preview while the test runs.
+
 ## CI hygiene (reference)
 
 - Every action is pinned to a full commit SHA with a `# vX.Y.Z` comment; Dependabot (`github-actions`) proposes bumps weekly.

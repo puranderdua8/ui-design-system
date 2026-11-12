@@ -26,7 +26,9 @@ export default defineConfig({
         command: "pnpm build && pnpm start --port 3100",
         env: { SITE_ALLOW_HTTP: "1" },
         url: "http://localhost:3100",
-        reuseExistingServer: !process.env.CI,
+        // Always a fresh server: a leftover `next start` (or one from a build without the
+        // flag above) would be tested instead of this build. A busy port fails loudly.
+        reuseExistingServer: false,
         timeout: 180_000,
       },
 });
