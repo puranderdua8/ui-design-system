@@ -1,6 +1,6 @@
 name: Release
 
-# Publishes @puranderdua/ui when Purander pushes a tag `v<version>` and approves the
+# Publishes @puranderdua/ui when the maintainer pushes a tag `v<version>` and approves the
 # `npm-publish` deployment. Trusted publishing (OIDC): there is no npm token.
 on:
   push:

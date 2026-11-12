@@ -12,11 +12,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Purander Dua — Design systems",
-    template: "%s — Purander Dua",
+    default: "UI Design System",
+    template: "%s — UI Design System",
   },
   description:
-    "Portfolio of Purander Dua, built with its own token-driven design system.",
+    "A design system portfolio, built with its own token-driven components.",
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (

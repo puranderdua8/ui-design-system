@@ -56,7 +56,7 @@ Until H2 lands the workflow (0.4.0 and earlier), releases were published by hand
 
 > Run the Done-when checks, update PROGRESS.md and DECISIONS.md (and, in H-sessions, the audit register), and commit as "S<n>: …" or "H<n>: …".
 
-Then `/clear`, or start a new session. On the last session of a milestone, the AI pushes the branch and opens or edits the PR; wait for CI; Purander reviews and merges. The next milestone branch is cut from the updated `main`.
+Then `/clear`, or start a new session. On the last session of a milestone, the AI pushes the branch and opens or edits the PR; wait for CI; the maintainer reviews and merges. The next milestone branch is cut from the updated `main`.
 
 **If a session runs over 60 minutes:** stop, have the AI write the remaining work into PROGRESS.md "Next", commit, and continue in a fresh session.
 
@@ -192,7 +192,7 @@ A release-prep session (and H10) shows all of these before the PR is opened:
 > - Site header nav: Home, Components (later Playground).
 > - E2E: axe 0 violations and heading order on `/components` and each built category page; 320px has no horizontal scroll.
 
-**Done when:** site build and e2e are green; record in PROGRESS that the package upgrade path 0.1.0 → 0.2.0 worked (parking-lot item). Push and open PR `m7-foundations` (Purander merges and redeploys the site).
+**Done when:** site build and e2e are green; record in PROGRESS that the package upgrade path 0.1.0 → 0.2.0 worked (parking-lot item). Push and open PR `m7-foundations` (the maintainer merges and redeploys the site).
 
 ---
 
@@ -272,7 +272,7 @@ A release-prep session (and H10) shows all of these before the PR is opened:
 
 **Prompt:**
 
-> S25. Release prep 0.4.0 (CHANGELOG, README, tarball RSC check). Do NOT publish. **After Purander publishes:** site → 0.4.0; Forms page: each control's states, plus a demo form (Field + Input/Select/Checkbox/RadioGroup) with client-side validation messages. E2E: keyboard operation of each control, error messages announced (`aria-describedby`), axe clean.
+> S25. Release prep 0.4.0 (CHANGELOG, README, tarball RSC check). Do NOT publish. **After the maintainer publishes:** site → 0.4.0; Forms page: each control's states, plus a demo form (Field + Input/Select/Checkbox/RadioGroup) with client-side validation messages. E2E: keyboard operation of each control, error messages announced (`aria-describedby`), axe clean.
 
 **You do:** `npm publish` 0.4.0 partway through the session (the AI pauses for it).
 **Done when:** npm shows 0.4.0; site build and e2e are green. Push and open PR `m9-forms`.
@@ -306,7 +306,7 @@ Fixes every finding in [`docs/audits/2026-10-20-production-readiness.md`](audits
 > - `.github/dependabot.yml`: npm (weekly, grouped minor/patch, `apps/site` excluded from `@puranderdua/ui` bumps) and github-actions.
 > - Upgrade Playwright to ≥1.55.1 in `apps/site` and `packages/ui` (same pin). Add Firefox and WebKit projects to both `playwright.config.ts`; CI installs all three browsers. CI: `retries: 0` (or `failOnFlakyTests: true`) so a flake fails the run.
 > - `.github/workflows/release.yml`: on push of tags `v*`; job in environment `npm-publish`; `permissions: contents: read, id-token: write`; fails unless the tag equals `packages/ui/package.json` version; `pnpm install --frozen-lockfile`, `pnpm check`, `check:rsc`, then `npm publish --provenance --access public` from `packages/ui`. No npm token (trusted publishing).
-> - `docs/releasing.md`: one-time setup (npm trusted publisher for this repo and workflow, GitHub environment `npm-publish` with Purander as required reviewer) and the release flow from PLAN "Release rhythm".
+> - `docs/releasing.md`: one-time setup (npm trusted publisher for this repo and workflow, GitHub environment `npm-publish` with the maintainer as required reviewer) and the release flow from PLAN "Release rhythm".
 
 **You do:** create the `npm-publish` environment (required reviewer: you; tags `v*` only) and add the trusted publisher on npmjs.com, following `docs/releasing.md`.
 **Done when:** CI is green in all three browsers; `release.yml` passes `actionlint` and its version-mismatch guard is shown failing locally (e.g. with `act` or a script dry-run), without publishing.
@@ -420,13 +420,13 @@ Fixes every finding in [`docs/audits/2026-10-20-production-readiness.md`](audits
 
 > H10. Close the audit.
 >
-> - Walk every row of the audit register: re-verify each finding with evidence (command output, test name, measured value) and set its final status. Nothing stays `open`; anything not fixed needs Purander's agreement and a D-entry (`accepted`).
+> - Walk every row of the audit register: re-verify each finding with evidence (command output, test name, measured value) and set its final status. Nothing stays `open`; anything not fixed needs the maintainer's agreement and a D-entry (`accepted`).
 > - Re-run the review on the whole repo (React, TS, a11y, security, semantic HTML, architecture, system design). New findings get new F-IDs and are fixed now or accepted with a D-entry.
 > - Run the full [Definition of Done](#definition-of-done-every-release) plus site e2e against production; write `docs/evidence/production-readiness-<date>.md`.
 > - MH retro in PROGRESS (time per session, what broke, which guardrail caught what).
 
 **You do:** review the evidence and sign off in PROGRESS.
-**Done when:** the register has no `open` rows and Purander's sign-off is recorded. S26 starts after this.
+**Done when:** the register has no `open` rows and the maintainer's sign-off is recorded. S26 starts after this.
 
 ---
 
@@ -494,7 +494,7 @@ Fixes every finding in [`docs/audits/2026-10-20-production-readiness.md`](audits
 
 **Prompt:**
 
-> S30. Apply Purander's feedback to Corporate and Nature. Re-run contrast; check every component story in both themes (a11y addon); update `docs/themes.md` with the final values and font-loading snippets (`next/font`, plain `<link>`).
+> S30. Apply the maintainer's feedback to Corporate and Nature. Re-run contrast; check every component story in both themes (a11y addon); update `docs/themes.md` with the final values and font-loading snippets (`next/font`, plain `<link>`).
 
 **Done when:** `pnpm check` is green; both themes are signed off in PROGRESS.
 

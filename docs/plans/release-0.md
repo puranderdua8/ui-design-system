@@ -2,7 +2,7 @@
 
 > **Archived (done, v0.1.0 tagged 2026-10-17).** Kept for history. The current plan is [`../PLAN.md`](../PLAN.md). Release 1 retires the shadcn registry described here (D-055) and moves token values out of `foundations.css` into per-theme files (D-056).
 
-Source: _Design System Single-Repo Multi-Agent Blueprint v6_, adapted. The multi-agent infrastructure (B0, sections 13–19) is dropped; Purander builds with Claude Code in short sessions. See `DECISIONS.md`.
+Source: _Design System Single-Repo Multi-Agent Blueprint v6_, adapted. The multi-agent infrastructure (B0, sections 13–19) is dropped; the maintainer builds with Claude Code in short sessions. See `DECISIONS.md`.
 
 ## Goal (Release 0, done when all are true)
 
@@ -39,7 +39,7 @@ Source: _Design System Single-Repo Multi-Agent Blueprint v6_, adapted. The multi
 
 > Run the Done-when checks, update PROGRESS.md and DECISIONS.md, and commit as "S<n>: …".
 
-Then `/clear`, or start a new session. On the last session of a milestone, the AI pushes the branch and opens/edits the PR; wait for CI; Purander reviews and merges.
+Then `/clear`, or start a new session. On the last session of a milestone, the AI pushes the branch and opens/edits the PR; wait for CI; the maintainer reviews and merges.
 
 **If a session runs over 60 minutes:** stop, have the AI write the remaining work into PROGRESS.md "Next", commit, and continue in a fresh session.
 
@@ -61,7 +61,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 > S1. Scaffold the pnpm monorepo per CLAUDE.md layout: root package.json (pnpm workspaces, node 22, scripts `check`, `tokens:build`, `tokens:check`, `registry:build` as stubs), `pnpm-workspace.yaml` (`packages/*`, `apps/*`), `.npmrc` with `link-workspace-packages=false`, TypeScript base config (strict), ESLint (flat config) + Prettier, `.gitignore`, `packages/ui` skeleton (`@puranderdua/ui`, version 0.0.0, React 18/19 peer deps, `src/index.ts` empty export, tsconfig path `@/*` → `src/*`), empty `tokens/`, `scripts/`, `apps/` folders with .gitkeep, and `.github/workflows/ci.yml` (pnpm install --frozen-lockfile, `pnpm check`). Record my brand choices in PROGRESS.md: font <X>, primary <HEX>.
 
 **Done when:** `pnpm install && pnpm check` passes locally; CI is green on the pushed branch.
-**Feeds:** M0, then Purander merges PR `m0-foundation`.
+**Feeds:** M0, then the maintainer merges PR `m0-foundation`.
 
 ---
 
@@ -84,7 +84,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 
 > S3. Add Style Dictionary v4 (`usesDtcg: true`). `pnpm tokens:build` outputs `packages/ui/src/styles/generated/tokens.css` (`:root` vars with prefix `--ds-`, `outputReferences: true` so semantics reference primitives) and `tokens.json` (flat). Typography composites expand to per-property vars (`--ds-type-body-font-size`, etc.). `pnpm tokens:check` must: (1) run validate-tokens, (2) rebuild and fail if generated output differs from the committed copy (determinism and no stale output), (3) run `scripts/contrast.mjs` that checks WCAG AA (4.5:1 normal text) for text.primary/surface.canvas, text.muted/surface.canvas, action.primary.fg/bg (and hover, active), action.secondary.fg/bg. Wire both into `pnpm check` and CI.
 
-**Done when:** CI is green. Changing one primitive and rebuilding changes every dependent `--ds-*` var. Contrast passes, or adjust the primary color now. This is **Gate A**. Open PR `m1-tokens` (Purander merges).
+**Done when:** CI is green. Changing one primitive and rebuilding changes every dependent `--ds-*` var. Contrast passes, or adjust the primary color now. This is **Gate A**. Open PR `m1-tokens` (the maintainer merges).
 
 ---
 
@@ -97,7 +97,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 > S4. In `packages/ui/src/styles/theme.css` (hand-written) map semantic vars into Tailwind v4 with `@theme inline` (namespaces: `--color-ds-*` for semantic colors, `--text-ds-*` with line-height and weight companions for each type role, `--font-ds-sans`, `--radius-ds-control`, `--spacing-*` only if needed). Add `@layer components` recipes `.ds-type-<role>` only where utilities can't express a composite. Write `scripts/build-foundations.mjs` that concatenates generated `tokens.css` + `theme.css` into `packages/ui/dist/foundations.css` (no `@import "tailwindcss"` inside it). Add `docs/styling-rules.md`: no dynamic class names, no arbitrary values for shared decisions, `@apply` only inside recipes, consumers add `@import "tailwindcss"; @import "@puranderdua/ui/foundations.css"; @source "../node_modules/@puranderdua/ui/dist";`.
 > Create a minimal throwaway Vite+React page in `packages/ui/playground/` (not published) that renders every type role and both button color pairs using only token utilities, and verify the production build CSS contains them.
 
-**Done when:** The playground production build shows all roles correctly, with no missing classes in the built CSS (grep for e.g. `text-ds-h1`). Open PR `m2-styles` (Purander merges).
+**Done when:** The playground production build shows all roles correctly, with no missing classes in the built CSS (grep for e.g. `text-ds-h1`). Open PR `m2-styles` (the maintainer merges).
 
 ---
 
@@ -128,7 +128,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 > S7. Configure tsup for `@puranderdua/ui`: ESM + `.d.ts`, `"use client"` banner on the Button entry only if needed, externalize react/react-dom/radix, resolve `@/` paths. package.json: version 0.1.0, `exports` for `.` and `./foundations.css`, `files: ["dist"]`, `sideEffects: ["*.css"]`, peerDeps react >=18, `publishConfig.access: public`, repository/license/keywords, a README with install + Tailwind setup. Build runs `build-foundations` too. Then `pnpm pack`, create a throwaway Next.js app in `/tmp` (outside the repo), install the tarball, render Text/Heading/Button with the documented CSS setup, and `next build` it. Report the result. Do NOT publish.
 
 **You do:** `cd packages/ui && npm publish --access public`, using your 2FA code. Check `npm view @puranderdua/ui`.
-**Done when:** The tarball app builds and `npm view` shows 0.1.0. Open PR `m3-components` (Purander merges).
+**Done when:** The tarball app builds and `npm view` shows 0.1.0. Open PR `m3-components` (the maintainer merges).
 
 ---
 
@@ -154,7 +154,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 
 > S9. Write `scripts/clean-install.sh`: in a temp dir outside the repo, `create-next-app` (TS, Tailwind v4, App Router) → `shadcn init` → add `"registries": {"@puranderdua": "<REGISTRY>/r/v0.1.0/{name}.json"}` to components.json → `shadcn add @puranderdua/ds-typography @puranderdua/ds-button` → add the foundations import → render a page using both → `npm i @puranderdua/ui@0.1.0` and render the package Button on a second route → `next build`. Then edit button.tsx locally and rerun `shadcn add @puranderdua/ds-button` to confirm it prompts and doesn't overwrite silently. Save the logs to `docs/evidence/clean-install-<date>.md`. Add a manual-trigger GitHub workflow that runs the script.
 
-**Done when:** The script passes end to end; evidence file committed. This is **Gate D**. Open PR `m4-registry` (Purander merges).
+**Done when:** The script passes end to end; evidence file committed. This is **Gate D**. Open PR `m4-registry` (the maintainer merges).
 
 ---
 
@@ -176,7 +176,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 > S11. Add Playwright to apps/site: smoke test against the preview URL (env var): exactly one h1, headings in order, primary Button via keyboard (Tab to focus, focus ring visible, Enter triggers the dialog "Button clicked"; handle it with `page.once('dialog')`), secondary button works, @axe-core/playwright reports no violations, viewport 320px has no horizontal scroll, 200% zoom keeps content readable. Run it, fix issues at the right tier (token → recipe → component → site), and add the test to CI against a local `next start`.
 
 **You do:** A 5-minute manual pass with the keyboard only, plus your browser zoom at 200%. Note it in PROGRESS.md.
-**Done when:** Playwright and axe are green, and your manual pass is recorded. This covers **Gates B and C**. Open PR `m5-site` (Purander merges).
+**Done when:** Playwright and axe are green, and your manual pass is recorded. This covers **Gates B and C**. Open PR `m5-site` (the maintainer merges).
 
 ---
 
