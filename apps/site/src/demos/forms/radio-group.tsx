@@ -1,6 +1,6 @@
 import {
   Cluster,
-  Field,
+  Fieldset,
   Label,
   RadioGroup,
   RadioGroupItem,
@@ -13,7 +13,7 @@ const plans = [
 ];
 
 export const Demo = () => (
-  <Field label="Plan" description="Arrow keys move between the options.">
+  <Fieldset legend="Plan" description="Arrow keys move between the options.">
     <RadioGroup defaultValue="free">
       {plans.map(({ value, label, disabled }) => (
         <Cluster key={value} gap="xs" align="center">
@@ -26,5 +26,5 @@ export const Demo = () => (
         </Cluster>
       ))}
     </RadioGroup>
-  </Field>
+  </Fieldset>
 );

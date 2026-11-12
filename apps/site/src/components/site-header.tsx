@@ -3,14 +3,12 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { Cluster, Container, Link } from "@puranderdua/ui";
+import { isCurrent } from "@/lib/is-current";
 
 const items = [
   { href: "/", label: "Home" },
   { href: "/components", label: "Components" },
 ] as const;
-
-const isCurrent = (pathname: string, href: string) =>
-  href === "/" ? pathname === "/" : pathname.startsWith(href);
 
 export const SiteHeader = () => {
   const pathname = usePathname();
@@ -21,7 +19,11 @@ export const SiteHeader = () => {
           <Cluster as="ul" gap="lg">
             {items.map(({ href, label }) => (
               <li key={href}>
-                <Link asChild variant="standalone">
+                <Link
+                  asChild
+                  variant="standalone"
+                  className="aria-[current=page]:font-semibold aria-[current=page]:underline aria-[current=page]:underline-offset-4"
+                >
                   <NextLink
                     href={href}
                     aria-current={

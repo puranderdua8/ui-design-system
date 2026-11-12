@@ -18,37 +18,43 @@ test("has exactly one h1 and headings in order", async ({ page }) => {
   });
 });
 
-test("primary button works from the keyboard", async ({
+test("the call to action is a link to GitHub that opens a new tab", async ({
   page,
   browserName,
 }) => {
-  const primary = page.getByRole("button", { name: "Get in touch" });
+  const cta = page.getByRole("link", { name: /^Get in touch/ });
+  await expect(cta).toHaveAttribute("href", "https://github.com/puranderdua8");
+  await expect(cta).toHaveAttribute("target", "_blank");
+  const rel = (await cta.getAttribute("rel")) ?? "";
+  expect(rel).toContain("noopener");
+  expect(rel).toContain("noreferrer");
+  await expect(cta).toContainText("opens in a new tab");
+
   // The skip link and the header links come first in the tab order.
   for (
     let i = 0;
-    i < 10 && !(await primary.evaluate((el) => el === document.activeElement));
+    i < 10 && !(await cta.evaluate((el) => el === document.activeElement));
     i++
   ) {
     await page.keyboard.press(tabKey(browserName));
   }
-  await expect(primary).toBeFocused();
-
-  const ring = await primary.evaluate((el) => {
+  await expect(cta).toBeFocused();
+  const ring = await cta.evaluate((el) => {
     const s = getComputedStyle(el);
     return { style: s.outlineStyle, width: s.outlineWidth };
   });
   expect(ring.style).not.toBe("none");
   expect(parseFloat(ring.width)).toBeGreaterThan(0);
+});
 
-  const dialog = new Promise<string>((resolve) =>
-    page.once("dialog", async (d) => {
-      const message = d.message();
-      await d.accept();
-      resolve(message);
-    }),
-  );
-  await page.keyboard.press("Enter");
-  expect(await dialog).toBe("Button clicked");
+test("the page has banner, main and contentinfo landmarks", async ({
+  page,
+}) => {
+  await expect(page.getByRole("banner")).toHaveCount(1);
+  await expect(page.getByRole("main")).toHaveCount(1);
+  await expect(page.getByRole("contentinfo")).toHaveCount(1);
+  // The footer sits outside <main>.
+  await expect(page.locator("main footer")).toHaveCount(0);
 });
 
 test("secondary button navigates to the approach section", async ({ page }) => {
@@ -82,12 +88,12 @@ test("200% zoom keeps content readable", async ({ page }) => {
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
   await expect(page.locator("h1")).toBeInViewport();
   const bodyFont = await page
-    .locator("article p")
+    .locator("#approach p")
     .first()
     .evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   expect(bodyFont).toBeGreaterThanOrEqual(16);
   const clipped = await page
-    .getByRole("button", { name: "Get in touch" })
+    .getByRole("link", { name: /^Get in touch/ })
     .evaluate((el) => el.scrollWidth > el.clientWidth);
   expect(clipped).toBe(false);
 });

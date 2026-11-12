@@ -96,7 +96,7 @@ test.describe("index and navigation", () => {
     const display = cards.filter({
       has: page.getByRole("heading", { name: "Display" }),
     });
-    await expect(display).toContainText("Coming in");
+    await expect(display).toContainText("Coming in 0.6");
   });
 
   test("the current page is marked in the header", async ({ page }) => {
