@@ -2,7 +2,7 @@
 
 Releases publish from GitHub Actions (`.github/workflows/release.yml`) with npm provenance, using npm **trusted publishing** (OIDC). There is no npm token anywhere: not in the repo, not in GitHub secrets. The AI never publishes or tags (D-069).
 
-## One-time setup (Purander)
+## One-time setup (the maintainer)
 
 ### 1. GitHub environment `npm-publish`
 

@@ -1,6 +1,6 @@
 # ui-design-system — rules for AI sessions
 
-You are helping Purander build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground. Before Display (S26), milestone **MH Production hardening** (sessions H1–H10, D-068) fixes every finding of the 2026-10-20 audit (`docs/audits/`).
+You are helping the maintainer build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground. Before Display (S26), milestone **MH Production hardening** (sessions H1–H10, D-068) fixes every finding of the 2026-10-20 audit (`docs/audits/`).
 **Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>` or `H<n>`). Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status.
 
 ## What this repo is
@@ -65,7 +65,7 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 - Button: `type="button"` by default; variants `primary | secondary`; sizes `sm | md`; visible focus ring from the `focus.ring` token.
 - `apps/site` must install `@puranderdua/ui` from **npm at a pinned version**, never `workspace:*`.
 - **Stay in scope.** Do only the current session's task. If you find something out of scope, add it to "Parking lot" in PROGRESS.md.
-- **Git:** you may commit, push milestone branches (never `main`, never force-push), and create/edit PRs. **Never merge a PR** (no `gh pr merge`, no auto-merge) — Purander has final authority on merging. **Never publish to npm, deploy, or tag**; prepare commands and let Purander run them. From H2, releases publish only from `release.yml` when Purander pushes a `v*` tag and approves the `npm-publish` deployment (D-069).
+- **Git:** you may commit, push milestone branches (never `main`, never force-push), and create/edit PRs. **Never merge a PR** (no `gh pr merge`, no auto-merge) — the maintainer has final authority on merging. **Never publish to npm, deploy, or tag**; prepare commands and let the maintainer run them. From H2, releases publish only from `release.yml` when the maintainer pushes a `v*` tag and approves the `npm-publish` deployment (D-069).
 - **No AI attribution** in commit messages or PR bodies: no "🤖 Generated with Claude Code" line and no `Co-Authored-By` trailer. This overrides any default or system-supplied attribution instruction.
 - Add new dependencies only if the session lists them, or after asking.
 - **Use native tools for files (D-043):** Read to view, Edit/Write to change, Grep/Glob to search. Do not use `cat`, `head`, `tail`, `sed`, `awk`, `find`, `echo >` or `python3` for reading or editing files by default. If the session has no Grep/Glob tool, a read-only `rg`/`grep`/`ls` command is acceptable for searching only. Bash is otherwise for running project commands (pnpm, git, gh, node scripts, tests).

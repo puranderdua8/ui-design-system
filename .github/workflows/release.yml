@@ -1,6 +1,6 @@
 name: Release
 
-# Publishes @puranderdua/ui when Purander pushes a tag `v<version>` and approves the
+# Publishes @puranderdua/ui when the maintainer pushes a tag `v<version>` and approves the
 # `npm-publish` deployment. Trusted publishing (OIDC): there is no npm token.
 on:
   push:
@@ -32,7 +32,9 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+          # No registry-url: it writes an .npmrc with `_authToken=${NODE_AUTH_TOKEN}`, and a
+          # configured (empty) token can stop npm from using the OIDC trusted-publishing exchange.
+          # npm publishes to registry.npmjs.org by default.
       - run: pnpm install --frozen-lockfile
       - name: Install Playwright browsers
         run: pnpm --filter site exec playwright install --with-deps chromium firefox webkit
@@ -43,4 +45,4 @@ jobs:
         run: npm install --global npm@^11.5.1
       - name: Publish with provenance
         working-directory: packages/ui
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --loglevel verbose

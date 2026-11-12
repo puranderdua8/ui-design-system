@@ -128,7 +128,7 @@ test.describe("index and navigation", () => {
 
   test("page titles use the site template", async ({ page }) => {
     await page.goto("/components/layout");
-    await expect(page).toHaveTitle("Layout — Purander Dua");
+    await expect(page).toHaveTitle("Layout — UI Design System");
   });
 });
 
