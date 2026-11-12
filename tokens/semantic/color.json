@@ -47,6 +47,14 @@
     "brand": {
       "$value": "{color.brand.600}",
       "$description": "Brand-filled surface; text on it uses text.on-brand."
+    },
+    "gradient-start": {
+      "$value": "{color.brand.600}",
+      "$description": "Start (top left) of the .ds-tone-gradient surface. Roles inside the gradient tone are checked against both stops."
+    },
+    "gradient-end": {
+      "$value": "{color.brand.800}",
+      "$description": "End (bottom right) of the .ds-tone-gradient surface. Keep it at least as dark as gradient-start: the tone reuses the on-brand roles, which are light on dark."
     }
   },
   "border": {

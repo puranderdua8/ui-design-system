@@ -628,6 +628,161 @@ test.describe("Tabs (S26)", () => {
   });
 });
 
+test.describe("Banner (S27)", () => {
+  const style = (page: Page, id: string, prop: string) =>
+    page
+      .getByTestId(id)
+      .evaluate(
+        (el, p) =>
+          getComputedStyle(el)[p as keyof CSSStyleDeclaration] as string,
+        prop,
+      );
+
+  test("screen is at least the viewport tall and tall is 75% of it", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await open(page, "banner-heights");
+    expect((await rect(page, "banner-screen")).height).toBeCloseTo(800, 0);
+    expect((await rect(page, "banner-tall")).height).toBeCloseTo(600, 0);
+  });
+
+  test("grows with its content instead of clipping it at 200% text size", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 200 });
+    await open(page, "banner-tones");
+    await page.addStyleTag({ content: "html { font-size: 200%; }" });
+    for (const t of ["canvas", "gradient"]) {
+      const banner = await rect(page, `banner-${t}`);
+      const last = await rect(page, `bsecondary-${t}`);
+      expect(last.y + last.height).toBeLessThanOrEqual(
+        banner.y + banner.height + 1,
+      );
+    }
+    expect(await noHorizontalOverflow(page)).toBe(true);
+  });
+
+  const hexToRgb = (hex: string) => {
+    const h = hex.trim().replace("#", "");
+    const n = parseInt(h, 16);
+    return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+  };
+
+  for (const tone of ["canvas", "brand", "inverse", "gradient"]) {
+    test(`on ${tone}: text, link, focus ring and actions meet their minimums`, async ({
+      page,
+    }) => {
+      await open(page, "banner-tones", 900);
+      const get = (id: string, prop: string) =>
+        style(page, `${id}-${tone}`, prop);
+      const surface = await style(page, `banner-${tone}`, "backgroundColor");
+      // A gradient has two stops; every role is checked on both.
+      const surfaces = [surface];
+      if (tone === "gradient") {
+        const image = await style(page, `banner-${tone}`, "backgroundImage");
+        expect(image).toContain("linear-gradient");
+        surfaces.push(
+          hexToRgb(
+            await page
+              .getByTestId(`banner-${tone}`)
+              .evaluate((el) =>
+                getComputedStyle(el).getPropertyValue(
+                  "--ds-surface-gradient-end",
+                ),
+              ),
+          ),
+        );
+      }
+      for (const bg of surfaces) {
+        for (const id of ["btext", "bmuted", "blink"])
+          expect(
+            contrast(await get(id, "color"), bg),
+            `${id} on ${tone}`,
+          ).toBeGreaterThanOrEqual(4.5);
+        for (const id of ["blink", "bprimary", "bsecondary"]) {
+          await page.getByTestId(`${id}-${tone}`).focus();
+          expect(await get(id, "outlineStyle")).toBe("solid");
+          expect(
+            contrast(await get(id, "outlineColor"), bg),
+            `focus ring on ${id} in ${tone}`,
+          ).toBeGreaterThanOrEqual(3);
+        }
+        expect(
+          contrast(await get("bprimary", "backgroundColor"), bg),
+        ).toBeGreaterThanOrEqual(3);
+        expect(
+          contrast(await get("bsecondary", "borderTopColor"), bg),
+        ).toBeGreaterThanOrEqual(3);
+      }
+    });
+  }
+
+  for (const [strength, min] of [
+    ["strong", 7],
+    ["medium", 4.5],
+  ] as const) {
+    test(`a ${strength} scrim keeps text at ${min}:1 over a white image`, async ({
+      page,
+    }) => {
+      await open(page, "banner-media", 900);
+      const scrim = page
+        .getByTestId(`banner-${strength}`)
+        .locator('[data-slot="banner-scrim"]');
+      const { rgba, opacity } = await scrim.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return { rgba: s.backgroundColor, opacity: Number(s.opacity) };
+      });
+      const m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/.exec(
+        rgba,
+      );
+      if (!m) throw new Error(`unexpected scrim colour: ${rgba}`);
+      const alpha = Number(m[4] ?? 1) * opacity;
+      const over = [m[1], m[2], m[3]]
+        .map((c) => Math.round(Number(c) * alpha + 255 * (1 - alpha)))
+        .join(", ");
+      expect(
+        contrast(
+          await style(page, `mtext-${strength}`, "color"),
+          `rgb(${over})`,
+        ),
+      ).toBeGreaterThanOrEqual(min);
+    });
+  }
+
+  test("media covers the band", async ({ page }) => {
+    await open(page, "banner-media", 900);
+    const band = await rect(page, "banner-strong");
+    const img = await page
+      .getByTestId("banner-strong")
+      .locator("img")
+      .boundingBox();
+    expect(img?.width).toBeCloseTo(band.width, 0);
+    expect(img?.height).toBeCloseTo(band.height, 0);
+    expect(
+      await page
+        .getByTestId("banner-strong")
+        .locator("img")
+        .evaluate((el) => getComputedStyle(el).objectFit),
+    ).toBe("cover");
+  });
+
+  test("video: a pause button shows normally, and only the poster under reduced motion", async ({
+    page,
+  }) => {
+    await open(page, "banner-video", 900);
+    const button = page.getByRole("button", { name: /(pause|play) video/i });
+    await expect(button).toBeVisible();
+    expect((await button.boundingBox())?.height).toBeGreaterThanOrEqual(24);
+    await expect(page.locator("video")).toHaveCount(1);
+
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect(page.locator("video")).toHaveCount(0);
+    await expect(button).toHaveCount(0);
+    await expect(page.locator('[data-slot="banner-video"] img')).toBeVisible();
+  });
+});
+
 test.describe("target size (F12)", () => {
   test("Checkbox and RadioGroupItem have a pointer target of at least control.target-min", async ({
     page,

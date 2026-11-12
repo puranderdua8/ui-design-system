@@ -347,6 +347,48 @@
     color: var(--ds-text-primary);
   }
 
+  /* Gradient surface (Banner): a diagonal brand gradient. It is a dark tone, so
+     it reuses the on-brand roles; every role is contrast-checked against both
+     stops (contexts.gradient in contrast-pairs.json, S27). */
+  .ds-tone-gradient {
+    --ds-text-primary: var(--ds-text-on-brand);
+    --ds-text-muted: var(--ds-on-brand-text-muted);
+    --ds-text-link: var(--ds-on-brand-link);
+    --ds-text-link-hover: var(--ds-on-brand-link-hover);
+    --ds-focus-ring: var(--ds-on-brand-focus-ring);
+    --ds-border-control: var(--ds-on-brand-border-control);
+    --ds-action-primary-bg: var(--ds-on-brand-action-primary-bg);
+    --ds-action-primary-bg-hover: var(--ds-on-brand-action-primary-bg-hover);
+    --ds-action-primary-bg-active: var(--ds-on-brand-action-primary-bg-active);
+    --ds-action-primary-fg: var(--ds-on-brand-action-primary-fg);
+    --ds-action-secondary-bg: var(--ds-on-brand-action-secondary-bg);
+    --ds-action-secondary-bg-hover: var(
+      --ds-on-brand-action-secondary-bg-hover
+    );
+    --ds-action-secondary-bg-active: var(
+      --ds-on-brand-action-secondary-bg-active
+    );
+    --ds-action-secondary-fg: var(--ds-on-brand-action-secondary-fg);
+    --ds-action-secondary-border: var(--ds-on-brand-action-secondary-border);
+    background-color: var(--ds-surface-gradient-start);
+    background-image: linear-gradient(
+      135deg,
+      var(--ds-surface-gradient-start),
+      var(--ds-surface-gradient-end)
+    );
+    color: var(--ds-text-primary);
+  }
+
+  /* Banner heights. `min-height`, never `height`, so large text or a narrow
+     screen grows the band instead of clipping it. svh: the small viewport, so
+     the band does not jump when a mobile browser's toolbar hides. */
+  .ds-banner-screen {
+    min-height: 100svh;
+  }
+  .ds-banner-tall {
+    min-height: 75svh;
+  }
+
   /* Raised surface (cards). Unlike canvas and subtle it re-points the role
      vars back to the base look, so a raised Card inside an inverse or brand
      Section stays readable (tones do not nest otherwise, D-074, D-080). */
