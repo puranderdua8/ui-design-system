@@ -5,9 +5,9 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** the maintainer signs off H10 (see its log entry), merges the H10 PR; then S26 Card + Tabs.
-- **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) the maintainer must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
+- **Current milestone:** M10 Display → 0.6.0 (S26–S28). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
+- **Next session:** S27 Banner (the maintainer reviews and merges the S26 PR first).
+- **Blockers:** none.
 
 ## Brand (filled in S1)
 
@@ -68,8 +68,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☑      |
 | H8 0.5.0 release prep                       | MH        | ☑      |
 | H9 Site production readiness                | MH        | ☑      |
-| H10 Production-readiness sign-off           | MH        | ◐      |
-| S26 Card + Tabs                             | M10       | ☐      |
+| H10 Production-readiness sign-off           | MH        | ☑      |
+| S26 Card + Tabs                             | M10       | ☑      |
 | S27 Banner                                  | M10       | ☐      |
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☐      |
 | S29 Theme direction                         | M11       | ☐      |
@@ -407,6 +407,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - **Sign-off (the maintainer):** _pending. Review the evidence file and record the date here._
 - Next: the maintainer signs off and merges the H10 PR; then S26.
 
+### S26 — Card + Tabs — 2026-11-12
+
+- Done (branch `s26-card-tabs`, cut from `main` after the H10 PR #43 merged): `Card` (`outline` | `raised`; `as` div, article, section, li, aside) with `CardMedia`, `CardHeader`, `CardTitle` (Heading, `as` configurable), `CardDescription`, `CardContent`, `CardFooter`; server-safe, `cardVariants` and the class strings in `card.styles.ts`. `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` adapted from shadcn new-york-v4 on `radix-ui` (`docs/provenance/tabs.md`, upstream `c257f68`), `"use client"`, class strings in `tabs.styles.ts`, `activationMode`/`orientation` pass through, triggers at least 32px. New tone `.ds-tone-raised` with `on-raised.*` tokens and a `raised` context in the contrast matrix (D-080). Tests: 11 Tabs and 11 Card unit tests (roving focus, arrows, Home/End, manual activation, vertical, controlled, refs, axe), 15 rendered tests per browser in Chromium, Firefox and WebKit (raised Card inside all four tones, Tabs on canvas and inverse, keyboard, 320px). Stories `Components/Card` and `Components/Tabs`. `check-rsc.sh` covers the new files.
+- Verified: see the check output recorded at the end of this session's PR (`pnpm check`, `pnpm check:rsc`).
+- Decisions: D-080 (resolves the "tones do not nest" parking-lot item for Card: a raised surface restores the base roles).
+- Gotchas: (1) Radix moves focus after an arrow key on a timer, so browser tests use `toBeFocused()`, not `document.activeElement`. (2) The Radix list is the tab stop and forwards focus to the active tab, so the first Tab lands on the list and then the active trigger. (3) `onValueChange` fires twice for one click (mouse down and focus, same value). (4) `HTMLHeadingElement` and `HTMLParagraphElement` are structurally identical, so a ref-type `@ts-expect-error` check on a heading needs a different element (a button). (5) Upstream's filled `default` Tabs list was dropped (see provenance and D-080). (6) Not published, no CHANGELOG or README component-list entry yet: S28 owns 0.6.0.
+- Next: S27 Banner.
+
 ### MH retro — 2026-11-12
 
 - **Time per session:** not tracked per session. From commit times: H1–H2 on 2026-10-21; H3 on 2026-11-11 (about 11:57 to 12:26 after the H2 merge); H4–H7 on 2026-11-11 between 14:54 and 15:57, 15 to 35 minutes apart; H8 on 2026-11-11/12; H9 and H10 on 2026-11-12. The maintainer: add real figures.
@@ -459,5 +467,5 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - More components: Textarea, Switch, Dialog, Toast, Tooltip, navigation.
 - Playground share URL (not in Release 1, D-052).
 - Penpot boards (Release 0 S12 optional, not done); later one board per theme.
-- Tones do not nest (D-074): S26 Card needs a surface that restores the base roles inside an inverse or brand Section (e.g. a `.ds-tone-raised` reset, or `on-canvas.*` tokens). Decide in S26.
+- ~~Tones do not nest (D-074): S26 Card needs a surface that restores the base roles inside an inverse or brand Section.~~ Done in S26 with `.ds-tone-raised` (D-080). Still true for canvas and subtle: they do not restore the base roles inside an inverse or brand Section (use a raised Card, or a Section).
 - Everything else found on 2026-10-20 lives in `docs/audits/2026-10-20-production-readiness.md`, not here.

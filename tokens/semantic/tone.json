@@ -1,4 +1,73 @@
 {
+  "on-raised": {
+    "$type": "color",
+    "text-primary": {
+      "$value": "{color.neutral.900}",
+      "$description": "Default text inside a .ds-tone-raised scope; restores text.primary even when the scope sits in an inverse or brand tone."
+    },
+    "text-muted": {
+      "$value": "{color.neutral.600}",
+      "$description": "Secondary text inside a .ds-tone-raised scope; restores text.muted."
+    },
+    "link": {
+      "$value": "{color.brand.700}",
+      "$description": "Link text inside a .ds-tone-raised scope; restores text.link."
+    },
+    "link-hover": {
+      "$value": "{color.brand.800}",
+      "$description": "Link text on hover inside a .ds-tone-raised scope."
+    },
+    "focus-ring": {
+      "$value": "{color.brand.600}",
+      "$description": "Keyboard focus ring inside a .ds-tone-raised scope; 3:1 against surface.raised."
+    },
+    "border-control": {
+      "$value": "{color.neutral.500}",
+      "$description": "Control boundary (checkbox, radio) inside a .ds-tone-raised scope; 3:1 against surface.raised."
+    },
+    "action": {
+      "primary": {
+        "bg": {
+          "$value": "{color.brand.600}",
+          "$description": "Primary action fill inside a .ds-tone-raised scope."
+        },
+        "bg-hover": {
+          "$value": "{color.brand.700}",
+          "$description": "Primary action fill on hover inside a .ds-tone-raised scope."
+        },
+        "bg-active": {
+          "$value": "{color.brand.800}",
+          "$description": "Primary action fill when pressed inside a .ds-tone-raised scope."
+        },
+        "fg": {
+          "$value": "{color.white}",
+          "$description": "Text and icons on the primary action fill inside a .ds-tone-raised scope."
+        }
+      },
+      "secondary": {
+        "bg": {
+          "$value": "{color.white}",
+          "$description": "Secondary action fill inside a .ds-tone-raised scope."
+        },
+        "bg-hover": {
+          "$value": "{color.brand.50}",
+          "$description": "Secondary action fill on hover inside a .ds-tone-raised scope."
+        },
+        "bg-active": {
+          "$value": "{color.brand.100}",
+          "$description": "Secondary action fill when pressed inside a .ds-tone-raised scope."
+        },
+        "fg": {
+          "$value": "{color.brand.700}",
+          "$description": "Text and icons on the secondary action fill inside a .ds-tone-raised scope."
+        },
+        "border": {
+          "$value": "{color.brand.500}",
+          "$description": "Secondary action outline inside a .ds-tone-raised scope; 3:1 against its fills and the surface."
+        }
+      }
+    }
+  },
   "on-inverse": {
     "$type": "color",
     "text-muted": {
