@@ -64,7 +64,9 @@
     { "fg": "input.border", "bg": "input.bg", "min": "ui" },
     { "fg": "input.border", "bg": "surface.canvas", "min": "ui" },
     { "fg": "input.border", "bg": "surface.subtle", "min": "ui" },
+    { "fg": "input.border", "bg": "surface.raised", "min": "ui" },
     { "fg": "input.border-hover", "bg": "input.bg", "min": "ui" },
+    { "fg": "input.border-hover", "bg": "surface.raised", "min": "ui" },
     { "fg": "input.border-hover", "bg": "surface.canvas", "min": "ui" },
     { "fg": "input.border-hover", "bg": "surface.subtle", "min": "ui" },
     { "fg": "input.placeholder", "bg": "input.bg", "min": "text" },
@@ -83,6 +85,26 @@
   "contexts": {
     "canvas": { "surface": "surface.canvas", "map": {} },
     "subtle": { "surface": "surface.subtle", "map": {} },
+    "raised": {
+      "surface": "surface.raised",
+      "map": {
+        "text.primary": "on-raised.text-primary",
+        "text.muted": "on-raised.text-muted",
+        "text.link": "on-raised.link",
+        "text.link-hover": "on-raised.link-hover",
+        "focus.ring": "on-raised.focus-ring",
+        "border.control": "on-raised.border-control",
+        "action.primary.bg": "on-raised.action.primary.bg",
+        "action.primary.bg-hover": "on-raised.action.primary.bg-hover",
+        "action.primary.bg-active": "on-raised.action.primary.bg-active",
+        "action.primary.fg": "on-raised.action.primary.fg",
+        "action.secondary.bg": "on-raised.action.secondary.bg",
+        "action.secondary.bg-hover": "on-raised.action.secondary.bg-hover",
+        "action.secondary.bg-active": "on-raised.action.secondary.bg-active",
+        "action.secondary.fg": "on-raised.action.secondary.fg",
+        "action.secondary.border": "on-raised.action.secondary.border"
+      }
+    },
     "inverse": {
       "surface": "surface.inverse",
       "map": {
@@ -188,6 +210,11 @@
       "context": "subtle",
       "fg": "input.bg",
       "reason": "The input fill is not meant to stand out from a subtle surface; the control boundary is input.border, checked in pairs."
+    },
+    {
+      "context": "raised",
+      "fg": "input.bg",
+      "reason": "The input fill is the canvas colour; on a raised surface the boundary is input.border, checked in pairs (input.border on surface.raised)."
     },
     {
       "context": "inverse",

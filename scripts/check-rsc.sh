@@ -39,12 +39,13 @@ mkdir "$WORK/unpacked"
 tar -xzf "$TARBALL" -C "$WORK/unpacked"
 DIST="$WORK/unpacked/package/dist"
 # Every client component (H3, F36): Radix-based and context-based files.
-for client in field input checkbox radio-group select; do
+for client in field input checkbox radio-group select tabs; do
   expect "$DIST/components/$client.js" '"use client"'
 done
-# Server-safe files, including the plain `.styles` modules (F01).
-for server in text heading label button link stack grid cluster container section split sidebar \
-  input.styles checkbox.styles radio-group.styles select.styles; do
+# Server-safe files, including the plain `.styles` modules (F01). Card has no
+# directive (it only composes Heading and Text), so Server Components render it.
+for server in text heading label button link stack grid cluster container section split sidebar card \
+  input.styles checkbox.styles radio-group.styles select.styles card.styles tabs.styles; do
   reject "$DIST/components/$server.js" '"use client"'
 done
 reject "$DIST/index.js" '"use client"'
@@ -61,11 +62,13 @@ cat >src/app/page.tsx <<'TSX'
 // components inside the package, so they must arrive as client references.
 import * as ui from "@puranderdua/ui";
 import {
-  Button, Checkbox, Cluster, Container, Field, Grid, Heading, Input, Link, Label,
+  Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardMedia, CardTitle,
+  Checkbox, Cluster, Container, Field, Grid, Heading, Input, Link, Label,
   RadioGroup, RadioGroupItem, Section, Select, SelectContent, SelectItem,
-  SelectTrigger, SelectValue, Sidebar, Split, Stack, Text,
-  buttonVariants, checkboxClasses, cn, headingVariants, inputVariants, linkVariants,
-  radioGroupItemClasses, selectTriggerVariants, textVariants,
+  SelectTrigger, SelectValue, Sidebar, Split, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text,
+  buttonVariants, cardVariants, checkboxClasses, cn, headingVariants, inputVariants, linkVariants,
+  radioGroupItemClasses, selectTriggerVariants, tabsClasses, tabsContentClasses, tabsListClasses,
+  tabsTriggerClasses, textVariants,
 } from "@puranderdua/ui";
 
 // Every server-safe export is called here, on the server (F01, F36). If one of
@@ -78,14 +81,20 @@ const serverSafe = [
   selectTriggerVariants({ size: "md" }),
   textVariants({ variant: "body" }),
   cn("a", "b"),
+  cardVariants({ variant: "raised" }),
   checkboxClasses,
   radioGroupItemClasses,
+  tabsClasses,
+  tabsListClasses,
+  tabsTriggerClasses,
+  tabsContentClasses,
 ];
 
 // A value export that is neither a component nor a hook must be server-safe and
 // belong in the list above: a new one fails here until it is added.
 const known = new Set(["buttonVariants", "headingVariants", "inputVariants", "linkVariants",
-  "selectTriggerVariants", "textVariants", "cn", "checkboxClasses", "radioGroupItemClasses"]);
+  "selectTriggerVariants", "textVariants", "cn", "checkboxClasses", "radioGroupItemClasses",
+  "cardVariants", "tabsClasses", "tabsListClasses", "tabsTriggerClasses", "tabsContentClasses"]);
 const unlisted = Object.keys(ui).filter((k) => !/^[A-Z]/.test(k) && !/^use[A-Z]/.test(k) && !known.has(k));
 if (unlisted.length > 0) throw new Error("Unlisted server-safe exports: " + unlisted.join(", "));
 
@@ -112,6 +121,17 @@ export default function Page() {
           <SelectContent><SelectItem value="in">India</SelectItem></SelectContent>
         </Select>
       </Field>
+      <Card as="article" variant="raised">
+        <CardMedia><div>media</div></CardMedia>
+        <CardHeader><CardTitle as="h2">Card title</CardTitle><CardDescription>Card hint</CardDescription></CardHeader>
+        <CardContent>Card body</CardContent>
+        <CardFooter><Button>Act</Button></CardFooter>
+      </Card>
+      <Tabs defaultValue="a">
+        <TabsList aria-label="Demo"><TabsTrigger value="a">A</TabsTrigger><TabsTrigger value="b">B</TabsTrigger></TabsList>
+        <TabsContent value="a">Panel A</TabsContent>
+        <TabsContent value="b">Panel B</TabsContent>
+      </Tabs>
     </main>
   );
 }
@@ -146,6 +166,12 @@ expect "$WORK/page.html" ',\"Field\"]'
 expect "$WORK/page.html" ',\"Input\"]'
 reject "$WORK/page.html" ',\"Text\"]'
 reject "$WORK/page.html" ',\"Heading\"]'
+# Card is server-rendered (no client reference); Tabs is a client component that
+# still SSRs its tablist and the active panel (S26).
+expect "$WORK/page.html" 'data-slot="card"'
+reject "$WORK/page.html" ',\"Card\"]'
+expect "$WORK/page.html" 'role="tablist"'
+expect "$WORK/page.html" ',\"Tabs\"]'
 expect "$WORK/page.html" '[\"$\",\"h1\",null,{\"children\":\"RSC check\"'
 expect "$WORK/page.html" '[\"$\",\"p\",null,{\"children\":\"Rendered on the server.\"'
 

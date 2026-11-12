@@ -105,3 +105,36 @@ export type {
   SelectSeparatorProps,
   SelectScrollButtonProps,
 } from "./components/select";
+export {
+  Card,
+  CardMedia,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "./components/card";
+export { cardVariants } from "./components/card.styles";
+export type {
+  CardProps,
+  CardElement,
+  CardMediaProps,
+  CardHeaderProps,
+  CardTitleProps,
+  CardDescriptionProps,
+  CardContentProps,
+  CardFooterProps,
+} from "./components/card";
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/tabs";
+export {
+  tabsClasses,
+  tabsListClasses,
+  tabsTriggerClasses,
+  tabsContentClasses,
+} from "./components/tabs.styles";
+export type {
+  TabsProps,
+  TabsListProps,
+  TabsTriggerProps,
+  TabsContentProps,
+} from "./components/tabs";

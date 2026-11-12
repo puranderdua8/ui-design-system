@@ -155,6 +155,21 @@
   --ds-layout-item-min-md: var(--ds-size-item-md); /** Default minimum item width in an auto-fit grid. */
   --ds-layout-item-min-lg: var(--ds-size-item-lg); /** Wide minimum item width in an auto-fit grid. */
   --ds-layout-sidebar-width: var(--ds-size-sidebar); /** Width of a sidebar column. */
+  --ds-on-raised-text-primary: var(--ds-color-neutral-900); /** Default text inside a .ds-tone-raised scope; restores text.primary even when the scope sits in an inverse or brand tone. */
+  --ds-on-raised-text-muted: var(--ds-color-neutral-600); /** Secondary text inside a .ds-tone-raised scope; restores text.muted. */
+  --ds-on-raised-link: var(--ds-color-brand-700); /** Link text inside a .ds-tone-raised scope; restores text.link. */
+  --ds-on-raised-link-hover: var(--ds-color-brand-800); /** Link text on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-focus-ring: var(--ds-color-brand-600); /** Keyboard focus ring inside a .ds-tone-raised scope; 3:1 against surface.raised. */
+  --ds-on-raised-border-control: var(--ds-color-neutral-500); /** Control boundary (checkbox, radio) inside a .ds-tone-raised scope; 3:1 against surface.raised. */
+  --ds-on-raised-action-primary-bg: var(--ds-color-brand-600); /** Primary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-primary-bg-hover: var(--ds-color-brand-700); /** Primary action fill on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-primary-bg-active: var(--ds-color-brand-800); /** Primary action fill when pressed inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-primary-fg: var(--ds-color-white); /** Text and icons on the primary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-bg: var(--ds-color-white); /** Secondary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-bg-hover: var(--ds-color-brand-50); /** Secondary action fill on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-bg-active: var(--ds-color-brand-100); /** Secondary action fill when pressed inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-fg: var(--ds-color-brand-700); /** Text and icons on the secondary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-border: var(--ds-color-brand-500); /** Secondary action outline inside a .ds-tone-raised scope; 3:1 against its fills and the surface. */
   --ds-on-inverse-text-muted: var(--ds-color-neutral-300); /** Secondary text inside a .ds-tone-inverse scope; replaces text.muted there. */
   --ds-on-inverse-link: var(--ds-color-brand-200); /** Link text inside a .ds-tone-inverse scope; replaces text.link there. */
   --ds-on-inverse-link-hover: var(--ds-color-white); /** Link text on hover inside a .ds-tone-inverse scope. */

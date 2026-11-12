@@ -347,6 +347,33 @@
     color: var(--ds-text-primary);
   }
 
+  /* Raised surface (cards). Unlike canvas and subtle it re-points the role
+     vars back to the base look, so a raised Card inside an inverse or brand
+     Section stays readable (tones do not nest otherwise, D-074, D-080). */
+  .ds-tone-raised {
+    --ds-text-primary: var(--ds-on-raised-text-primary);
+    --ds-text-muted: var(--ds-on-raised-text-muted);
+    --ds-text-link: var(--ds-on-raised-link);
+    --ds-text-link-hover: var(--ds-on-raised-link-hover);
+    --ds-focus-ring: var(--ds-on-raised-focus-ring);
+    --ds-border-control: var(--ds-on-raised-border-control);
+    --ds-action-primary-bg: var(--ds-on-raised-action-primary-bg);
+    --ds-action-primary-bg-hover: var(--ds-on-raised-action-primary-bg-hover);
+    --ds-action-primary-bg-active: var(--ds-on-raised-action-primary-bg-active);
+    --ds-action-primary-fg: var(--ds-on-raised-action-primary-fg);
+    --ds-action-secondary-bg: var(--ds-on-raised-action-secondary-bg);
+    --ds-action-secondary-bg-hover: var(
+      --ds-on-raised-action-secondary-bg-hover
+    );
+    --ds-action-secondary-bg-active: var(
+      --ds-on-raised-action-secondary-bg-active
+    );
+    --ds-action-secondary-fg: var(--ds-on-raised-action-secondary-fg);
+    --ds-action-secondary-border: var(--ds-on-raised-action-secondary-border);
+    background-color: var(--ds-surface-raised);
+    color: var(--ds-text-primary);
+  }
+
   /* Pointer target of at least control.target-min (WCAG 2.2 SC 2.5.8) around a
      smaller visual: an invisible ::after centred on the control, never smaller
      than the control itself. Clicks on it reach the control. */

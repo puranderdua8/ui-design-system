@@ -2,6 +2,12 @@ import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   Checkbox,
   Cluster,
   Container,
@@ -13,6 +19,10 @@ import {
   Sidebar,
   Split,
   Stack,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   Text,
   type SectionTone,
 } from "../../src";
@@ -150,6 +160,82 @@ const cases: Record<string, ReactNode> = {
         </Section>
       ))}
     </>
+  ),
+  // A raised and an outline Card inside every tone (S26, D-080): the raised one
+  // restores the base roles, the outline one follows the tone around it.
+  "card-tones": (
+    <>
+      {(["canvas", "subtle", "inverse", "brand"] as SectionTone[]).map((t) => (
+        <Section key={t} tone={t} padding="sm" data-testid={`ctone-${t}`}>
+          <Cluster gap="md" align="start">
+            {(["raised", "outline"] as const).map((v) => (
+              <Card key={v} variant={v} data-testid={`card-${v}-${t}`}>
+                <CardHeader>
+                  <CardTitle data-testid={`ctitle-${v}-${t}`}>Title</CardTitle>
+                  <CardDescription data-testid={`cmuted-${v}-${t}`}>
+                    Description
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Text data-testid={`ctext-${v}-${t}`}>Body</Text>{" "}
+                  <Link href="#x" data-testid={`clink-${v}-${t}`}>
+                    Link
+                  </Link>
+                </CardContent>
+                <CardFooter>
+                  <Button data-testid={`cprimary-${v}-${t}`}>Primary</Button>
+                  <Button
+                    variant="secondary"
+                    data-testid={`csecondary-${v}-${t}`}
+                  >
+                    Secondary
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </Cluster>
+        </Section>
+      ))}
+    </>
+  ),
+  // Tabs on a light and a dark tone, plus a vertical list.
+  tabs: (
+    <>
+      {(["canvas", "inverse"] as SectionTone[]).map((t) => (
+        <Section key={t} tone={t} padding="sm" data-testid={`ttone-${t}`}>
+          <Tabs defaultValue="one">
+            <TabsList aria-label={`Tabs on ${t}`}>
+              <TabsTrigger value="one" data-testid={`tab-one-${t}`}>
+                One
+              </TabsTrigger>
+              <TabsTrigger value="two" data-testid={`tab-two-${t}`}>
+                Two
+              </TabsTrigger>
+              <TabsTrigger value="three" data-testid={`tab-three-${t}`}>
+                Three
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="one">First panel</TabsContent>
+            <TabsContent value="two">Second panel</TabsContent>
+            <TabsContent value="three">Third panel</TabsContent>
+          </Tabs>
+        </Section>
+      ))}
+    </>
+  ),
+  "tabs-vertical": (
+    <Tabs defaultValue="one" orientation="vertical">
+      <TabsList aria-label="Vertical tabs">
+        <TabsTrigger value="one" data-testid="vtab-one">
+          One
+        </TabsTrigger>
+        <TabsTrigger value="two" data-testid="vtab-two">
+          Two
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="one">First panel</TabsContent>
+      <TabsContent value="two">Second panel</TabsContent>
+    </Tabs>
   ),
   controls: (
     <Stack gap="md">

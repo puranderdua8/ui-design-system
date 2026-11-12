@@ -427,6 +427,207 @@ test.describe("surface tones (F02)", () => {
   });
 });
 
+test.describe("Card (S26)", () => {
+  const style = (page: Page, id: string, prop: string) =>
+    page
+      .getByTestId(id)
+      .evaluate(
+        (el, p) =>
+          getComputedStyle(el)[p as keyof CSSStyleDeclaration] as string,
+        prop,
+      );
+
+  for (const tone of ["canvas", "subtle", "inverse", "brand"]) {
+    test(`a raised Card inside ${tone} keeps the base roles: text, link, actions and focus ring read on its surface`, async ({
+      page,
+    }) => {
+      await open(page, "card-tones", 900);
+      const id = (name: string) => `${name}-raised-${tone}`;
+      const surface = await style(page, id("card"), "backgroundColor");
+      const section = await style(page, `ctone-${tone}`, "backgroundColor");
+      // The card paints surface.raised (white in Base), whatever the Section is.
+      expect(surface).toBe(
+        await style(page, "card-raised-canvas", "backgroundColor"),
+      );
+      if (tone === "inverse" || tone === "brand")
+        expect(surface).not.toBe(section);
+
+      for (const name of ["ctitle", "ctext", "cmuted", "clink"])
+        expect(
+          contrast(await style(page, id(name), "color"), surface),
+          `${name} on a raised card in ${tone}`,
+        ).toBeGreaterThanOrEqual(4.5);
+
+      for (const name of ["clink", "cprimary", "csecondary"]) {
+        await page.getByTestId(id(name)).focus();
+        expect(await style(page, id(name), "outlineStyle")).toBe("solid");
+        expect(
+          contrast(await style(page, id(name), "outlineColor"), surface),
+          `focus ring on ${name} in a raised card in ${tone}`,
+        ).toBeGreaterThanOrEqual(3);
+      }
+
+      const primary = await style(page, id("cprimary"), "backgroundColor");
+      expect(contrast(primary, surface)).toBeGreaterThanOrEqual(3);
+      expect(
+        contrast(await style(page, id("cprimary"), "color"), primary),
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contrast(
+          await style(page, id("csecondary"), "borderTopColor"),
+          surface,
+        ),
+      ).toBeGreaterThanOrEqual(3);
+    });
+  }
+
+  test("a raised Card gives the same link colour in every tone; an outline Card follows its tone", async ({
+    page,
+  }) => {
+    await open(page, "card-tones", 900);
+    const link = (v: string, t: string) =>
+      style(page, `clink-${v}-${t}`, "color");
+    const base = await link("raised", "canvas");
+    for (const t of ["subtle", "inverse", "brand"])
+      expect(await link("raised", t), `raised in ${t}`).toBe(base);
+    expect(await link("outline", "inverse")).not.toBe(base);
+    expect(await link("outline", "brand")).not.toBe(base);
+    // The outline card on a dark tone still reads on that tone's surface.
+    for (const t of ["inverse", "brand"])
+      expect(
+        contrast(
+          await style(page, `ctext-outline-${t}`, "color"),
+          await style(page, `ctone-${t}`, "backgroundColor"),
+        ),
+        `outline card text on ${t}`,
+      ).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test("raised has an elevation and the card radius; outline has a border", async ({
+    page,
+  }) => {
+    await open(page, "card-tones", 900);
+    expect(await style(page, "card-raised-canvas", "boxShadow")).not.toBe(
+      "none",
+    );
+    expect(await style(page, "card-outline-canvas", "boxShadow")).toBe("none");
+    expect(
+      parseFloat(await style(page, "card-raised-canvas", "borderTopWidth")),
+    ).toBeGreaterThan(0);
+    expect(
+      parseFloat(
+        await style(page, "card-raised-canvas", "borderTopLeftRadius"),
+      ),
+    ).toBeGreaterThan(0);
+  });
+
+  test("a Card follows its container: no horizontal overflow at 320px", async ({
+    page,
+  }) => {
+    await open(page, "card-tones", 320);
+    expect(await noHorizontalOverflow(page)).toBe(true);
+  });
+});
+
+test.describe("Tabs (S26)", () => {
+  const style = (page: Page, id: string, prop: string) =>
+    page
+      .getByTestId(id)
+      .evaluate(
+        (el, p) =>
+          getComputedStyle(el)[p as keyof CSSStyleDeclaration] as string,
+        prop,
+      );
+
+  test("triggers are at least 24px high and the list has no overflow at 320px", async ({
+    page,
+  }) => {
+    await open(page, "tabs", 320);
+    for (const t of ["canvas", "inverse"])
+      for (const n of ["one", "two", "three"])
+        expect(
+          (await rect(page, `tab-${n}-${t}`)).height,
+          `tab ${n} on ${t}`,
+        ).toBeGreaterThanOrEqual(24);
+    expect(await noHorizontalOverflow(page)).toBe(true);
+  });
+
+  for (const tone of ["canvas", "inverse"]) {
+    test(`on ${tone}: labels, active marker and focus ring meet their minimums`, async ({
+      page,
+    }) => {
+      await open(page, "tabs", 600);
+      const surface = await style(page, `ttone-${tone}`, "backgroundColor");
+      // Inactive label (text.muted) and active label (text.primary): 4.5:1.
+      for (const n of ["one", "two"])
+        expect(
+          contrast(await style(page, `tab-${n}-${tone}`, "color"), surface),
+          `label ${n} on ${tone}`,
+        ).toBeGreaterThanOrEqual(4.5);
+      // Active marker (border.control, the ::after bar): 3:1 and visible.
+      const marker = await page
+        .getByTestId(`tab-one-${tone}`)
+        .evaluate((el) => {
+          const s = getComputedStyle(el, "::after");
+          return { bg: s.backgroundColor, opacity: s.opacity };
+        });
+      expect(Number(marker.opacity)).toBe(1);
+      expect(contrast(marker.bg, surface)).toBeGreaterThanOrEqual(3);
+      const inactive = await page
+        .getByTestId(`tab-two-${tone}`)
+        .evaluate((el) => getComputedStyle(el, "::after").opacity);
+      expect(Number(inactive)).toBe(0);
+      // Keyboard focus ring: 3:1.
+      await page.getByTestId(`tab-one-${tone}`).focus();
+      await page.keyboard.press("Shift+Tab");
+      await page.keyboard.press("Tab");
+      await page.getByTestId(`tab-one-${tone}`).focus();
+      expect(await style(page, `tab-one-${tone}`, "outlineStyle")).toBe(
+        "solid",
+      );
+      expect(
+        contrast(await style(page, `tab-one-${tone}`, "outlineColor"), surface),
+      ).toBeGreaterThanOrEqual(3);
+    });
+  }
+
+  test("arrow keys, Home and End move focus and selection in a real browser", async ({
+    page,
+  }) => {
+    await open(page, "tabs", 600);
+    // Radix moves focus on a timer after the key, so wait for it (auto-retry).
+    const focused = (n: string) =>
+      expect(page.getByTestId(`tab-${n}-canvas`)).toBeFocused();
+    await page.getByTestId("tab-one-canvas").focus();
+    await page.keyboard.press("ArrowRight");
+    await focused("two");
+    await expect(page.getByText("Second panel")).toBeVisible();
+    await page.keyboard.press("End");
+    await focused("three");
+    await page.keyboard.press("ArrowRight");
+    await focused("one");
+    await page.keyboard.press("ArrowLeft");
+    await focused("three");
+    await page.keyboard.press("Home");
+    await focused("one");
+    await expect(page.getByText("First panel").first()).toBeVisible();
+  });
+
+  test("a vertical list stacks its triggers and uses Up and Down", async ({
+    page,
+  }) => {
+    await open(page, "tabs-vertical", 600);
+    const one = await rect(page, "vtab-one");
+    const two = await rect(page, "vtab-two");
+    expect(stacked(one, two)).toBe(true);
+    await page.getByTestId("vtab-one").focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(page.getByTestId("vtab-two")).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByTestId("vtab-two")).toBeFocused();
+  });
+});
+
 test.describe("target size (F12)", () => {
   test("Checkbox and RadioGroupItem have a pointer target of at least control.target-min", async ({
     page,
