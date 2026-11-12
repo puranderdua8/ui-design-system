@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** MH Production hardening (H1–H10, D-068), one branch and PR per session (`h<n>-<slug>`, cut from synced `main`). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** H10 production-readiness sign-off (after the maintainer merges the H9 PR and redeploys the site). S26 Card + Tabs starts only after H10 signs off.
+- **Next session:** the maintainer signs off H10 (see its log entry), merges the H10 PR; then S26 Card + Tabs.
 - **Blockers:** none for H6. Before the first workflow release (0.5.0, H8) the maintainer must create the `npm-publish` GitHub environment and the npm trusted publisher (`docs/releasing.md`).
 
 ## Brand (filled in S1)
@@ -68,7 +68,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H7 Storybook a11y gate + CSS coverage       | MH        | ☑      |
 | H8 0.5.0 release prep                       | MH        | ☑      |
 | H9 Site production readiness                | MH        | ☑      |
-| H10 Production-readiness sign-off           | MH        | ☐      |
+| H10 Production-readiness sign-off           | MH        | ◐      |
 | S26 Card + Tabs                             | M10       | ☐      |
 | S27 Banner                                  | M10       | ☐      |
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☐      |
@@ -397,6 +397,28 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-079.
 - Gotchas: (1) WebKit upgrades `http://localhost` to https under `upgrade-insecure-requests`, so no asset loaded and 19 WebKit tests timed out; the e2e web server now builds with `SITE_ALLOW_HTTP=1` (D-079). (2) A stale `next start` on port 3100 (from my own debug run) made the first fix look ineffective; Playwright reuses an existing server locally, so check `lsof -i :3100`. (3) `import.meta.dirname` is undefined under Turbopack; `fileURLToPath(import.meta.url)` works. (4) The Sidebar demo needed no code change. (5) `pnpm prettier --write` was needed on five new files before `pnpm check` passed.
 - Next: the maintainer: merge the PR, redeploy the site (`vercel --prod` or dashboard), run `SITE_URL=<prod> pnpm --filter site test:e2e` (this also checks `upgrade-insecure-requests` over https). Then H10.
+
+### H10 — Production-readiness sign-off — 2026-11-12
+
+- Done (branch `h10`, cut from `main` after #42): re-verified the register (41 of 41 fixed, 0 open, no row reopened), re-ran the whole-repo review (no new findings), ran the Definition of Done and wrote `docs/evidence/production-readiness-2026-11-12.md`. The maintainer redeployed production; site e2e against it passed 168 of 168 in Chromium, Firefox and WebKit, including the security-header test over https. npm shows 0.5.0 with SLSA provenance.
+- Verified: `pnpm check` exit 0 (184 unit, 84 layout, 90 story tests); `pnpm check:rsc` PASS; `scripts/clean-install.sh` PASS; `pnpm audit --prod --audit-level high` clean.
+- Decisions: none new. Accepted limit stays under D-074 (danger feedback is not re-mapped on inverse and brand).
+- Gotchas: (1) Production was still the S10/S11 build (about 24 days old) until the maintainer redeployed; Git deployments are off (D-057), so "Redeploy" on the old deployment would rebuild the old commit, deploy `main` with `vercel --prod`. (2) `clean-install.sh` piped through `tail` looks hung because the `next start` child keeps the pipe open (same as H8).
+- **Sign-off (the maintainer):** _pending. Review the evidence file and record the date here._
+- Next: the maintainer signs off and merges the H10 PR; then S26.
+
+### MH retro — 2026-11-12
+
+- **Time per session:** not tracked per session. From commit times: H1–H2 on 2026-10-21; H3 on 2026-11-11 (about 11:57 to 12:26 after the H2 merge); H4–H7 on 2026-11-11 between 14:54 and 15:57, 15 to 35 minutes apart; H8 on 2026-11-11/12; H9 and H10 on 2026-11-12. The maintainer: add real figures.
+- **What broke:**
+  - The first 0.5.0 publish failed and needed the H8 workflow fix (#41).
+  - WebKit upgraded `http://localhost` to https under `upgrade-insecure-requests`, so 19 tests timed out until the e2e server got `SITE_ALLOW_HTTP=1` (D-079).
+  - WebKit on macOS skips links and buttons on Tab (needs Option+Tab); a CI-only Select keyboard flake (ArrowDown before focus moved) was fixed by waiting for focus.
+  - Environment: Playwright 1.57 install hung under Node 26 and DNS could not reach the default download host.
+  - Production sat on a 24-day-old build until H10 because Git deployments are off.
+  - Easy to misread: a green-looking `| tail` run hid a failed Prettier step (H8); a `| tail` on `clean-install.sh` looks hung (H8, H10).
+- **Which guardrail caught what:** the new lint rules caught a conditional hook and `<div onClick>` (planted, H1); `check-client-exports` caught a planted export in a client file (H3); the contrast matrix and `check-tone-recipes` caught the planted 1:1 focus ring and a removed recipe (H4); the layout tests caught the old Section classes (H4) and a class-string regression in Button (H7); the story a11y gate found a real `landmark-unique` violation (H7); `playground:check` caught a planted missing class (H7); the D-043 hook blocked my own `cat` calls (H1–H10). `check:rsc` is what would have caught F01 at S23.
+- **What worked:** planting a bug to watch the guardrail fail, then reverting, was the right proof each time. Re-running the full e2e against a real deployment (a preview in H9, production in H10) found the one thing local runs could not: that production was stale.
 
 ## Retro (Release 0)
 
