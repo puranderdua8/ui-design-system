@@ -1,6 +1,6 @@
 # @puranderdua/ui
 
-Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Fieldset`, `Input`, `Checkbox`, `RadioGroup`, `Select`). React 19 and Tailwind CSS v4 only.
+Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Fieldset`, `Input`, `Checkbox`, `RadioGroup`, `Select`) and the display set (`Card`, `Tabs`, `Banner`). React 19 and Tailwind CSS v4 only.
 
 ## Install
 
@@ -85,6 +85,12 @@ Forms (0.4.0). The controls are client components; a Server Component page can s
 - `Select` with `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `SelectGroup`, `SelectLabel`, `SelectSeparator`: `SelectContent` takes a `container` so the list renders inside a themed scope.
 
 **Field or Fieldset?** One control with one label: `Field`. A group of related controls (radio group, list of checkboxes) with one question: `Fieldset`.
+
+Display (0.6.0):
+
+- `Card`: `variant` outline | raised; `as` div, article, section, li, aside. Parts: `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`; set `as` to fit the page outline), `CardDescription`, `CardContent`, `CardFooter`. A raised Card restores the base colour roles, so it is readable inside an inverse or brand `Section`.
+- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`: arrow keys, Home/End, `activationMode` automatic | manual, `orientation`.
+- `Banner`: full-screen hero. `height` screen | tall, `align` start | center, `tone` canvas | brand | inverse | gradient. `media` takes any `<img>` (object-cover) under a scrim (`scrim` strong | medium; the scrim is contrast-checked per theme over white). `video={{ src, poster, type?, pauseLabel?, playLabel? }}` plays muted and looped; with `prefers-reduced-motion` only the poster shows, and a pause/play button is always visible.
 
 Theme scopes and portals (0.5.0):
 

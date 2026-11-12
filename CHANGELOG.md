@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.6.0 — 2026-11-12
+
+Display components: `Card`, `Tabs`, `Banner`. No breaking changes to existing components.
+
+**New tokens that custom themes must define** (`validate-tokens` enforces this in this repo):
+
+- `on-raised.*` in `tokens/semantic/tone.json` (text, muted text, link, focus ring, control border, primary and secondary action roles), used by `.ds-tone-raised`.
+- `surface.gradient-start` and `surface.gradient-end` in `tokens/semantic/color.json`, used by `.ds-tone-gradient`. Keep the end at least as dark as the start: the tone reuses the `on-brand` roles (light on dark).
+
+**Migration:** copy these tokens from `themes/base` into each custom theme and adjust values until `contrast-pairs.json` passes. It now checks a `raised` and a `gradient` context (both gradient stops), and a per-theme scrim check for `Banner`.
+
+**Added:**
+
+- `Card` (`variant` outline | raised; `as` div, article, section, li, aside) with `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`, `as` configurable), `CardDescription`, `CardContent`, `CardFooter`. Server-safe; `cardVariants` can be called from a Server Component.
+- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` (adapted from shadcn new-york-v4 on `radix-ui`): roving focus, arrow keys, Home/End, `activationMode`, `orientation`, triggers at least 32px. Client component.
+- `Banner`: full-screen hero (`height` screen | tall, `align` start | center, `tone` canvas | brand | inverse | gradient, `as`, `container`), a `media` slot under an `overlay.scrim` layer (`scrim` strong | medium), and a `video` prop (`src`, `poster`, muted, looped, inline). The video part is a small client component: under `prefers-reduced-motion` only the poster shows, and a visible pause/play button is always offered (WCAG 2.2.2). `Banner` itself is server-safe.
+- Tones `.ds-tone-raised` (a surface that restores the base roles inside an inverse or brand Section) and `.ds-tone-gradient`.
+
 ## 0.5.0 — 2026-11-11
 
 Production-hardening release (milestone MH, findings in `docs/audits/2026-10-20-production-readiness.md`).

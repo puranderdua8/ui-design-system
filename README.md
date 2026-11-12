@@ -1,6 +1,6 @@
 # ui-design-system
 
-A small, token-driven design system: **Text**, **Heading**, **Button**, **Link** and layout components (**Container**, **Grid**, **Stack**, **Cluster**, **Section**, **Split**, **Sidebar**) and form components (**Label**, **Field**, **Fieldset**, **Input**, **Checkbox**, **RadioGroup**, **Select**) for React 19 and Tailwind CSS v4, distributed as one npm package. Release 1 is in progress (see [Roadmap](#roadmap)).
+A small, token-driven design system: **Text**, **Heading**, **Button**, **Link** and layout components (**Container**, **Grid**, **Stack**, **Cluster**, **Section**, **Split**, **Sidebar**) and form components (**Label**, **Field**, **Fieldset**, **Input**, **Checkbox**, **RadioGroup**, **Select**) and display components (**Card**, **Tabs**, **Banner**) for React 19 and Tailwind CSS v4, distributed as one npm package. Release 1 is in progress (see [Roadmap](#roadmap)).
 
 - Site: https://ui-design-system-beta.vercel.app/
 - Storybook: https://ui-design-system-storybook-mu.vercel.app/

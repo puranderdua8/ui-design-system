@@ -423,6 +423,16 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) `playground:check` scans every string literal in `dist` for `ds-` classes, including backticked text in comments: a comment with `` `ds-banner-*` `` counted as a missing class. (2) Video needs no `autoPlay` attribute: the client part plays on mount, and the server snapshot is "reduced" so nothing plays before hydration. (3) The Banner video story uses the CC0 MDN flower clip from the network; offline the poster stays. S28 may commit a small sample. (4) An existing test pinned the contrast contexts to the Section tones plus `raised`; it now lists `gradient` too. (5) Not published, no CHANGELOG or README entry yet: S28 owns 0.6.0. (6) Heights are recipes in `theme.css`, not tokens (DTCG has no viewport units).
 - Next: S28 0.6.0 + showcase Display + hardening.
 
+### S28 — 0.6.0 release prep — 2026-11-12
+
+- Done (branch `s28`, cut from `main` after the S27 PR #45 merged): version 0.6.0, CHANGELOG 0.6.0 (Card, Tabs, Banner, tones raised and gradient, new tokens custom themes must define, migration note), both READMEs list the display set.
+- Verified: `pnpm check` exit 0; `pnpm check:rsc` PASS; `pnpm audit --prod --audit-level high` clean. Not yet run: `clean-install.sh` (needs the published version) and site e2e in three browsers.
+- Decisions: none new.
+- Gotchas: the D-043 hook also blocks `echo >` and `tail <file>`; use pipes from project commands.
+- **Not done (waits for the maintainer's publish):** site → 0.6.0, Display page, `/components` index polish, `clean-install.sh` form + display render, e2e/axe on all showcase pages with 320px and 200% zoom on Display.
+- You do: merge the release-prep PR, push tag `v0.6.0`, approve the `npm-publish` deployment (`docs/releasing.md`).
+- Next: S28 part 2 (site) after 0.6.0 is on npm.
+
 ### MH retro — 2026-11-12
 
 - **Time per session:** not tracked per session. From commit times: H1–H2 on 2026-10-21; H3 on 2026-11-11 (about 11:57 to 12:26 after the H2 merge); H4–H7 on 2026-11-11 between 14:54 and 15:57, 15 to 35 minutes apart; H8 on 2026-11-11/12; H9 and H10 on 2026-11-12. The maintainer: add real figures.
