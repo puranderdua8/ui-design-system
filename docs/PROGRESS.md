@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S27 Banner (the maintainer reviews and merges the S26 PR first).
+- **Next session:** S28 0.6.0 + showcase Display + hardening (the maintainer reviews and merges the S27 PR first).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -70,7 +70,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H9 Site production readiness                | MH        | ☑      |
 | H10 Production-readiness sign-off           | MH        | ☑      |
 | S26 Card + Tabs                             | M10       | ☑      |
-| S27 Banner                                  | M10       | ☐      |
+| S27 Banner                                  | M10       | ☑      |
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☐      |
 | S29 Theme direction                         | M11       | ☐      |
 | S30 Corporate + Nature final                | M11       | ☐      |
@@ -414,6 +414,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-080 (resolves the "tones do not nest" parking-lot item for Card: a raised surface restores the base roles).
 - Gotchas: (1) Radix moves focus after an arrow key on a timer, so browser tests use `toBeFocused()`, not `document.activeElement`. (2) The Radix list is the tab stop and forwards focus to the active tab, so the first Tab lands on the list and then the active trigger. (3) `onValueChange` fires twice for one click (mouse down and focus, same value). (4) `HTMLHeadingElement` and `HTMLParagraphElement` are structurally identical, so a ref-type `@ts-expect-error` check on a heading needs a different element (a button). (5) Upstream's filled `default` Tabs list was dropped (see provenance and D-080). (6) Not published, no CHANGELOG or README component-list entry yet: S28 owns 0.6.0.
 - Next: S27 Banner.
+
+### S27 — Banner — 2026-11-12
+
+- Done (branch `s27-banner`, cut from `main` after the S26 PR #44 merged): `Banner` (server-safe; `height` screen | tall, `align` start | center, `tone` canvas | brand | inverse | gradient, `as` section | div | header, `container`), `media` slot under an `overlay.scrim` layer (`scrim` strong | medium), and `video` ({ src, poster, type?, pauseLabel?, playLabel? }) through the client part `banner-video.tsx` (muted, looped, inline; poster only under `prefers-reduced-motion`; visible pause/play button). New tone `.ds-tone-gradient` (tokens `surface.gradient-start|end`, context `gradient` in the contrast matrix, both stops checked) and a per-theme scrim check in `contrast.mjs` (D-081). Tests: 20 Banner unit tests (structure, media, video, mocked `matchMedia` for both branches, change of preference, pause button, keyboard, axe), 10 rendered tests per browser in Chromium (heights, 200% text, every tone, scrim ratios over white, cover, reduced motion). Story `Components/Banner`. `check-rsc.sh` covers the new files.
+- Verified: `pnpm check` exit 0 (225 unit, 150 layout, 106 story tests, Storybook build); `pnpm check:rsc` PASS (Banner server-rendered, `BannerVideo` a client reference, no `<video>` in the HTML). Base scrim: 7.23:1 strong, 4.96:1 medium over white.
+- Decisions: D-081.
+- Gotchas: (1) `playground:check` scans every string literal in `dist` for `ds-` classes, including backticked text in comments: a comment with `` `ds-banner-*` `` counted as a missing class. (2) Video needs no `autoPlay` attribute: the client part plays on mount, and the server snapshot is "reduced" so nothing plays before hydration. (3) The Banner video story uses the CC0 MDN flower clip from the network; offline the poster stays. S28 may commit a small sample. (4) An existing test pinned the contrast contexts to the Section tones plus `raised`; it now lists `gradient` too. (5) Not published, no CHANGELOG or README entry yet: S28 owns 0.6.0. (6) Heights are recipes in `theme.css`, not tokens (DTCG has no viewport units).
+- Next: S28 0.6.0 + showcase Display + hardening.
 
 ### MH retro — 2026-11-12
 

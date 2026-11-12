@@ -1,6 +1,7 @@
 import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
+  Banner,
   Button,
   Card,
   CardContent,
@@ -236,6 +237,81 @@ const cases: Record<string, ReactNode> = {
       <TabsContent value="one">First panel</TabsContent>
       <TabsContent value="two">Second panel</TabsContent>
     </Tabs>
+  ),
+  // Banner (S27): every tone with the roles a component reads inside it, the
+  // heights, and the scrim over the lightest possible image.
+  "banner-tones": (
+    <>
+      {(["canvas", "brand", "inverse", "gradient"] as const).map((t) => (
+        <Banner
+          key={t}
+          tone={t}
+          height="tall"
+          aria-label={`${t} banner`}
+          data-testid={`banner-${t}`}
+        >
+          <Stack gap="sm" align="start">
+            <Text data-testid={`btext-${t}`}>Body text</Text>
+            <Text variant="caption" data-testid={`bmuted-${t}`}>
+              Muted text
+            </Text>
+            <Link href="#x" data-testid={`blink-${t}`}>
+              Link
+            </Link>
+            <Cluster gap="sm">
+              <Button data-testid={`bprimary-${t}`}>Primary</Button>
+              <Button variant="secondary" data-testid={`bsecondary-${t}`}>
+                Secondary
+              </Button>
+            </Cluster>
+          </Stack>
+        </Banner>
+      ))}
+    </>
+  ),
+  "banner-heights": (
+    <>
+      <Banner height="screen" aria-label="Screen" data-testid="banner-screen">
+        <Text>Screen</Text>
+      </Banner>
+      <Banner height="tall" aria-label="Tall" data-testid="banner-tall">
+        <Text>Tall</Text>
+      </Banner>
+    </>
+  ),
+  "banner-media": (
+    <>
+      {(["strong", "medium"] as const).map((s) => (
+        <Banner
+          key={s}
+          height="tall"
+          scrim={s}
+          aria-label={`${s} scrim`}
+          data-testid={`banner-${s}`}
+          media={
+            <img
+              alt=""
+              src={`data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="#ffffff"/></svg>')}`}
+            />
+          }
+        >
+          <Text data-testid={`mtext-${s}`}>Text over a white image</Text>
+        </Banner>
+      ))}
+    </>
+  ),
+  "banner-video": (
+    <Banner
+      height="tall"
+      aria-label="Video"
+      data-testid="banner-video"
+      video={{
+        src: "/missing.mp4",
+        poster: `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="#cccccc"/></svg>')}`,
+      }}
+    >
+      <Text>Video</Text>
+    </Banner>
   ),
   controls: (
     <Stack gap="md">

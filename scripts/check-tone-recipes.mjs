@@ -39,7 +39,7 @@ for (const name of recipes.keys())
       `theme.css has .ds-tone-${name}, contrast-pairs.json has no context "${name}"`,
     );
 
-for (const [name, { surface, map }] of Object.entries(contexts)) {
+for (const [name, { surface, surfaceEnd, map }] of Object.entries(contexts)) {
   const decls = recipes.get(name);
   if (!decls) {
     problems.push(
@@ -53,7 +53,14 @@ for (const [name, { surface, map }] of Object.entries(contexts)) {
       `var(${cssVar(token)})`,
     ]),
   );
+  // `background-color` is the first stop (also the fallback). A context with
+  // `surfaceEnd` paints a diagonal gradient from the surface to that token.
   expected.set("background-color", `var(${cssVar(surface)})`);
+  if (surfaceEnd)
+    expected.set(
+      "background-image",
+      `linear-gradient(135deg,var(${cssVar(surface)}),var(${cssVar(surfaceEnd)}))`,
+    );
   // Text colour is whatever text.primary is inside the tone.
   expected.set("color", `var(${cssVar("text.primary")})`);
   for (const [prop, value] of expected)

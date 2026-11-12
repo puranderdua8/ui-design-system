@@ -24,7 +24,7 @@ const MINIMUMS = {
 // [foreground, background, minimum] as var names without --ds-
 // (text.on-brand -> text-on-brand). The pairs, and what is left out on
 // purpose, live in tokens/contrast-pairs.json.
-const { pairs, contexts, roles, exclusions } = JSON.parse(
+const { pairs, contexts, roles, exclusions, scrim } = JSON.parse(
   readFileSync(join(root, "tokens/contrast-pairs.json"), "utf8"),
 );
 const varName = (token) => token.replaceAll(".", "-");
@@ -47,18 +47,26 @@ const excluded = new Set(
   (exclusions ?? []).map(({ context, fg }) => `${context}|${fg}`),
 );
 let skipped = 0;
-for (const [name, { surface, map }] of Object.entries(contexts ?? {}))
+// A context with `surfaceEnd` paints a gradient (surface -> surfaceEnd): the
+// roles that sit on the surface are checked against both stops.
+for (const [name, { surface, surfaceEnd, map }] of Object.entries(
+  contexts ?? {},
+))
   for (const { fg, bg, min } of roles ?? []) {
     if (excluded.has(`${name}|${fg}`) && !bg) {
       skipped++;
       continue;
     }
-    PAIRS.push([
-      varName(map[fg] ?? fg),
-      varName(bg ? (map[bg] ?? bg) : surface),
-      minimum(min, fg),
-      ` in ${name}`,
-    ]);
+    // A role with its own bg (an action fill) does not touch the surface.
+    const stops = bg ? [surface] : [surface, surfaceEnd].filter(Boolean);
+    stops.forEach((stop, i) =>
+      PAIRS.push([
+        varName(map[fg] ?? fg),
+        varName(bg ? (map[bg] ?? bg) : stop),
+        minimum(min, fg),
+        i === 0 ? ` in ${name}` : ` in ${name} (end)`,
+      ]),
+    );
   }
 
 function rgb(hex) {
@@ -109,6 +117,36 @@ for (const path of themePaths) {
     console.log(
       `${ok ? "ok  " : "FAIL"} [${theme}] ${fg} (${f}) on ${bg} (${b})${tone} = ${r.toFixed(2)}:1 (min ${min}:1)`,
     );
+  }
+  // Scrim over media: text on the scrim composited over pure white.
+  if (scrim) {
+    const text = vars[`--ds-${varName(scrim.fg)}`];
+    // The build resolves alpha colours to rgba(r, g, b, a).
+    const layer = /^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\s*\)$/.exec(
+      vars["--ds-overlay-scrim"] ?? "",
+    );
+    for (const [strength, opacity] of Object.entries(scrim.strengths)) {
+      if (!text || !layer) {
+        console.error(
+          `FAIL [${theme}] scrim ${strength}: needs ${scrim.fg} and an rgba() overlay.scrim`,
+        );
+        themeFailed++;
+        continue;
+      }
+      const alpha = Number(layer[4]) * opacity;
+      const flat = layer
+        .slice(1, 4)
+        .map((c) => Math.round(Number(c) * alpha + 255 * (1 - alpha)));
+      const r = ratio(
+        text,
+        `#${flat.map((c) => c.toString(16).padStart(2, "0")).join("")}`,
+      );
+      const ok = r >= minimum(scrim.min, scrim.fg);
+      if (!ok) themeFailed++;
+      console.log(
+        `${ok ? "ok  " : "FAIL"} [${theme}] ${scrim.fg} on scrim ${strength} (strength ${opacity}) over white = ${r.toFixed(2)}:1 (min ${minimum(scrim.min, scrim.fg)}:1)`,
+      );
+    }
   }
   if (themeFailed)
     console.error(

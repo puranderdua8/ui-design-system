@@ -39,13 +39,13 @@ mkdir "$WORK/unpacked"
 tar -xzf "$TARBALL" -C "$WORK/unpacked"
 DIST="$WORK/unpacked/package/dist"
 # Every client component (H3, F36): Radix-based and context-based files.
-for client in field input checkbox radio-group select tabs; do
+for client in field input checkbox radio-group select tabs banner-video; do
   expect "$DIST/components/$client.js" '"use client"'
 done
 # Server-safe files, including the plain `.styles` modules (F01). Card has no
 # directive (it only composes Heading and Text), so Server Components render it.
-for server in text heading label button link stack grid cluster container section split sidebar card \
-  input.styles checkbox.styles radio-group.styles select.styles card.styles tabs.styles; do
+for server in text heading label button link stack grid cluster container section split sidebar card banner \
+  input.styles checkbox.styles radio-group.styles select.styles card.styles tabs.styles banner.styles; do
   reject "$DIST/components/$server.js" '"use client"'
 done
 reject "$DIST/index.js" '"use client"'
@@ -62,11 +62,11 @@ cat >src/app/page.tsx <<'TSX'
 // components inside the package, so they must arrive as client references.
 import * as ui from "@puranderdua/ui";
 import {
-  Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardMedia, CardTitle,
+  Banner, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardMedia, CardTitle,
   Checkbox, Cluster, Container, Field, Grid, Heading, Input, Link, Label,
   RadioGroup, RadioGroupItem, Section, Select, SelectContent, SelectItem,
   SelectTrigger, SelectValue, Sidebar, Split, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text,
-  buttonVariants, cardVariants, checkboxClasses, cn, headingVariants, inputVariants, linkVariants,
+  bannerVariants, buttonVariants, cardVariants, checkboxClasses, cn, headingVariants, inputVariants, linkVariants,
   radioGroupItemClasses, selectTriggerVariants, tabsClasses, tabsContentClasses, tabsListClasses,
   tabsTriggerClasses, textVariants,
 } from "@puranderdua/ui";
@@ -82,6 +82,7 @@ const serverSafe = [
   textVariants({ variant: "body" }),
   cn("a", "b"),
   cardVariants({ variant: "raised" }),
+  bannerVariants({ tone: "gradient", height: "tall" }),
   checkboxClasses,
   radioGroupItemClasses,
   tabsClasses,
@@ -94,7 +95,7 @@ const serverSafe = [
 // belong in the list above: a new one fails here until it is added.
 const known = new Set(["buttonVariants", "headingVariants", "inputVariants", "linkVariants",
   "selectTriggerVariants", "textVariants", "cn", "checkboxClasses", "radioGroupItemClasses",
-  "cardVariants", "tabsClasses", "tabsListClasses", "tabsTriggerClasses", "tabsContentClasses"]);
+  "cardVariants", "bannerVariants", "tabsClasses", "tabsListClasses", "tabsTriggerClasses", "tabsContentClasses"]);
 const unlisted = Object.keys(ui).filter((k) => !/^[A-Z]/.test(k) && !/^use[A-Z]/.test(k) && !known.has(k));
 if (unlisted.length > 0) throw new Error("Unlisted server-safe exports: " + unlisted.join(", "));
 
@@ -127,6 +128,9 @@ export default function Page() {
         <CardContent>Card body</CardContent>
         <CardFooter><Button>Act</Button></CardFooter>
       </Card>
+      <Banner aria-label="Hero" tone="gradient" height="tall" video={{ src: "/hero.mp4", poster: "/hero.jpg" }}>
+        <Heading as="h2">Banner</Heading>
+      </Banner>
       <Tabs defaultValue="a">
         <TabsList aria-label="Demo"><TabsTrigger value="a">A</TabsTrigger><TabsTrigger value="b">B</TabsTrigger></TabsList>
         <TabsContent value="a">Panel A</TabsContent>
@@ -170,6 +174,14 @@ reject "$WORK/page.html" ',\"Heading\"]'
 # still SSRs its tablist and the active panel (S26).
 expect "$WORK/page.html" 'data-slot="card"'
 reject "$WORK/page.html" ',\"Card\"]'
+# Banner is server-rendered; its video part is a client component. Before
+# hydration it renders the poster only (no video starts for someone who asked
+# for reduced motion).
+expect "$WORK/page.html" 'data-slot="banner"'
+reject "$WORK/page.html" ',\"Banner\"]'
+expect "$WORK/page.html" ',\"BannerVideo\"]'
+expect "$WORK/page.html" 'data-slot="banner-video"'
+reject "$WORK/page.html" '<video'
 expect "$WORK/page.html" 'role="tablist"'
 expect "$WORK/page.html" ',\"Tabs\"]'
 expect "$WORK/page.html" '[\"$\",\"h1\",null,{\"children\":\"RSC check\"'

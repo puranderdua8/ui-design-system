@@ -101,6 +101,8 @@
   --ds-surface-raised: var(--ds-color-white); /** Cards and floating layers; pair with the elevation tokens. */
   --ds-surface-inverse: var(--ds-color-neutral-900); /** Dark surface; text on it uses text.inverse. */
   --ds-surface-brand: var(--ds-color-brand-600); /** Brand-filled surface; text on it uses text.on-brand. */
+  --ds-surface-gradient-start: var(--ds-color-brand-600); /** Start (top left) of the .ds-tone-gradient surface. Roles inside the gradient tone are checked against both stops. */
+  --ds-surface-gradient-end: var(--ds-color-brand-800); /** End (bottom right) of the .ds-tone-gradient surface. Keep it at least as dark as gradient-start: the tone reuses the on-brand roles, which are light on dark. */
   --ds-border-default: var(--ds-color-neutral-300); /** Decorative separators and neutral outlines. Not a control boundary (3:1 not guaranteed). */
   --ds-border-strong: var(--ds-color-neutral-400); /** Emphasised separators and outlines. Not a control boundary (3:1 not guaranteed). */
   --ds-border-control: var(--ds-color-neutral-500); /** Boundary of an interactive control; meets 3:1 against the canvas. */

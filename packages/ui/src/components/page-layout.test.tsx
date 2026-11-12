@@ -126,9 +126,14 @@ describe("Section", () => {
   });
 
   it("every tone is a contrast context, so every role is checked on it", () => {
-    // `raised` is the Card surface, not a Section tone (D-080).
+    // `raised` is the Card surface (D-080) and `gradient` the Banner tone
+    // (D-081); neither is a Section tone.
     expect(Object.keys(contrastPairs.contexts).sort()).toEqual(
-      [...(Object.keys(sectionToneClasses) as SectionTone[]), "raised"].sort(),
+      [
+        ...(Object.keys(sectionToneClasses) as SectionTone[]),
+        "raised",
+        "gradient",
+      ].sort(),
     );
     const surfaces = Object.fromEntries(
       Object.entries(contrastPairs.contexts).map(([k, v]) => [k, v.surface]),
@@ -139,6 +144,7 @@ describe("Section", () => {
       inverse: "surface.inverse",
       brand: "surface.brand",
       raised: "surface.raised",
+      gradient: "surface.gradient-start",
     });
     // Links and the focus ring are the roles F02 found broken on dark tones.
     const roles = contrastPairs.roles.map((r) => r.fg);

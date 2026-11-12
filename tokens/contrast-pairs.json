@@ -81,6 +81,13 @@
     { "fg": "feedback.danger.border", "bg": "feedback.danger.bg", "min": "ui" }
   ],
 
+  "scrimDescription": "overlay.scrim has alpha, so it cannot be a pair. Banner puts text.inverse on media under a scrim layer at one of these strengths (the layer's opacity). The check composites the scrim over pure white, the lightest pixel an image can have, and needs the text to meet its minimum on the result. A theme whose scrim is too weak fails here.",
+  "scrim": {
+    "fg": "text.inverse",
+    "min": "text",
+    "strengths": { "strong": 1, "medium": 0.85 }
+  },
+
   "contextsDescription": "Surface tones (.ds-tone-* in theme.css). Each context has a surface and a map from a base role to the token that replaces it inside that tone. scripts/contrast.mjs expands every context x every role per theme: a role's fg and bg (bg defaults to the tone surface) are looked up in the map first, so a tone checks the roles a component actually sees there. scripts/check-tone-recipes.mjs fails if a recipe in theme.css re-points anything other than this map. Add a role here when a component puts a new colour role on a tone surface; add a context when a new .ds-tone-* recipe appears.",
   "contexts": {
     "canvas": { "surface": "surface.canvas", "map": {} },
@@ -123,6 +130,27 @@
         "action.secondary.bg-active": "on-inverse.action.secondary.bg-active",
         "action.secondary.fg": "on-inverse.action.secondary.fg",
         "action.secondary.border": "on-inverse.action.secondary.border"
+      }
+    },
+    "gradient": {
+      "surface": "surface.gradient-start",
+      "surfaceEnd": "surface.gradient-end",
+      "map": {
+        "text.primary": "text.on-brand",
+        "text.muted": "on-brand.text-muted",
+        "text.link": "on-brand.link",
+        "text.link-hover": "on-brand.link-hover",
+        "focus.ring": "on-brand.focus-ring",
+        "border.control": "on-brand.border-control",
+        "action.primary.bg": "on-brand.action.primary.bg",
+        "action.primary.bg-hover": "on-brand.action.primary.bg-hover",
+        "action.primary.bg-active": "on-brand.action.primary.bg-active",
+        "action.primary.fg": "on-brand.action.primary.fg",
+        "action.secondary.bg": "on-brand.action.secondary.bg",
+        "action.secondary.bg-hover": "on-brand.action.secondary.bg-hover",
+        "action.secondary.bg-active": "on-brand.action.secondary.bg-active",
+        "action.secondary.fg": "on-brand.action.secondary.fg",
+        "action.secondary.border": "on-brand.action.secondary.border"
       }
     },
     "brand": {
@@ -233,6 +261,16 @@
     },
     {
       "context": "brand",
+      "fg": "feedback.danger.border",
+      "reason": "Not re-mapped for dark tones yet (see feedback.danger.fg)."
+    },
+    {
+      "context": "gradient",
+      "fg": "feedback.danger.fg",
+      "reason": "Not re-mapped for dark tones yet (no on-brand danger tokens). Put Field errors on a canvas, subtle or raised surface."
+    },
+    {
+      "context": "gradient",
       "fg": "feedback.danger.border",
       "reason": "Not re-mapped for dark tones yet (see feedback.danger.fg)."
     }

@@ -138,3 +138,11 @@ export type {
   TabsTriggerProps,
   TabsContentProps,
 } from "./components/tabs";
+export { Banner } from "./components/banner";
+export { bannerVariants } from "./components/banner.styles";
+export type { BannerProps, BannerElement } from "./components/banner";
+export type { BannerTone, BannerScrim } from "./components/banner.styles";
+export type {
+  BannerVideoSource,
+  BannerVideoProps,
+} from "./components/banner-video";
