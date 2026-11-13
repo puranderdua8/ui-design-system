@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M10 Display → 0.6.0 (S26–S28). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S28 0.6.0 + showcase Display + hardening (the maintainer reviews and merges the S27 PR first).
+- **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
+- **Next session:** S29 Theme direction (after the maintainer merges the S28 showcase PR).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -71,7 +71,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | H10 Production-readiness sign-off           | MH        | ☑      |
 | S26 Card + Tabs                             | M10       | ☑      |
 | S27 Banner                                  | M10       | ☑      |
-| S28 0.6.0 + showcase Display + hardening    | M10       | ☐      |
+| S28 0.6.0 + showcase Display + hardening    | M10       | ☑      |
 | S29 Theme direction                         | M11       | ☐      |
 | S30 Corporate + Nature final                | M11       | ☐      |
 | S31 Quirky + theme QA                       | M11       | ☐      |
@@ -432,6 +432,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - **Not done (waits for the maintainer's publish):** site → 0.6.0, Display page, `/components` index polish, `clean-install.sh` form + display render, e2e/axe on all showcase pages with 320px and 200% zoom on Display.
 - You do: merge the release-prep PR, push tag `v0.6.0`, approve the `npm-publish` deployment (`docs/releasing.md`).
 - Next: S28 part 2 (site) after 0.6.0 is on npm.
+
+### S28 part 2 — Showcase Display — 2026-11-13
+
+- Done (branch `s28-showcase-display`, cut from `main` after the release-prep PR #46 merged and the maintainer published 0.6.0 with tag `v0.6.0`): site pinned to `@puranderdua/ui@0.6.0` (`--frozen-lockfile` verified, exclusion entry swapped to 0.6.0). Display page with six `Example`s from real demo files in `src/demos/display/`: card grid (list of `Card as="li"` in a fit Grid), raised Card on subtle and inverse Sections, Tabs (disabled tab), Banner tones, Banner with `next/image`, Banner with video. `/components` index: each category card shows its component count, the lead shows the total (21), no "Coming in" anywhere (`since` removed from `categories.ts`, replaced by a `components` list; the category page no longer has a fallback). `clean-install.sh` now renders Field + Input (form) and a raised Card (display) from the package and checks their markup.
+- Verified: site lint, typecheck; `pnpm --filter site test:e2e` in Chromium, Firefox and WebKit: 185 passed, 1 skipped (video pause in WebKit). New `display.spec.ts`: Tabs arrows skip the disabled tab and wrap, axe on the Cards, video pause/play, reduced motion shows only the poster, 320px and 200% zoom (640px) with no overflow and no clipped Banner content. `showcase.spec.ts` covers `/components/display` in the heading-order, axe and 320px loops and checks the index counts.
+- Decisions: none new.
+- Gotchas: (1) The site CSP is `default-src 'self'`, so a remote video is blocked; I committed the CC0 MDN `flower.mp4` (1.1 MB, downloaded with the maintainer's OK) to `apps/site/public/media/` with generated SVG posters. (2) Banner demos use `as="div"` and `height="tall"` so a showcase page keeps one h1 and no extra landmarks; a page hero uses the default full-screen height. (3) The hook blocks redirecting output with `>` even for `bash`; use `EVIDENCE=` or the background task output.
+- Next: S29 Theme direction. The maintainer: redeploy the site with `vercel --prod`.
 
 ### MH retro — 2026-11-12
 

@@ -34,13 +34,7 @@ const CategoryPage = async ({ params }: PageProps) => {
             {found.title}
           </Heading>
           <Text variant="lead">{found.description}</Text>
-          {Content ? (
-            <Content />
-          ) : (
-            <Text>
-              Coming in {found.since}. These components are not published yet.
-            </Text>
-          )}
+          <Content />
         </Stack>
       </Container>
     </main>

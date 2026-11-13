@@ -5,6 +5,8 @@ import { categories } from "@/lib/categories";
 
 export const metadata: Metadata = { title: "Components" };
 
+const total = categories.reduce((n, c) => n + c.components.length, 0);
+
 const ComponentsIndex = () => (
   <main id="main" tabIndex={-1} className="py-ds-section-sm">
     <Container size="lg">
@@ -13,7 +15,7 @@ const ComponentsIndex = () => (
           Components
         </Heading>
         <Text variant="lead">
-          Every component in @puranderdua/ui, grouped by what it is for.
+          {total} components in @puranderdua/ui, grouped by what they are for.
         </Text>
         <Grid as="ul" cols={2}>
           {categories.map((c) => (
@@ -30,9 +32,7 @@ const ComponentsIndex = () => (
                   </Link>
                 </Heading>
                 <Text>{c.description}</Text>
-                {c.since ? (
-                  <Text variant="caption">Coming in {c.since}</Text>
-                ) : null}
+                <Text variant="caption">{c.components.length} components</Text>
               </Stack>
             </li>
           ))}

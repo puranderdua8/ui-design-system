@@ -138,9 +138,51 @@ const Layout = () => (
   </>
 );
 
-export const categoryContent: Partial<Record<CategorySlug, () => ReactNode>> = {
+const Display = () => (
+  <>
+    <Example
+      title="Card grid"
+      description="Cards in a list inside a Grid that fits as many columns as the width allows. Each card is a li, and its title is an h3 under this page's section heading."
+      demo="display/card-grid"
+      fill
+    />
+    <Example
+      title="Raised Card"
+      description="A raised Card restores the base text, link and button colours, so it stays readable inside an inverse or brand Section."
+      demo="display/card-raised"
+      fill
+    />
+    <Example
+      title="Tabs"
+      description="Arrow keys move between tabs, Home and End jump to the first and last, and a disabled tab is skipped."
+      demo="display/tabs"
+      fill
+    />
+    <Example
+      title="Banner tones"
+      description="canvas, brand, inverse and gradient. These demos use the tall height and a div; a page hero uses the default full-screen height."
+      demo="display/banner-tones"
+      fill
+    />
+    <Example
+      title="Banner with an image"
+      description="The media slot takes any img. A scrim sits between it and the content; strong keeps light text at 7:1 over the lightest pixel."
+      demo="display/banner-image"
+      fill
+    />
+    <Example
+      title="Banner with video"
+      description="The clip is a small CC0 sample served from this site. Under prefers-reduced-motion only the poster shows."
+      demo="display/banner-video"
+      fill
+    />
+  </>
+);
+
+export const categoryContent: Record<CategorySlug, () => ReactNode> = {
   typography: Typography,
   layout: Layout,
   forms: Forms,
   actions: Actions,
+  display: Display,
 };

@@ -83,20 +83,26 @@ test.describe("Link examples", () => {
 });
 
 test.describe("index and navigation", () => {
-  test("only unreleased categories say 'Coming in'", async ({ page }) => {
+  test("every category card has a component count and no 'Coming in'", async ({
+    page,
+  }) => {
     await page.goto("/components");
     const cards = page
       .getByRole("listitem")
       .filter({ has: page.getByRole("heading", { level: 2 }) });
     await expect(cards).toHaveCount(5);
-    for (const name of ["Typography", "Layout", "Forms", "Actions"]) {
+    for (const name of [
+      "Typography",
+      "Layout",
+      "Forms",
+      "Actions",
+      "Display",
+    ]) {
       const card = cards.filter({ has: page.getByRole("heading", { name }) });
       await expect(card).not.toContainText("Coming in");
+      await expect(card).toContainText(/\d+ components/);
     }
-    const display = cards.filter({
-      has: page.getByRole("heading", { name: "Display" }),
-    });
-    await expect(display).toContainText("Coming in 0.6");
+    await expect(page.getByText("21 components in")).toBeVisible();
   });
 
   test("the current page is marked in the header", async ({ page }) => {
