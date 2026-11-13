@@ -1,0 +1,62 @@
+{
+  "space": {
+    "$type": "dimension",
+    "$description": "Key is the multiple of 0.25rem; 1-5 means 1.5. Compact: the steps from 3 up are about 12% tighter than Base.",
+    "1": { "$value": "0.25rem" },
+    "1-5": { "$value": "0.375rem" },
+    "2": { "$value": "0.5rem" },
+    "3": { "$value": "0.625rem" },
+    "4": { "$value": "0.875rem" },
+    "6": { "$value": "1.25rem" },
+    "8": { "$value": "1.75rem" },
+    "12": { "$value": "2.5rem" },
+    "16": { "$value": "3.5rem" },
+    "24": { "$value": "5rem" }
+  },
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "sm": { "$value": "1.75rem" },
+      "md": { "$value": "2.25rem" }
+    },
+    "target": {
+      "min": {
+        "$value": "1.5rem",
+        "$description": "Smallest pointer target (WCAG 2.2 SC 2.5.8, 24 CSS px). A denser theme may not go below this."
+      }
+    },
+    "container": {
+      "sm": { "$value": "40rem" },
+      "md": { "$value": "48rem" },
+      "lg": { "$value": "64rem" },
+      "xl": { "$value": "80rem" }
+    },
+    "item": {
+      "sm": { "$value": "12rem" },
+      "md": { "$value": "16rem" },
+      "lg": { "$value": "20rem" }
+    },
+    "sidebar": { "$value": "15rem" },
+    "$description": "Fixed sizes that are not on the spacing scale: control heights (D-018), container widths, sidebar width."
+  },
+  "radius": {
+    "$type": "dimension",
+    "sm": { "$value": "0.125rem" },
+    "md": { "$value": "0.25rem" },
+    "lg": { "$value": "0.375rem" },
+    "full": { "$value": "9999px" },
+    "$description": "Corner radii. Small and square: corporate."
+  },
+  "border-width": {
+    "$type": "dimension",
+    "1": { "$value": "1px" },
+    "2": { "$value": "2px" },
+    "$description": "Border thickness."
+  },
+  "ring": {
+    "$type": "dimension",
+    "width": { "$value": "2px" },
+    "offset": { "$value": "2px" },
+    "$description": "Raw focus ring metrics. Components use the semantic focus.ring-* tokens instead."
+  }
+}
