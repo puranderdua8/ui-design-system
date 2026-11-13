@@ -36,7 +36,13 @@ const withTheme: Decorator = (Story, context) => {
 
 const preview: Preview = {
   decorators: [withTheme],
-  initialGlobals: { theme: "base" },
+  // `VITE_DS_THEME=nature pnpm test:stories` runs the whole story suite (axe
+  // included) under one theme; unset means Base.
+  initialGlobals: {
+    theme: isThemeName(import.meta.env.VITE_DS_THEME)
+      ? import.meta.env.VITE_DS_THEME
+      : "base",
+  },
   globalTypes: {
     theme: {
       description: "Design-system theme",

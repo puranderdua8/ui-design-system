@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S30 Corporate + Nature final, after the maintainer reviews the S29 themes in Storybook and lists adjustments (see the S29 log entry).
+- **Next session:** S31 Quirky + theme QA (S30 done: Corporate and Nature signed off).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -73,7 +73,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S27 Banner                                  | M10       | ☑      |
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☑      |
 | S29 Theme direction                         | M11       | ☑      |
-| S30 Corporate + Nature final                | M11       | ☐      |
+| S30 Corporate + Nature final                | M11       | ☑      |
 | S31 Quirky + theme QA                       | M11       | ☐      |
 | S32 0.7.0 + site theme switcher             | M11       | ☐      |
 | S33 Playground engine                       | M12       | ☐      |
@@ -449,6 +449,15 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) Style Dictionary quotes font names with spaces itself, so the DTCG value must be unquoted. (2) Quirky's coral accent has no role in the contract, so it sits in the `red` scale (asked in the review list below). (3) The site CSP now allows Google Fonts (`style-src` adds `https://fonts.googleapis.com`, `font-src` adds `https://fonts.gstatic.com`; nothing else changed, `production.spec.ts` asserts both). The site does not load the fonts yet; S32 adds the `<link>` or `next/font` with the switcher. (4) The package is not republished; `themes/*.css|json` ship in 0.7.0 (S32).
 - **Maintainer review (2026-11-13):** reviewed Corporate, Nature and Quirky in Storybook (`Foundations/Theme specimen`, theme toolbar): "everything looks good", no adjustments listed. The Quirky accent-role question was not raised, so coral stays in the `red` scale.
 - Next: S30 (apply feedback: none; sign off Corporate and Nature, add font-loading snippets, check every component story in both themes).
+
+### S30 — Corporate + Nature final — 2026-11-13
+
+- Done (branch `s30-display-release-prep`, cut from `main` after #48): no feedback to apply, so Corporate and Nature values are unchanged and signed off. `VITE_DS_THEME` env override in `apps/docs/.storybook/preview.tsx` runs the story suite under any theme. `docs/themes.md`: status updated, `next/font` snippets (Nature in full, Corporate and Quirky variants), Quirky `<link>` family strings.
+- Verified: `tokens:check` green (180 pairs per theme, no change); `VITE_DS_THEME=corporate|nature vitest run`: 111 of 111 each, axe on.
+- Decisions: none new.
+- Gotchas: (1) The env override was not separately proven to switch the theme (a pass is the same under Base); the per-theme specimen stories do prove each theme renders. (2) The `next/font` mapping and runtime JSON switching overlap; S32 decides the loading strategy.
+- Sign-off: Corporate and Nature **signed off** (maintainer review 2026-11-13 plus the axe pass above).
+- Next: S31 Quirky + theme QA.
 
 ### MH retro — 2026-11-12
 
