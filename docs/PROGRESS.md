@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S31 Quirky + theme QA (S30 done: Corporate and Nature signed off).
+- **Next session:** S32 0.7.0 + site theme switcher (S31 done: all four themes signed off).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -74,7 +74,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☑      |
 | S29 Theme direction                         | M11       | ☑      |
 | S30 Corporate + Nature final                | M11       | ☑      |
-| S31 Quirky + theme QA                       | M11       | ☐      |
+| S31 Quirky + theme QA                       | M11       | ☑      |
 | S32 0.7.0 + site theme switcher             | M11       | ☐      |
 | S33 Playground engine                       | M12       | ☐      |
 | S34 Playground UI                           | M12       | ☐      |
@@ -458,6 +458,16 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) The env override was not separately proven to switch the theme (a pass is the same under Base); the per-theme specimen stories do prove each theme renders. (2) The `next/font` mapping and runtime JSON switching overlap; S32 decides the loading strategy.
 - Sign-off: Corporate and Nature **signed off** (maintainer review 2026-11-13 plus the axe pass above).
 - Next: S31 Quirky + theme QA.
+
+### S31 — Quirky + theme QA — 2026-11-13
+
+- Done (branch `s31-display-next`, cut from `main` after #49): no Quirky feedback (the maintainer's S29 review had none), so Quirky values are unchanged and signed off. Ran the whole story suite with axe under Quirky and Base (`VITE_DS_THEME`); Corporate and Nature were run in S30.
+- Verified: `test:stories` 111 of 111 under each of Base, Corporate, Nature and Quirky; `pnpm check` exit 0 (225 unit tests, 150 site e2e). The `VITE_DS_THEME` override is now proven: a planted low-contrast text colour under Quirky failed 2 stories while Base stayed green (reverted, no diff).
+- Components changed: none. No token, semantic or recipe fix was needed.
+- Decisions: none new.
+- Gotchas: the stories assert axe only on the canvas, so colour roles that a story does not render are covered by `tokens:check` (180 pairs per theme), not by the story run. Quirky's coral accent stays in the `red` scale.
+- Sign-off: all four themes **signed off** (Base, Corporate, Nature, Quirky).
+- Next: S32 0.7.0 + site theme switcher.
 
 ### MH retro — 2026-11-12
 
