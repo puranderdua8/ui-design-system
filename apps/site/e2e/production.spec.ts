@@ -24,6 +24,9 @@ for (const path of ["/", "/components/forms"]) {
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
+      // Google Fonts only, for the theme fonts.
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
     ]) {
       expect(csp).toContain(directive);
     }
