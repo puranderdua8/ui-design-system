@@ -1,0 +1,47 @@
+{
+  "color": {
+    "$type": "color",
+    "white": {
+      "$value": "#fffefa",
+      "$description": "Warm ivory; page canvas, raised surfaces and inverse text."
+    },
+    "scrim": {
+      "$value": "#0d0b05b3",
+      "$description": "Neutral 950 at 70% opacity; the backdrop behind overlays."
+    },
+    "red": {
+      "$description": "Error and danger scale (OKLCH hue 30), a brick red that sits with the earth neutrals.",
+      "50": { "$value": "#fef0ed" },
+      "600": { "$value": "#ac3225" },
+      "700": { "$value": "#911e13" }
+    },
+    "brand": {
+      "$description": "Forest and moss scale (OKLCH hue 150, chroma 0.105 at the peak). brand.600 is the primary.",
+      "50": { "$value": "#edfbef" },
+      "100": { "$value": "#dcf4e0" },
+      "200": { "$value": "#c2e8c9" },
+      "300": { "$value": "#a0d3a9" },
+      "400": { "$value": "#79b685" },
+      "500": { "$value": "#488c58" },
+      "600": { "$value": "#2f7442", "$description": "Primary." },
+      "700": { "$value": "#1c5b2f" },
+      "800": { "$value": "#08411c" },
+      "900": { "$value": "#00280c" }
+    },
+    "neutral": {
+      "$description": "Warm earth neutrals (OKLCH hue 90, chroma 0.014).",
+      "0": { "$value": "#fffcf3" },
+      "50": { "$value": "#f9f5eb" },
+      "100": { "$value": "#f0ede3" },
+      "200": { "$value": "#e1ded4" },
+      "300": { "$value": "#cbc7bd" },
+      "400": { "$value": "#a8a49b" },
+      "500": { "$value": "#7d7a71" },
+      "600": { "$value": "#66635a" },
+      "700": { "$value": "#504d45" },
+      "800": { "$value": "#36332b" },
+      "900": { "$value": "#1f1d15" },
+      "950": { "$value": "#0d0b05" }
+    }
+  }
+}

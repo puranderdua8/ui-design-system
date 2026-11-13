@@ -1,0 +1,36 @@
+{
+  "shadow": {
+    "$type": "shadow",
+    "$description": "Raw shadow recipes. Components use the semantic elevation.* tokens. Offset and hard: no blur, solid ink colour.",
+    "sm": {
+      "$value": {
+        "color": "#1e1b24",
+        "offsetX": "2px",
+        "offsetY": "2px",
+        "blur": "0px",
+        "spread": "0px"
+      }
+    },
+    "lg": {
+      "$value": {
+        "color": "#1e1b24",
+        "offsetX": "6px",
+        "offsetY": "6px",
+        "blur": "0px",
+        "spread": "0px"
+      }
+    }
+  },
+  "duration": {
+    "$type": "duration",
+    "$description": "Raw transition lengths. Long enough to see the bounce.",
+    "100": { "$value": "150ms" },
+    "200": { "$value": "300ms" }
+  },
+  "easing": {
+    "$type": "cubicBezier",
+    "$description": "Raw timing curves. Both overshoot: bouncy.",
+    "in-out": { "$value": [0.5, 1.4, 0.5, 1] },
+    "out-strong": { "$value": [0.34, 1.56, 0.64, 1] }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "color": {
+    "$type": "color",
+    "white": {
+      "$value": "#ffffff",
+      "$description": "Pure white; page canvas and inverse text."
+    },
+    "scrim": {
+      "$value": "#0c0912b3",
+      "$description": "Neutral 950 at 70% opacity; the backdrop behind overlays."
+    },
+    "red": {
+      "$description": "Error and danger scale (OKLCH hue 22). Saturated coral-red; the coral accent of the direction lives here until the contract gets an accent role.",
+      "50": { "$value": "#fef0ef" },
+      "600": { "$value": "#ba0329" },
+      "700": { "$value": "#99001f" }
+    },
+    "brand": {
+      "$description": "Violet scale (OKLCH hue 295, chroma 0.2 at the peak). brand.600 is the primary.",
+      "50": { "$value": "#f7f5fe" },
+      "100": { "$value": "#eeeafe" },
+      "200": { "$value": "#ded6fe" },
+      "300": { "$value": "#c8b7ff" },
+      "400": { "$value": "#ad8dfe" },
+      "500": { "$value": "#8658e1" },
+      "600": { "$value": "#703dc6", "$description": "Primary." },
+      "700": { "$value": "#5928a4" },
+      "800": { "$value": "#3f127c" },
+      "900": { "$value": "#270154" }
+    },
+    "neutral": {
+      "$description": "Violet-tinted neutrals (OKLCH hue 300, chroma 0.018).",
+      "0": { "$value": "#fcfbfe" },
+      "50": { "$value": "#f6f3ff" },
+      "100": { "$value": "#eeeaf7" },
+      "200": { "$value": "#e0dce8" },
+      "300": { "$value": "#c9c5d2" },
+      "400": { "$value": "#a6a2ae" },
+      "500": { "$value": "#7c7884" },
+      "600": { "$value": "#65616c" },
+      "700": { "$value": "#4e4b56" },
+      "800": { "$value": "#34313b" },
+      "900": { "$value": "#1e1b24" },
+      "950": { "$value": "#0c0912" }
+    }
+  }
+}

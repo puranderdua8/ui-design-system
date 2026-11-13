@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S29 Theme direction (after the maintainer merges the S28 showcase PR).
+- **Next session:** S30 Corporate + Nature final, after the maintainer reviews the S29 themes in Storybook and lists adjustments (see the S29 log entry).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -72,7 +72,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S26 Card + Tabs                             | M10       | ☑      |
 | S27 Banner                                  | M10       | ☑      |
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☑      |
-| S29 Theme direction                         | M11       | ☐      |
+| S29 Theme direction                         | M11       | ◐      |
 | S30 Corporate + Nature final                | M11       | ☐      |
 | S31 Quirky + theme QA                       | M11       | ☐      |
 | S32 0.7.0 + site theme switcher             | M11       | ☐      |
@@ -440,6 +440,15 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: none new.
 - Gotchas: (1) The site CSP is `default-src 'self'`, so a remote video is blocked; I committed the CC0 MDN `flower.mp4` (1.1 MB, downloaded with the maintainer's OK) to `apps/site/public/media/` with generated SVG posters. (2) Banner demos use `as="div"` and `height="tall"` so a showcase page keeps one h1 and no extra landmarks; a page hero uses the default full-screen height. (3) The hook blocks redirecting output with `>` even for `bash`; use `EVIDENCE=` or the background task output.
 - Next: S29 Theme direction. The maintainer: redeploy the site with `vercel --prod`.
+
+### S29 — Theme direction — 2026-11-13
+
+- Done (branch `s29-themes-doc`, cut from synced `main` after #47): `tokens/themes/{corporate,nature,quirky}/{color,dimension,effects,typography}.json` (Base's key set; palettes OKLCH-built, fonts IBM Plex Sans / Fraunces + Nunito Sans / Bricolage Grotesque, radius, border widths, shadows, density, motion), registered in `tokens/resolver.json`. Storybook: **Theme** toolbar and a `ThemeScope` decorator (`.storybook/preview.tsx`, replaces `preview.ts`), Google Fonts in `preview-head.html`, story `Foundations/Theme specimen` (toolbar-driven plus one pinned story per theme). `docs/themes.md` (rationale, font loading, contrast table).
+- Verified: `tokens:check` all 180 contrast pairs pass for all four themes with no token adjustment; `docs` typecheck and `test:stories` (111 tests, axe on every theme specimen) green; `pnpm check` result in the session summary.
+- Decisions: D-082.
+- Gotchas: (1) Style Dictionary quotes font names with spaces itself, so the DTCG value must be unquoted. (2) Quirky's coral accent has no role in the contract, so it sits in the `red` scale (asked in the review list below). (3) Fonts load from Google Fonts in Storybook only; the site CSP (`default-src 'self'`) will need `font-src`/`style-src` changes or `next/font` when the site gets the switcher (S32). (4) The package is not republished; `themes/*.css|json` ship in 0.7.0 (S32).
+- **Maintainer review (to record here):** run `pnpm --filter docs storybook`, open `Foundations/Theme specimen`, switch themes with the toolbar, then approve or list adjustments for Corporate, Nature and Quirky (palette, radius, shadow, density, motion, fonts, and whether Quirky needs a real accent role).
+- Next: S30.
 
 ### MH retro — 2026-11-12
 

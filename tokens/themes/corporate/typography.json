@@ -1,0 +1,43 @@
+{
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "heading": {
+        "$value": "IBM Plex Sans, system-ui, sans-serif",
+        "$description": "Display and heading font (IBM Plex Sans) with system fallback stack."
+      },
+      "body": {
+        "$value": "IBM Plex Sans, system-ui, sans-serif",
+        "$description": "Body, label and control font (IBM Plex Sans) with system fallback stack."
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "xs": { "$value": "0.75rem", "$description": "12px" },
+      "sm": { "$value": "0.875rem", "$description": "14px" },
+      "base": { "$value": "1rem", "$description": "16px" },
+      "lg": { "$value": "1.125rem", "$description": "18px" },
+      "xl": { "$value": "1.375rem", "$description": "22px" },
+      "2xl": { "$value": "1.75rem", "$description": "28px" },
+      "3xl": { "$value": "2.5rem", "$description": "40px" }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "medium": { "$value": 500 },
+      "semibold": { "$value": 600 },
+      "bold": { "$value": 700 }
+    },
+    "line-height": {
+      "$type": "number",
+      "tight": { "$value": 1.2, "$description": "Unitless; headings." },
+      "normal": { "$value": 1.45, "$description": "Unitless; body text." },
+      "relaxed": { "$value": 1.6, "$description": "Unitless; lead text." }
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "tight": { "$value": "-0.01em" },
+      "normal": { "$value": "0em" }
+    }
+  }
+}

@@ -33,6 +33,24 @@
           { "$ref": "themes/base/dimension.json" },
           { "$ref": "themes/base/effects.json" },
           { "$ref": "themes/base/typography.json" }
+        ],
+        "corporate": [
+          { "$ref": "themes/corporate/color.json" },
+          { "$ref": "themes/corporate/dimension.json" },
+          { "$ref": "themes/corporate/effects.json" },
+          { "$ref": "themes/corporate/typography.json" }
+        ],
+        "nature": [
+          { "$ref": "themes/nature/color.json" },
+          { "$ref": "themes/nature/dimension.json" },
+          { "$ref": "themes/nature/effects.json" },
+          { "$ref": "themes/nature/typography.json" }
+        ],
+        "quirky": [
+          { "$ref": "themes/quirky/color.json" },
+          { "$ref": "themes/quirky/dimension.json" },
+          { "$ref": "themes/quirky/effects.json" },
+          { "$ref": "themes/quirky/typography.json" }
         ]
       }
     },

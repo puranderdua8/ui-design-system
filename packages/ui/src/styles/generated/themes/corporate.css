@@ -1,0 +1,243 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --ds-color-white: #ffffff; /** Pure white; page canvas and inverse text. */
+  --ds-color-scrim: rgba(7, 11, 17, 0.7); /** Neutral 950 at 70% opacity; the backdrop behind overlays. */
+  --ds-color-red-50: #fef0ee;
+  --ds-color-red-600: #b02b27;
+  --ds-color-red-700: #941516;
+  --ds-color-brand-50: #f1f7ff;
+  --ds-color-brand-100: #e1eeff;
+  --ds-color-brand-200: #c7dffe;
+  --ds-color-brand-300: #9dc7fe;
+  --ds-color-brand-400: #67a7f7;
+  --ds-color-brand-500: #337bd0;
+  --ds-color-brand-600: #1762b6; /** Primary. */
+  --ds-color-brand-700: #004b96;
+  --ds-color-brand-800: #00346c;
+  --ds-color-brand-900: #001e44;
+  --ds-color-neutral-0: #fafcfe;
+  --ds-color-neutral-50: #eff6ff;
+  --ds-color-neutral-100: #e7edf6;
+  --ds-color-neutral-200: #d8dfe7;
+  --ds-color-neutral-300: #c1c8d0;
+  --ds-color-neutral-400: #9fa5ad;
+  --ds-color-neutral-500: #757b83;
+  --ds-color-neutral-600: #5e646b;
+  --ds-color-neutral-700: #484e55;
+  --ds-color-neutral-800: #2e333a;
+  --ds-color-neutral-900: #191d24;
+  --ds-color-neutral-950: #070b11;
+  --ds-space-1: 0.25rem;
+  --ds-space-1-5: 0.375rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.625rem;
+  --ds-space-4: 0.875rem;
+  --ds-space-6: 1.25rem;
+  --ds-space-8: 1.75rem;
+  --ds-space-12: 2.5rem;
+  --ds-space-16: 3.5rem;
+  --ds-space-24: 5rem;
+  --ds-size-control-sm: 1.75rem;
+  --ds-size-control-md: 2.25rem;
+  --ds-size-target-min: 1.5rem; /** Smallest pointer target (WCAG 2.2 SC 2.5.8, 24 CSS px). A denser theme may not go below this. */
+  --ds-size-container-sm: 40rem;
+  --ds-size-container-md: 48rem;
+  --ds-size-container-lg: 64rem;
+  --ds-size-container-xl: 80rem;
+  --ds-size-item-sm: 12rem;
+  --ds-size-item-md: 16rem;
+  --ds-size-item-lg: 20rem;
+  --ds-size-sidebar: 15rem;
+  --ds-radius-sm: 0.125rem;
+  --ds-radius-md: 0.25rem;
+  --ds-radius-lg: 0.375rem;
+  --ds-radius-full: 9999px;
+  --ds-border-width-1: 1px;
+  --ds-border-width-2: 2px;
+  --ds-ring-width: 2px;
+  --ds-ring-offset: 2px;
+  --ds-shadow-sm: 0px 1px 2px 0px #070b1126;
+  --ds-shadow-lg: 0px 4px 10px -1px #070b1133;
+  --ds-duration-100: 80ms;
+  --ds-duration-200: 150ms;
+  --ds-easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-easing-out-strong: cubic-bezier(0.2, 0, 0, 1);
+  --ds-font-family-heading: 'IBM Plex Sans', system-ui, sans-serif; /** Display and heading font (IBM Plex Sans) with system fallback stack. */
+  --ds-font-family-body: 'IBM Plex Sans', system-ui, sans-serif; /** Body, label and control font (IBM Plex Sans) with system fallback stack. */
+  --ds-font-size-xs: 0.75rem; /** 12px */
+  --ds-font-size-sm: 0.875rem; /** 14px */
+  --ds-font-size-base: 1rem; /** 16px */
+  --ds-font-size-lg: 1.125rem; /** 18px */
+  --ds-font-size-xl: 1.375rem; /** 22px */
+  --ds-font-size-2xl: 1.75rem; /** 28px */
+  --ds-font-size-3xl: 2.5rem; /** 40px */
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+  --ds-font-line-height-tight: 1.2; /** Unitless; headings. */
+  --ds-font-line-height-normal: 1.45; /** Unitless; body text. */
+  --ds-font-line-height-relaxed: 1.6; /** Unitless; lead text. */
+  --ds-font-letter-spacing-tight: -0.01em;
+  --ds-font-letter-spacing-normal: 0em;
+  --ds-elevation-raised: 0px 1px 2px 0px #070b1126; /** Shadow of raised surfaces such as cards. */
+  --ds-elevation-overlay: 0px 4px 10px -1px #070b1133; /** Shadow of floating layers: menus, popovers, dialogs. */
+  --ds-radius-control: var(--ds-radius-md); /** Corner radius shared by controls. */
+  --ds-radius-card: var(--ds-radius-lg); /** Corner radius of cards and panels. */
+  --ds-radius-pill: var(--ds-radius-full); /** Fully rounded ends: badges, chips, pills. */
+  --ds-border-width-default: var(--ds-border-width-1); /** Standard border thickness. */
+  --ds-border-width-strong: var(--ds-border-width-2); /** Emphasised border thickness: selected and active states. */
+  --ds-text-primary: var(--ds-color-neutral-900); /** Default text on surfaces. */
+  --ds-text-muted: var(--ds-color-neutral-600); /** Secondary text: hints, captions, helper copy. */
+  --ds-text-inverse: var(--ds-color-white); /** Text on dark backgrounds (surface.inverse). */
+  --ds-text-link: var(--ds-color-brand-700); /** Link text; 4.5:1 on the canvas and subtle surfaces. */
+  --ds-text-link-hover: var(--ds-color-brand-800); /** Link text on hover. */
+  --ds-text-on-brand: var(--ds-color-white); /** Text and icons on surface.brand. */
+  --ds-surface-canvas: var(--ds-color-white); /** Page background. */
+  --ds-surface-subtle: var(--ds-color-neutral-50); /** Quiet panel or band behind content, one step off the canvas. */
+  --ds-surface-raised: var(--ds-color-white); /** Cards and floating layers; pair with the elevation tokens. */
+  --ds-surface-inverse: var(--ds-color-neutral-900); /** Dark surface; text on it uses text.inverse. */
+  --ds-surface-brand: var(--ds-color-brand-600); /** Brand-filled surface; text on it uses text.on-brand. */
+  --ds-surface-gradient-start: var(--ds-color-brand-600); /** Start (top left) of the .ds-tone-gradient surface. Roles inside the gradient tone are checked against both stops. */
+  --ds-surface-gradient-end: var(--ds-color-brand-800); /** End (bottom right) of the .ds-tone-gradient surface. Keep it at least as dark as gradient-start: the tone reuses the on-brand roles, which are light on dark. */
+  --ds-border-default: var(--ds-color-neutral-300); /** Decorative separators and neutral outlines. Not a control boundary (3:1 not guaranteed). */
+  --ds-border-strong: var(--ds-color-neutral-400); /** Emphasised separators and outlines. Not a control boundary (3:1 not guaranteed). */
+  --ds-border-control: var(--ds-color-neutral-500); /** Boundary of an interactive control; meets 3:1 against the canvas. */
+  --ds-input-bg: var(--ds-color-white); /** Text input and select fill. */
+  --ds-input-border: var(--ds-color-neutral-500); /** Input outline; meets 3:1 against the input fill and the canvas. */
+  --ds-input-border-hover: var(--ds-color-neutral-700); /** Input outline on hover. */
+  --ds-input-placeholder: var(--ds-color-neutral-600); /** Placeholder text; 4.5:1 on the input fill. */
+  --ds-feedback-danger-fg: var(--ds-color-red-700); /** Error text and icons; 4.5:1 on the canvas and feedback.danger.bg. */
+  --ds-feedback-danger-border: var(--ds-color-red-600); /** Error outline; meets 3:1 against the canvas and feedback.danger.bg. */
+  --ds-feedback-danger-bg: var(--ds-color-red-50); /** Error message or field background. */
+  --ds-overlay-scrim: var(--ds-color-scrim); /** Translucent backdrop behind modal layers (has alpha, so no contrast pair). */
+  --ds-action-primary-bg: var(--ds-color-brand-600); /** Primary action fill. */
+  --ds-action-primary-bg-hover: var(--ds-color-brand-700); /** Primary action fill on hover. */
+  --ds-action-primary-bg-active: var(--ds-color-brand-800); /** Primary action fill when pressed. */
+  --ds-action-primary-fg: var(--ds-color-white); /** Text and icons on the primary action fill. */
+  --ds-action-secondary-bg: var(--ds-color-white); /** Secondary action fill. */
+  --ds-action-secondary-bg-hover: var(--ds-color-brand-50); /** Secondary action fill on hover. */
+  --ds-action-secondary-bg-active: var(--ds-color-brand-100); /** Secondary action fill when pressed. */
+  --ds-action-secondary-fg: var(--ds-color-brand-700); /** Text and icons on the secondary action fill. */
+  --ds-action-secondary-border: var(--ds-color-brand-500); /** Secondary action outline; meets 3:1 against its fills. */
+  --ds-focus-ring: var(--ds-color-brand-600); /** Keyboard focus ring colour; meets 3:1 against the canvas. */
+  --ds-focus-ring-width: var(--ds-ring-width); /** Keyboard focus ring thickness. */
+  --ds-focus-ring-offset: var(--ds-ring-offset); /** Gap between a control and its focus ring. */
+  --ds-disabled-bg: var(--ds-color-neutral-100); /** Disabled control fill. */
+  --ds-disabled-fg: var(--ds-color-neutral-500); /** Disabled control text (exempt from contrast requirements). */
+  --ds-disabled-border: var(--ds-color-neutral-200); /** Disabled control outline. */
+  --ds-control-target-min: var(--ds-size-target-min); /** Smallest pointer target for any interactive control. Small visuals (checkbox, radio) extend their hit area to this with .ds-hit-area. */
+  --ds-control-sm-height: var(--ds-size-control-sm); /** Small control height. */
+  --ds-control-sm-padding-x: var(--ds-space-3); /** Small control horizontal padding. */
+  --ds-control-sm-font-size: var(--ds-font-size-sm); /** Small control label size. */
+  --ds-control-md-height: var(--ds-size-control-md); /** Medium control height. */
+  --ds-control-md-padding-x: var(--ds-space-4); /** Medium control horizontal padding. */
+  --ds-control-md-font-size: var(--ds-font-size-base); /** Medium control label size. */
+  --ds-motion-duration-fast: var(--ds-duration-100); /** Quick feedback: hover, press, focus. */
+  --ds-motion-duration-normal: var(--ds-duration-200); /** Standard transitions: open, close, expand. */
+  --ds-motion-easing-standard: var(--ds-easing-in-out); /** Default curve for most transitions. */
+  --ds-motion-easing-emphasized: var(--ds-easing-out-strong); /** Decisive curve for elements entering the screen. */
+  --ds-layout-gap-xs: var(--ds-space-2); /** Tightest gap between related items. */
+  --ds-layout-gap-sm: var(--ds-space-3); /** Small gap. */
+  --ds-layout-gap-md: var(--ds-space-4); /** Default gap. */
+  --ds-layout-gap-lg: var(--ds-space-6); /** Large gap between groups. */
+  --ds-layout-gap-xl: var(--ds-space-8); /** Largest gap between blocks. */
+  --ds-layout-section-padding-sm: var(--ds-space-12); /** Vertical padding of a compact page section. */
+  --ds-layout-section-padding-md: var(--ds-space-16); /** Vertical padding of a standard page section. */
+  --ds-layout-section-padding-lg: var(--ds-space-24); /** Vertical padding of a spacious page section. */
+  --ds-layout-gutter: var(--ds-space-4); /** Horizontal page margin and column gutter. */
+  --ds-layout-container-sm: var(--ds-size-container-sm); /** Narrow content width. */
+  --ds-layout-container-md: var(--ds-size-container-md); /** Reading content width. */
+  --ds-layout-container-lg: var(--ds-size-container-lg); /** Wide content width. */
+  --ds-layout-container-xl: var(--ds-size-container-xl); /** Widest content width. */
+  --ds-layout-item-min-sm: var(--ds-size-item-sm); /** Narrowest item in an auto-fit grid. */
+  --ds-layout-item-min-md: var(--ds-size-item-md); /** Default minimum item width in an auto-fit grid. */
+  --ds-layout-item-min-lg: var(--ds-size-item-lg); /** Wide minimum item width in an auto-fit grid. */
+  --ds-layout-sidebar-width: var(--ds-size-sidebar); /** Width of a sidebar column. */
+  --ds-on-raised-text-primary: var(--ds-color-neutral-900); /** Default text inside a .ds-tone-raised scope; restores text.primary even when the scope sits in an inverse or brand tone. */
+  --ds-on-raised-text-muted: var(--ds-color-neutral-600); /** Secondary text inside a .ds-tone-raised scope; restores text.muted. */
+  --ds-on-raised-link: var(--ds-color-brand-700); /** Link text inside a .ds-tone-raised scope; restores text.link. */
+  --ds-on-raised-link-hover: var(--ds-color-brand-800); /** Link text on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-focus-ring: var(--ds-color-brand-600); /** Keyboard focus ring inside a .ds-tone-raised scope; 3:1 against surface.raised. */
+  --ds-on-raised-border-control: var(--ds-color-neutral-500); /** Control boundary (checkbox, radio) inside a .ds-tone-raised scope; 3:1 against surface.raised. */
+  --ds-on-raised-action-primary-bg: var(--ds-color-brand-600); /** Primary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-primary-bg-hover: var(--ds-color-brand-700); /** Primary action fill on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-primary-bg-active: var(--ds-color-brand-800); /** Primary action fill when pressed inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-primary-fg: var(--ds-color-white); /** Text and icons on the primary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-bg: var(--ds-color-white); /** Secondary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-bg-hover: var(--ds-color-brand-50); /** Secondary action fill on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-bg-active: var(--ds-color-brand-100); /** Secondary action fill when pressed inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-fg: var(--ds-color-brand-700); /** Text and icons on the secondary action fill inside a .ds-tone-raised scope. */
+  --ds-on-raised-action-secondary-border: var(--ds-color-brand-500); /** Secondary action outline inside a .ds-tone-raised scope; 3:1 against its fills and the surface. */
+  --ds-on-inverse-text-muted: var(--ds-color-neutral-300); /** Secondary text inside a .ds-tone-inverse scope; replaces text.muted there. */
+  --ds-on-inverse-link: var(--ds-color-brand-200); /** Link text inside a .ds-tone-inverse scope; replaces text.link there. */
+  --ds-on-inverse-link-hover: var(--ds-color-white); /** Link text on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-focus-ring: var(--ds-color-white); /** Keyboard focus ring inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
+  --ds-on-inverse-border-control: var(--ds-color-neutral-400); /** Control boundary (checkbox, radio) inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
+  --ds-on-inverse-action-primary-bg: var(--ds-color-white); /** Primary action fill inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
+  --ds-on-inverse-action-primary-bg-hover: var(--ds-color-brand-100); /** Primary action fill on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-primary-bg-active: var(--ds-color-brand-200); /** Primary action fill when pressed inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-primary-fg: var(--ds-color-neutral-900); /** Text and icons on the primary action fill inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-bg: var(--ds-color-neutral-900); /** Secondary action fill inside a .ds-tone-inverse scope (same as the surface, so the button reads as an outline). */
+  --ds-on-inverse-action-secondary-bg-hover: var(--ds-color-neutral-800); /** Secondary action fill on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-bg-active: var(--ds-color-neutral-700); /** Secondary action fill when pressed inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-fg: var(--ds-color-white); /** Text and icons on the secondary action fill inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-action-secondary-border: var(--ds-color-neutral-400); /** Secondary action outline inside a .ds-tone-inverse scope; 3:1 against its fills and the surface. */
+  --ds-on-brand-text-muted: var(--ds-color-brand-100); /** Secondary text inside a .ds-tone-brand scope; replaces text.muted there. */
+  --ds-on-brand-link: var(--ds-color-white); /** Link text inside a .ds-tone-brand scope; replaces text.link there. */
+  --ds-on-brand-link-hover: var(--ds-color-brand-100); /** Link text on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-focus-ring: var(--ds-color-white); /** Keyboard focus ring inside a .ds-tone-brand scope; 3:1 against surface.brand. */
+  --ds-on-brand-border-control: var(--ds-color-brand-200); /** Control boundary (checkbox, radio) inside a .ds-tone-brand scope; 3:1 against surface.brand. */
+  --ds-on-brand-action-primary-bg: var(--ds-color-white); /** Primary action fill inside a .ds-tone-brand scope; 3:1 against surface.brand. */
+  --ds-on-brand-action-primary-bg-hover: var(--ds-color-brand-100); /** Primary action fill on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-primary-bg-active: var(--ds-color-brand-200); /** Primary action fill when pressed inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-primary-fg: var(--ds-color-brand-700); /** Text and icons on the primary action fill inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-bg: var(--ds-color-brand-600); /** Secondary action fill inside a .ds-tone-brand scope (same as the surface, so the button reads as an outline). */
+  --ds-on-brand-action-secondary-bg-hover: var(--ds-color-brand-700); /** Secondary action fill on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-bg-active: var(--ds-color-brand-800); /** Secondary action fill when pressed inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-fg: var(--ds-color-white); /** Text and icons on the secondary action fill inside a .ds-tone-brand scope. */
+  --ds-on-brand-action-secondary-border: var(--ds-color-brand-200); /** Secondary action outline inside a .ds-tone-brand scope; 3:1 against its fills and the surface. */
+  --ds-type-display-font-family: var(--ds-font-family-heading);
+  --ds-type-display-font-size: var(--ds-font-size-3xl);
+  --ds-type-display-font-weight: var(--ds-font-weight-bold);
+  --ds-type-display-line-height: var(--ds-font-line-height-tight);
+  --ds-type-display-letter-spacing: var(--ds-font-letter-spacing-tight);
+  --ds-type-h1-font-family: var(--ds-font-family-heading);
+  --ds-type-h1-font-size: var(--ds-font-size-2xl);
+  --ds-type-h1-font-weight: var(--ds-font-weight-bold);
+  --ds-type-h1-line-height: var(--ds-font-line-height-tight);
+  --ds-type-h1-letter-spacing: var(--ds-font-letter-spacing-tight);
+  --ds-type-h2-font-family: var(--ds-font-family-heading);
+  --ds-type-h2-font-size: var(--ds-font-size-xl);
+  --ds-type-h2-font-weight: var(--ds-font-weight-semibold);
+  --ds-type-h2-line-height: var(--ds-font-line-height-tight);
+  --ds-type-h2-letter-spacing: var(--ds-font-letter-spacing-tight);
+  --ds-type-h3-font-family: var(--ds-font-family-heading);
+  --ds-type-h3-font-size: var(--ds-font-size-lg);
+  --ds-type-h3-font-weight: var(--ds-font-weight-semibold);
+  --ds-type-h3-line-height: var(--ds-font-line-height-tight);
+  --ds-type-h3-letter-spacing: var(--ds-font-letter-spacing-normal);
+  --ds-type-body-font-family: var(--ds-font-family-body);
+  --ds-type-body-font-size: var(--ds-font-size-base);
+  --ds-type-body-font-weight: var(--ds-font-weight-regular);
+  --ds-type-body-line-height: var(--ds-font-line-height-normal);
+  --ds-type-body-letter-spacing: var(--ds-font-letter-spacing-normal);
+  --ds-type-lead-font-family: var(--ds-font-family-body);
+  --ds-type-lead-font-size: var(--ds-font-size-lg);
+  --ds-type-lead-font-weight: var(--ds-font-weight-regular);
+  --ds-type-lead-line-height: var(--ds-font-line-height-relaxed);
+  --ds-type-lead-letter-spacing: var(--ds-font-letter-spacing-normal);
+  --ds-type-caption-font-family: var(--ds-font-family-body);
+  --ds-type-caption-font-size: var(--ds-font-size-xs);
+  --ds-type-caption-font-weight: var(--ds-font-weight-regular);
+  --ds-type-caption-line-height: var(--ds-font-line-height-normal);
+  --ds-type-caption-letter-spacing: var(--ds-font-letter-spacing-normal);
+  --ds-type-label-font-family: var(--ds-font-family-body);
+  --ds-type-label-font-size: var(--ds-font-size-sm);
+  --ds-type-label-font-weight: var(--ds-font-weight-medium);
+  --ds-type-label-line-height: var(--ds-font-line-height-normal);
+  --ds-type-label-letter-spacing: var(--ds-font-letter-spacing-normal);
+}
