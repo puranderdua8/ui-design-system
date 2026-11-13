@@ -156,6 +156,7 @@ vite.config.ts.timestamp-*
 
 # Claude Code: per-machine settings and session worktrees (may hold local paths)
 .claude/settings.local.json
+.claude/launch.json
 .claude/worktrees/
 .vercel
 .env*

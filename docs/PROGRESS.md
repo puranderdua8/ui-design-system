@@ -72,7 +72,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S26 Card + Tabs                             | M10       | ☑      |
 | S27 Banner                                  | M10       | ☑      |
 | S28 0.6.0 + showcase Display + hardening    | M10       | ☑      |
-| S29 Theme direction                         | M11       | ◐      |
+| S29 Theme direction                         | M11       | ☑      |
 | S30 Corporate + Nature final                | M11       | ☐      |
 | S31 Quirky + theme QA                       | M11       | ☐      |
 | S32 0.7.0 + site theme switcher             | M11       | ☐      |
@@ -447,8 +447,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `tokens:check` all 180 contrast pairs pass for all four themes with no token adjustment; `docs` typecheck and `test:stories` (111 tests, axe on every theme specimen) green; `pnpm check` result in the session summary.
 - Decisions: D-082.
 - Gotchas: (1) Style Dictionary quotes font names with spaces itself, so the DTCG value must be unquoted. (2) Quirky's coral accent has no role in the contract, so it sits in the `red` scale (asked in the review list below). (3) The site CSP now allows Google Fonts (`style-src` adds `https://fonts.googleapis.com`, `font-src` adds `https://fonts.gstatic.com`; nothing else changed, `production.spec.ts` asserts both). The site does not load the fonts yet; S32 adds the `<link>` or `next/font` with the switcher. (4) The package is not republished; `themes/*.css|json` ship in 0.7.0 (S32).
-- **Maintainer review (to record here):** run `pnpm --filter docs storybook`, open `Foundations/Theme specimen`, switch themes with the toolbar, then approve or list adjustments for Corporate, Nature and Quirky (palette, radius, shadow, density, motion, fonts, and whether Quirky needs a real accent role).
-- Next: S30.
+- **Maintainer review (2026-11-13):** reviewed Corporate, Nature and Quirky in Storybook (`Foundations/Theme specimen`, theme toolbar): "everything looks good", no adjustments listed. The Quirky accent-role question was not raised, so coral stays in the `red` scale.
+- Next: S30 (apply feedback: none; sign off Corporate and Nature, add font-loading snippets, check every component story in both themes).
 
 ### MH retro — 2026-11-12
 
