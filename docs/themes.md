@@ -2,7 +2,7 @@
 
 Four themes ship with `@puranderdua/ui`: **Base** (the default grey and Inter), **Corporate**, **Nature** and **Quirky** (D-053). A theme is only tokens: `tokens/themes/<name>/{color,dimension,effects,typography}.json`. Components never branch on the theme (D-048). Every theme defines exactly Base's keys; `pnpm tokens:check` fails on a missing key or a failing contrast pair.
 
-> Status: **S29 proposal.** Values and fonts below are the starting point for the maintainer's review in Storybook. S30 (Corporate, Nature) and S31 (Quirky) apply the feedback and finalise this page.
+> Status: **Corporate and Nature are final (S30).** The maintainer reviewed them in Storybook on 2026-11-13 with no adjustments; every story passes axe under both. Quirky is finalised in S31.
 
 ## Using a theme
 
@@ -29,7 +29,54 @@ All fonts are free Google Fonts. The theme token names the family with a system 
 />
 ```
 
-Weights 400 to 700 are the ones the tokens use. If your site sends a Content-Security-Policy, allow `https://fonts.googleapis.com` in `style-src` and `https://fonts.gstatic.com` in `font-src` (this repo's site does, in `apps/site/next.config.ts`). `next/font` snippets for each theme are added in S30.
+Weights 400 to 700 are the ones the tokens use. If your site sends a Content-Security-Policy, allow `https://fonts.googleapis.com` in `style-src` and `https://fonts.gstatic.com` in `font-src` (this repo's site does, in `apps/site/next.config.ts`).
+
+Other themes, same pattern (swap the `family=` parts):
+
+- Corporate: `family=IBM+Plex+Sans:wght@400;500;600;700`
+- Quirky: `family=Bricolage+Grotesque:wght@400;500;600;700`
+
+### With `next/font` (Next.js)
+
+`next/font` self-hosts the files, so no CSP change is needed and there is no request to Google at run time. Give each font a CSS variable and map it onto the theme's family vars in your global CSS. Nature:
+
+```tsx
+// app/layout.tsx
+import { Fraunces, Nunito_Sans } from "next/font/google";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fraunces",
+});
+const nunito = Nunito_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-nunito",
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" className={`${fraunces.variable} ${nunito.variable}`}>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+```css
+/* globals.css, after the theme import */
+:root {
+  --ds-font-family-heading: var(--font-fraunces), Georgia, serif;
+  --ds-font-family-body: var(--font-nunito), system-ui, sans-serif;
+}
+```
+
+Corporate uses `IBM_Plex_Sans` for both vars (`variable: "--font-plex"`); Quirky uses `Bricolage_Grotesque` (`--font-bricolage`). Both families are mapped onto the same two `--ds-font-family-*` vars. If you switch themes at run time with a JSON map, the map sets those vars too, so declare the mapping where the inline map wins (or leave it out and let the theme's own value, which names the family, resolve through the `<link>` route). The switcher's loading strategy is decided in S32.
 
 | Theme     | Heading             | Body                |
 | --------- | ------------------- | ------------------- |
@@ -75,4 +122,4 @@ The direction asks for a violet primary with a coral accent. The semantic contra
 | border.control on subtle (3:1)                    | 4.14  | 3.92      | 3.94   | 3.93   |
 | feedback.danger.fg on canvas                      | 7.42  | 8.83      | 8.67   | 8.84   |
 
-Storybook runs axe on the **Theme specimen** story once per theme (`Foundations/Theme specimen`: Base, Corporate, Nature, Quirky), so the story test run covers all four. Checking every component story in each theme is S30/S31.
+Storybook runs axe on the **Theme specimen** story once per theme (`Foundations/Theme specimen`: Base, Corporate, Nature, Quirky), so the story test run covers all four. To run every story under one theme: `VITE_DS_THEME=nature pnpm --filter docs exec vitest run` (unset means Base). S30 ran all 111 story tests under Corporate and Nature, 0 axe violations; S31 does Quirky.
