@@ -126,6 +126,12 @@ serve_and_check() {
     expect "$file" 'data-slot="button"'
     expect "$file" 'data-slot="heading"'
     expect "$file" 'ds-type-display'
+    # One form component (Field + Input, client components) and one display
+    # component (Card, server-safe) render from the package.
+    expect "$file" 'data-slot="field"'
+    expect "$file" 'data-slot="input"'
+    expect "$file" 'data-slot="card"'
+    expect "$file" 'ds-tone-raised'
     node "$WORK/tools/axe-check.mjs" "$file" || fail "axe violations on $route"
   done
   kill "$SERVER_PID" 2>/dev/null || true
@@ -141,7 +147,16 @@ cd "$APP_B"
 npm i "${TARBALL:-@puranderdua/ui@$VERSION}"
 edit_css "$APP_B" 'css.replace("@import \"tailwindcss\";", "@import \"tailwindcss\";\n@import \"@puranderdua/ui/foundations.css\";\n@import \"@puranderdua/ui/themes/base.css\";\n@source \"../../node_modules/@puranderdua/ui/dist\";")'
 cat >src/app/page.tsx <<'TSX'
-import { Button, Heading, Text } from "@puranderdua/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardTitle,
+  Field,
+  Heading,
+  Input,
+  Text,
+} from "@puranderdua/ui";
 
 export default function Page() {
   return (
@@ -149,6 +164,17 @@ export default function Page() {
       <Heading as="h1" variant="display">Package only</Heading>
       <Text>Body copy from the package.</Text>
       <Button>Package button</Button>
+      <form>
+        <Field label="Email" description="Form component from the package">
+          <Input type="email" name="email" />
+        </Field>
+      </form>
+      <Card variant="raised">
+        <CardContent>
+          <CardTitle as="h2">Display card</CardTitle>
+          <Text>Display component from the package.</Text>
+        </CardContent>
+      </Card>
     </main>
   );
 }

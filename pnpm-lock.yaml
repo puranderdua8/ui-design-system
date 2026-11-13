@@ -91,8 +91,8 @@ importers:
   apps/site:
     dependencies:
       '@puranderdua/ui':
-        specifier: 0.5.0
-        version: 0.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 0.6.0
+        version: 0.6.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next:
         specifier: 16.4.5
         version: 16.4.5(@babel/core@7.29.13(supports-color@7.2.0))(@playwright/test@1.65.0)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1373,8 +1373,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@puranderdua/ui@0.5.0':
-    resolution: {integrity: sha512-6BjYQtY2XbjeEYigfSo1LSQn7qO5OY5opYryqe/peMSygP+jZdyk3Qj4lqhkWA9OFL2QXN9eRpzBHgLnZ3yfbA==}
+  '@puranderdua/ui@0.6.0':
+    resolution: {integrity: sha512-7XEbkWQ4gt0DTDM6itpgoAb9k6vah1WJzdihcTI055QUTlKfTZhO9L9MbIzxI2iLTNqaJ3/IDS7E+0oWFMAzYw==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -6274,7 +6274,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@puranderdua/ui@0.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@puranderdua/ui@0.6.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       class-variance-authority: 0.7.1
       clsx: 2.1.1

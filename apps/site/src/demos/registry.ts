@@ -6,6 +6,12 @@ import { Demo as LinkExternal } from "@/demos/actions/link-external";
 import { Demo as LinkInline } from "@/demos/actions/link-inline";
 import { Demo as LinkNext } from "@/demos/actions/link-next";
 import { Demo as LinkStandalone } from "@/demos/actions/link-standalone";
+import { Demo as BannerImage } from "@/demos/display/banner-image";
+import { Demo as BannerTones } from "@/demos/display/banner-tones";
+import { Demo as BannerVideo } from "@/demos/display/banner-video";
+import { Demo as CardGrid } from "@/demos/display/card-grid";
+import { Demo as CardRaised } from "@/demos/display/card-raised";
+import { Demo as TabsDemo } from "@/demos/display/tabs";
 import { Demo as CheckboxStates } from "@/demos/forms/checkbox-states";
 import { Demo as InputStates } from "@/demos/forms/input-states";
 import { Demo as RadioGroupDemo } from "@/demos/forms/radio-group";
@@ -43,6 +49,12 @@ export const demos = {
   "forms/radio-group": RadioGroupDemo,
   "forms/select-states": SelectStates,
   "forms/signup-form": SignupForm,
+  "display/card-grid": CardGrid,
+  "display/card-raised": CardRaised,
+  "display/tabs": TabsDemo,
+  "display/banner-tones": BannerTones,
+  "display/banner-image": BannerImage,
+  "display/banner-video": BannerVideo,
   "layout/container": ContainerDemo,
   "layout/grid": GridDemo,
   "layout/stack": StackDemo,

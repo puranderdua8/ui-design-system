@@ -4,32 +4,49 @@ export const categories = [
     title: "Typography",
     description:
       "Text and Heading, with the element chosen apart from the look.",
-    since: null,
+    components: ["Text", "Heading"],
   },
   {
     slug: "layout",
     title: "Layout",
     description: "Container, Grid, Stack, Cluster, Section, Split and Sidebar.",
-    since: null,
+    components: [
+      "Container",
+      "Grid",
+      "Stack",
+      "Cluster",
+      "Section",
+      "Split",
+      "Sidebar",
+    ],
   },
   {
     slug: "forms",
     title: "Forms",
-    description: "Label, Field, Input, Checkbox, RadioGroup and Select.",
-    since: null,
+    description:
+      "Label, Field, Fieldset, Input, Checkbox, RadioGroup and Select.",
+    components: [
+      "Label",
+      "Field",
+      "Fieldset",
+      "Input",
+      "Checkbox",
+      "RadioGroup",
+      "Select",
+    ],
   },
   {
     slug: "actions",
     title: "Actions",
     description:
       "Button variants and sizes, a button that renders a link, and Link itself.",
-    since: null,
+    components: ["Button", "Link"],
   },
   {
     slug: "display",
     title: "Display",
     description: "Card, Tabs and Banner.",
-    since: "0.6",
+    components: ["Card", "Tabs", "Banner"],
   },
 ] as const;
 
