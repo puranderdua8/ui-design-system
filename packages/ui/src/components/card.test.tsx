@@ -41,7 +41,7 @@ const refChecks = () => {
 };
 void refChecks;
 
-const Sample = ({ variant }: { variant?: "outline" | "raised" }) => (
+const Sample = ({ variant }: { variant?: "outline" | "raised" | "accent" }) => (
   <Card variant={variant ?? "outline"} aria-label="Plan">
     <CardMedia>
       <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
@@ -77,6 +77,20 @@ describe("Card", () => {
     expect(themeCss).toContain(".ds-tone-raised {");
     expect(themeCss).toContain("--shadow-ds-raised");
     expect(themeCss).toContain("--radius-ds-card");
+  });
+
+  it("accent is a raised card with an accent outline at the strong width", () => {
+    render(<Sample variant="accent" />);
+    const cls = screen.getByLabelText("Plan").className;
+    expect(cls).toContain("ds-tone-raised");
+    expect(cls).toContain("ds-border-strong");
+    expect(cls).toContain("border-ds-accent-border");
+    expect(cls).toContain("shadow-ds-raised");
+    expect(cls).not.toMatch(/border-ds-border\b/);
+    expect(themeCss).toContain("--color-ds-accent-border");
+    expect(themeCss).toContain(
+      "--ds-accent-border: var(--ds-on-raised-accent-border)",
+    );
   });
 
   it("every variant class is static, never built from the prop", () => {

@@ -14,13 +14,15 @@ export const tabsListClasses =
   "group-data-[orientation=vertical]/tabs:border-e group-data-[orientation=vertical]/tabs:border-ds-border";
 
 // min-h-ds-control-sm keeps every trigger at least 32px (target size, D-076).
-// The active marker is a 2px `after` bar in border.control (3:1 on every tone).
+// The active marker is a 2px `after` bar in accent.border and the active label
+// is text.accent (A1): the accent is the selection cue, the brand stays on actions.
+// Both roles are re-mapped per tone (3:1 for the bar, 4.5:1 for the label).
 export const tabsTriggerClasses =
   "relative inline-flex min-h-ds-control-sm shrink-0 items-center justify-center gap-ds-gap-xs px-ds-control-px-md " +
   "font-ds-body text-ds-control-md font-medium whitespace-nowrap text-ds-text-muted rounded-ds-control ds-transition ds-focus-ring " +
-  "hover:text-ds-text data-[state=active]:text-ds-text " +
+  "hover:text-ds-text data-[state=active]:text-ds-accent " +
   "disabled:pointer-events-none disabled:text-ds-disabled-fg " +
-  "after:absolute after:bg-ds-border-control after:opacity-0 after:transition-opacity data-[state=active]:after:opacity-100 " +
+  "after:absolute after:bg-ds-accent-border after:opacity-0 after:transition-opacity data-[state=active]:after:opacity-100 " +
   "group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:-bottom-px group-data-[orientation=horizontal]/tabs:after:h-0.5 " +
   "group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start " +
   "group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-px group-data-[orientation=vertical]/tabs:after:w-0.5 " +

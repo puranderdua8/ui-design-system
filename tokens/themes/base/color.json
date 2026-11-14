@@ -21,6 +21,19 @@
         "$value": "#9f2a22"
       }
     },
+    "accent": {
+      "$description": "Restrained steel-blue scale (OKLCH hue 250, chroma 0.11 at the peak), a single cool note beside the achromatic brand. accent.600 is the accent fill and border; accent.700 is accent text.",
+      "50": { "$value": "#f0f7ff" },
+      "100": { "$value": "#dfefff" },
+      "200": { "$value": "#c5e0fd" },
+      "300": { "$value": "#a1c8f1" },
+      "400": { "$value": "#77a9dd" },
+      "500": { "$value": "#437eb9" },
+      "600": { "$value": "#2a669f" },
+      "700": { "$value": "#1a4f80" },
+      "800": { "$value": "#0c375e" },
+      "900": { "$value": "#04203a" }
+    },
     "brand": {
       "$description": "Achromatic scale built around the primary #595959 (brand.600).",
       "50": {

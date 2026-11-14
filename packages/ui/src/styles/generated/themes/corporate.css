@@ -8,6 +8,16 @@
   --ds-color-red-50: #fef0ee;
   --ds-color-red-600: #b02b27;
   --ds-color-red-700: #941516;
+  --ds-color-accent-50: #eef9f9;
+  --ds-color-accent-100: #daf2f2;
+  --ds-color-accent-200: #bbe7e6;
+  --ds-color-accent-300: #92d2d1;
+  --ds-color-accent-400: #5db5b5;
+  --ds-color-accent-500: #018c8d;
+  --ds-color-accent-600: #017272;
+  --ds-color-accent-700: #005959;
+  --ds-color-accent-800: #003e3f;
+  --ds-color-accent-900: #002525;
   --ds-color-brand-50: #f1f7ff;
   --ds-color-brand-100: #e1eeff;
   --ds-color-brand-200: #c7dffe;
@@ -96,6 +106,8 @@
   --ds-text-link: var(--ds-color-brand-700); /** Link text; 4.5:1 on the canvas and subtle surfaces. */
   --ds-text-link-hover: var(--ds-color-brand-800); /** Link text on hover. */
   --ds-text-on-brand: var(--ds-color-white); /** Text and icons on surface.brand. */
+  --ds-text-accent: var(--ds-color-accent-700); /** Accent text and icons (selected tab label, highlight eyebrow); 4.5:1 on the canvas and subtle and raised surfaces. A second voice beside the brand, never the action colour. */
+  --ds-accent-border: var(--ds-color-accent-600); /** Accent marker: selected-tab bar, highlight edge, accent underline. Meets 3:1 against the canvas and subtle and raised surfaces. */
   --ds-surface-canvas: var(--ds-color-white); /** Page background. */
   --ds-surface-subtle: var(--ds-color-neutral-50); /** Quiet panel or band behind content, one step off the canvas. */
   --ds-surface-raised: var(--ds-color-white); /** Cards and floating layers; pair with the elevation tokens. */
@@ -161,6 +173,8 @@
   --ds-on-raised-text-muted: var(--ds-color-neutral-600); /** Secondary text inside a .ds-tone-raised scope; restores text.muted. */
   --ds-on-raised-link: var(--ds-color-brand-700); /** Link text inside a .ds-tone-raised scope; restores text.link. */
   --ds-on-raised-link-hover: var(--ds-color-brand-800); /** Link text on hover inside a .ds-tone-raised scope. */
+  --ds-on-raised-text-accent: var(--ds-color-accent-700); /** Accent text inside a .ds-tone-raised scope; restores text.accent. */
+  --ds-on-raised-accent-border: var(--ds-color-accent-600); /** Accent marker inside a .ds-tone-raised scope; restores accent.border. */
   --ds-on-raised-focus-ring: var(--ds-color-brand-600); /** Keyboard focus ring inside a .ds-tone-raised scope; 3:1 against surface.raised. */
   --ds-on-raised-border-control: var(--ds-color-neutral-500); /** Control boundary (checkbox, radio) inside a .ds-tone-raised scope; 3:1 against surface.raised. */
   --ds-on-raised-action-primary-bg: var(--ds-color-brand-600); /** Primary action fill inside a .ds-tone-raised scope. */
@@ -175,6 +189,8 @@
   --ds-on-inverse-text-muted: var(--ds-color-neutral-300); /** Secondary text inside a .ds-tone-inverse scope; replaces text.muted there. */
   --ds-on-inverse-link: var(--ds-color-brand-200); /** Link text inside a .ds-tone-inverse scope; replaces text.link there. */
   --ds-on-inverse-link-hover: var(--ds-color-white); /** Link text on hover inside a .ds-tone-inverse scope. */
+  --ds-on-inverse-text-accent: var(--ds-color-accent-300); /** Accent text inside a .ds-tone-inverse scope; replaces text.accent there. */
+  --ds-on-inverse-accent-border: var(--ds-color-accent-400); /** Accent marker inside a .ds-tone-inverse scope; replaces accent.border there; 3:1 against surface.inverse. */
   --ds-on-inverse-focus-ring: var(--ds-color-white); /** Keyboard focus ring inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
   --ds-on-inverse-border-control: var(--ds-color-neutral-400); /** Control boundary (checkbox, radio) inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
   --ds-on-inverse-action-primary-bg: var(--ds-color-white); /** Primary action fill inside a .ds-tone-inverse scope; 3:1 against surface.inverse. */
@@ -189,6 +205,8 @@
   --ds-on-brand-text-muted: var(--ds-color-brand-100); /** Secondary text inside a .ds-tone-brand scope; replaces text.muted there. */
   --ds-on-brand-link: var(--ds-color-white); /** Link text inside a .ds-tone-brand scope; replaces text.link there. */
   --ds-on-brand-link-hover: var(--ds-color-brand-100); /** Link text on hover inside a .ds-tone-brand scope. */
+  --ds-on-brand-text-accent: var(--ds-color-accent-100); /** Accent text inside a .ds-tone-brand and .ds-tone-gradient scope; replaces text.accent there. */
+  --ds-on-brand-accent-border: var(--ds-color-accent-200); /** Accent marker inside a .ds-tone-brand and .ds-tone-gradient scope; replaces accent.border there; 3:1 against surface.brand. */
   --ds-on-brand-focus-ring: var(--ds-color-white); /** Keyboard focus ring inside a .ds-tone-brand scope; 3:1 against surface.brand. */
   --ds-on-brand-border-control: var(--ds-color-brand-200); /** Control boundary (checkbox, radio) inside a .ds-tone-brand scope; 3:1 against surface.brand. */
   --ds-on-brand-action-primary-bg: var(--ds-color-white); /** Primary action fill inside a .ds-tone-brand scope; 3:1 against surface.brand. */

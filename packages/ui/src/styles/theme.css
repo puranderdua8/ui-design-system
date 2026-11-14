@@ -14,6 +14,8 @@
   --color-ds-link: var(--ds-text-link);
   --color-ds-link-hover: var(--ds-text-link-hover);
   --color-ds-on-brand: var(--ds-text-on-brand);
+  --color-ds-accent: var(--ds-text-accent);
+  --color-ds-accent-border: var(--ds-accent-border);
 
   --color-ds-canvas: var(--ds-surface-canvas);
   --color-ds-surface-subtle: var(--ds-surface-subtle);
@@ -303,6 +305,8 @@
     --ds-text-muted: var(--ds-on-inverse-text-muted);
     --ds-text-link: var(--ds-on-inverse-link);
     --ds-text-link-hover: var(--ds-on-inverse-link-hover);
+    --ds-text-accent: var(--ds-on-inverse-text-accent);
+    --ds-accent-border: var(--ds-on-inverse-accent-border);
     --ds-focus-ring: var(--ds-on-inverse-focus-ring);
     --ds-border-control: var(--ds-on-inverse-border-control);
     --ds-action-primary-bg: var(--ds-on-inverse-action-primary-bg);
@@ -328,6 +332,8 @@
     --ds-text-muted: var(--ds-on-brand-text-muted);
     --ds-text-link: var(--ds-on-brand-link);
     --ds-text-link-hover: var(--ds-on-brand-link-hover);
+    --ds-text-accent: var(--ds-on-brand-text-accent);
+    --ds-accent-border: var(--ds-on-brand-accent-border);
     --ds-focus-ring: var(--ds-on-brand-focus-ring);
     --ds-border-control: var(--ds-on-brand-border-control);
     --ds-action-primary-bg: var(--ds-on-brand-action-primary-bg);
@@ -355,6 +361,8 @@
     --ds-text-muted: var(--ds-on-brand-text-muted);
     --ds-text-link: var(--ds-on-brand-link);
     --ds-text-link-hover: var(--ds-on-brand-link-hover);
+    --ds-text-accent: var(--ds-on-brand-text-accent);
+    --ds-accent-border: var(--ds-on-brand-accent-border);
     --ds-focus-ring: var(--ds-on-brand-focus-ring);
     --ds-border-control: var(--ds-on-brand-border-control);
     --ds-action-primary-bg: var(--ds-on-brand-action-primary-bg);
@@ -397,6 +405,8 @@
     --ds-text-muted: var(--ds-on-raised-text-muted);
     --ds-text-link: var(--ds-on-raised-link);
     --ds-text-link-hover: var(--ds-on-raised-link-hover);
+    --ds-text-accent: var(--ds-on-raised-text-accent);
+    --ds-accent-border: var(--ds-on-raised-accent-border);
     --ds-focus-ring: var(--ds-on-raised-focus-ring);
     --ds-border-control: var(--ds-on-raised-border-control);
     --ds-action-primary-bg: var(--ds-on-raised-action-primary-bg);

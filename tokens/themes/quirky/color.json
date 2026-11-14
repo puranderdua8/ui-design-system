@@ -10,10 +10,23 @@
       "$description": "Neutral 950 at 70% opacity; the backdrop behind overlays."
     },
     "red": {
-      "$description": "Error and danger scale (OKLCH hue 22). Saturated coral-red; the coral accent of the direction lives here until the contract gets an accent role.",
-      "50": { "$value": "#fef0ef" },
-      "600": { "$value": "#ba0329" },
-      "700": { "$value": "#99001f" }
+      "$description": "Error and danger scale (OKLCH hue 25). A deep crimson, kept apart from the coral accent.",
+      "50": { "$value": "#ffefee" },
+      "600": { "$value": "#af2a2d" },
+      "700": { "$value": "#940015" }
+    },
+    "accent": {
+      "$description": "Coral scale (OKLCH hue 38, chroma 0.19 at the peak), the loud counterpoint to the violet brand (moved here from the red scale, D-082). accent.600 is the accent fill and border; accent.700 is accent text.",
+      "50": { "$value": "#fff4f0" },
+      "100": { "$value": "#ffe7df" },
+      "200": { "$value": "#ffd1c3" },
+      "300": { "$value": "#ffad93" },
+      "400": { "$value": "#f77b54" },
+      "500": { "$value": "#d24200" },
+      "600": { "$value": "#ac3400" },
+      "700": { "$value": "#872700" },
+      "800": { "$value": "#621800" },
+      "900": { "$value": "#3d0a00" }
     },
     "brand": {
       "$description": "Violet scale (OKLCH hue 295, chroma 0.2 at the peak). brand.600 is the primary.",

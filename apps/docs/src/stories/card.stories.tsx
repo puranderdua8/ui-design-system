@@ -23,7 +23,7 @@ const media =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120"><rect width="320" height="120" fill="#c4c4c4"/><circle cx="160" cy="60" r="32" fill="#8a8a8a"/></svg>',
   );
 
-const Body = ({ variant }: { variant?: "outline" | "raised" }) => (
+const Body = ({ variant }: { variant?: "outline" | "raised" | "accent" }) => (
   <Card variant={variant ?? "outline"} className="max-w-ds-sm">
     <CardHeader>
       <CardTitle as="h2">Team plan</CardTitle>
@@ -49,13 +49,16 @@ const meta = {
     docs: {
       description: {
         component:
-          "Card parts: `Card` (`variant` outline | raised), `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`, level set with `as`), `CardDescription`, `CardContent`, `CardFooter`. Server-safe: no client code.",
+          "Card parts: `Card` (`variant` outline | raised | accent), `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`, level set with `as`), `CardDescription`, `CardContent`, `CardFooter`. Server-safe: no client code.",
       },
     },
   },
   args: { variant: "outline" },
   argTypes: {
-    variant: { control: "inline-radio", options: ["outline", "raised"] },
+    variant: {
+      control: "inline-radio",
+      options: ["outline", "raised", "accent"],
+    },
   },
 } satisfies Meta<typeof Card>;
 
@@ -68,6 +71,11 @@ export const Outline: Story = {
 
 export const Raised: Story = {
   render: () => <Body variant="raised" />,
+};
+
+/** A highlighted card (featured plan): a raised card outlined in the accent colour. */
+export const Accent: Story = {
+  render: () => <Body variant="accent" />,
 };
 
 export const WithMedia: Story = {
@@ -108,6 +116,7 @@ export const InTones: Story = {
         >
           <Cluster gap="md" align="start">
             <Body variant="raised" />
+            <Body variant="accent" />
             <Body variant="outline" />
           </Cluster>
         </Section>

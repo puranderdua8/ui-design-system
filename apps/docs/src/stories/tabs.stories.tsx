@@ -76,7 +76,7 @@ export const Vertical: Story = {
   ),
 };
 
-/** Labels, the active marker and the focus ring are role colours the tone re-maps. */
+/** Labels, the active label and marker (`text.accent`, `accent.border`) and the focus ring are role colours the tone re-maps. */
 export const InTones: Story = {
   render: () => (
     <>

@@ -17,6 +17,14 @@
       "$value": "{color.brand.800}",
       "$description": "Link text on hover inside a .ds-tone-raised scope."
     },
+    "text-accent": {
+      "$value": "{color.accent.700}",
+      "$description": "Accent text inside a .ds-tone-raised scope; restores text.accent."
+    },
+    "accent-border": {
+      "$value": "{color.accent.600}",
+      "$description": "Accent marker inside a .ds-tone-raised scope; restores accent.border."
+    },
     "focus-ring": {
       "$value": "{color.brand.600}",
       "$description": "Keyboard focus ring inside a .ds-tone-raised scope; 3:1 against surface.raised."
@@ -82,6 +90,14 @@
       "$value": "{color.white}",
       "$description": "Link text on hover inside a .ds-tone-inverse scope."
     },
+    "text-accent": {
+      "$value": "{color.accent.300}",
+      "$description": "Accent text inside a .ds-tone-inverse scope; replaces text.accent there."
+    },
+    "accent-border": {
+      "$value": "{color.accent.400}",
+      "$description": "Accent marker inside a .ds-tone-inverse scope; replaces accent.border there; 3:1 against surface.inverse."
+    },
     "focus-ring": {
       "$value": "{color.white}",
       "$description": "Keyboard focus ring inside a .ds-tone-inverse scope; 3:1 against surface.inverse."
@@ -146,6 +162,14 @@
     "link-hover": {
       "$value": "{color.brand.100}",
       "$description": "Link text on hover inside a .ds-tone-brand scope."
+    },
+    "text-accent": {
+      "$value": "{color.accent.100}",
+      "$description": "Accent text inside a .ds-tone-brand and .ds-tone-gradient scope; replaces text.accent there."
+    },
+    "accent-border": {
+      "$value": "{color.accent.200}",
+      "$description": "Accent marker inside a .ds-tone-brand and .ds-tone-gradient scope; replaces accent.border there; 3:1 against surface.brand."
     },
     "focus-ring": {
       "$value": "{color.white}",

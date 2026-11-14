@@ -3,7 +3,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 // Plain module, no "use client": Server Components can call this (D-065, D-070).
 // `raised` uses the .ds-tone-raised recipe, so the card restores the base roles
 // (text, links, focus ring, actions) even inside an inverse or brand Section.
-// `outline` paints nothing and follows the tone around it.
+// `outline` paints nothing and follows the tone around it. `accent` is `raised`
+// with an accent.border outline at the strong width: a highlighted card (featured
+// plan, recommended option) that does not compete with the primary action.
 export const cardVariants = cva(
   "flex flex-col gap-ds-gap-md rounded-ds-card py-ds-gap-md",
   {
@@ -11,6 +13,8 @@ export const cardVariants = cva(
       variant: {
         outline: "ds-border border-ds-border",
         raised: "ds-tone-raised ds-border border-ds-border shadow-ds-raised",
+        accent:
+          "ds-tone-raised ds-border-strong border-ds-accent-border shadow-ds-raised",
       },
     },
     defaultVariants: { variant: "outline" },

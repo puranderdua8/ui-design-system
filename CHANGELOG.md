@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.8.0 — unreleased
+
+New **accent** colour role: a second voice beside the brand, for selection and highlight, never for the primary action. No API breaks; existing components keep their look except the `Tabs` active marker (below).
+
+**New tokens that custom themes must define** (`validate-tokens` enforces this in this repo):
+
+- `color.accent` scale, 50–900 (same steps as `brand`), in each theme's `color.json`.
+- Semantic roles `text.accent` and `accent.border` in `tokens/semantic/color.json`, and `text-accent` and `accent-border` in each of `on-raised`, `on-inverse` and `on-brand` in `tokens/semantic/tone.json`. All `.ds-tone-*` recipes re-point the two vars.
+
+**Migration:** copy the accent scale and tokens from `themes/base` into each custom theme and adjust values until `contrast-pairs.json` passes (200 pairs per theme, was 180: `text.accent` needs 4.5:1 and `accent.border` 3:1 on every tone).
+
+**Added:**
+
+- Themes: Base steel-blue, Corporate teal, Nature terracotta, Quirky coral accent. Quirky's `red` scale is now a crimson (the coral moved to `accent`).
+- Tailwind bridge: `text-ds-accent`, `bg-ds-accent-border`, `border-ds-accent-border`.
+- `Card` `variant="accent"`: a raised card with an accent outline (featured plan).
+
+**Changed:**
+
+- `Tabs`: the active label uses `text.accent` and the active bar `accent.border` (was `text` and `border.control`). Override with `className` if you want the old look.
+
 ## 0.7.0 — 2026-11-13
 
 Three new themes: **Corporate**, **Nature** and **Quirky**, alongside the default **Base**. No component, token-contract or API changes, so there are no breaking changes and no migration steps.
