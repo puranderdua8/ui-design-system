@@ -560,6 +560,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) Playwright cannot click inputs inside a closed `<details>`; open the `summary` first. (2) Chunk names differ between a local build and production, so match chunks by content markers, not names.
 - Next: R5.
 
+### R5 — Accessibility beyond axe, testing strategy — 2026-11-14
+
+- Done (same branch): findings R35–R39 (R35 Select highlight 1.09:1, R36 WebKit e2e flake on a docs-only commit, R37 no suite for RTL/forced colours/print/hydration/visual change and no coverage, R38 class-string assertions and triple axe, R39 "Read more" demo buttons). `docs/evidence/screen-reader-script-2026-11-14.md` (20 VoiceOver + Safari steps) for the maintainer. Two leads closed (K → R37, J dismissed with the script step that checks it). R5 probe notes with a suite map.
+- Verified: Playwright keyboard walk and target-size scan of all 8 pages on production; WCAG ratios for the Select highlight in all four themes; CI history for the flake.
+- Gotchas: (1) A Vitest coverage provider installed outside the repo reports 0 % (it is a different module instance), and `c8` around Vitest does too; real coverage needs `@vitest/coverage-v8` as a dev dependency. (2) Keys in a keyboard walk need more than name + position: two "Read more" buttons on one row look like a trap.
+- You do: run the screen-reader script and fill in its Results column.
+- Next: R6.
+
 ## Retro (Release 1)
 
 - **Time per session:** not tracked per session. From merge times: S13–S25 and H1 on 2026-10-19 and 10-20 (thirteen sessions in about two days, the plan's 60-minute slots were not the limit); MH H1–H10 from 10-21 to 11-12 (H3–H7 within about 4 hours on 11-11); S26–S28 on 11-12 and 11-13 (18:10 to 18:42 on 11-12 for S26–S28 prep); S29–S31 on 11-13 (14:35 to 15:44); S32 on 11-14 (11:22 to 11:49), S33 12:52, A1 13:06 to 13:20, S34 14:52, S35 the same day. The maintainer: add real figures.
