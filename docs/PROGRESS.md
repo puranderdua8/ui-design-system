@@ -544,6 +544,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: none new.
 - Gotchas: (1) A Vitest config in the scratchpad works with a `node_modules` symlink to `packages/ui/node_modules` and an `@` alias, so probes need no file in the repo. (2) `babel-plugin-react-compiler` 1.0 fails on every destructuring default under Babel 8 (`AssignmentPattern`); use Babel 7. (3) A `MutationObserver` reports only after the test's synchronous code; call `takeRecords()` before reading, or use a ref callback.
 - Next: R3 Tokens, styling, dark-mode readiness, packaging, on `review-r3` cut from `main` after this PR merges.
+- Process change (the maintainer, 2026-11-14, after R2): R3–R6 and the hardening plan go into the same PR (#59, `review-r2`), so the whole review is reviewed together. PLAN MR intro and D-087 updated.
+
+### R3 — Tokens, styling, dark-mode readiness, packaging — 2026-11-14
+
+- Done (same branch): findings R17–R29 (R17 no semver/deprecation policy and new roles break custom themes, R18 Radix roots force `dir="ltr"`, R19 Tabs marker lost in forced colours, R20 consumer CSS setups that break styles, R21 tokens not in DTCG 2025.10 format, R22 revisit D-075 (portal clipped inside the scope), R23 control line-height, R24 print, R25 `tailwindcss` peer, R26–R29 dark-mode blockers). Two G leads dismissed with measurements, the H lead became R22; R13's token proposal filled in; R3 probe notes.
+- Verified: scratch Vite 7 and Next 16.4.2 apps on the packed tarball (bundle per route, `tsc` bundler and node16, CSS clash cases), Playwright Chromium for forced colours, RTL, print PDF and a clipped Select.
+- Gotchas: (1) `create-next-app` and `npm i` take about a minute; run them in the background while building the Vite app. (2) `@tailwindcss/vite` scans the module graph, so a Vite consumer gets the package classes without `@source`; Next needs it. (3) `sips -s format png file.pdf` turns a Playwright PDF into an image you can look at.
+- Next: R4.
 
 ## Retro (Release 1)
 
