@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S33 Playground engine (S32 done: 0.7.0 is on npm with provenance, the site is on 0.7.0 with a theme switcher; the maintainer redeploys the site).
+- **Next session:** S34 Playground UI (S33 done: the engine is in `apps/site/src/playground/`, no UI yet).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -76,7 +76,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S30 Corporate + Nature final                | M11       | ☑      |
 | S31 Quirky + theme QA                       | M11       | ☑      |
 | S32 0.7.0 + site theme switcher             | M11       | ☑      |
-| S33 Playground engine                       | M12       | ☐      |
+| S33 Playground engine                       | M12       | ☑      |
 | S34 Playground UI                           | M12       | ☐      |
 | S35 Export + Release 1 wrap-up              | M12       | ☐      |
 
@@ -483,6 +483,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: none new.
 - Gotchas: (1) `next/font` generates its own family name, so the theme JSON's "Fraunces, Georgia, serif" would not match the loaded font; the switcher swaps the leading family for the font's CSS variable and keeps the fallback stack. (2) Theme JSON values include numbers (font weights), so the var map is typed `string | number`. (3) The `react-hooks/set-state-in-effect` rule rejects `setState` in a mount effect, so the applied theme is read from `<html data-ds-theme>` with `useSyncExternalStore`. (4) The cache is re-validated on every load (the stored theme's chunk is re-imported), so a package upgrade refreshes a stale map. (5) `<html>` has `suppressHydrationWarning` because the head script changes its style and attribute before hydration. (6) The site CSP still allows Google Fonts (S29); `next/font` self-hosts, so those two allowances are now unused. Left as is; tightening them is a separate change.
 - Next: S33 Playground engine. The maintainer: merge the S32-site PR and redeploy the site (`vercel --prod`).
+
+### S33 — Playground engine — 2026-11-14
+
+- Done (branch `s33`, cut from synced `main` after #52): pure TypeScript engine in `apps/site/src/playground/`. `resolveState(state, themes)` takes a starting theme (one of the four `themes/<name>.json` maps), knobs (brand, accent, neutral hue/chroma, heading and body font from five curated fonts, radius scale, border width, shadow strength, density, motion speed) and per-token overrides, and returns the resolved var map plus `primitives`, `refs`, `semanticOverrides` and `ignored`. `toDtcg` (the four files of a theme folder), `toCss` (shaped like `themes/<name>.css`), `evaluateContrast` (port of `scripts/contrast.mjs` on `@puranderdua/ui/contrast-pairs.json`). OKLCH ramps with `culori`. Added `culori`, `vitest`, `@types/culori` to `apps/site`; `pnpm --filter site test` is now part of `pnpm check` (root `test` runs it).
+- Verified: 56 site unit tests green. They cover: ramps strictly darker per step (10 colours, 4 neutral hues), an unchanged state equals each of the four themes (vars, key order, refs), every knob, overrides win over knobs and re-resolve dependants, ignored overrides (unknown, alias on a primitive, cycle), contrast results equal `scripts/contrast.mjs` output line for line on Base and all four themes pass, DTCG output equals `tokens/themes/<name>/` values for all four themes, CSS declarations equal the shipped `themes/<name>.css`. Planted proof: with the text minimum bent to 4.4 the script-parity test failed; reverted, no diff.
+- Decisions: D-083.
+- Gotchas: (1) The shipped CSS lists `space-1-5` after `space-1`, the var map after `space-24`, so the CSS test compares declarations, not order. (2) `elevation.*` are literals in the theme JSON, so the engine carries the `elevation -> shadow` aliases itself. (3) The contract has no accent role (D-082): the accent knob only adds `--ds-color-accent-*` primitives; whether `validate-tokens` accepts them in a theme folder is not checked, S35's export should say so or S34 should drop the knob from the UI. (4) The scrim is `rgba()` in the JSON map and 8-digit hex in DTCG; rounding needs a small epsilon (0.7 × 255 = 178.49999…). (5) The engine does not touch the DOM, fonts or localStorage; applying fonts means swapping the leading family for the `next/font` var as `withFonts` does (`fontChoices[].cssVar`). (6) Not viewed in a browser: there is no UI yet.
+- Next: S34 Playground UI. Open the PR for S33; the maintainer merges.
 
 ### MH retro — 2026-11-12
 
