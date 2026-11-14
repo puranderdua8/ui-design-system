@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** MR Release 1 review (R1–R6, D-087) is written: R1 in #58, R2–R6 and the proposed hardening milestone in PR #59 (`review-r2`). Register `docs/audits/2026-11-14-release-1-review.md` (47 findings, scorecard, MH2 proposal).
-- **Next session:** H11 of the proposed **MH2 1.0.0 hardening** (H11–H20), once the maintainer merges #59 and approves or edits MH2 (prompts in the register). Release 2 (dark mode) waits for MH2.
+- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 is done on branch `mh2-hardening`.
+- **Next session:** H12 (CI, release and deploy). H13 and H18 are independent and can run in parallel. Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -567,6 +567,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) A Vitest coverage provider installed outside the repo reports 0 % (it is a different module instance), and `c8` around Vitest does too; real coverage needs `@vitest/coverage-v8` as a dev dependency. (2) Keys in a keyboard walk need more than name + position: two "Read more" buttons on one row look like a trap.
 - You do: run the screen-reader script and fill in its Results column.
 - Next: R6.
+
+### H11 — Decisions and the 1.0.0 contract — 2026-11-14
+
+- Done (branch `mh2-hardening`, off the synced `main`): the maintainer answered the six decisions (all with the recommendation, except R45); recorded as D-088 to D-096. `docs/versioning.md` written (public surface, breaking vs not, deprecation, ESM-only, default alias for new themeable tokens). `DECISIONS.md` split from one 320 KB table into one `### D-0NN` section per decision (87 existing + 9 new, text unchanged, 64 KB). PLAN: Goal 2 says 0.8.0, MH2 section with the H11–H20 prompts added (adjusted for the decisions). CLAUDE.md names MH2, `versioning.md` and the D-093 Radix change. README: `ThemeScope` props and Card `accent` fixed (R16, the Card line is in `packages/ui/README.md`, not the root README as the register said).
+- Decisions: D-088 MH2, D-089 renames, D-090 DTCG 2025.10, D-091 overlays portal to `body`, D-092 mode selector, D-093 individual Radix packages, D-094 deploys stay manual, D-095 default alias, D-096 versioning contract. Note: D-094 differs from the register's proposal, so H12 documents the manual deploy plus a post-deploy smoke instead of deploy-from-`main`.
+- Findings: R16, R17, R44 set to `fixed in H11`. R10, R21, R22, R26, R42, R45 are decided; they stay open until H12, H15, H16 and H17 implement them.
+- Gotchas: (1) D-043's hook blocks `cat`, `sed` and `head` in any Bash command, even inside a heredoc or as a word; use Read and Edit. (2) The DECISIONS rows used `\|` escapes; the conversion script handles them, and D-039 has no "Why" cell. (3) PLAN still says 0.7.0 for M11 and S32 (history: that session did ship 0.7.0); only Goal 2 was wrong.
+- Next: H12.
 
 ### R6 — Security, DX, tooling, process + write-up — 2026-11-14
 

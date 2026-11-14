@@ -91,13 +91,13 @@ Forms (0.4.0). The controls are client components; a Server Component page can s
 
 Display (0.6.0):
 
-- `Card`: `variant` outline | raised; `as` div, article, section, li, aside. Parts: `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`; set `as` to fit the page outline), `CardDescription`, `CardContent`, `CardFooter`. A raised Card restores the base colour roles, so it is readable inside an inverse or brand `Section`.
+- `Card`: `variant` outline | raised | accent; `as` div, article, section, li, aside. Parts: `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`; set `as` to fit the page outline), `CardDescription`, `CardContent`, `CardFooter`. A raised Card restores the base colour roles, so it is readable inside an inverse or brand `Section`.
 - `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`: arrow keys, Home/End, `activationMode` automatic | manual, `orientation`.
 - `Banner`: full-screen hero. `height` screen | tall, `align` start | center, `tone` canvas | brand | inverse | gradient. `media` takes any `<img>` (object-cover) under a scrim (`scrim` strong | medium; the scrim is contrast-checked per theme over white). `video={{ src, poster, type?, pauseLabel?, playLabel? }}` plays muted and looped; with `prefers-reduced-motion` only the poster shows, and a pause/play button is always visible.
 
 Theme scopes and portals (0.5.0):
 
-- `ThemeScope` applies a theme's `vars` (or `theme={json}`) to a subtree and sets `data-ds-theme`. It is also the portal container: portal components render into `container ?? usePortalContainer()` (the nearest `ThemeScope`), falling back to `document.body`, so an open `Select` list keeps the scope's theme. An explicit `container` prop always wins.
+- `ThemeScope` takes `theme` (a name, written to `data-ds-theme`) and `vars` (the `vars` map from `themes/<name>.json`) and applies them to a subtree. It is also the portal container: portal components render into `container ?? usePortalContainer()` (the nearest `ThemeScope`), falling back to `document.body`, so an open `Select` list keeps the scope's theme. An explicit `container` prop always wins.
 - Stacking uses the shared layer scale (`--ds-layer-*`, `.ds-layer-*`: base, sticky, dropdown, overlay, modal, toast, tooltip, skip-link). Use these recipes, not raw `z-*`.
 - Accent (0.8.0): a `color.accent` scale in every theme and two roles, `text.accent` and `accent.border` (utilities `text-ds-accent`, `bg-ds-accent-border`, `border-ds-accent-border`), re-mapped in every tone. `Tabs` marks the active tab with it and `Card` takes `variant="accent"`. Custom themes must define the accent tokens (see the CHANGELOG).
 - `Section` tones (`.ds-tone-*`) re-map the colour roles in scope, so links, focus rings and controls stay readable on inverse and brand surfaces. Tones do not nest.
