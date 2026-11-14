@@ -2,6 +2,7 @@
 
 You are helping the maintainer build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground. Before Display (S26), milestone **MH Production hardening** (sessions H1–H10, D-068) fixes every finding of the 2026-10-20 audit (`docs/audits/`).
 After Release 1, milestone **MR Release 1 review** (sessions R1–R6, D-087) reviews the whole repo against a semver 1.0.0 bar. It is review only (no fixes); findings go into `docs/audits/2026-11-14-release-1-review.md`.
+After the review, milestone **MH2 1.0.0 hardening** (sessions H11–H20, D-088) fixes those findings: H11–H19 ship as 0.9.0, H20 cuts 1.0.0. H-session rules apply; the audit rows are in the review register. The public-API contract is `docs/versioning.md` (D-096): follow it, and give every new themeable token a default alias (D-095).
 **Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>`, `H<n>` or `R<n>`). Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status. In an R-session, also read the MR intro in `docs/PLAN.md` (working assumptions, finding format) and the review register.
 
 ## What this repo is
@@ -61,7 +62,7 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
   - Interactive targets are at least 24px (`.ds-hit-area`, from H6). Every user-visible string in a component is a prop with an English default.
   - Single controls use `Field`; groups of controls use `Fieldset` (from H6).
 - **Production-ready bar (D-070):** release sessions run the Definition of Done in `docs/PLAN.md`. A known issue you can't fix in scope goes into the current audit register (or the PROGRESS parking lot), never silently.
-- **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from `radix-ui`; icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop (it wins over `ThemeScope`).
+- **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from `radix-ui` until H16 moves it to individual `@radix-ui/react-*` packages (D-093); icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop (it wins over `ThemeScope`).
 - Text/Heading: the `as` prop (HTML element) is independent of `variant` (visual role).
 - Button: `type="button"` by default; variants `primary | secondary`; sizes `sm | md`; visible focus ring from the `focus.ring` token.
 - `apps/site` must install `@puranderdua/ui` from **npm at a pinned version**, never `workspace:*`.
