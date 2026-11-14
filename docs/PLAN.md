@@ -5,7 +5,7 @@ Release 0 (v0.1.0, tagged) is archived in [`plans/release-0.md`](plans/release-0
 ## Goal (Release 1, done when all are true)
 
 1. **Single channel.** The shadcn registry is gone from the repo and from Vercel. `@puranderdua/ui` on npm is the only source of truth for every component, including Text, Heading and Button (D-055).
-2. **Components.** `@puranderdua/ui@0.7.0` on npm ships every component in five categories:
+2. **Components.** `@puranderdua/ui@0.8.0` on npm (0.7.0 plus the `accent` role, D-086) ships every component in five categories:
    - Typography: Text, Heading
    - Layout: Container, Grid, Stack, Cluster, Section, Split, Sidebar
    - Forms: Label, Field, Input, Checkbox, RadioGroup, Select
@@ -21,16 +21,17 @@ Release 0 (v0.1.0, tagged) is archived in [`plans/release-0.md`](plans/release-0
 
 ## Milestones
 
-| Milestone                                  | Sessions | npm release | Branch → PR      |
-| ------------------------------------------ | -------- | ----------- | ---------------- |
-| **M7 Single channel + theme-ready tokens** | S13–S17  | 0.2.0       | `m7-foundations` |
-| **M8 Layout + Actions**                    | S18–S21  | 0.3.0       | `m8-layout`      |
-| **M9 Forms**                               | S22–S25  | 0.4.0       | `m9-forms`       |
-| **MH Production hardening**                | H1–H10   | 0.5.0       | `h<n>-<slug>`    |
-| **M10 Display**                            | S26–S28  | 0.6.0       | `m10-display`    |
-| **M11 Themes**                             | S29–S32  | 0.7.0       | `m11-themes`     |
-| **M12 Theme playground**                   | S33–S35  | (site only) | `m12-playground` |
-| **MR Release 1 review**                    | R1–R6    | (none)      | `review-r<n>`    |
+| Milestone                                  | Sessions | npm release  | Branch → PR      |
+| ------------------------------------------ | -------- | ------------ | ---------------- |
+| **M7 Single channel + theme-ready tokens** | S13–S17  | 0.2.0        | `m7-foundations` |
+| **M8 Layout + Actions**                    | S18–S21  | 0.3.0        | `m8-layout`      |
+| **M9 Forms**                               | S22–S25  | 0.4.0        | `m9-forms`       |
+| **MH Production hardening**                | H1–H10   | 0.5.0        | `h<n>-<slug>`    |
+| **M10 Display**                            | S26–S28  | 0.6.0        | `m10-display`    |
+| **M11 Themes**                             | S29–S32  | 0.7.0        | `m11-themes`     |
+| **M12 Theme playground**                   | S33–S35  | (site only)  | `m12-playground` |
+| **MR Release 1 review**                    | R1–R6    | (none)       | `review-r<n>`    |
+| **MH2 1.0.0 hardening**                    | H11–H20  | 0.9.0, 1.0.0 | `h<n>-<slug>`    |
 
 **Total:** 33 sessions, about 31 hours.
 
@@ -641,6 +642,71 @@ An independent, evidence-based review of the whole repo after Release 1 (D-087).
 
 **You do:** run the R5 screen-reader script; review the register and approve (or edit) the proposed hardening milestone.
 **Done when (each session):** its findings are in the register with evidence and a proposed fix, PROGRESS is updated, and its commit is on PR #59. **Done when (MR):** every area has a scorecard entry, the "Leads" list is empty (each lead became a finding or was dismissed with a reason), and both PRs (#58, #59) are merged.
+
+---
+
+## MH2 1.0.0 hardening → 0.9.0, 1.0.0 (D-088)
+
+Approved by the maintainer on 2026-11-14. Source: the proposal in the review register (`audits/2026-11-14-release-1-review.md`, "Proposed hardening milestone"). Numbering continues from MH, so CLAUDE.md's H-session rules apply unchanged. Each session reads the register rows it names, sets them to `fixed in H<n>` with evidence (or `accepted` with a D-number), and runs the [Definition of Done](#definition-of-done-every-release). H11–H19 ship as **0.9.0** (breaking changes, migration guide, the site moves to it); H20 cuts **1.0.0**. Branch per session: `h<n>-<slug>`. The versioning contract is [`versioning.md`](versioning.md).
+
+**Decisions made in H11:** D-089 renames (`container` → `contentWidth`, Sidebar `side` → `sidebarSide`, Banner `align` → `justify`; old names for one release with a dev warning), D-090 DTCG 2025.10 migration, D-091 overlays portal to `body` with the scope re-applied, D-092 mode selector in theme CSS, D-093 individual `@radix-ui/react-*` packages, D-094 production deploys stay manual, D-095 default alias for new themeable tokens, D-096 `docs/versioning.md`.
+
+| Session | Title                             | Findings                                             | Depends on |
+| ------- | --------------------------------- | ---------------------------------------------------- | ---------- |
+| H11     | Decisions and the 1.0.0 contract  | R17, R44, R16; decides R10, R21, R22, R26, R42, R45  | —          |
+| H12     | CI, release and deploy            | R36, R40, R45, R46, R47 (hook test)                  | H11 (R45)  |
+| H13     | Build chain and dead code         | R03, R14, R04, R05, R47 (upstream diff)              | —          |
+| H14     | Form wiring                       | R06, R12, R15                                        | H11        |
+| H15     | Overlays, direction and selection | R08, R22, R18, R35, R19                              | H11 (R22)  |
+| H16     | Public API surface                | R09, R10, R11, R07, R25, R42                         | H11, H14   |
+| H17     | Tokens and styling                | R13, R23, R24, R20, R21, R28 (`color-scheme: light`) | H11 (R21)  |
+| H18     | Site performance and polish       | R31, R30 (closes R01), R32, R33, R34, R39, R41       | —          |
+| H19     | Test environments                 | R37, R38                                             | H14–H17    |
+| H20     | Docs and 1.0.0                    | R43, R02, migration guide, sign-off                  | H11–H19    |
+
+Sessions that touch different files can run in parallel (H13 with H14; H18 with H13–H17).
+
+### H11: Decisions and the 1.0.0 contract (60 min) — done
+
+Decided D-088 to D-096 (above), wrote `versioning.md`, split `DECISIONS.md` into one section per decision, fixed Goal 2 and the two README lines, added MH2 here and in CLAUDE.md.
+
+### H12: CI, release and deploy (60 min)
+
+> H12 (R36, R40, R45, R46, R47 hook part). Fix the WebKit flake: open the Advanced group by role, assert `open` and visibility before `fill`; prove it with `--repeat-each=20` in WebKit (R36). Split `release.yml` into a `verify` job without `id-token` that uploads the packed tarball and a `publish` job with `id-token: write`, a pinned npm and `npm publish <tarball> --provenance` (R40). Production deploys stay manual (D-094); document the post-deploy step and add an e2e smoke against production that the maintainer runs after deploying (R45). CI: a docs-only path that runs lint and Prettier only, a Playwright browser cache, and the site e2e as its own job in parallel with `check` (R46). Run `.claude/hooks/block-file-bash.test.mjs` in `pnpm check` (R47). Done when: a docs-only PR finishes in under 2 minutes, a code PR runs both jobs in parallel, and a dry run of the release workflow on a test tag reaches the approval gate with the tarball artifact.
+
+### H13: Build chain and dead code (60 min, parallel with H14)
+
+> H13 (R03, R14, R04, R05, R47 upstream part). Type-check `tsup.config.ts` and take the esbuild `Plugin` type from tsup (R03). Replace the three-step `build` string with one script that runs build-classes, tsup and build-foundations in order; have `utils.test.ts` import the generator's parser and check all five lists; fail CI if the build leaves `src/` dirty; make the externals plugin fail on a component outside the flat folder (R14). Delete the site's unused barrel and un-export module-private helpers (R04). Add `knip.json` with the real entry points and run knip in `pnpm check` (R05; dev dependency, ask first). Add `scripts/upstream-diff.mjs` that reports changes in the adopted shadcn files since their pinned commits (R47). Done when: knip reports zero, and a planted file in `components/sub/` fails the build.
+
+### H14: Form wiring (60 min)
+
+> H14 (R06, R12, R15). Add `useFieldControlProps(props)` (id, required, invalid, merged `aria-describedby`) and use it in Input, Checkbox, SelectTrigger and RadioGroup; Field and Fieldset share one helper for description and error and one required marker (R12). Inside a Field the control's own `id` no longer breaks the label: choose Field's id wins with a development warning, or Field reads the child's id (ask the maintainer), and make `Field id`/`Fieldset id` semantics explicit in the types and docs (R06). Rewrite the describedBy join so the React Compiler compiles Field and Fieldset, and add a script that runs `babel-plugin-react-compiler` over `src/components` with `panicThreshold: "all_errors"` in `pnpm check` (R15; dev dependency, ask first). Remove the duplicated maps and the no-op `checked` (R12). Done when: a test per control proves `<Field label><Control id="x"/></Field>` is labelled, and the compiler script reports every component compiled.
+
+### H15: Overlays, direction and selection (60 min)
+
+> H15 (R08, R22, R18, R35, R19). Implement D-091: a `ScopedPortal` that portals to `body` (or a top layer) and re-applies the nearest scope's theme vars, `data-ds-theme` and tone, used by `SelectContent` and ready for Dialog/Tooltip/Toast; `usePortalContainer` gets an unambiguous contract (R08, R22). Re-export Radix's direction provider as `DirectionProvider`, let `ThemeScope` take `dir`, and test Tabs and RadioGroup under RTL, arrow keys included (R18). Radix moves focus after an arrow key on the next tick, so assert with `expect(locator).toBeFocused()` (it waits), never by reading `document.activeElement` right after the key press (that race gave R3 a false reading, see the R18 evidence). Add a highlight role for menu items with a 3:1 pair in `contrast-pairs.json` for every context and use it in `SelectItem` (R35). Make the active Tabs marker survive forced colours (a border or `Highlight`), with a forced-colours layout test for every state indicator (R19). Done when: the R22 clip case, an RTL Tabs case and a forced-colours Tabs case are layout tests that fail on 0.8.0 and pass now.
+
+### H16: Public API surface (60 min)
+
+> H16 (R09, R10, R11, R07, R25, R42). Trim `index.ts` to the 1.0.0 surface: keep the five `*Variants` named in R09, make the `*Classes` strings, `selectTriggerVariants`, `bannerVariants`, `cardVariants`, both Select scroll buttons and `BannerVideoProps` private, and export a `<Name>Variant`/`<Name>Size` type per public cva prop (R09). Apply the D-089 renames with the old names kept for one release behind a development warning. Expose the inner elements R11 lists (as parts or one `*Props` object each), drop `sidebarClassName`, give CardTitle/CardDescription their own `data-slot`, set `data-slot` after the spread everywhere. Grid: props reach the outermost element, the wrapper fills a flex parent, `cols` and `minItemWidth` are a discriminated union, with layout tests in a Cluster and a centred Stack (R07). Add `tailwindcss` ^4 as a peer (R25). Replace `radix-ui` with the individual `@radix-ui/react-*` packages the components use (D-093, R42) and update D-049's wording in CLAUDE.md. Update `check:rsc`'s export list. Done when: the CHANGELOG 0.9.0 lists every removal and rename with its replacement, and `pnpm check:rsc` passes.
+
+### H17: Tokens and styling (60 min)
+
+> H17 (R13, R23, R24, R20, R21, R28 part). Add the semantic tokens R13 proposes (icon sizes, control font weight, menu item padding, underline offset, selection marker width) with default aliases (D-095), and use them in the components; move the Tabs fade onto the motion tokens (R13). Add control line-height tokens and the `--text-ds-control-*--line-height` companions (R23). Add a `@media print` block to `foundations.css` (tones fall back to base roles; state fills kept) (R24). Move `@source "./"` into `foundations.css`, document the import order for palette resets, that `prefix()` is not supported and that unlayered CSS beats the components, and add a clean-install case for the reset order (R20). Migrate the token sources and the playground export to DTCG 2025.10 objects (D-090, R21); it is a full migration, so split it into its own session if it does not fit. Add the mode selector to theme CSS (D-092) and set `color-scheme: light` on `:root` and in `ThemeScope` (R28). Done when: `tokens:check` passes with the new tokens in all four themes and the R24 print PDF shows the checked Checkbox.
+
+### H18: Site performance and polish (60 min, parallel with H13–H17)
+
+> H18 (R31, R30 + R01, R32, R33, R34, R39, R41). In `BannerVideo`, play only while an `IntersectionObserver` reports the video in view and pause when it leaves, `preload="none"` until then (R31; package change, ships in 0.9.0). Replace the header's Radix Select with a native `<select>` styled by `inputVariants` (or load it on first focus) and keep `SiteHeader` a Server Component with a client island for `aria-current`; target `/` within 10 KB gzip of a blank Next page (R30, closes R01). Render Advanced rows only while their group is open and pass rows only what they show (R32). Version both stored states with a migration and sync tabs with the `storage` event (R33). Category descriptions in metadata, `error.digest` on the error page and a styled `global-error.tsx` (R34). Unique names for the card demo's actions (R39). Drop the Google Fonts hosts from the CSP (R41). Done when: per-route JS and the Display page's transfer size are re-measured with the R4 scripts and recorded in the register.
+
+### H19: Test environments (60 min)
+
+> H19 (R37, R38). Use auto-waiting assertions (`toBeFocused`, `toHaveAttribute`, `toBeVisible`) for anything a component changes after an event; only synchronous browser behaviour (Tab order) may be read directly. Add an environments layout suite: every interactive component under `dir="rtl"`, forced colours and print media, in a flex row, and with screenshots for the story set (`toHaveScreenshot`, Chromium only, committed baselines). Add a hydration test (`renderToString` + `hydrateRoot` in StrictMode, no errors) for every client component. Turn this review's probes for R06, R07, R08, R22 and R31 into regression tests if H14–H18 did not. Add `@vitest/coverage-v8` and report (not enforce) coverage in CI (dev dependency, ask first). Replace class-string assertions with behaviour or computed-style checks where the class is not the contract, and drop jsdom axe where a story covers the same component (R38). Done when: planting each of R18, R19 and R07 back makes a test fail.
+
+### H20: Docs and 1.0.0 (60 min)
+
+> H20 (R43, R02, release). Turn on Storybook autodocs, add usage and accessibility notes per component (from the props appendix and the README), a `CONTRIBUTING.md`, and development warnings for the misuses R43 lists. Document the `tailwind-merge` cost (R02) and the Field/overlay/CSS-setup rules. Write the 0.8 → 1.0 migration guide (from the 0.9.0 CHANGELOG). Run the Definition of Done, `check:rsc`, `clean-install` and the site e2e against production; record the screen-reader results (R5 script) with any new findings fixed or accepted. Remove the deprecated 0.9.0 names (D-089) and list them in the migration guide. Bump to 1.0.0; the maintainer tags and approves the publish. Done when: every row in the register is `fixed in H<n>` or `accepted` with a D-number, and R26–R29 are handed to Release 2's first session.
+
+**You do:** run the screen-reader script (`evidence/screen-reader-script-2026-11-14.md`) before H20; for each 0.9.0 and 1.0.0 release, merge the release-prep PR, push the tag and approve the `npm-publish` deployment (D-069); deploy the site by hand (D-094).
 
 ---
 
