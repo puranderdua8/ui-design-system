@@ -500,6 +500,12 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: D-083 is taken by S33 on branch `s33`, so this is D-084. `accent.border` uses accent.600 (not 500) so the 3:1 holds on subtle surfaces in every theme.
 - Next: S34 Playground UI (S33 is merged; A1 is done and independent of it). When `apps/site` moves to 0.8.0 (not before; it is pinned to npm 0.7.0 and was not touched here), the playground's accent knob (`--ds-color-accent-50..900`, S33 engine) starts driving Tabs and accent Cards in live previews. The maintainer: release 0.8.0 (not published or tagged here).
 
+### A1 — 0.8.0 release prep — 2026-11-14
+
+- Done (branch `a1-release-prep`, cut from `main` after #54): `packages/ui/package.json` 0.8.0, CHANGELOG 0.8.0 dated 2026-11-14, root README range 0.2.0 → 0.8.0. Not published or tagged.
+- Gotchas: (1) #54 merged without the version bump (the A1 brief only asked for a CHANGELOG entry), so the maintainer's first `v0.8.0` tag failed the guard in 26 seconds ("Tag v0.8.0 does not match packages/ui/package.json version 0.7.0"); nothing was published. The bad tag has to be deleted (`git push origin :refs/tags/v0.8.0`) before tagging the merge commit of this PR. (2) A release-prep session must bump the version; a feature session must not leave "unreleased" for a version it was told to prepare.
+- Next: the maintainer merges this PR, deletes the bad tag, tags the merge commit `v0.8.0`, pushes it and approves `npm-publish`; then S34 pins the site to 0.8.0 and enables the accent knob.
+
 ### MH retro — 2026-11-12
 
 - **Time per session:** not tracked per session. From commit times: H1–H2 on 2026-10-21; H3 on 2026-11-11 (about 11:57 to 12:26 after the H2 merge); H4–H7 on 2026-11-11 between 14:54 and 15:57, 15 to 35 minutes apart; H8 on 2026-11-11/12; H9 and H10 on 2026-11-12. The maintainer: add real figures.
