@@ -574,6 +574,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: workflows read in full, CI step timings from the GitHub API, Radix footprint in the R3 consumer app, Storybook config and story files searched; `pnpm lint` passes.
 - Decisions: none new (MH2 becomes D-088 when approved, in H11).
 - Next: the maintainer reviews PR #59, approves or edits MH2 and runs the screen-reader script; then H11.
+- Follow-up (same day, the maintainer asked to re-run the stopped forced-colours probe server): served it again on port 4317 through the Browser pane and re-ran the probes. R19 reproduced exactly. R18's arrow-key evidence had been a race (Radix moves focus on the next tick; the R3 probe read `document.activeElement` at once); re-measured with a wait, the keys ignore the page direction in both LTR and RTL, so R18 stands with corrected evidence. The repo's own tests do not have this race (direct reads only follow Tab; arrow keys use `toBeFocused`). The H15 and H19 prompts now say to use auto-waiting assertions. Server stopped afterwards and its `.claude/launch.json` entry removed.
+- Gotchas: (1) A preview server never finishes, so a "long-running" probe server is normal; start one through `.claude/launch.json` and the Browser pane, and stop it when the probes are done. (2) After a key press on a Radix composite (Tabs, RadioGroup, Select), wait for focus before reading it.
 
 ## Retro (Release 1)
 
