@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** MR Release 1 review (R1–R6, D-087), review only, on branch `review-r1`; register `docs/audits/2026-11-14-release-1-review.md`. Release 2 (dark mode) waits for the review and the hardening milestone it proposes.
+- **Next session:** R2 of MR Release 1 review (R1–R6, D-087), review only; each session cuts `review-r<n>` from synced `main` and opens its own PR, which the maintainer merges before the next. Register `docs/audits/2026-11-14-release-1-review.md`. Release 2 (dark mode) waits for the review and the hardening milestone it proposes.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -534,7 +534,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `pnpm check` exit 0 in 1:38; site e2e 312 passed, 3 skipped (2:18); `pnpm check:rsc` PASS; `pnpm audit --prod --audit-level high` clean; publint clean; no import cycles.
 - Decisions: none new.
 - Gotchas: (1) The D-043 hook blocks `node -e` that reads files, so probe helpers are small scripts in the scratchpad (`tools/*.mjs`) run with `node <script> <path>`. (2) Lighthouse needs `CHROME_PATH` (Chrome.app) when run from `pnpm dlx`. (3) knip without a config is mostly noise in this repo (R05). (4) e2e now skips 3 tests (WebKit video pause, clipboard in Firefox and WebKit), not 1.
-- Next: R2 Package architecture, component API, React.
+- Process change (the maintainer, 2026-11-14): one PR per R-session, merged before the next starts (was one PR at R6). PLAN MR and D-087 updated; this PR carries the plan and R1.
+- Next: R2 Package architecture, component API, React, on `review-r2` cut from `main` after this PR merges.
 
 ## Retro (Release 1)
 
