@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.0 — unreleased
+## 0.8.0 — 2026-11-14
 
 New **accent** colour role: a second voice beside the brand, for selection and highlight, never for the primary action. No API breaks; existing components keep their look except the `Tabs` active marker (below).
 

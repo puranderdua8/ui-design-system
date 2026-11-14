@@ -1,6 +1,6 @@
 {
   "name": "@puranderdua/ui",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Token-driven design system for React 19 and Tailwind v4: typography, actions, layout, forms and overlay scoping (ThemeScope), with themeable tokens.",
   "license": "MIT",
   "keywords": [
