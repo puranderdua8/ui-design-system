@@ -670,7 +670,7 @@ Sessions that touch different files can run in parallel (H13 with H14; H18 with 
 
 Decided D-088 to D-096 (above), wrote `versioning.md`, split `DECISIONS.md` into one section per decision, fixed Goal 2 and the two README lines, added MH2 here and in CLAUDE.md.
 
-### H12: CI, release and deploy (60 min)
+### H12: CI, release and deploy (60 min) — done
 
 > H12 (R36, R40, R45, R46, R47 hook part). Fix the WebKit flake: open the Advanced group by role, assert `open` and visibility before `fill`; prove it with `--repeat-each=20` in WebKit (R36). Split `release.yml` into a `verify` job without `id-token` that uploads the packed tarball and a `publish` job with `id-token: write`, a pinned npm and `npm publish <tarball> --provenance` (R40). Production deploys stay manual (D-094); document the post-deploy step and add an e2e smoke against production that the maintainer runs after deploying (R45). CI: a docs-only path that runs lint and Prettier only, a Playwright browser cache, and the site e2e as its own job in parallel with `check` (R46). Run `.claude/hooks/block-file-bash.test.mjs` in `pnpm check` (R47). Done when: a docs-only PR finishes in under 2 minutes, a code PR runs both jobs in parallel, and a dry run of the release workflow on a test tag reaches the approval gate with the tarball artifact.
 
