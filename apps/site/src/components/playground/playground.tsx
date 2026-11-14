@@ -11,10 +11,19 @@ import { ContrastPanel } from "./contrast-panel";
 import { KnobPanel } from "./knob-panel";
 import { Preview } from "./preview";
 
+const noopSubscribe = () => () => {};
+
 export const Playground = () => {
   // Server and first client render use the default state; localStorage takes over
   // right after hydration.
   const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  // False on the server and during hydration, true once handlers are attached
+  // (the e2e tests wait for it before typing).
+  const hydrated = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
   const { resolved, error } = useMemo(
     () => safeResolve(state, themeMaps),
     [state],
@@ -26,7 +35,12 @@ export const Playground = () => {
   const vars = useMemo(() => previewVars(resolved.vars), [resolved]);
 
   return (
-    <main id="main" tabIndex={-1} className="py-ds-section-sm">
+    <main
+      id="main"
+      tabIndex={-1}
+      data-hydrated={hydrated}
+      className="py-ds-section-sm"
+    >
       <Container size="lg">
         <Stack gap="xl">
           <Stack gap="sm">

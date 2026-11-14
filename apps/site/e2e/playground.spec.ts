@@ -14,7 +14,9 @@ const scopeVar = (page: Page, name: string) =>
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/playground");
-  // The state comes from localStorage after hydration; wait for the controls.
+  // The controls are server-rendered: typing before hydration is lost, and the
+  // state only comes from localStorage after it.
+  await expect(page.locator("main")).toHaveAttribute("data-hydrated", "true");
   await expect(page.getByLabel("Brand colour", { exact: true })).toBeVisible();
 });
 
@@ -67,6 +69,7 @@ test("a reload keeps the edit, and Reset clears it", async ({ page }) => {
   await page.getByRole("button", { name: "Reset to Base" }).click();
   await expect.poll(() => background(page)).not.toBe("rgb(23, 98, 182)");
   await page.reload();
+  await expect(page.locator("main")).toHaveAttribute("data-hydrated", "true");
   await expect(
     page.getByLabel("Brand colour", { exact: true }),
   ).not.toHaveValue("#1762b6");
