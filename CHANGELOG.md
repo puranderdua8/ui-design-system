@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 — 2026-11-13
+
+Three new themes: **Corporate**, **Nature** and **Quirky**, alongside the default **Base**. No component, token-contract or API changes, so there are no breaking changes and no migration steps.
+
+**Added:**
+
+- `themes/corporate.css|json`, `themes/nature.css|json`, `themes/quirky.css|json` (each in the package `exports` next to `themes/base.*`). Every theme defines the full token set and passes the WCAG contrast matrix in `contrast-pairs.json` (180 pairs per theme), and every component story passes axe under each theme.
+- Fonts: Corporate uses IBM Plex Sans, Nature uses Fraunces (headings) and Nunito Sans (body), Quirky uses Bricolage Grotesque. Themes name the font in `--ds-font-family-heading|body` but **do not load it**; load the font in your app (for example with `next/font`, see `docs/themes.md`).
+
+**Using a theme:** import `foundations.css` plus exactly one theme, for example `@import "@puranderdua/ui/themes/nature.css";`. To switch at runtime, apply the `vars` of `@puranderdua/ui/themes/<name>.json` as inline custom properties on `<html>` or a `ThemeScope`.
+
 ## 0.6.0 — 2026-11-12
 
 Display components: `Card`, `Tabs`, `Banner`. No breaking changes to existing components.

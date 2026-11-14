@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S32 0.7.0 + site theme switcher (S31 done: all four themes signed off).
+- **Next session:** S32 continues: 0.7.0 release prep is done (awaiting merge, tag `v0.7.0` and publish); then the site theme switcher.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -75,7 +75,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S29 Theme direction                         | M11       | ☑      |
 | S30 Corporate + Nature final                | M11       | ☑      |
 | S31 Quirky + theme QA                       | M11       | ☑      |
-| S32 0.7.0 + site theme switcher             | M11       | ☐      |
+| S32 0.7.0 + site theme switcher             | M11       | ◐      |
 | S33 Playground engine                       | M12       | ☐      |
 | S34 Playground UI                           | M12       | ☐      |
 | S35 Export + Release 1 wrap-up              | M12       | ☐      |
@@ -468,6 +468,13 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: the stories assert axe only on the canvas, so colour roles that a story does not render are covered by `tokens:check` (180 pairs per theme), not by the story run. Quirky's coral accent stays in the `red` scale.
 - Sign-off: all four themes **signed off** (Base, Corporate, Nature, Quirky).
 - Next: S32 0.7.0 + site theme switcher.
+
+### S32a — 0.7.0 release prep — 2026-11-14
+
+- Done (branch `S32`, cut from `main` after #50): version 0.7.0, CHANGELOG 0.7.0 (themes added, no breaking changes, fonts are named but not loaded), package README theme table (four themes, fonts, since-version) and root README release line. `scripts/check-rsc.sh` now also checks that all four `themes/*.css|json` are in the tarball, imports `themes/nature.css` into the fresh Next app, resolves `themes/nature.json` through `exports`, and finds Nature's primary (`#2f7442`) and `Fraunces` in the built CSS.
+- Verified (Definition of Done): `pnpm check` exit 0 (180 contrast pairs per theme, four themes); `pnpm check:rsc` PASS; `scripts/clean-install.sh` PASS against the packed 0.7.0 tarball (axe 0 violations); `pnpm audit --prod --audit-level high` clean; site e2e (still on 0.6.0) 185 passed, 1 skipped in Chromium, Firefox and WebKit. Not published or tagged.
+- Gotchas: `clean-install.sh` and `check-rsc.sh` started `next start` inside a `( … ) &` wrapper and killed only the wrapper, so every run left a `next-server` on port 3102 (3103). The next run then hit `EADDRINUSE` but still fetched pages from the stale server, giving a false PASS. Both scripts now stop whatever listens on the port at cleanup and fail if the port already answers; the rerun left the port free. One earlier run exceeded 10 minutes once and did not reproduce.
+- Next: the maintainer merges the release-prep PR, tags `v0.7.0` and approves `npm-publish`; then the site half of S32 (site on 0.7.0, header theme switcher, `next/font`, theme e2e).
 
 ### MH retro — 2026-11-12
 

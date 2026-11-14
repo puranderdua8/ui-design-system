@@ -21,10 +21,21 @@ JSDOM_VERSION="27.0.0"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/ds-clean-install.XXXXXX")"
 LOG="$WORK/run.log"
 SERVER_PID=""
+SERVER_PORT=""
+
+# `(cd app && npx next start) &` makes SERVER_PID the wrapper, so killing it alone
+# leaves the real next-server listening (an orphan would then serve stale pages to
+# the next run). Stop whatever listens on the port, then the wrapper.
+stop_server() {
+  if [ -n "$SERVER_PORT" ] && command -v lsof >/dev/null 2>&1; then
+    for pid in $(lsof -ti "tcp:$SERVER_PORT" -sTCP:LISTEN 2>/dev/null); do kill "$pid" 2>/dev/null || true; done
+  fi
+  if [ -n "$SERVER_PID" ]; then kill "$SERVER_PID" 2>/dev/null || true; fi
+}
 
 cleanup() {
   local status=$?
-  if [ -n "$SERVER_PID" ]; then kill "$SERVER_PID" 2>/dev/null || true; fi
+  stop_server
   sleep 1 # let tee flush the log
   if [ -n "${EVIDENCE:-}" ] && [ -f "$LOG" ]; then write_evidence "$status"; fi
   if [ "${KEEP:-0}" = 1 ]; then echo "kept $WORK"; else rm -rf "$WORK"; fi
@@ -109,8 +120,11 @@ serve_and_check() {
   done
 
   step "next start ($(basename "$app")) and fetch routes"
+  # A server already on the port would answer instead of ours (stale pages, false PASS).
+  if curl -fsS -o /dev/null "http://localhost:$port/" 2>/dev/null; then fail "port $port is already in use; stop that server first"; fi
   (cd "$app" && npx next start -p "$port") &
   SERVER_PID=$!
+  SERVER_PORT=$port
   for _ in $(seq 1 60); do
     curl -fsS "http://localhost:$port/" >/dev/null 2>&1 && break
     sleep 1
@@ -134,9 +148,10 @@ serve_and_check() {
     expect "$file" 'ds-tone-raised'
     node "$WORK/tools/axe-check.mjs" "$file" || fail "axe violations on $route"
   done
-  kill "$SERVER_PID" 2>/dev/null || true
+  stop_server
   wait "$SERVER_PID" 2>/dev/null || true
   SERVER_PID=""
+  SERVER_PORT=""
 }
 
 # --- Package-only app -------------------------------------------------------
