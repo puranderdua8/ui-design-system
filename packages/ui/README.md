@@ -38,11 +38,14 @@ grep -l "ds-focus-ring" .next/static/css/*.css   # Next.js; use your build outpu
 
 ## Themes
 
-| Theme  | Import                            | Status          |
-| ------ | --------------------------------- | --------------- |
-| `base` | `@puranderdua/ui/themes/base.css` | shipped (0.2.0) |
+| Theme       | Import                                 | Fonts                            | Since |
+| ----------- | -------------------------------------- | -------------------------------- | ----- |
+| `base`      | `@puranderdua/ui/themes/base.css`      | Inter                            | 0.2.0 |
+| `corporate` | `@puranderdua/ui/themes/corporate.css` | IBM Plex Sans                    | 0.7.0 |
+| `nature`    | `@puranderdua/ui/themes/nature.css`    | Fraunces (headings), Nunito Sans | 0.7.0 |
+| `quirky`    | `@puranderdua/ui/themes/quirky.css`    | Bricolage Grotesque              | 0.7.0 |
 
-Corporate, Nature and Quirky are planned (0.6.0). Import exactly one theme CSS file; that is all a consumer ships.
+Import exactly one theme CSS file; that is all a consumer ships. Themes name their fonts in `--ds-font-family-heading|body` but do not load them: load the fonts in your app (for example with `next/font`; snippets in the repo's `docs/themes.md`).
 
 **Live switching** (a theme switcher, Storybook, a playground): every theme also ships as `@puranderdua/ui/themes/<name>.json`, a fully resolved map `{ vars, refs }`. Apply `vars` as inline CSS custom properties on `<html>` (or a scope element) to switch themes without loading another stylesheet. `@puranderdua/ui/contrast-pairs.json` lists the WCAG pairs each theme must pass.
 

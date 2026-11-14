@@ -15,8 +15,13 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CNA_VERSION="${CNA_VERSION:-16.4.2}"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/ds-check-rsc.XXXXXX")"
 SERVER_PID=""
+SERVER_PORT=3103
 
+# Killing the wrapper alone leaves the real next-server listening; stop by port too.
 cleanup() {
+  if command -v lsof >/dev/null 2>&1; then
+    for pid in $(lsof -ti "tcp:$SERVER_PORT" -sTCP:LISTEN 2>/dev/null); do kill "$pid" 2>/dev/null || true; done
+  fi
   if [ -n "$SERVER_PID" ]; then kill "$SERVER_PID" 2>/dev/null || true; fi
   if [ "${KEEP:-0}" = 1 ]; then echo "kept $WORK"; else rm -rf "$WORK"; fi
 }
@@ -51,12 +56,34 @@ done
 reject "$DIST/index.js" '"use client"'
 node "$REPO_ROOT/scripts/check-client-exports.mjs" "$DIST"
 
+# Every theme ships as CSS and as a resolved JSON map (S32). Nature's primary
+# (brand.600) is a value no other theme has, so it proves the right file is used.
+for theme in base corporate nature quirky; do
+  [ -s "$DIST/themes/$theme.css" ] || fail "themes/$theme.css missing from the tarball"
+  [ -s "$DIST/themes/$theme.json" ] || fail "themes/$theme.json missing from the tarball"
+done
+expect "$DIST/themes/nature.css" '#2f7442'
+reject "$DIST/themes/base.css" '#2f7442'
+
 step "create-next-app $CNA_VERSION and install the tarball"
 (cd "$WORK" && npx --yes "create-next-app@$CNA_VERSION" app --ts --tailwind --app --src-dir --eslint \
   --import-alias "@/*" --use-npm --disable-git --yes)
 APP="$WORK/app"
 cd "$APP"
 npm i "$TARBALL"
+# A non-Base theme: the consumer imports foundations plus exactly one theme CSS
+# file (S32). The theme JSON export must resolve through the package `exports`.
+cat >src/app/globals.css <<'CSS'
+@import "tailwindcss";
+@import "@puranderdua/ui/foundations.css";
+@import "@puranderdua/ui/themes/nature.css";
+@source "../../node_modules/@puranderdua/ui/dist";
+CSS
+node -e '
+const j = require("@puranderdua/ui/themes/nature.json");
+if (j.vars["--ds-color-brand-600"] !== "#2f7442") { console.error("nature.json brand.600 is", j.vars["--ds-color-brand-600"]); process.exit(1); }
+console.log("ok: themes/nature.json resolves through exports");
+'
 cat >src/app/page.tsx <<'TSX'
 // A Server Component: no "use client", no hooks. Field and Input are client
 // components inside the package, so they must arrive as client references.
@@ -144,7 +171,14 @@ TSX
 step "next build"
 npx next build
 
+step "Built CSS carries the non-Base theme"
+NATURE_CSS="$WORK/built.css"
+cat .next/static/chunks/*.css >"$NATURE_CSS" 2>/dev/null || cat .next/static/css/*.css >"$NATURE_CSS"
+expect "$NATURE_CSS" '#2f7442'
+expect "$NATURE_CSS" 'Fraunces'
+
 step "next start and fetch /"
+if curl -fsS -o /dev/null "http://localhost:3103/" 2>/dev/null; then fail "port 3103 is already in use; stop that server first"; fi
 (npx next start -p 3103) &
 SERVER_PID=$!
 for _ in $(seq 1 60); do
