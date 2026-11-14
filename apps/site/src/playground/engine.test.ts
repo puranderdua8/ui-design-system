@@ -390,17 +390,28 @@ describe("contrast", () => {
   });
 
   it("matches scripts/contrast.mjs for Base, line for line", () => {
-    const script = execFileSync(
-      process.execPath,
-      [
-        join(repo, "scripts/contrast.mjs"),
-        join(packageDist, "themes/base.json"),
-      ],
-      { encoding: "utf8" },
-    );
+    let script: string;
+    try {
+      script = execFileSync(
+        process.execPath,
+        [
+          join(repo, "scripts/contrast.mjs"),
+          join(packageDist, "themes/base.json"),
+        ],
+        { encoding: "utf8" },
+      );
+    } catch (error) {
+      // The script exits non-zero on the accent pairs the pinned theme lacks
+      // (see the filter below); its report is still on stdout.
+      script = (error as { stdout: string }).stdout;
+    }
     const expected = script
       .split("\n")
-      .filter((line) => /^(ok  |FAIL) /.test(line));
+      .filter((line) => /^(ok  |FAIL) /.test(line))
+      // The script reads the repo's contrast-pairs.json, which runs ahead of the
+      // pinned package (accent pairs, A1); the pinned theme has no accent tokens.
+      // TODO(S34): drop this filter once the site is on 0.8.0.
+      .filter((line) => !/accent/.test(line));
 
     const report = evaluateContrast(base.vars, spec);
     const actual = report.results.map((r) => {
@@ -496,13 +507,52 @@ const emitted = (state_: PlaygroundState): VarMap => {
   return out;
 };
 
+const isAccent = (key: string) => key.startsWith("--ds-color-accent-");
+
 describe("DTCG output", () => {
+  // Values come from the pinned package (what the site actually uses), not from
+  // the repo's tokens/themes folder: the repo can run ahead of the pinned npm
+  // version (A1 added the accent role before the site moved to 0.8.0).
   it.each(names)(
-    "an unchanged %s state has the values of its tokens/themes folder",
+    "an unchanged %s state round-trips every primitive of the pinned package theme",
     (name) => {
-      // The shipped scrim is `#0d0f12b3` in DTCG and `rgba()` in the JSON map.
-      expect(normalise(emitted(state(name)))).toEqual(
-        normalise(readDtcg(name)),
+      const { vars, refs } = themes[name];
+      // Primitives are the vars that are not semantic aliases or elevation literals.
+      const primitives = Object.fromEntries(
+        Object.entries(vars).filter(
+          ([key]) => !(key in refs) && !key.startsWith("--ds-elevation-"),
+        ),
+      );
+      // The scrim is `rgba()` in the JSON map and 8-digit hex in DTCG.
+      const scrim = primitives["--ds-color-scrim"];
+      const match = /^rgba\((\d+), (\d+), (\d+), ([\d.]+)\)$/.exec(
+        String(scrim),
+      );
+      if (match) {
+        const [r, g, b] = match.slice(1, 4).map(Number);
+        const alpha = Math.round(Number(match[4]) * 255 + 1e-6);
+        primitives["--ds-color-scrim"] =
+          "#" +
+          [r, g, b, alpha]
+            .map((n) => n!.toString(16).padStart(2, "0"))
+            .join("");
+      }
+      expect(normalise(emitted(state(name)))).toEqual(normalise(primitives));
+    },
+  );
+
+  // Shape only: the set of tokens matches the repo folder. Accent values are not
+  // compared (the pinned package has no accent scale yet). TODO(S34): compare
+  // values with the repo DTCG again once the site is on 0.8.0.
+  it.each(names)(
+    "an unchanged %s state has the token names of its tokens/themes folder",
+    (name) => {
+      const withoutAccent = (vars: VarMap) =>
+        Object.keys(vars)
+          .filter((key) => !isAccent(key))
+          .sort();
+      expect(withoutAccent(emitted(state(name)))).toEqual(
+        withoutAccent(readDtcg(name)),
       );
     },
   );

@@ -545,6 +545,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 ## Parking lot (out of scope, later)
 
+- When the site moves to 0.8.0 (S34), tighten `apps/site/src/playground/engine.test.ts` back to comparing values with the repo DTCG, drop the accent exclusion in the token-name test and the `accent` filter in the contrast-script parity test (A1 made it drift-free against the pinned package).
+
 - ~~Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).~~ Checked in S6: no change. Themes (M11) define their own palettes.
 - ~~Update-path checks for the registry~~ Dropped: registry retired (D-055).
 - ~~Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds.~~ Done in S17 (site 0.1.0 → 0.2.0).
