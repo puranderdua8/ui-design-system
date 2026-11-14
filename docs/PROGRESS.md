@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** S32 continues: 0.7.0 release prep is done (awaiting merge, tag `v0.7.0` and publish); then the site theme switcher.
+- **Next session:** S33 Playground engine (S32 done: 0.7.0 is on npm with provenance, the site is on 0.7.0 with a theme switcher; the maintainer redeploys the site).
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -75,7 +75,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S29 Theme direction                         | M11       | ☑      |
 | S30 Corporate + Nature final                | M11       | ☑      |
 | S31 Quirky + theme QA                       | M11       | ☑      |
-| S32 0.7.0 + site theme switcher             | M11       | ◐      |
+| S32 0.7.0 + site theme switcher             | M11       | ☑      |
 | S33 Playground engine                       | M12       | ☐      |
 | S34 Playground UI                           | M12       | ☐      |
 | S35 Export + Release 1 wrap-up              | M12       | ☐      |
@@ -475,6 +475,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified (Definition of Done): `pnpm check` exit 0 (180 contrast pairs per theme, four themes); `pnpm check:rsc` PASS; `scripts/clean-install.sh` PASS against the packed 0.7.0 tarball (axe 0 violations); `pnpm audit --prod --audit-level high` clean; site e2e (still on 0.6.0) 185 passed, 1 skipped in Chromium, Firefox and WebKit. Not published or tagged.
 - Gotchas: `clean-install.sh` and `check-rsc.sh` started `next start` inside a `( … ) &` wrapper and killed only the wrapper, so every run left a `next-server` on port 3102 (3103). The next run then hit `EADDRINUSE` but still fetched pages from the stale server, giving a false PASS. Both scripts now stop whatever listens on the port at cleanup and fail if the port already answers; the rerun left the port free. One earlier run exceeded 10 minutes once and did not reproduce.
 - Next: the maintainer merges the release-prep PR, tags `v0.7.0` and approves `npm-publish`; then the site half of S32 (site on 0.7.0, header theme switcher, `next/font`, theme e2e).
+
+### S32b — Site theme switcher — 2026-11-14
+
+- Done (branch `S32-site`, cut from `main` after #51; 0.7.0 published by the maintainer, `npm view` shows 0.7.0 with provenance): `apps/site` pinned to 0.7.0 (old `0.6.0` exclusion dropped, `--frozen-lockfile` verified). Header theme switcher (package `Select`, client): `src/lib/theme.ts` `import()`s the chosen `themes/<name>.json` (one chunk per theme, Base needs none), applies its `vars` inline on `<html>` and caches the map in `localStorage` (`ds-theme`); an inline `<head>` script applies the cache before first paint. `next/font` for all five fonts in `layout.tsx`, `preload: false` for the four non-default ones, mapped onto the theme's family vars. `docs/themes.md` describes it. E2E `themes.spec.ts` (28 tests per browser): axe on 6 showcase pages × 4 themes, switching updates a known token, the heading font and the primary Button, reload keeps the theme and it is set before `<body>` exists, a theme's font file is requested only after it is chosen.
+- Verified: `pnpm check` exit 0; site e2e 269 passed, 1 skipped (Chromium, Firefox, WebKit; was 185). Planted proof: with the head script emptied, the reload test failed (`null` instead of `quirky`); reverted, no diff. Not viewed in the browser pane.
+- Decisions: none new.
+- Gotchas: (1) `next/font` generates its own family name, so the theme JSON's "Fraunces, Georgia, serif" would not match the loaded font; the switcher swaps the leading family for the font's CSS variable and keeps the fallback stack. (2) Theme JSON values include numbers (font weights), so the var map is typed `string | number`. (3) The `react-hooks/set-state-in-effect` rule rejects `setState` in a mount effect, so the applied theme is read from `<html data-ds-theme>` with `useSyncExternalStore`. (4) The cache is re-validated on every load (the stored theme's chunk is re-imported), so a package upgrade refreshes a stale map. (5) `<html>` has `suppressHydrationWarning` because the head script changes its style and attribute before hydration. (6) The site CSP still allows Google Fonts (S29); `next/font` self-hosts, so those two allowances are now unused. Left as is; tightening them is a separate change.
+- Next: S33 Playground engine. The maintainer: merge the S32-site PR and redeploy the site (`vercel --prod`).
 
 ### MH retro — 2026-11-12
 
