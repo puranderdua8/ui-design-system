@@ -156,17 +156,20 @@ describe("knobs", () => {
     );
   });
 
-  it("adds an accent scale after neutral-950 without touching anything else", () => {
+  it("a new accent colour rewrites the accent scale in place and flows to the accent roles", () => {
     const resolved = resolveState(state("base", { accent: "#e11d48" }), themes);
-    const keys = Object.keys(resolved.vars);
-    expect(keys).toContain("--ds-color-accent-600");
-    expect(keys.indexOf("--ds-color-accent-50")).toBe(
-      keys.indexOf("--ds-color-neutral-950") + 1,
+    expect(Object.keys(resolved.vars)).toEqual(Object.keys(base.vars));
+    expect(resolved.vars["--ds-color-accent-600"]).toBe("#e11d48");
+    expect(resolved.vars["--ds-accent-border"]).toBe(
+      resolved.vars["--ds-color-accent-600"],
     );
-    expect(keys.filter((k) => k.includes("accent"))).toHaveLength(10);
+    // Nothing outside the accent scale and its roles moved.
     const baseVars: VarMap = base.vars;
-    for (const key of Object.keys(baseVars))
-      expect(resolved.vars[key]).toBe(baseVars[key]);
+    const moved = Object.keys(baseVars).filter(
+      (key) => resolved.vars[key] !== baseVars[key],
+    );
+    expect(moved.length).toBeGreaterThan(10);
+    for (const key of moved) expect(key).toMatch(/accent/);
   });
 
   it("swaps heading and body fonts independently", () => {
@@ -390,28 +393,17 @@ describe("contrast", () => {
   });
 
   it("matches scripts/contrast.mjs for Base, line for line", () => {
-    let script: string;
-    try {
-      script = execFileSync(
-        process.execPath,
-        [
-          join(repo, "scripts/contrast.mjs"),
-          join(packageDist, "themes/base.json"),
-        ],
-        { encoding: "utf8" },
-      );
-    } catch (error) {
-      // The script exits non-zero on the accent pairs the pinned theme lacks
-      // (see the filter below); its report is still on stdout.
-      script = (error as { stdout: string }).stdout;
-    }
+    const script = execFileSync(
+      process.execPath,
+      [
+        join(repo, "scripts/contrast.mjs"),
+        join(packageDist, "themes/base.json"),
+      ],
+      { encoding: "utf8" },
+    );
     const expected = script
       .split("\n")
-      .filter((line) => /^(ok  |FAIL) /.test(line))
-      // The script reads the repo's contrast-pairs.json, which runs ahead of the
-      // pinned package (accent pairs, A1); the pinned theme has no accent tokens.
-      // TODO(S34): drop this filter once the site is on 0.8.0.
-      .filter((line) => !/accent/.test(line));
+      .filter((line) => /^(ok  |FAIL) /.test(line));
 
     const report = evaluateContrast(base.vars, spec);
     const actual = report.results.map((r) => {
@@ -507,8 +499,6 @@ const emitted = (state_: PlaygroundState): VarMap => {
   return out;
 };
 
-const isAccent = (key: string) => key.startsWith("--ds-color-accent-");
-
 describe("DTCG output", () => {
   // Values come from the pinned package (what the site actually uses), not from
   // the repo's tokens/themes folder: the repo can run ahead of the pinned npm
@@ -541,18 +531,13 @@ describe("DTCG output", () => {
     },
   );
 
-  // Shape only: the set of tokens matches the repo folder. Accent values are not
-  // compared (the pinned package has no accent scale yet). TODO(S34): compare
-  // values with the repo DTCG again once the site is on 0.8.0.
+  // Names and values, accent scale included (the site is on the release that
+  // ships the repo's tokens, 0.8.0).
   it.each(names)(
-    "an unchanged %s state has the token names of its tokens/themes folder",
+    "an unchanged %s state equals its tokens/themes folder, names and values",
     (name) => {
-      const withoutAccent = (vars: VarMap) =>
-        Object.keys(vars)
-          .filter((key) => !isAccent(key))
-          .sort();
-      expect(withoutAccent(emitted(state(name)))).toEqual(
-        withoutAccent(readDtcg(name)),
+      expect(normalise(emitted(state(name)))).toEqual(
+        normalise(readDtcg(name)),
       );
     },
   );

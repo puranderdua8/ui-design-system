@@ -29,8 +29,6 @@ export const shadowAliases: Record<string, string> = {
   "--ds-elevation-overlay": "--ds-shadow-lg",
 };
 
-const ACCENT_AFTER = "--ds-color-neutral-950";
-
 const number = (n: number): string => String(+n.toFixed(4));
 
 const positive = (name: string, value: number): number => {
@@ -91,23 +89,6 @@ const scaleShadow = (value: string | number, strength: number): string => {
 
 // ---- knobs -----------------------------------------------------------------
 
-const withoutAccent = (key: string): boolean =>
-  !key.startsWith("--ds-color-accent-");
-
-/** Rebuilds `literals` with `entries` inserted right after `after`. */
-const insertAfter = (
-  literals: VarMap,
-  after: string,
-  entries: VarMap,
-): VarMap => {
-  const out: VarMap = {};
-  for (const [key, value] of Object.entries(literals)) {
-    if (withoutAccent(key)) out[key] = value;
-    if (key === after) Object.assign(out, entries);
-  }
-  return out;
-};
-
 const scrimFrom = (start: VarMap, neutral950: string): string => {
   const alpha = /,\s*([\d.]+)\s*\)$/.exec(String(start["--ds-color-scrim"]));
   const n = parseInt(neutral950.slice(1), 16);
@@ -116,7 +97,7 @@ const scrimFrom = (start: VarMap, neutral950: string): string => {
 
 /** Applies the knobs to the starting theme's primitives. Returns a new map. */
 export const applyKnobs = (primitives: VarMap, knobs: Knobs): VarMap => {
-  let out: VarMap = { ...primitives };
+  const out: VarMap = { ...primitives };
 
   if (knobs.brand !== undefined) {
     const ramp = brandRamp(knobs.brand);
@@ -132,10 +113,9 @@ export const applyKnobs = (primitives: VarMap, knobs: Knobs): VarMap => {
   }
 
   if (knobs.accent !== undefined) {
-    const entries: VarMap = {};
+    // Every theme ships `color.accent` since 0.8.0 (A1), so this rewrites it in place.
     for (const [step, hex] of Object.entries(brandRamp(knobs.accent)))
-      entries[`--ds-color-accent-${step}`] = hex;
-    out = insertAfter(out, ACCENT_AFTER, entries);
+      out[`--ds-color-accent-${step}`] = hex;
   }
 
   if (knobs.headingFont !== undefined)
@@ -275,9 +255,7 @@ export const resolveTheme = (
   }
 
   const literals: VarMap = { ...primitives, ...semanticLiterals };
-  const order = Object.keys(
-    insertAfter(start.vars, ACCENT_AFTER, pickAccent(primitives)),
-  );
+  const order = Object.keys(start.vars);
   const vars: VarMap = {};
   for (const key of order) vars[key] = resolveVar(key, refs, literals);
 
@@ -297,13 +275,6 @@ export const resolveTheme = (
     semanticOverrides,
     ignored,
   };
-};
-
-const pickAccent = (primitives: VarMap): VarMap => {
-  const out: VarMap = {};
-  for (const [key, value] of Object.entries(primitives))
-    if (!withoutAccent(key)) out[key] = value;
-  return out;
 };
 
 /** The state-shaped entry point: look the starting theme up, then resolve. */
