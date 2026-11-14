@@ -89,13 +89,14 @@ Corporate uses `IBM_Plex_Sans` for both vars (`variable: "--font-plex"`); Quirky
 
 ## Directions and rationale
 
-Palettes are built in OKLCH (fixed lightness per step, chroma and hue per theme, chroma reduced until the colour fits sRGB) and converted to hex. The key set is Base's: `brand` 50–900, `neutral` 0–950, `red` 50/600/700, plus `white` and `scrim`.
+Palettes are built in OKLCH (fixed lightness per step, chroma and hue per theme, chroma reduced until the colour fits sRGB) and converted to hex. The key set is Base's: `brand` 50–900, `accent` 50–900, `neutral` 0–950, `red` 50/600/700, plus `white` and `scrim`.
 
 |                     | Corporate                                                                           | Nature                                                                     | Quirky                                               |
 | ------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------- |
 | Brand (hue)         | navy-blue (255), primary `#1762b6`                                                  | forest and moss (150), primary `#2f7442`                                   | violet (295), primary `#703dc6`                      |
 | Neutrals            | cool blue-grey (255)                                                                | warm earth (90); canvas is ivory `#fffefa`                                 | violet-tinted (300)                                  |
-| Danger              | red (27)                                                                            | brick (30)                                                                 | coral-red (22)                                       |
+| Accent (hue)        | teal (195)                                                                          | terracotta and ochre (55)                                                  | coral (38)                                           |
+| Danger              | red (27)                                                                            | brick (30)                                                                 | crimson (25)                                         |
 | Radius sm / md / lg | 2 / 4 / 6px                                                                         | 6 / 12 / 20px                                                              | 12 / 20 / 28px                                       |
 | Border widths       | 1 / 2px                                                                             | 1 / 2px                                                                    | 2 / 3px                                              |
 | Focus ring          | 2px, offset 2px                                                                     | 2px, offset 2px                                                            | 3px, offset 2px                                      |
@@ -106,13 +107,13 @@ Palettes are built in OKLCH (fixed lightness per step, chroma and hue per theme,
 
 Pointer targets never go below `size.target.min` (24px, WCAG 2.5.8): Corporate's smallest control is 28px.
 
-### Known gap: Quirky's coral accent
+### The accent role (0.8.0, D-084)
 
-The direction asks for a violet primary with a coral accent. The semantic contract has no accent role (only brand, neutral and danger), so the coral lives in Quirky's `red` scale for now. A real accent needs a new semantic role and contrast pairs for every tone; that is a decision for the maintainer (see PROGRESS, S29).
+Every theme has a `color.accent` scale (Base steel-blue, hue 250, restrained beside the grey brand). Two semantic roles read it: `text.accent` (accent.700, 4.5:1) and `accent.border` (accent.600, 3:1), re-mapped in every surface tone through `on-raised`, `on-inverse` and `on-brand`. Components use it as a second voice for selection and highlight: the `Tabs` active label and bar, and `Card variant="accent"`. It never replaces the brand on an action. Utilities: `text-ds-accent`, `bg-ds-accent-border`, `border-ds-accent-border`. The site playground's accent knob (it generates `--ds-color-accent-50..900`) drives this role once the site is on 0.8.0.
 
 ## Contrast
 
-`pnpm tokens:check` runs the full matrix (every tone × role, from `tokens/contrast-pairs.json`) for each theme: **180 checks per theme, all pass for all four**, with no token adjustments needed. Headline ratios (text 4.5:1, UI 3:1):
+`pnpm tokens:check` runs the full matrix (every tone × role, from `tokens/contrast-pairs.json`) for each theme: **200 checks per theme (180 before the accent role), all pass for all four**, with no token adjustments needed. Accent: `text.accent` on canvas 8.49 / 8.16 / 8.71 / 9.05 and `accent.border` on canvas 6.00 / 5.75 / 6.19 / 6.47 (Base / Corporate / Nature / Quirky). Headline ratios (text 4.5:1, UI 3:1):
 
 | Pair                                              | Base  | Corporate | Nature | Quirky |
 | ------------------------------------------------- | ----- | --------- | ------ | ------ |

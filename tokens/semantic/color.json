@@ -24,6 +24,17 @@
     "on-brand": {
       "$value": "{color.white}",
       "$description": "Text and icons on surface.brand."
+    },
+    "accent": {
+      "$value": "{color.accent.700}",
+      "$description": "Accent text and icons (selected tab label, highlight eyebrow); 4.5:1 on the canvas and subtle and raised surfaces. A second voice beside the brand, never the action colour."
+    }
+  },
+  "accent": {
+    "$type": "color",
+    "border": {
+      "$value": "{color.accent.600}",
+      "$description": "Accent marker: selected-tab bar, highlight edge, accent underline. Meets 3:1 against the canvas and subtle and raised surfaces."
     }
   },
   "surface": {

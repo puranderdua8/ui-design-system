@@ -15,6 +15,19 @@
       "600": { "$value": "#b02b27" },
       "700": { "$value": "#941516" }
     },
+    "accent": {
+      "$description": "Teal scale (OKLCH hue 195, chroma 0.10 at the peak), the cool counterpart to the navy brand. accent.600 is the accent fill and border; accent.700 is accent text.",
+      "50": { "$value": "#eef9f9" },
+      "100": { "$value": "#daf2f2" },
+      "200": { "$value": "#bbe7e6" },
+      "300": { "$value": "#92d2d1" },
+      "400": { "$value": "#5db5b5" },
+      "500": { "$value": "#018c8d" },
+      "600": { "$value": "#017272" },
+      "700": { "$value": "#005959" },
+      "800": { "$value": "#003e3f" },
+      "900": { "$value": "#002525" }
+    },
     "brand": {
       "$description": "Navy-blue scale (OKLCH hue 255, chroma 0.15 at the peak). brand.600 is the primary.",
       "50": { "$value": "#f1f7ff" },

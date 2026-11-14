@@ -99,6 +99,7 @@ Theme scopes and portals (0.5.0):
 
 - `ThemeScope` applies a theme's `vars` (or `theme={json}`) to a subtree and sets `data-ds-theme`. It is also the portal container: portal components render into `container ?? usePortalContainer()` (the nearest `ThemeScope`), falling back to `document.body`, so an open `Select` list keeps the scope's theme. An explicit `container` prop always wins.
 - Stacking uses the shared layer scale (`--ds-layer-*`, `.ds-layer-*`: base, sticky, dropdown, overlay, modal, toast, tooltip, skip-link). Use these recipes, not raw `z-*`.
+- Accent (0.8.0): a `color.accent` scale in every theme and two roles, `text.accent` and `accent.border` (utilities `text-ds-accent`, `bg-ds-accent-border`, `border-ds-accent-border`), re-mapped in every tone. `Tabs` marks the active tab with it and `Card` takes `variant="accent"`. Custom themes must define the accent tokens (see the CHANGELOG).
 - `Section` tones (`.ds-tone-*`) re-map the colour roles in scope, so links, focus rings and controls stay readable on inverse and brand surfaces. Tones do not nest.
 
 Type a `ref` from the same element you pass to `as`, and prefer callback refs.

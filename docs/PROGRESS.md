@@ -492,6 +492,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) The shipped CSS lists `space-1-5` after `space-1`, the var map after `space-24`, so the CSS test compares declarations, not order. (2) `elevation.*` are literals in the theme JSON, so the engine carries the `elevation -> shadow` aliases itself. (3) The contract has no accent role (D-082): the accent knob only adds `--ds-color-accent-*` primitives; whether `validate-tokens` accepts them in a theme folder is not checked, S35's export should say so or S34 should drop the knob from the UI. (4) The scrim is `rgba()` in the JSON map and 8-digit hex in DTCG; rounding needs a small epsilon (0.7 × 255 = 178.49999…). (5) The engine does not touch the DOM, fonts or localStorage; applying fonts means swapping the leading family for the `next/font` var as `withFonts` does (`fontChoices[].cssVar`). (6) Not viewed in a browser: there is no UI yet.
 - Next: S34 Playground UI. Open the PR for S33; the maintainer merges.
 
+### A1 Accent role — 2026-11-14
+
+- Done (extra session between S33 and S34, branch `claude/accent-role-849a32`, rebased onto `main` after #53, independent of the S33 engine; D-084): `color.accent` 50–900 in all four themes (OKLCH, brand's lightness steps: Base steel-blue 250, Corporate teal 195, Nature terracotta 55, Quirky coral 38; Quirky `red` is now crimson 25). Semantic `text.accent` and `accent.border`; `on-raised|inverse|brand` get `text-accent` and `accent-border`; all `.ds-tone-*` recipes re-point them; `contrast-pairs.json` has the canvas/subtle/raised pairs and both roles in every context. Components: `Tabs` active label and bar, `Card variant="accent"`. Tests, stories (Card Accent, InTones), CHANGELOG 0.8.0 (unreleased), `docs/themes.md`, package README.
+- Verified: see the final `pnpm check` in the session report; contrast is 200 pairs per theme, all pass, no minimum weakened.
+- Decisions: D-084 (two roles only, no `accent.bg|fg` yet; Link, Checkbox, RadioGroup and Banner stay on brand).
+- Gotchas: D-083 is taken by S33 on branch `s33`, so this is D-084. `accent.border` uses accent.600 (not 500) so the 3:1 holds on subtle surfaces in every theme.
+- Next: S34 Playground UI (S33 is merged; A1 is done and independent of it). When `apps/site` moves to 0.8.0 (not before; it is pinned to npm 0.7.0 and was not touched here), the playground's accent knob (`--ds-color-accent-50..900`, S33 engine) starts driving Tabs and accent Cards in live previews. The maintainer: release 0.8.0 (not published or tagged here).
+
 ### MH retro — 2026-11-12
 
 - **Time per session:** not tracked per session. From commit times: H1–H2 on 2026-10-21; H3 on 2026-11-11 (about 11:57 to 12:26 after the H2 merge); H4–H7 on 2026-11-11 between 14:54 and 15:57, 15 to 35 minutes apart; H8 on 2026-11-11/12; H9 and H10 on 2026-11-12. The maintainer: add real figures.
@@ -536,6 +544,8 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Next: S13 Remove the registry, on `m7-foundations`.
 
 ## Parking lot (out of scope, later)
+
+- When the site moves to 0.8.0 (S34), tighten `apps/site/src/playground/engine.test.ts` back to comparing values with the repo DTCG, drop the accent exclusion in the token-name test and the `accent` filter in the contrast-script parity test (A1 made it drift-free against the pinned package).
 
 - ~~Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).~~ Checked in S6: no change. Themes (M11) define their own palettes.
 - ~~Update-path checks for the registry~~ Dropped: registry retired (D-055).

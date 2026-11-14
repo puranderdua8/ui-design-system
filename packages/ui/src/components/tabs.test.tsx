@@ -192,7 +192,8 @@ describe("Tabs", () => {
     );
     expect(tabsTriggerClasses).toContain("min-h-ds-control-sm");
     expect(tabsTriggerClasses).toContain("ds-focus-ring");
-    expect(tabsTriggerClasses).toContain("after:bg-ds-border-control");
+    expect(tabsTriggerClasses).toContain("after:bg-ds-accent-border");
+    expect(tabsTriggerClasses).toContain("data-[state=active]:text-ds-accent");
     expect(tabsContentClasses).toContain("ds-focus-ring");
     // No raw colour, arbitrary value, or primitive reference.
     expect(all).not.toMatch(/\[#|\[\d+px\]|(neutral|brand|red)-\d{2,3}/);

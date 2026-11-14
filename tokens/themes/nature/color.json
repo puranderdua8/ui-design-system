@@ -15,6 +15,19 @@
       "600": { "$value": "#ac3225" },
       "700": { "$value": "#911e13" }
     },
+    "accent": {
+      "$description": "Terracotta and ochre scale (OKLCH hue 55, chroma 0.12 at the peak), the warm earth against the forest brand. accent.600 is the accent fill and border; accent.700 is accent text.",
+      "50": { "$value": "#fff4ed" },
+      "100": { "$value": "#fde8da" },
+      "200": { "$value": "#fad4bb" },
+      "300": { "$value": "#ecb794" },
+      "400": { "$value": "#d69365" },
+      "500": { "$value": "#b0652b" },
+      "600": { "$value": "#964d09" },
+      "700": { "$value": "#773a00" },
+      "800": { "$value": "#552700" },
+      "900": { "$value": "#351500" }
+    },
     "brand": {
       "$description": "Forest and moss scale (OKLCH hue 150, chroma 0.105 at the peak). brand.600 is the primary.",
       "50": { "$value": "#edfbef" },
