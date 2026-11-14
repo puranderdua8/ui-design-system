@@ -528,6 +528,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: an Edit that appends a row to `DECISIONS.md` must not cut into the previous row's padded cells; Prettier then re-pads the whole table (large diff, no content change).
 - Next: R1 Baseline and automated probes.
 
+### R1 — Baseline and automated probes — 2026-11-14
+
+- Done (branch `review-r1`): Baseline section of the review register (gates, package surface, consumer bundle cost, Lighthouse on production), probes madge, publint, attw, knip, esbuild metafiles and Lighthouse, findings R01–R05, four new leads, probe notes.
+- Verified: `pnpm check` exit 0 in 1:38; site e2e 312 passed, 3 skipped (2:18); `pnpm check:rsc` PASS; `pnpm audit --prod --audit-level high` clean; publint clean; no import cycles.
+- Decisions: none new.
+- Gotchas: (1) The D-043 hook blocks `node -e` that reads files, so probe helpers are small scripts in the scratchpad (`tools/*.mjs`) run with `node <script> <path>`. (2) Lighthouse needs `CHROME_PATH` (Chrome.app) when run from `pnpm dlx`. (3) knip without a config is mostly noise in this repo (R05). (4) e2e now skips 3 tests (WebKit video pause, clipboard in Firefox and WebKit), not 1.
+- Next: R2 Package architecture, component API, React.
+
 ## Retro (Release 1)
 
 - **Time per session:** not tracked per session. From merge times: S13–S25 and H1 on 2026-10-19 and 10-20 (thirteen sessions in about two days, the plan's 60-minute slots were not the limit); MH H1–H10 from 10-21 to 11-12 (H3–H7 within about 4 hours on 11-11); S26–S28 on 11-12 and 11-13 (18:10 to 18:42 on 11-12 for S26–S28 prep); S29–S31 on 11-13 (14:35 to 15:44); S32 on 11-14 (11:22 to 11:49), S33 12:52, A1 13:06 to 13:20, S34 14:52, S35 the same day. The maintainer: add real figures.
