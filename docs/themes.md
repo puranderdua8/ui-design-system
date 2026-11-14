@@ -2,7 +2,7 @@
 
 Four themes ship with `@puranderdua/ui`: **Base** (the default grey and Inter), **Corporate**, **Nature** and **Quirky** (D-053). A theme is only tokens: `tokens/themes/<name>/{color,dimension,effects,typography}.json`. Components never branch on the theme (D-048). Every theme defines exactly Base's keys; `pnpm tokens:check` fails on a missing key or a failing contrast pair.
 
-> Status: **Corporate and Nature are final (S30).** The maintainer reviewed them in Storybook on 2026-11-13 with no adjustments; every story passes axe under both. Quirky is finalised in S31.
+> Status: **all four themes are final (S30, S31)** and ship in 0.7.0. The maintainer reviewed Corporate, Nature and Quirky in Storybook on 2026-11-13 with no adjustments; every story passes axe under each theme.
 
 ## Using a theme
 
@@ -76,7 +76,9 @@ export default function RootLayout({
 }
 ```
 
-Corporate uses `IBM_Plex_Sans` for both vars (`variable: "--font-plex"`); Quirky uses `Bricolage_Grotesque` (`--font-bricolage`). Both families are mapped onto the same two `--ds-font-family-*` vars. If you switch themes at run time with a JSON map, the map sets those vars too, so declare the mapping where the inline map wins (or leave it out and let the theme's own value, which names the family, resolve through the `<link>` route). The switcher's loading strategy is decided in S32.
+Corporate uses `IBM_Plex_Sans` for both vars (`variable: "--font-plex"`); Quirky uses `Bricolage_Grotesque` (`--font-bricolage`). Both families are mapped onto the same two `--ds-font-family-*` vars. If you switch themes at run time with a JSON map, the map sets those vars too, and an inline value beats your `:root` mapping. The map names the family ("Fraunces, Georgia, serif"), which `next/font` does not use (it generates its own family name), so map it yourself when applying the vars: replace the leading family with `var(--font-fraunces)` and keep the fallback stack.
+
+**How this repo's site does it (S32):** `apps/site/src/app/layout.tsx` declares all five fonts with `next/font` (Inter preloads, the others set `preload: false`, so a page downloads a theme's font file only once text uses it). `apps/site/src/lib/theme.ts` `import()`s the chosen `themes/<name>.json` (one chunk per theme), swaps the two font-family vars as above, applies the map inline on `<html>` and caches it in `localStorage` (`ds-theme`). A small inline script in `<head>` applies the cached map before first paint, so a reload does not flash Base.
 
 | Theme     | Heading             | Body                |
 | --------- | ------------------- | ------------------- |
