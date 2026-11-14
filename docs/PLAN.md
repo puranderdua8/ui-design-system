@@ -574,7 +574,7 @@ Fixes every finding in [`docs/audits/2026-10-20-production-readiness.md`](audits
 
 ## MR Release 1 review (1.0.0 readiness)
 
-An independent, evidence-based review of the whole repo after Release 1 (D-087). It is **review only**: no fixes. Findings go into [`docs/audits/2026-11-14-release-1-review.md`](audits/2026-11-14-release-1-review.md) as `R01…`, and R6 proposes a hardening milestone for the maintainer to approve. **One PR per session:** each R-session cuts `review-r<n>` from synced `main`, pushes it and opens its own PR at the end; the maintainer merges it before the next session starts (R1's PR also carries the plan).
+An independent, evidence-based review of the whole repo after Release 1 (D-087). It is **review only**: no fixes. Findings go into [`docs/audits/2026-11-14-release-1-review.md`](audits/2026-11-14-release-1-review.md) as `R01…`, and R6 proposes a hardening milestone for the maintainer to approve. **PRs:** R1 was its own PR (#58, which also carried the plan). After R2 the maintainer changed this (2026-11-14): R2–R6 and the proposed hardening milestone go into **one PR**, #59 on `review-r2`, so the whole review and the hardening plan are reviewed together.
 
 **Working assumptions (agreed 2026-11-14):**
 
@@ -637,10 +637,10 @@ An independent, evidence-based review of the whole repo after Release 1 (D-087).
 > - L: CSP and the inline script, parsing of stored and imported state, export filenames, download and clipboard, dependency surface, workflow permissions and provenance.
 > - M: README and package README accuracy (run every snippet), Storybook docs (autodocs, controls, usage guidance), onboarding, dev warnings, contribution guide.
 > - N: `pnpm check` duration and caching, script quality and tests, docs maintainability (`DECISIONS.md` size, PLAN drift), upstream shadcn sync.
-> - Write-up: a scorecard per area (A–N), every finding prioritised, and a proposed hardening milestone (sessions with prompts, like MH) in the register. Update PROGRESS, push `review-r6` and open the PR.
+> - Write-up: a scorecard per area (A–N), every finding prioritised, and a proposed hardening milestone (sessions with prompts, like MH) in the register. Update PROGRESS, push `review-r2` and update PR #59.
 
 **You do:** run the R5 screen-reader script; review the register and approve (or edit) the proposed hardening milestone.
-**Done when (each session):** its findings are in the register with evidence and a proposed fix, PROGRESS is updated, and its PR is open. **Done when (MR):** every area has a scorecard entry, the "Leads" list is empty (each lead became a finding or was dismissed with a reason), and all six PRs are merged.
+**Done when (each session):** its findings are in the register with evidence and a proposed fix, PROGRESS is updated, and its commit is on PR #59. **Done when (MR):** every area has a scorecard entry, the "Leads" list is empty (each lead became a finding or was dismissed with a reason), and both PRs (#58, #59) are merged.
 
 ---
 

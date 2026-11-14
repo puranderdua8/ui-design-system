@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** R2 of MR Release 1 review (R1–R6, D-087), review only; each session cuts `review-r<n>` from synced `main` and opens its own PR, which the maintainer merges before the next. Register `docs/audits/2026-11-14-release-1-review.md`. Release 2 (dark mode) waits for the review and the hardening milestone it proposes.
+- **Current milestone:** MR Release 1 review (R1–R6, D-087) is written: R1 in #58, R2–R6 and the proposed hardening milestone in PR #59 (`review-r2`). Register `docs/audits/2026-11-14-release-1-review.md` (47 findings, scorecard, MH2 proposal).
+- **Next session:** H11 of the proposed **MH2 1.0.0 hardening** (H11–H20), once the maintainer merges #59 and approves or edits MH2 (prompts in the register). Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -536,6 +536,46 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) The D-043 hook blocks `node -e` that reads files, so probe helpers are small scripts in the scratchpad (`tools/*.mjs`) run with `node <script> <path>`. (2) Lighthouse needs `CHROME_PATH` (Chrome.app) when run from `pnpm dlx`. (3) knip without a config is mostly noise in this repo (R05). (4) e2e now skips 3 tests (WebKit video pause, clipboard in Firefox and WebKit), not 1.
 - Process change (the maintainer, 2026-11-14): one PR per R-session, merged before the next starts (was one PR at R6). PLAN MR and D-087 updated; this PR carries the plan and R1.
 - Next: R2 Package architecture, component API, React, on `review-r2` cut from `main` after this PR merges.
+
+### R2 — Package architecture, component API, React — 2026-11-14
+
+- Done (branch `review-r2`, cut from synced `main` at 3e4a19b after #58): read every source file in `packages/ui/src`, `tsup.config.ts` and the two build scripts it depends on. Findings R06–R16 in the register (R06 id inside Field, R07 Grid wrapper, R08 ThemeScope first render, R09 export surface, R10 prop names, R11 inner elements, R12 duplication, R13 default-scale values, R14 build chain, R15 React Compiler, R16 README). Props table and vocabulary check in `docs/audits/2026-11-14-release-1-review-props.md`. Settled two leads (ThemeScope → R08, style naming → R09), added three (K, J for R5; H for R3), R2 probe notes.
+- Verified: probes in the scratchpad, none committed: Vitest + jsdom against the package source (label association, portal container per render, Grid prop target, SSR + hydration of 7 trees in StrictMode), Playwright Chromium for the Grid wrapper width, `babel-plugin-react-compiler` 1.0 over every component file. `pnpm lint` passes.
+- Decisions: none new.
+- Gotchas: (1) A Vitest config in the scratchpad works with a `node_modules` symlink to `packages/ui/node_modules` and an `@` alias, so probes need no file in the repo. (2) `babel-plugin-react-compiler` 1.0 fails on every destructuring default under Babel 8 (`AssignmentPattern`); use Babel 7. (3) A `MutationObserver` reports only after the test's synchronous code; call `takeRecords()` before reading, or use a ref callback.
+- Next: R3 Tokens, styling, dark-mode readiness, packaging, on `review-r3` cut from `main` after this PR merges.
+- Process change (the maintainer, 2026-11-14, after R2): R3–R6 and the hardening plan go into the same PR (#59, `review-r2`), so the whole review is reviewed together. PLAN MR intro and D-087 updated.
+
+### R3 — Tokens, styling, dark-mode readiness, packaging — 2026-11-14
+
+- Done (same branch): findings R17–R29 (R17 no semver/deprecation policy and new roles break custom themes, R18 Radix roots force `dir="ltr"`, R19 Tabs marker lost in forced colours, R20 consumer CSS setups that break styles, R21 tokens not in DTCG 2025.10 format, R22 revisit D-075 (portal clipped inside the scope), R23 control line-height, R24 print, R25 `tailwindcss` peer, R26–R29 dark-mode blockers). Two G leads dismissed with measurements, the H lead became R22; R13's token proposal filled in; R3 probe notes.
+- Verified: scratch Vite 7 and Next 16.4.2 apps on the packed tarball (bundle per route, `tsc` bundler and node16, CSS clash cases), Playwright Chromium for forced colours, RTL, print PDF and a clipped Select.
+- Gotchas: (1) `create-next-app` and `npm i` take about a minute; run them in the background while building the Vite app. (2) `@tailwindcss/vite` scans the module graph, so a Vite consumer gets the package classes without `@source`; Next needs it. (3) `sips -s format png file.pdf` turns a Playwright PDF into an image you can look at.
+- Next: R4.
+
+### R4 — Site: Next.js, state, performance — 2026-11-14
+
+- Done (same branch): findings R30–R34 (R30 attributes R01 to the header's Radix Select, R31 BannerVideo downloads below the fold, R32 folded playground rows still render, R33 stored states have no version or cross-tab sync, R34 metadata and error pages). Leads: D → R33, two F leads → R31/R32, `legacy-javascript` dismissed (Next's polyfill module). R4 probe notes.
+- Verified: local `next build` with per-route script totals and chunk markers; Lighthouse 12 (`legacy-javascript`, `unused-javascript`) and Playwright (INP with 4× CPU, DOM size, video bytes without scrolling) against production.
+- Gotchas: (1) Playwright cannot click inputs inside a closed `<details>`; open the `summary` first. (2) Chunk names differ between a local build and production, so match chunks by content markers, not names.
+- Next: R5.
+
+### R5 — Accessibility beyond axe, testing strategy — 2026-11-14
+
+- Done (same branch): findings R35–R39 (R35 Select highlight 1.09:1, R36 WebKit e2e flake on a docs-only commit, R37 no suite for RTL/forced colours/print/hydration/visual change and no coverage, R38 class-string assertions and triple axe, R39 "Read more" demo buttons). `docs/evidence/screen-reader-script-2026-11-14.md` (20 VoiceOver + Safari steps) for the maintainer. Two leads closed (K → R37, J dismissed with the script step that checks it). R5 probe notes with a suite map.
+- Verified: Playwright keyboard walk and target-size scan of all 8 pages on production; WCAG ratios for the Select highlight in all four themes; CI history for the flake.
+- Gotchas: (1) A Vitest coverage provider installed outside the repo reports 0 % (it is a different module instance), and `c8` around Vitest does too; real coverage needs `@vitest/coverage-v8` as a dev dependency. (2) Keys in a keyboard walk need more than name + position: two "Read more" buttons on one row look like a trap.
+- You do: run the screen-reader script and fill in its Results column.
+- Next: R6.
+
+### R6 — Security, DX, tooling, process + write-up — 2026-11-14
+
+- Done (same branch): findings R40–R47 (R40 publish job runs the whole toolchain with `id-token: write`, R41 unused Google Fonts hosts in the CSP, R42 revisit D-049: 60 `@radix-ui` packages per consumer, R43 no API reference for outside teams, R44 DECISIONS.md 320 KB in one table and PLAN's 0.7.0, R45 revisit D-057: manual production deploys, R46 CI cost, R47 hook test and upstream sync unchecked). Every lead settled. Scorecard per area (A–N), priorities, and the proposed milestone **MH2 1.0.0 hardening, H11–H20**, with a prompt per session (0.9.0 for the breaking changes, then 1.0.0).
+- Verified: workflows read in full, CI step timings from the GitHub API, Radix footprint in the R3 consumer app, Storybook config and story files searched; `pnpm lint` passes.
+- Decisions: none new (MH2 becomes D-088 when approved, in H11).
+- Next: the maintainer reviews PR #59, approves or edits MH2 and runs the screen-reader script; then H11.
+- Follow-up (same day, the maintainer asked to re-run the stopped forced-colours probe server): served it again on port 4317 through the Browser pane and re-ran the probes. R19 reproduced exactly. R18's arrow-key evidence had been a race (Radix moves focus on the next tick; the R3 probe read `document.activeElement` at once); re-measured with a wait, the keys ignore the page direction in both LTR and RTL, so R18 stands with corrected evidence. The repo's own tests do not have this race (direct reads only follow Tab; arrow keys use `toBeFocused`). The H15 and H19 prompts now say to use auto-waiting assertions. Server stopped afterwards and its `.claude/launch.json` entry removed.
+- Gotchas: (1) A preview server never finishes, so a "long-running" probe server is normal; start one through `.claude/launch.json` and the Browser pane, and stop it when the probes are done. (2) After a key press on a Radix composite (Tabs, RadioGroup, Select), wait for focus before reading it.
 
 ## Retro (Release 1)
 
