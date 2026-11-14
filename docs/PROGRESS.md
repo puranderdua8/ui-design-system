@@ -553,6 +553,13 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) `create-next-app` and `npm i` take about a minute; run them in the background while building the Vite app. (2) `@tailwindcss/vite` scans the module graph, so a Vite consumer gets the package classes without `@source`; Next needs it. (3) `sips -s format png file.pdf` turns a Playwright PDF into an image you can look at.
 - Next: R4.
 
+### R4 — Site: Next.js, state, performance — 2026-11-14
+
+- Done (same branch): findings R30–R34 (R30 attributes R01 to the header's Radix Select, R31 BannerVideo downloads below the fold, R32 folded playground rows still render, R33 stored states have no version or cross-tab sync, R34 metadata and error pages). Leads: D → R33, two F leads → R31/R32, `legacy-javascript` dismissed (Next's polyfill module). R4 probe notes.
+- Verified: local `next build` with per-route script totals and chunk markers; Lighthouse 12 (`legacy-javascript`, `unused-javascript`) and Playwright (INP with 4× CPU, DOM size, video bytes without scrolling) against production.
+- Gotchas: (1) Playwright cannot click inputs inside a closed `<details>`; open the `summary` first. (2) Chunk names differ between a local build and production, so match chunks by content markers, not names.
+- Next: R5.
+
 ## Retro (Release 1)
 
 - **Time per session:** not tracked per session. From merge times: S13–S25 and H1 on 2026-10-19 and 10-20 (thirteen sessions in about two days, the plan's 60-minute slots were not the limit); MH H1–H10 from 10-21 to 11-12 (H3–H7 within about 4 hours on 11-11); S26–S28 on 11-12 and 11-13 (18:10 to 18:42 on 11-12 for S26–S28 prep); S29–S31 on 11-13 (14:35 to 15:44); S32 on 11-14 (11:22 to 11:49), S33 12:52, A1 13:06 to 13:20, S34 14:52, S35 the same day. The maintainer: add real figures.
