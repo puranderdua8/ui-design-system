@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** R2 of MR Release 1 review (R1–R6, D-087), review only; each session cuts `review-r<n>` from synced `main` and opens its own PR, which the maintainer merges before the next. Register `docs/audits/2026-11-14-release-1-review.md`. Release 2 (dark mode) waits for the review and the hardening milestone it proposes.
+- **Next session:** R3 of MR Release 1 review (R1–R6, D-087), review only; each session cuts `review-r<n>` from synced `main` and opens its own PR, which the maintainer merges before the next. Register `docs/audits/2026-11-14-release-1-review.md`. Release 2 (dark mode) waits for the review and the hardening milestone it proposes.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -536,6 +536,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) The D-043 hook blocks `node -e` that reads files, so probe helpers are small scripts in the scratchpad (`tools/*.mjs`) run with `node <script> <path>`. (2) Lighthouse needs `CHROME_PATH` (Chrome.app) when run from `pnpm dlx`. (3) knip without a config is mostly noise in this repo (R05). (4) e2e now skips 3 tests (WebKit video pause, clipboard in Firefox and WebKit), not 1.
 - Process change (the maintainer, 2026-11-14): one PR per R-session, merged before the next starts (was one PR at R6). PLAN MR and D-087 updated; this PR carries the plan and R1.
 - Next: R2 Package architecture, component API, React, on `review-r2` cut from `main` after this PR merges.
+
+### R2 — Package architecture, component API, React — 2026-11-14
+
+- Done (branch `review-r2`, cut from synced `main` at 3e4a19b after #58): read every source file in `packages/ui/src`, `tsup.config.ts` and the two build scripts it depends on. Findings R06–R16 in the register (R06 id inside Field, R07 Grid wrapper, R08 ThemeScope first render, R09 export surface, R10 prop names, R11 inner elements, R12 duplication, R13 default-scale values, R14 build chain, R15 React Compiler, R16 README). Props table and vocabulary check in `docs/audits/2026-11-14-release-1-review-props.md`. Settled two leads (ThemeScope → R08, style naming → R09), added three (K, J for R5; H for R3), R2 probe notes.
+- Verified: probes in the scratchpad, none committed: Vitest + jsdom against the package source (label association, portal container per render, Grid prop target, SSR + hydration of 7 trees in StrictMode), Playwright Chromium for the Grid wrapper width, `babel-plugin-react-compiler` 1.0 over every component file. `pnpm lint` passes.
+- Decisions: none new.
+- Gotchas: (1) A Vitest config in the scratchpad works with a `node_modules` symlink to `packages/ui/node_modules` and an `@` alias, so probes need no file in the repo. (2) `babel-plugin-react-compiler` 1.0 fails on every destructuring default under Babel 8 (`AssignmentPattern`); use Babel 7. (3) A `MutationObserver` reports only after the test's synchronous code; call `takeRecords()` before reading, or use a ref callback.
+- Next: R3 Tokens, styling, dark-mode readiness, packaging, on `review-r3` cut from `main` after this PR merges.
 
 ## Retro (Release 1)
 
