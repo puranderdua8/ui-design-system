@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 is done on branch `mh2-hardening`.
-- **Next session:** H12 (CI, release and deploy). H13 and H18 are independent and can run in parallel. Release 2 (dark mode) waits for MH2.
+- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 is merged (#60); H12 is done on branch `h12-ci-release-deploy`.
+- **Next session:** H13 (build chain and dead code) or H14 (form wiring). H13 and H18 are independent and can run in parallel. Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -575,6 +575,15 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Findings: R16, R17, R44 set to `fixed in H11`. R10, R21, R22, R26, R42, R45 are decided; they stay open until H12, H15, H16 and H17 implement them.
 - Gotchas: (1) D-043's hook blocks `cat`, `sed` and `head` in any Bash command, even inside a heredoc or as a word; use Read and Edit. (2) The DECISIONS rows used `\|` escapes; the conversion script handles them, and D-039 has no "Why" cell. (3) PLAN still says 0.7.0 for M11 and S32 (history: that session did ship 0.7.0); only Goal 2 was wrong.
 - Next: H12.
+
+### H12 — CI, release and deploy — 2026-11-15
+
+- Done (branch `h12-ci-release-deploy`, off `main` after #60): **R36** the advanced-override test opens the group, asserts `open` and the field visible before `fill`; `--repeat-each=20 --project=webkit` passed 20 of 20. **R40** `release.yml` split: `verify` (no `id-token`: tag check, install, `pnpm check`, `check:rsc`, `pnpm pack`, upload `package-tarball`) and `publish` (needs `verify`, environment `npm-publish`, `id-token: write`, npm pinned to 11.5.1, `npm publish <tarball> --provenance`). **R45/D-094** deploys stay manual; `pnpm smoke:prod` runs the smoke, showcase and production specs against the live URL (ran against production: 141 passed) and `docs/releasing.md` has the post-deploy step and a dry-run recipe. **R46** `ci.yml`: a `changes` job (docs and `*.md` only → just a `lint` job), Playwright browsers cached by lockfile hash, `check` and site `e2e` as parallel jobs. **R47 (hook part)** `pnpm test:hooks` (`node --test .claude/hooks/`) runs inside `pnpm check`.
+- Decisions: none new (D-094 covers deploys).
+- Verified: `actionlint` clean on all workflows; `pnpm lint` green; `pnpm test:hooks` 2 of 2.
+- **Not verified:** the CI timing target (docs-only PR under 2 minutes, code PR running both jobs in parallel) and the release dry run reaching the approval gate can only be seen on GitHub. The first PR run will show the timings; the dry run needs the maintainer to push a test tag (the AI never tags). The new actions are pinned by SHA (`upload-artifact` v7.0.2, `download-artifact` v8.0.2, `cache` v6.1.0). If the `publish` job's trusted-publisher check ever complains, the cause is the workflow filename or environment name, which did not change.
+- Gotchas: (1) skipped jobs (`lint` on code PRs, `check` and `e2e` on docs PRs) count as passing for branch protection; if a required check is named `check`, a docs-only PR would show it as skipped. (2) `check` no longer runs the site e2e; the old single job did. (3) R47's upstream diff stays open for H13.
+- Next: H13 (build chain) or H14 (form wiring); H13 and H18 can run in parallel.
 
 ### R6 — Security, DX, tooling, process + write-up — 2026-11-14
 

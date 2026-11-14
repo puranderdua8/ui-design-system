@@ -180,10 +180,16 @@ test("export warns about failing contrast", async ({ page }) => {
 test("export notes an advanced override the files cannot hold", async ({
   page,
 }) => {
-  await page.getByText(/^action \(/).click();
-  await page
-    .getByLabel("action-primary-bg value", { exact: true })
-    .fill("#aa0000");
+  // Open the group through its summary, then wait for it to be open and the field visible
+  // before typing (R36: WebKit filled before the details had opened).
+  const group = page.locator("details", {
+    has: page.getByText(/^action \(/),
+  });
+  await group.getByText(/^action \(/).click();
+  await expect(group).toHaveAttribute("open", "");
+  const field = page.getByLabel("action-primary-bg value", { exact: true });
+  await expect(field).toBeVisible();
+  await field.fill("#aa0000");
   await expect(page.getByTestId("export-semantic-warning")).toContainText(
     "action-primary-bg",
   );

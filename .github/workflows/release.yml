@@ -2,6 +2,11 @@ name: Release
 
 # Publishes @puranderdua/ui when the maintainer pushes a tag `v<version>` and approves the
 # `npm-publish` deployment. Trusted publishing (OIDC): there is no npm token.
+#
+# Two jobs (R40). `verify` runs the whole toolchain (install, tests, Storybook, a fresh Next app)
+# with no `id-token`, so none of that code can ask for a publishing credential, and uploads the
+# packed tarball. `publish` waits for the environment approval, installs nothing from the repo,
+# and publishes exactly that tarball.
 on:
   push:
     tags: ["v*"]
@@ -14,13 +19,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
+  verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
-    environment: npm-publish
     permissions:
       contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Tag must equal the package version
@@ -32,17 +35,48 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          # No registry-url: it writes an .npmrc with `_authToken=${NODE_AUTH_TOKEN}`, and a
-          # configured (empty) token can stop npm from using the OIDC trusted-publishing exchange.
-          # npm publishes to registry.npmjs.org by default.
       - run: pnpm install --frozen-lockfile
       - name: Install Playwright browsers
         run: pnpm --filter site exec playwright install --with-deps chromium firefox webkit
       - run: pnpm check
       - run: pnpm check:rsc
-      # Trusted publishing needs npm >= 11.5.1.
-      - name: Use a trusted-publishing capable npm
-        run: npm install --global npm@^11.5.1
-      - name: Publish with provenance
+      - name: Pack the tarball
         working-directory: packages/ui
-        run: npm publish --provenance --access public --loglevel verbose
+        run: pnpm pack --pack-destination "$GITHUB_WORKSPACE/release"
+      - name: Tarball name must match the tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: test -f "release/puranderdua-ui-${TAG#v}.tgz"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: package-tarball
+          path: release/*.tgz
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: package-tarball
+          path: release
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          # No registry-url: it writes an .npmrc with `_authToken=${NODE_AUTH_TOKEN}`, and a
+          # configured (empty) token can stop npm from using the OIDC trusted-publishing exchange.
+          # npm publishes to registry.npmjs.org by default.
+      # Trusted publishing needs npm >= 11.5.1. Pinned exactly: bump it on purpose.
+      - name: Use a trusted-publishing capable npm
+        run: npm install --global npm@11.5.1
+      - name: Publish the verified tarball with provenance
+        env:
+          TAG: ${{ github.ref_name }}
+        run: npm publish "release/puranderdua-ui-${TAG#v}.tgz" --provenance --access public --loglevel verbose
