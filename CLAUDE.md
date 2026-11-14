@@ -1,7 +1,8 @@
 # ui-design-system — rules for AI sessions
 
 You are helping the maintainer build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground. Before Display (S26), milestone **MH Production hardening** (sessions H1–H10, D-068) fixes every finding of the 2026-10-20 audit (`docs/audits/`).
-**Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>` or `H<n>`). Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status.
+After Release 1, milestone **MR Release 1 review** (sessions R1–R6, D-087) reviews the whole repo against a semver 1.0.0 bar. It is review only (no fixes); findings go into `docs/audits/2026-11-14-release-1-review.md`.
+**Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>`, `H<n>` or `R<n>`). Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status. In an R-session, also read the MR intro in `docs/PLAN.md` (working assumptions, finding format) and the review register.
 
 ## What this repo is
 
@@ -90,5 +91,5 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 1. Run the session's "Done when" checks and show the output.
 2. Update `docs/PROGRESS.md`: what was done, decisions, gotchas, next session.
 3. Add any new decision to `docs/DECISIONS.md`.
-4. In an H-session, set the fixed findings to `fixed in H<n>` with evidence in the audit register.
-5. Commit on the session or milestone branch: `S<n>: <summary>` or `H<n>: <summary>`.
+4. In an H-session, set the fixed findings to `fixed in H<n>` with evidence in the audit register. In an R-session, add the session's findings (with evidence) to the review register.
+5. Commit on the session or milestone branch: `S<n>: <summary>`, `H<n>: <summary>` or `R<n>: <summary>`.

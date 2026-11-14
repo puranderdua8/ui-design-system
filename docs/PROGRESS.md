@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** M10 Display → 0.6.0 (S26–S28, done; 0.6.0 is on npm). MH Production hardening (H1–H10, D-068) is done and merged (H10 PR #43). Findings register: `docs/audits/2026-10-20-production-readiness.md`.
-- **Next session:** none planned in Release 1 (S35 done). The maintainer merges the S35 PR, redeploys the site and creates the GitHub Release on `v0.8.0`. Release 2 is dark mode (see the Release 1 retro).
+- **Next session:** R2 of MR Release 1 review (R1–R6, D-087), review only; each session cuts `review-r<n>` from synced `main` and opens its own PR, which the maintainer merges before the next. Register `docs/audits/2026-11-14-release-1-review.md`. Release 2 (dark mode) waits for the review and the hardening milestone it proposes.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -520,6 +520,22 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Decisions: D-086.
 - Gotchas: (1) The built CSS appends each semantic token's description as a `/** */` comment, so the CSS comparison strips it. (2) The accent knob exports cleanly: `validate-tokens` accepts `color.accent` since 0.8.0 (the S33 open question). (3) `PLAN.md` still says Release 1 ships 0.7.0 and tags `v0.7.0`; the real package is 0.8.0 (A1 added accent), so the GitHub Release belongs on `v0.8.0` (D-086). I left PLAN.md's wording alone (out of scope). (4) Clipboard is only tested in Chromium (permissions can only be granted there). (5) Several Bash calls (`head`, `cat`, `tail`, a `>` redirect) were blocked by the D-043 hook; Read and a background task output were used instead.
 - Next: the maintainer merges the PR, redeploys the site (`vercel --prod`) and creates the GitHub Release for Release 1 on the `v0.8.0` tag. Then Release 2 (dark mode).
+
+### MR plan — Release 1 review — 2026-11-14
+
+- Done (branch `review-r1`, cut from `origin/main` at eab00af): agreed the review approach with the maintainer (all recommended defaults): semver 1.0.0 bar, outside consumers on React 19 + Tailwind v4, review only, recorded decisions challenged only with evidence, probes through `pnpm dlx`, Lighthouse and e2e against production allowed, a scripted screen-reader pass the maintainer runs, reference systems for comparison only. Milestone MR (R1–R6) and its prompts in `docs/PLAN.md`; register skeleton `docs/audits/2026-11-14-release-1-review.md` with seven leads; CLAUDE.md knows R-sessions.
+- Decisions: D-087.
+- Gotchas: an Edit that appends a row to `DECISIONS.md` must not cut into the previous row's padded cells; Prettier then re-pads the whole table (large diff, no content change).
+- Next: R1 Baseline and automated probes.
+
+### R1 — Baseline and automated probes — 2026-11-14
+
+- Done (branch `review-r1`): Baseline section of the review register (gates, package surface, consumer bundle cost, Lighthouse on production), probes madge, publint, attw, knip, esbuild metafiles and Lighthouse, findings R01–R05, four new leads, probe notes.
+- Verified: `pnpm check` exit 0 in 1:38; site e2e 312 passed, 3 skipped (2:18); `pnpm check:rsc` PASS; `pnpm audit --prod --audit-level high` clean; publint clean; no import cycles.
+- Decisions: none new.
+- Gotchas: (1) The D-043 hook blocks `node -e` that reads files, so probe helpers are small scripts in the scratchpad (`tools/*.mjs`) run with `node <script> <path>`. (2) Lighthouse needs `CHROME_PATH` (Chrome.app) when run from `pnpm dlx`. (3) knip without a config is mostly noise in this repo (R05). (4) e2e now skips 3 tests (WebKit video pause, clipboard in Firefox and WebKit), not 1.
+- Process change (the maintainer, 2026-11-14): one PR per R-session, merged before the next starts (was one PR at R6). PLAN MR and D-087 updated; this PR carries the plan and R1.
+- Next: R2 Package architecture, component API, React, on `review-r2` cut from `main` after this PR merges.
 
 ## Retro (Release 1)
 

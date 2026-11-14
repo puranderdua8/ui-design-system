@@ -30,6 +30,7 @@ Release 0 (v0.1.0, tagged) is archived in [`plans/release-0.md`](plans/release-0
 | **M10 Display**                            | S26–S28  | 0.6.0       | `m10-display`    |
 | **M11 Themes**                             | S29–S32  | 0.7.0       | `m11-themes`     |
 | **M12 Theme playground**                   | S33–S35  | (site only) | `m12-playground` |
+| **MR Release 1 review**                    | R1–R6    | (none)      | `review-r<n>`    |
 
 **Total:** 33 sessions, about 31 hours.
 
@@ -568,6 +569,78 @@ Fixes every finding in [`docs/audits/2026-10-20-production-readiness.md`](audits
 
 **You do:** review and merge PR `m12-playground`, redeploy the site, and create a GitHub Release for Release 1 (on the `v0.7.0` tag).
 **Done when:** every Goal item at the top of this file is checked.
+
+---
+
+## MR Release 1 review (1.0.0 readiness)
+
+An independent, evidence-based review of the whole repo after Release 1 (D-087). It is **review only**: no fixes. Findings go into [`docs/audits/2026-11-14-release-1-review.md`](audits/2026-11-14-release-1-review.md) as `R01…`, and R6 proposes a hardening milestone for the maintainer to approve. **One PR per session:** each R-session cuts `review-r<n>` from synced `main`, pushes it and opens its own PR at the end; the maintainer merges it before the next session starts (R1's PR also carries the plan).
+
+**Working assumptions (agreed 2026-11-14):**
+
+- The bar is **semver 1.0.0**: every public export, prop, token name, CSS class and file path in `exports` is judged as a long-term commitment.
+- Consumers are **outside teams** on React 19 + Tailwind v4, not only `apps/site`. Packaging findings are rated for them.
+- Recorded decisions are constraints. A finding may challenge one only with concrete evidence, marked kind `revisit` with the D-number.
+- Scope is everything: package, tokens, scripts, Storybook, site, `packages/ui/playground`, CI, the `.claude` hook, docs and process (process kept light).
+- Tools may run through `pnpm dlx` in the scratchpad (network OK); nothing is added to any `package.json`. Lighthouse and e2e may run against production (read-only).
+- Conventions are compared with shadcn/ui, Radix Themes, Primer, Carbon and Spectrum in the register's "Reference" column (reference only, not a target).
+- Screen readers: R5 writes a scripted VoiceOver + Safari pass; the maintainer runs it and the results go in the register.
+
+**Every finding has:** area (A–N below), kind (`defect` | `recommendation` | `revisit`), severity (Blocker | High | Med | Low), evidence (command and output, measured value, or file:line with a reproduction), reference where useful, and a proposed fix. No evidence, no finding: a suspicion goes into the register's "Leads" list until it is checked.
+
+**Areas:** A Architecture and design principles · B Component API design · C React · D State management (site) · E Next.js · F Performance · G Packaging and distribution · H Styling and tokens · I Dark-mode readiness · J Accessibility beyond axe · K Testing strategy · L Security and supply chain · M DX and docs · N Tooling, CI and process.
+
+### R1: Baseline and automated probes (60 min)
+
+> R1. Record the baseline in the register's "Baseline" section, then run the probes. No fixes.
+>
+> - Run `pnpm check` (time it), `pnpm check:rsc`, `pnpm --filter site test:e2e`, `pnpm audit --prod --audit-level high`; record pass/fail, durations and test counts per suite.
+> - Metrics: `dist` size per component file (raw and gzip), the shared chunks and what is in them, `index.d.ts` size; number of public exports.
+> - Probes (scratchpad, `pnpm dlx`): `publint` and `@arethetypeswrong/cli --pack` on `packages/ui`; `knip` (unused files, exports, dependencies) across the workspace; `madge --circular` on `packages/ui/src` and `apps/site/src`; an esbuild metafile build of a consumer entry that imports only `Button` (what it pulls in); Lighthouse (mobile and desktop) on production `/`, `/components/display` and `/playground`.
+> - Each probe result that is a real problem becomes a finding; noise is listed under "Probe notes" with why it is noise.
+
+### R2: Package architecture, component API, React (60 min)
+
+> R2 (areas A, B, C). Read every file in `packages/ui/src` and `packages/ui/tsup.config.ts`.
+>
+> - A: dependency direction between tiers, coupling, duplication, single responsibility of each component file, the build chain (`build-classes` → tsup → `build-foundations`).
+> - B: one table of every component's props (name, type, default) to check vocabulary consistency (`variant`, `size`, `tone`, `as`, `asChild`), controlled/uncontrolled pairs, compound parts, event-handler composition, `className`/`style`/`data-*` passthrough, exported types, string props. Judge each export for 1.0.0 (keep, rename, make private).
+> - C: rules of React (purity, StrictMode), every hook and effect (why it exists, cleanup, SSR), contexts (value identity, the first render of `ThemeScope`), `useId`, hydration, the client boundary, React Compiler compatibility.
+
+### R3: Tokens, styling, dark-mode readiness, packaging (60 min)
+
+> R3 (areas G, H, I). Read `tokens/**`, `theme.css`, the token scripts and `packages/ui/package.json`.
+>
+> - G: `exports`, types, tree-shaking through the barrel, dependency vs peer dependency (`radix-ui`, `lucide-react`), the `@source` contract, semver and deprecation policy, CHANGELOG quality. Consumer simulation with the packed tarball: a fresh Vite app and a fresh Next app; import only `Button` and measure; TypeScript `moduleResolution` `bundler` and `node16`; StrictMode and the React Compiler on; a consumer stylesheet whose Tailwind utilities clash with ours (cascade order, specificity, `@layer`).
+> - H: DTCG compliance and naming, recipe design, forced colours (Chromium emulation), reduced motion, logical properties and `dir="rtl"`, print, `tailwind-merge` config drift.
+> - I: spike: what a `mode: dark` source for Base would need (literal values in theme JSON, scrim and elevation, `:root` vs scope, the head script, the playground). List each blocker as a finding.
+
+### R4: Site — Next.js, state, performance (60 min)
+
+> R4 (areas D, E, F). Read every file in `apps/site/src` and its config.
+>
+> - D: the playground store (derived vs stored, validation, versioning and migration of the stored shape, cross-tab sync, URL state, re-render scope), the theme switcher's source of truth.
+> - E: server vs client split per route (what ships to the client and why), static rendering (`next build` output), the inline head script vs the CSP, `next/font` strategy, dynamic theme imports, metadata/sitemap/robots/OG, error and not-found pages, whether Cache Components apply.
+> - F: Core Web Vitals from R1's Lighthouse runs plus a trace of the playground's response to a knob change (INP), first-load JS per route, video and image weight, font swap and layout shift.
+
+### R5: Accessibility beyond axe, testing strategy (60 min)
+
+> R5 (areas J, K).
+>
+> - J: keyboard walk of every showcase page and the playground; WCAG 2.2 AA checks axe cannot make (2.4.11 focus not obscured, 1.4.10 reflow at 400%, 1.4.11 non-text contrast of states, 3.3.x error handling, 2.5.8 target size outside Checkbox/Radio); forced colours; reduced motion. Write `docs/evidence/screen-reader-script-<date>.md` (VoiceOver + Safari steps with expected announcements) for the maintainer; record their results.
+> - K: map every test suite (jsdom unit, layout, story, site e2e, script tests) to what it proves; overlaps and gaps; behaviour vs implementation; coverage (measure once with `vitest --coverage` via `pnpm dlx` if feasible); visual regression (none today); flake risk; CI duration.
+
+### R6: Security, DX, tooling, process + write-up (60 min)
+
+> R6 (areas L, M, N), then close the review.
+>
+> - L: CSP and the inline script, parsing of stored and imported state, export filenames, download and clipboard, dependency surface, workflow permissions and provenance.
+> - M: README and package README accuracy (run every snippet), Storybook docs (autodocs, controls, usage guidance), onboarding, dev warnings, contribution guide.
+> - N: `pnpm check` duration and caching, script quality and tests, docs maintainability (`DECISIONS.md` size, PLAN drift), upstream shadcn sync.
+> - Write-up: a scorecard per area (A–N), every finding prioritised, and a proposed hardening milestone (sessions with prompts, like MH) in the register. Update PROGRESS, push `review-r6` and open the PR.
+
+**You do:** run the R5 screen-reader script; review the register and approve (or edit) the proposed hardening milestone.
+**Done when (each session):** its findings are in the register with evidence and a proposed fix, PROGRESS is updated, and its PR is open. **Done when (MR):** every area has a scorecard entry, the "Leads" list is empty (each lead became a finding or was dismissed with a reason), and all six PRs are merged.
 
 ---
 
