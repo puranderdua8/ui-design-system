@@ -8,6 +8,7 @@ import { previewVars, safeResolve } from "@/playground/state";
 import { getServerSnapshot, getSnapshot, subscribe } from "@/playground/store";
 import { AdvancedPanel } from "./advanced-panel";
 import { ContrastPanel } from "./contrast-panel";
+import { ExportPanel } from "./export-panel";
 import { KnobPanel } from "./knob-panel";
 import { Preview } from "./preview";
 
@@ -66,6 +67,7 @@ export const Playground = () => {
               <KnobPanel state={state} resolved={resolved} />
               <ContrastPanel report={report} />
               <AdvancedPanel state={state} resolved={resolved} />
+              <ExportPanel resolved={resolved} report={report} />
             </Stack>
             <Preview theme={state.start} vars={vars} />
           </Split>
