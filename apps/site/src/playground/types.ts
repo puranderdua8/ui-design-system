@@ -21,7 +21,7 @@ export type FontId = "inter" | "plex" | "fraunces" | "nunito" | "bricolage";
 export type Knobs = {
   /** Hex colour that becomes `brand.600`; the rest of the brand scale is generated. */
   brand?: string;
-  /** Hex colour for an `accent` scale (50-900). The contract has no accent role yet. */
+  /** Hex colour that becomes `accent.600`; drives Tabs and accent Cards (0.8.0). */
   accent?: string;
   /** Hue (degrees, OKLCH) and chroma of the neutral scale; lightness per step is kept. */
   neutral?: { hue?: number; chroma?: number };
@@ -52,7 +52,7 @@ export type PlaygroundState = {
 export type IgnoredOverride = { key: string; reason: string };
 
 export type ResolvedTheme = {
-  /** Every var, resolved. Same keys and order as the starting theme (plus accent). */
+  /** Every var, resolved. Same keys and order as the starting theme. */
   vars: VarMap;
   /** Semantic -> var aliases that survived (an override that sets a literal removes one). */
   refs: Record<string, string>;

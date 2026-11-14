@@ -91,8 +91,8 @@ importers:
   apps/site:
     dependencies:
       '@puranderdua/ui':
-        specifier: 0.7.0
-        version: 0.7.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 0.8.0
+        version: 0.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       culori:
         specifier: ^4.0.2
         version: 4.0.2
@@ -1382,8 +1382,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@puranderdua/ui@0.7.0':
-    resolution: {integrity: sha512-TfCLbJmbaZuAiUj3Q5SjO61dcnE0EmBzbnaQYQRaQbnggdaNfVn6XFU2rAemrb0b8msV24qPTnmYsmgA9HjNQw==}
+  '@puranderdua/ui@0.8.0':
+    resolution: {integrity: sha512-hsv5CY867OICjsVVuJmqNOhPOXKls2ktfuFKNAhUqbTfTmXUqzeFJOtt8DFAD/giwM0TXMv2YEzqUcv2IF8bag==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -6290,7 +6290,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@puranderdua/ui@0.7.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@puranderdua/ui@0.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       class-variance-authority: 0.7.1
       clsx: 2.1.1
