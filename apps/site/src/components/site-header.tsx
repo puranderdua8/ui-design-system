@@ -9,6 +9,7 @@ import { isCurrent } from "@/lib/is-current";
 const items = [
   { href: "/", label: "Home" },
   { href: "/components", label: "Components" },
+  { href: "/playground", label: "Playground" },
 ] as const;
 
 export const SiteHeader = () => {

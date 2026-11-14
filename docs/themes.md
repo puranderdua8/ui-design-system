@@ -109,7 +109,7 @@ Pointer targets never go below `size.target.min` (24px, WCAG 2.5.8): Corporate's
 
 ### The accent role (0.8.0, D-084)
 
-Every theme has a `color.accent` scale (Base steel-blue, hue 250, restrained beside the grey brand). Two semantic roles read it: `text.accent` (accent.700, 4.5:1) and `accent.border` (accent.600, 3:1), re-mapped in every surface tone through `on-raised`, `on-inverse` and `on-brand`. Components use it as a second voice for selection and highlight: the `Tabs` active label and bar, and `Card variant="accent"`. It never replaces the brand on an action. Utilities: `text-ds-accent`, `bg-ds-accent-border`, `border-ds-accent-border`. The site playground's accent knob (it generates `--ds-color-accent-50..900`) drives this role once the site is on 0.8.0.
+Every theme has a `color.accent` scale (Base steel-blue, hue 250, restrained beside the grey brand). Two semantic roles read it: `text.accent` (accent.700, 4.5:1) and `accent.border` (accent.600, 3:1), re-mapped in every surface tone through `on-raised`, `on-inverse` and `on-brand`. Components use it as a second voice for selection and highlight: the `Tabs` active label and bar, and `Card variant="accent"`. It never replaces the brand on an action. Utilities: `text-ds-accent`, `bg-ds-accent-border`, `border-ds-accent-border`. The site playground's accent knob (it generates `--ds-color-accent-50..900`) drives this role in `/playground` (the site is on 0.8.0).
 
 ## Contrast
 
