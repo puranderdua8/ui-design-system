@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1 wrap-up — 2026-11-14 (site only, no package change)
+
+`@puranderdua/ui` stays at **0.8.0**; nothing here is published to npm. The site's `/playground` can now **export** its theme: the four DTCG files for `tokens/themes/<name>/` (`color`, `dimension`, `effects`, `typography`) and a `<name>.css`, each with Copy and Download, plus Download all. A round-trip test writes an export into a scratch `tokens/themes/custom/` with a scratch resolver and runs `validate-tokens`, `build-tokens` and `contrast`. See `docs/releases/v1.md`.
+
 ## 0.8.0 — 2026-11-14
 
 New **accent** colour role: a second voice beside the brand, for selection and highlight, never for the primary action. No API breaks; existing components keep their look except the `Tabs` active marker (below).

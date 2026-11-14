@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
@@ -142,6 +143,69 @@ test("the advanced panel overrides one token and resets it", async ({
   await expect.poll(() => background(page)).toBe("rgb(170, 0, 0)");
   await page.getByRole("button", { name: "Reset action-primary-bg" }).click();
   await expect.poll(() => background(page)).not.toBe("rgb(170, 0, 0)");
+});
+
+const readDownload = async (page: Page, name: string): Promise<string> => {
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("button", { name: `Download ${name}` }).click(),
+  ]);
+  expect(download.suggestedFilename()).toBe(name);
+  const path = await download.path();
+  return readFileSync(path, "utf8");
+};
+
+test("export downloads DTCG JSON and CSS that carry the edit", async ({
+  page,
+}) => {
+  await page.getByLabel("Brand colour", { exact: true }).fill("#1762b6");
+  await page.getByLabel("Theme name", { exact: true }).fill("Acme Brand");
+
+  const colours = JSON.parse(await readDownload(page, "color.json"));
+  expect(colours.color.brand["600"].$value).toBe("#1762b6");
+
+  const css = await readDownload(page, "acme-brand.css");
+  expect(css).toContain("--ds-color-brand-600: #1762b6;");
+  expect(css).toContain(":root {");
+});
+
+test("export warns about failing contrast", async ({ page }) => {
+  await expect(page.getByTestId("export-contrast-warning")).toHaveCount(0);
+  await page.getByLabel("Brand colour", { exact: true }).fill("#facc15");
+  await expect(page.getByTestId("export-contrast-warning")).toContainText(
+    "tokens:check",
+  );
+});
+
+test("export notes an advanced override the files cannot hold", async ({
+  page,
+}) => {
+  await page.getByText(/^action \(/).click();
+  await page
+    .getByLabel("action-primary-bg value", { exact: true })
+    .fill("#aa0000");
+  await expect(page.getByTestId("export-semantic-warning")).toContainText(
+    "action-primary-bg",
+  );
+});
+
+test("export copies a file to the clipboard", async ({
+  page,
+  context,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== "chromium",
+    "clipboard permissions can only be granted in Chromium",
+  );
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.getByLabel("Brand colour", { exact: true }).fill("#1762b6");
+  await page.getByRole("button", { name: "Copy color.json" }).click();
+  await expect(page.getByTestId("export-status")).toHaveText(
+    "Copied color.json.",
+  );
+  const text = await page.evaluate(() => navigator.clipboard.readText());
+  expect(JSON.parse(text).color.brand["600"].$value).toBe("#1762b6");
 });
 
 test("the Playground link is in the header and marked current", async ({
