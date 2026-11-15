@@ -237,6 +237,7 @@ describe("Banner video", () => {
   it("plays a muted, looping, inline video that assistive technology skips", () => {
     stubMotion(false);
     render(<Banner aria-label="Welcome" video={video} />);
+    view.set(true);
     const el = getBanner().querySelector("video");
     expect(el).not.toBeNull();
     expect(el?.muted).toBe(true);
@@ -255,8 +256,14 @@ describe("Banner video", () => {
       "none",
     );
     expect(playback.play).not.toHaveBeenCalled();
+    // No `src` at all until it is wanted: `preload` alone is not honoured by
+    // every browser.
+    expect(getBanner().querySelector("video")?.hasAttribute("src")).toBe(false);
     expect(screen.getByRole("button", { name: "Play video" })).not.toBeNull();
     view.set(true);
+    expect(getBanner().querySelector("video")?.getAttribute("src")).toBe(
+      "hero.mp4",
+    );
     expect(playback.play).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("button", { name: "Pause video" })).not.toBeNull();
   });
@@ -282,6 +289,8 @@ describe("Banner video", () => {
     render(
       <Banner aria-label="Welcome" video={{ ...video, type: "video/mp4" }} />,
     );
+    expect(getBanner().querySelector("source")).toBeNull();
+    view.set(true);
     const el = getBanner().querySelector("video");
     expect(el?.hasAttribute("src")).toBe(false);
     expect(el?.querySelector("source")?.getAttribute("type")).toBe("video/mp4");
