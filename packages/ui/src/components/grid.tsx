@@ -33,14 +33,38 @@ export const gridFitClasses: Record<GridMinItemWidth, string> = {
 
 export type GridElement = "div" | "ul" | "ol" | "section";
 
-export type GridProps = {
-  /** Responsive column count. Ignored when `minItemWidth` is set. */
-  cols?: GridCols;
-  /** Auto-fit mode: as many columns as fit, each at least this wide. */
-  minItemWidth?: GridMinItemWidth;
+/**
+ * Either a column count (`cols`) or an auto-fit minimum width (`minItemWidth`),
+ * never both (R07).
+ */
+type GridColumns =
+  | {
+      /** Responsive column count; follows the Grid's own width, which must be definite. */
+      cols?: GridCols;
+      minItemWidth?: never;
+    }
+  | {
+      cols?: never;
+      /** Auto-fit mode: as many columns as fit, each at least this wide. */
+      minItemWidth: GridMinItemWidth;
+    };
+
+export type GridProps = GridColumns & {
   gap?: LayoutGap;
 } & AsProps<"div", Exclude<GridElement, "div">>;
 
+/** Props that belong on the outermost element: the one that is the flex or grid item. */
+const isOuterProp = (name: string) =>
+  name === "style" || name.startsWith("data-");
+
+/**
+ * With `minItemWidth` the Grid is one element and every prop lands on it. With
+ * `cols` a container query needs a wrapper (an element cannot query itself), so
+ * the outermost element is a `div` that fills its parent (`w-full min-w-0`,
+ * otherwise a flex parent sizes it to zero) and takes `className`, `style` and
+ * `data-*`: `col-span-2`, `flex-1` and `self-start` work on it. `as`, `ref`,
+ * `role`, `id`, `aria-*` and the children stay on the grid element inside it.
+ */
 export const Grid = ({
   as = "div",
   cols = 1,
@@ -49,26 +73,38 @@ export const Grid = ({
   className,
   ...props
 }: GridProps) => {
-  const grid = renderAs(as, {
-    role: listRole(as),
-    ...props,
-    "data-slot": "grid",
-    className: cn(
-      "grid",
-      minItemWidth ? gridFitClasses[minItemWidth] : gridColsClasses[cols],
-      gapClasses[gap],
-      className,
-    ),
-  });
+  if (minItemWidth) {
+    return renderAs(as, {
+      role: listRole(as),
+      ...props,
+      className: cn(
+        "grid",
+        gridFitClasses[minItemWidth],
+        gapClasses[gap],
+        className,
+      ),
+      "data-slot": "grid",
+    });
+  }
 
-  // Auto-fit already follows the container, so it needs no wrapper. A column
-  // count needs one, because a container query cannot style its own container.
-  // `as`, `ref`, `role` and every other prop stay on the grid itself.
-  return minItemWidth ? (
-    grid
-  ) : (
-    <div data-slot="grid-container" className={gridContainerClasses}>
-      {grid}
+  const outer: Record<string, unknown> = {};
+  const inner: Record<string, unknown> = {};
+  for (const [name, value] of Object.entries(props)) {
+    (isOuterProp(name) ? outer : inner)[name] = value;
+  }
+
+  return (
+    <div
+      {...outer}
+      data-slot="grid-container"
+      className={cn(gridContainerClasses, "w-full min-w-0", className)}
+    >
+      {renderAs(as, {
+        role: listRole(as),
+        ...inner,
+        className: cn("grid", gridColsClasses[cols], gapClasses[gap]),
+        "data-slot": "grid",
+      })}
     </div>
   );
 };

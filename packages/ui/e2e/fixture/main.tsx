@@ -75,7 +75,7 @@ const cases: Record<string, ReactNode> = {
     </Sidebar>
   ),
   "sidebar-end": (
-    <Sidebar side="end" sidebar={<Box id="a" />}>
+    <Sidebar sidebarSide="end" sidebar={<Box id="a" />}>
       <Box id="b" />
     </Sidebar>
   ),
@@ -87,7 +87,7 @@ const cases: Record<string, ReactNode> = {
     </Sidebar>
   ),
   "sidebar-end-focus": (
-    <Sidebar side="end" sidebar={<button id="a">a</button>}>
+    <Sidebar sidebarSide="end" sidebar={<button id="a">a</button>}>
       <button id="b">b</button>
     </Sidebar>
   ),
@@ -106,6 +106,32 @@ const cases: Record<string, ReactNode> = {
       <Box id="b" />
       <Box id="c" />
     </Grid>
+  ),
+  // R07: a container-query wrapper must not collapse to zero width in a flex
+  // parent, and `className` must land on the element that is the flex item.
+  "grid-in-cluster": (
+    <Cluster gap="sm">
+      <Grid cols={2} gap="sm" data-testid="outer">
+        <Box id="a" />
+        <Box id="b" />
+      </Grid>
+    </Cluster>
+  ),
+  "grid-in-stack-centre": (
+    <Stack align="center">
+      <Grid cols={2} gap="sm" data-testid="outer">
+        <Box id="a" />
+        <Box id="b" />
+      </Grid>
+    </Stack>
+  ),
+  "grid-in-stack-start-capped": (
+    <Stack align="start">
+      <Grid cols={2} gap="sm" className="max-w-ds-sm" data-testid="outer">
+        <Box id="a" />
+        <Box id="b" />
+      </Grid>
+    </Stack>
   ),
   "grid-fit-md": (
     <Grid minItemWidth="md" gap="sm">

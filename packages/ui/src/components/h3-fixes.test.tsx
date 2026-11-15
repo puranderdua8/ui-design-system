@@ -38,11 +38,29 @@ describe("H3: server-safe style exports (F01)", () => {
     }
   });
 
-  it("the public API still exports the style helpers", () => {
-    expect(typeof api.inputVariants).toBe("function");
-    expect(typeof api.selectTriggerVariants).toBe("function");
-    expect(typeof api.checkboxClasses).toBe("string");
-    expect(typeof api.radioGroupItemClasses).toBe("string");
+  it("the public API exports only the `*Variants` cva functions (R09)", () => {
+    const names = Object.keys(api);
+    expect(
+      names.filter((name) => /Variants$|Classes$/.test(name)).sort(),
+    ).toEqual([
+      "buttonVariants",
+      "headingVariants",
+      "inputVariants",
+      "linkVariants",
+      "textVariants",
+    ]);
+    for (const name of [
+      "checkboxClasses",
+      "radioGroupItemClasses",
+      "tabsClasses",
+      "selectTriggerVariants",
+      "bannerVariants",
+      "cardVariants",
+      "SelectScrollUpButton",
+      "SelectScrollDownButton",
+    ]) {
+      expect(names).not.toContain(name);
+    }
   });
 });
 

@@ -165,7 +165,7 @@ type Story = StoryObj<typeof meta>;
 
 const specimen = () => (
   <>
-    <Section tone="canvas" padding="md" container="lg">
+    <Section tone="canvas" padding="md" contentWidth="lg">
       <Stack gap="lg">
         <Stack gap="sm">
           <Heading as="h1" variant="display">
@@ -315,13 +315,13 @@ const specimen = () => (
       </Stack>
     </Section>
 
-    <Section tone="subtle" padding="md" container="lg">
+    <Section tone="subtle" padding="md" contentWidth="lg">
       <Heading as="h2" variant="h3">
         Subtle section
       </Heading>
       <Text>Quiet band, one step off the canvas.</Text>
     </Section>
-    <Section tone="inverse" padding="md" container="lg">
+    <Section tone="inverse" padding="md" contentWidth="lg">
       <Stack gap="sm">
         <Heading as="h2" variant="h3">
           Inverse section
@@ -331,7 +331,7 @@ const specimen = () => (
         </Text>
       </Stack>
     </Section>
-    <Section tone="brand" padding="md" container="lg">
+    <Section tone="brand" padding="md" contentWidth="lg">
       <Stack gap="sm">
         <Heading as="h2" variant="h3">
           Brand section

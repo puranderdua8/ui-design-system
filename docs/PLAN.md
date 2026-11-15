@@ -81,7 +81,7 @@ Then `/clear`, or start a new session. On the last session of a milestone, the A
 
 **Components (D-049).**
 
-- Interactive components are adapted from shadcn new-york-v4 source on the unified `radix-ui` package, each with a provenance doc in `docs/provenance/`. Icons come from `lucide-react`.
+- Interactive components are adapted from shadcn new-york-v4 source on Radix (the individual `@radix-ui/react-*` packages from H16, D-093; the unified `radix-ui` package before), each with a provenance doc in `docs/provenance/`. Icons come from `lucide-react`.
 - Client components start with `"use client"`, and the package build must keep it.
 - Portal components (Select) accept a `container` prop, so the playground's scoped preview can theme them. They default to the nearest `ThemeScope` (`usePortalContainer()`, H5, D-075), then `document.body`, and an explicit `container` still wins.
 

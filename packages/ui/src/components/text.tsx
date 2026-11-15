@@ -15,6 +15,10 @@ export const textVariants = cva("", {
   defaultVariants: { variant: "body" },
 });
 
+export type TextVariant = NonNullable<
+  VariantProps<typeof textVariants>["variant"]
+>;
+
 export type TextElement = "p" | "span" | "div" | "label";
 
 type TextStyleProps = VariantProps<typeof textVariants>;

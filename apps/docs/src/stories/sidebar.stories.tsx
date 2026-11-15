@@ -31,13 +31,13 @@ const meta = {
   title: "Layout/Sidebar",
   component: Sidebar,
   args: {
-    side: "start",
+    sidebarSide: "start",
     gap: "lg",
     sidebar: <Links />,
     sidebarAs: "nav",
   },
   argTypes: {
-    side: { control: "inline-radio", options: ["start", "end"] },
+    sidebarSide: { control: "inline-radio", options: ["start", "end"] },
     gap: { control: "inline-radio", options: ["xs", "sm", "md", "lg", "xl"] },
   },
   render: (args) => (
@@ -58,7 +58,7 @@ export const Sides: Story = {
       {(["start", "end"] as const).map((side) => (
         <Sidebar
           key={side}
-          side={side}
+          sidebarSide={side}
           sidebar={<Links />}
           sidebarAs="nav"
           sidebarProps={{ "aria-label": `Links (${side})` }}
@@ -71,7 +71,7 @@ export const Sides: Story = {
 };
 
 /**
- * `side="end"` puts the content first in the DOM, so tab and reading order match
+ * `sidebarSide="end"` puts the content first in the DOM, so tab and reading order match
  * what you see; stacked, the aside sits below the content. `sidebarProps` names
  * each aside, so two of them are distinct landmarks.
  */
@@ -86,7 +86,7 @@ export const NamedAsides: Story = {
         <Content />
       </Sidebar>
       <Sidebar
-        side="end"
+        sidebarSide="end"
         sidebar={<Links />}
         sidebarAs="aside"
         sidebarProps={{ "aria-label": "Related" }}

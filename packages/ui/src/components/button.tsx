@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { Slot } from "radix-ui";
+import { Slot } from "@radix-ui/react-slot";
 import { controlSizeClasses } from "@/lib/control";
 import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
@@ -22,6 +22,13 @@ export const buttonVariants = cva(base, {
   defaultVariants: { variant: "primary", size: "md" },
 });
 
+export type ButtonVariant = NonNullable<
+  VariantProps<typeof buttonVariants>["variant"]
+>;
+export type ButtonSize = NonNullable<
+  VariantProps<typeof buttonVariants>["size"]
+>;
+
 export type ButtonProps = VariantProps<typeof buttonVariants> &
   ElementProps<"button"> & {
     /** Render the child element instead of a `<button>`, merging props onto it. */
@@ -36,7 +43,7 @@ export const Button = ({
   className,
   ...props
 }: ButtonProps) => {
-  const Comp = asChild ? Slot.Root : "button";
+  const Comp = asChild ? Slot : "button";
   return (
     <Comp
       // Default `type="button"` only on a real <button>; asChild may be a link.

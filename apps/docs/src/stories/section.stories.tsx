@@ -23,14 +23,14 @@ const Body = ({ label }: { label: string }) => (
 const meta = {
   title: "Layout/Section",
   component: Section,
-  args: { tone: "canvas", padding: "md", container: "md" },
+  args: { tone: "canvas", padding: "md", contentWidth: "md" },
   argTypes: {
     tone: {
       control: "inline-radio",
       options: ["canvas", "subtle", "inverse", "brand"],
     },
     padding: { control: "inline-radio", options: ["sm", "md", "lg"] },
-    container: {
+    contentWidth: {
       control: "inline-radio",
       options: [undefined, "sm", "md", "lg", "xl", "full"],
     },
@@ -52,7 +52,7 @@ export const Tones: Story = {
   render: () => (
     <>
       {(["canvas", "subtle", "inverse", "brand"] as const).map((tone) => (
-        <Section key={tone} tone={tone} container="md" padding="sm">
+        <Section key={tone} tone={tone} contentWidth="md" padding="sm">
           <Body label={`tone="${tone}"`} />
         </Section>
       ))}
@@ -68,7 +68,7 @@ export const TonesWithActions: Story = {
   render: () => (
     <>
       {(["canvas", "subtle", "inverse", "brand"] as const).map((tone) => (
-        <Section key={tone} tone={tone} container="md" padding="sm">
+        <Section key={tone} tone={tone} contentWidth="md" padding="sm">
           <Stack gap="sm">
             <Text>
               tone="{tone}": read <Link href="#docs">the documentation</Link> or
@@ -96,7 +96,7 @@ export const Paddings: Story = {
           key={padding}
           tone={i % 2 ? "canvas" : "subtle"}
           padding={padding}
-          container="md"
+          contentWidth="md"
         >
           <Text>padding="{padding}"</Text>
         </Section>

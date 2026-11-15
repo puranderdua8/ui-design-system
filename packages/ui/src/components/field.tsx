@@ -77,6 +77,11 @@ export type FieldProps = Omit<ElementProps<"div">, "children"> & {
    */
   layout?: FieldLayout;
   /**
+   * Props for the row that holds the control and its label when `layout` is
+   * `inline`: `className`, `id`, `data-*`. Ignored for `stacked`.
+   */
+  rowProps?: Omit<ElementProps<"div">, "children">;
+  /**
    * The id of the control inside (otherwise generated with `useId`), not of the
    * wrapping `div`: the label's `htmlFor` and the description and error ids
    * derive from it. A control's own `id` is ignored inside a Field (R06). On
@@ -95,6 +100,7 @@ export const Field = ({
   error,
   required = false,
   layout = "stacked",
+  rowProps,
   id,
   className,
   children,
@@ -127,7 +133,14 @@ export const Field = ({
         className={cn("flex flex-col gap-ds-gap-xs", className)}
       >
         {layout === "inline" ? (
-          <div className="flex items-center gap-ds-gap-sm">
+          <div
+            {...rowProps}
+            data-slot="field-row"
+            className={cn(
+              "flex items-center gap-ds-gap-sm",
+              rowProps?.className,
+            )}
+          >
             {children}
             {labelElement}
           </div>

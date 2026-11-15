@@ -8,11 +8,11 @@
 
 ## Dependencies
 
-| Package                  | Why                                                   |
-| ------------------------ | ----------------------------------------------------- |
-| `radix-ui`               | `Checkbox` primitive from the unified package (D-049) |
-| `lucide-react`           | `CheckIcon`, `MinusIcon` (indeterminate)              |
-| `clsx`, `tailwind-merge` | via our `cn` (`@/lib/utils`)                          |
+| Package                    | Why                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| `@radix-ui/react-checkbox` | `Checkbox` primitive from the individual package (D-093; upstream uses the unified `radix-ui`) |
+| `lucide-react`             | `CheckIcon`, `MinusIcon` (indeterminate)                                                       |
+| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                                                                   |
 
 ## Changes from upstream
 

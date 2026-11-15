@@ -2,6 +2,7 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
 import { gapClasses, type LayoutGap } from "@/lib/layout";
+import { warnRenamedProp } from "@/lib/deprecate";
 import type { AsProps } from "@/lib/types";
 
 export type SidebarSide = "start" | "end";
@@ -29,55 +30,61 @@ export type SidebarProps = {
   /** The aside column. */
   sidebar: React.ReactNode;
   /** Which edge the aside sits on when the row has room. */
+  sidebarSide?: SidebarSide;
+  /** @deprecated Renamed `sidebarSide` (D-089). Removed in 1.0.0. */
   side?: SidebarSide;
   /** Element for the aside. `aside` is a landmark; inside `<main>` prefer `div` or `nav`. */
   sidebarAs?: SidebarAsideElement;
   gap?: LayoutGap;
-  /** Passed to the aside element. */
-  sidebarClassName?: string;
   /**
-   * Other props for the aside element: `aria-label`, `id`, `data-*`. Name each
-   * `aside` or `nav` when a page has more than one (axe `landmark-unique`).
+   * Props for the aside element: `className`, `aria-label`, `id`, `data-*`.
+   * Name each `aside` or `nav` when a page has more than one (axe
+   * `landmark-unique`).
    */
   sidebarProps?: Omit<React.ComponentPropsWithoutRef<"div">, "children">;
+  /** Props for the content column: `className`, `id`, `data-*`. */
+  contentProps?: Omit<React.ComponentPropsWithoutRef<"div">, "children">;
 } & AsProps<"div", "section">;
 
 /** Aside plus content. The children are the content column. */
 export const Sidebar = ({
   as = "div",
   sidebar,
-  side = "start",
+  sidebarSide,
+  side,
   sidebarAs = "aside",
   gap = "lg",
-  sidebarClassName,
   sidebarProps,
+  contentProps,
   className,
   children,
   ...props
 }: SidebarProps) => {
+  if (side !== undefined) warnRenamedProp("Sidebar", "side", "sidebarSide");
+  const edge = sidebarSide ?? side ?? "start";
   const aside = renderAs(sidebarAs, {
     ...sidebarProps,
+    className: cn(sidebarAsideClasses, sidebarProps?.className),
     "data-slot": "sidebar-aside",
-    className: cn(
-      sidebarAsideClasses,
-      sidebarClassName,
-      sidebarProps?.className,
-    ),
     children: sidebar,
   });
   const content = (
-    <div data-slot="sidebar-content" className={sidebarContentClasses}>
+    <div
+      {...contentProps}
+      data-slot="sidebar-content"
+      className={cn(sidebarContentClasses, contentProps?.className)}
+    >
       {children}
     </div>
   );
 
   return renderAs(as, {
     ...props,
-    "data-slot": "sidebar",
-    "data-side": side,
     className: cn(sidebarRowClasses, gapClasses[gap], className),
+    "data-slot": "sidebar",
+    "data-side": edge,
     children:
-      side === "end" ? (
+      edge === "end" ? (
         <>
           {content}
           {aside}

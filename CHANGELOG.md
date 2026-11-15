@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.9.0 — unreleased (MH2, in progress)
+
+0.9.0 is the last release that may break before 1.0.0. This section lists the public-API changes from H16; later MH2 sessions add theirs. Renamed props keep working for this release and log a development warning once per prop; **they are removed in 1.0.0** (D-089).
+
+**Renamed (old name works in 0.9.0, removed in 1.0.0):**
+
+| Component | Old prop    | New prop       | Note                                                                                                  |
+| --------- | ----------- | -------------- | ----------------------------------------------------------------------------------------------------- |
+| `Section` | `container` | `contentWidth` | A `ContainerSize`. `container` is now only the portal element (`SelectContent`).                      |
+| `Banner`  | `container` | `contentWidth` | Default stays `lg`.                                                                                   |
+| `Banner`  | `align`     | `justify`      | Position of the content on the column's main axis; same name as `Cluster`'s `justify`.                |
+| `Sidebar` | `side`      | `sidebarSide`  | `start` or `end`. The `data-side` attribute is unchanged. `side` no longer clashes with Radix `side`. |
+
+**Removed (no replacement period; they were never documented):**
+
+- `sidebarClassName` on `Sidebar`: use `sidebarProps={{ className }}`.
+- Public style exports `checkboxClasses`, `radioGroupItemClasses`, `tabsClasses`, `tabsListClasses`, `tabsTriggerClasses`, `tabsContentClasses`, `selectTriggerVariants`, `bannerVariants` and `cardVariants`. They only worked on Radix markup or one component's inner markup. Pass `className` to the component, or use `ButtonProps["variant"]`-style types. The public style exports are now the five `*Variants` cva functions: `textVariants`, `headingVariants`, `buttonVariants`, `linkVariants`, `inputVariants`.
+- `SelectScrollUpButton`, `SelectScrollDownButton` and the `SelectScrollButtonProps` type: `SelectContent` renders them.
+- The `BannerVideoProps` type (the component was never exported). `BannerVideoSource` stays.
+- `Grid` with both `cols` and `minItemWidth` is now a type error (the second was silently ignored).
+
+**Added:**
+
+- Variant types: `TextVariant`, `ButtonVariant`, `ButtonSize`, `LinkVariant`, `InputSize`, `SelectTriggerSize`, `CardVariant`, `BannerHeight`, `BannerJustify` (`HeadingVariant`, `BannerTone` and `BannerScrim` already existed).
+- Props for inner elements: `Section` and `Banner` `contentProps` (the inner `Container`), `Banner` `layerProps` (the content layer), `Sidebar` `contentProps` (the content column), `Field` `rowProps` (the inline row, with `data-slot="field-row"`).
+  **Changed:**
+
+- `CardTitle` and `CardDescription` have their own `data-slot`: `card-title` and `card-description` (they were `heading` and `text`). A selector on `[data-slot="heading"]` or `[data-slot="text"]` no longer matches inside a Card.
+
+**Fixed:**
+
+- `Grid` with `cols` collapsed to zero width inside a `Cluster` or a `Stack` with `align` other than `stretch`, and its `className` landed on the inner element. The outermost element now fills its parent (`w-full min-w-0`) and takes `className`, `style` and `data-*`; `as`, `ref`, `role`, `id` and `aria-*` stay on the grid element inside it. `cols` needs a definite width.
+- `data-slot` is set after the props spread everywhere, so a caller can no longer overwrite it (`SelectGroup` and `SelectValue` did).
+
+**Dependencies:**
+
+- `tailwindcss` `^4.0.0` is a peer dependency (it was only in the install line).
+- The `radix-ui` umbrella is replaced by `@radix-ui/react-slot`, `-checkbox`, `-radio-group`, `-select`, `-tabs` and `-direction` (same code and versions): consumers install 6 Radix packages instead of about 60 (D-093).
+
 ## Release 1 wrap-up — 2026-11-14 (site only, no package change)
 
 `@puranderdua/ui` stays at **0.8.0**; nothing here is published to npm. The site's `/playground` can now **export** its theme: the four DTCG files for `tokens/themes/<name>/` (`color`, `dimension`, `effects`, `typography`) and a `<name>.css`, each with Copy and Download, plus Download all. A round-trip test writes an export into a scratch `tokens/themes/custom/` with a scratch resolver and runs `validate-tokens`, `build-tokens` and `contrast`. See `docs/releases/v1.md`.

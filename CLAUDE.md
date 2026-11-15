@@ -62,7 +62,7 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
   - Interactive targets are at least 24px (`.ds-hit-area`, from H6). Every user-visible string in a component is a prop with an English default.
   - Single controls use `Field`; groups of controls use `Fieldset` (from H6).
 - **Production-ready bar (D-070):** release sessions run the Definition of Done in `docs/PLAN.md`. A known issue you can't fix in scope goes into the current audit register (or the PROGRESS parking lot), never silently.
-- **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from `radix-ui` until H16 moves it to individual `@radix-ui/react-*` packages (D-093); icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop (it wins over `ThemeScope`).
+- **Adopted components (D-049):** interactive components are adapted from shadcn new-york-v4 source, with a provenance doc in `docs/provenance/`. Radix comes only from the individual `@radix-ui/react-*` packages, never the `radix-ui` umbrella (D-093, amends D-049); icons come only from `lucide-react`. Client components start with `"use client"`, and the package build must keep it. Portal components accept a `container` prop (it wins over `ThemeScope`).
 - Text/Heading: the `as` prop (HTML element) is independent of `variant` (visual role).
 - Button: `type="button"` by default; variants `primary | secondary`; sizes `sm | md`; visible focus ring from the `focus.ring` token.
 - `apps/site` must install `@puranderdua/ui` from **npm at a pinned version**, never `workspace:*`.

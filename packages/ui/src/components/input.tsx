@@ -6,6 +6,8 @@ import type { ElementProps } from "@/lib/types";
 import { useFieldControlProps } from "./field";
 import { inputVariants } from "./input.styles";
 
+export type InputSize = NonNullable<VariantProps<typeof inputVariants>["size"]>;
+
 export type InputProps = VariantProps<typeof inputVariants> &
   Omit<ElementProps<"input">, "size">;
 

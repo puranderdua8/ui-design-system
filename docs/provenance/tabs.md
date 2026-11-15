@@ -8,10 +8,10 @@
 
 ## Dependencies
 
-| Package                  | Why                                       |
-| ------------------------ | ----------------------------------------- |
-| `radix-ui`               | `Tabs` primitive from the unified package |
-| `clsx`, `tailwind-merge` | via our `cn` (`@/lib/utils`)              |
+| Package                  | Why                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| `@radix-ui/react-tabs`   | `Tabs` primitive from the individual package (D-093; upstream uses the unified `radix-ui`) |
+| `clsx`, `tailwind-merge` | via our `cn` (`@/lib/utils`)                                                               |
 
 ## Changes from upstream
 
