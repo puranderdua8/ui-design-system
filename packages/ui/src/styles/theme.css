@@ -51,6 +51,8 @@
 
   --color-ds-focus-ring: var(--ds-focus-ring);
 
+  --color-ds-menu-highlight: var(--ds-menu-highlight-bg);
+  --color-ds-menu-highlight-fg: var(--ds-menu-highlight-fg);
   --color-ds-disabled: var(--ds-disabled-bg);
   --color-ds-disabled-fg: var(--ds-disabled-fg);
   --color-ds-disabled-border: var(--ds-disabled-border);

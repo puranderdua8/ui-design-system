@@ -1,3 +1,5 @@
+import * as React from "react";
+import { renderToString } from "react-dom/server";
 import { beforeAll, describe, expect, it } from "vitest";
 import { render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -9,7 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
-import { ThemeScope, usePortalContainer } from "./theme-scope";
+import {
+  DirectionProvider,
+  ScopedPortal,
+  ThemeScope,
+  usePortalContainer,
+} from "./theme-scope";
 
 // jsdom lacks the pointer and layout APIs Radix Select calls.
 beforeAll(() => {
@@ -77,39 +84,185 @@ describe("ThemeScope", () => {
     expect(scope.style.getPropertyValue("--b")).toBe("3");
   });
 
-  it("provides itself as the portal container", () => {
-    const { result } = renderHook(() => usePortalContainer(), {
+  it("sets dir and tells Radix components which way to read", () => {
+    render(
+      <ThemeScope theme="nature" vars={vars} dir="rtl" data-testid="scope">
+        x
+      </ThemeScope>,
+    );
+    expect(screen.getByTestId("scope").getAttribute("dir")).toBe("rtl");
+  });
+
+  it("writes no dir attribute unless one is given", () => {
+    render(
+      <ThemeScope theme="nature" vars={vars} data-testid="scope">
+        x
+      </ThemeScope>,
+    );
+    expect(screen.getByTestId("scope").hasAttribute("dir")).toBe(false);
+  });
+
+  it("renders its children once on mount (R08)", () => {
+    let renders = 0;
+    const Probe = () => {
+      renders += 1;
+      return null;
+    };
+    render(
+      <ThemeScope theme="nature" vars={vars}>
+        <Probe />
+      </ThemeScope>,
+    );
+    expect(renders).toBe(1);
+  });
+});
+
+describe("usePortalContainer", () => {
+  it("is document.body in the browser, scope or not", () => {
+    const bare = renderHook(() => usePortalContainer());
+    expect(bare.result.current).toBe(document.body);
+    const scoped = renderHook(() => usePortalContainer(), {
       wrapper: ({ children }) => (
-        <ThemeScope theme="nature" vars={vars} data-testid="scope">
+        <ThemeScope theme="nature" vars={vars}>
           {children}
         </ThemeScope>
       ),
     });
-    expect(result.current).toBe(screen.getByTestId("scope"));
+    expect(scoped.result.current).toBe(document.body);
   });
 
-  it("returns null with no scope", () => {
-    const { result } = renderHook(() => usePortalContainer());
-    expect(result.current).toBeNull();
+  it("is null while rendering on the server, never an ambiguous first value", () => {
+    const html = renderToString(<Server />);
+    expect(html).toBe("<p>no portal</p>");
   });
 });
 
-describe("Select portal container", () => {
-  it("portals into the ThemeScope, so the list sits under the scoped vars", async () => {
+const Server = () => {
+  const container = usePortalContainer();
+  return <p>{container ? "portal" : "no portal"}</p>;
+};
+
+describe("ScopedPortal", () => {
+  it("portals to body and re-applies theme, vars, direction and the raised tone", () => {
     render(
-      <ThemeScope theme="nature" vars={vars} data-testid="scope">
+      <ThemeScope theme="nature" vars={vars} dir="rtl" data-testid="scope">
+        <ScopedPortal>
+          <span data-testid="inside">in</span>
+        </ScopedPortal>
+      </ThemeScope>,
+    );
+    const inside = screen.getByTestId("inside");
+    const portal = inside.closest<HTMLElement>("[data-slot=scoped-portal]");
+    expect(screen.getByTestId("scope").contains(inside)).toBe(false);
+    expect(portal?.parentElement).toBe(document.body);
+    expect(portal?.getAttribute("data-ds-theme")).toBe("nature");
+    expect(portal?.getAttribute("dir")).toBe("rtl");
+    expect(portal?.style.getPropertyValue("--ds-color-surface-raised")).toBe(
+      "rgb(1, 2, 3)",
+    );
+    expect(portal?.className).toContain("ds-tone-raised");
+  });
+
+  it("puts the scope on its single child with asChild, without a wrapper", () => {
+    render(
+      <ThemeScope theme="nature" vars={vars}>
+        <ScopedPortal asChild>
+          <p data-testid="surface" className="own">
+            in
+          </p>
+        </ScopedPortal>
+      </ThemeScope>,
+    );
+    const surface = screen.getByTestId("surface");
+    expect(surface.parentElement).toBe(document.body);
+    expect(surface.getAttribute("data-ds-theme")).toBe("nature");
+    expect(surface.className).toContain("own");
+    expect(surface.className).toContain("ds-tone-raised");
+  });
+
+  it("outside any scope it writes no theme or dir, and a container wins", () => {
+    const other = document.createElement("div");
+    document.body.append(other);
+    render(
+      <ScopedPortal container={other}>
+        <span data-testid="inside">in</span>
+      </ScopedPortal>,
+    );
+    const portal = screen
+      .getByTestId("inside")
+      .closest<HTMLElement>("[data-slot=scoped-portal]");
+    expect(portal?.parentElement).toBe(other);
+    expect(portal?.hasAttribute("data-ds-theme")).toBe(false);
+    expect(portal?.hasAttribute("dir")).toBe(false);
+    other.remove();
+  });
+
+  it("takes the direction from a DirectionProvider", () => {
+    render(
+      <DirectionProvider dir="rtl">
+        <ScopedPortal>
+          <span data-testid="inside">in</span>
+        </ScopedPortal>
+      </DirectionProvider>,
+    );
+    expect(
+      screen
+        .getByTestId("inside")
+        .closest("[data-slot=scoped-portal]")
+        ?.getAttribute("dir"),
+    ).toBe("rtl");
+  });
+
+  it("keeps a portalled child's state when the scope re-renders (R08)", () => {
+    let mounts = 0;
+    const Child = () => {
+      React.useEffect(() => {
+        mounts += 1;
+      }, []);
+      return null;
+    };
+    const { rerender } = render(
+      <ThemeScope theme="nature" vars={vars}>
+        <ScopedPortal>
+          <Child />
+        </ScopedPortal>
+      </ThemeScope>,
+    );
+    rerender(
+      <ThemeScope theme="nature" vars={{ ...vars }}>
+        <ScopedPortal>
+          <Child />
+        </ScopedPortal>
+      </ThemeScope>,
+    );
+    expect(mounts).toBe(1);
+  });
+});
+
+describe("Select portal", () => {
+  it("opens on body with the scope re-applied, not inside the scope", async () => {
+    render(
+      <ThemeScope theme="nature" vars={vars} dir="rtl" data-testid="scope">
         <Fruit />
       </ThemeScope>,
     );
     const list = await open();
-    const scope = screen.getByTestId("scope");
-    expect(scope.contains(list)).toBe(true);
-    expect(list.closest("[data-ds-theme]")).toBe(scope);
-    expect(
-      list
-        .closest<HTMLElement>("[data-ds-theme]")
-        ?.style.getPropertyValue("--ds-color-surface-raised"),
-    ).toBe("rgb(1, 2, 3)");
+    expect(screen.getByTestId("scope").contains(list)).toBe(false);
+    expect(list.getAttribute("data-ds-theme")).toBe("nature");
+    expect(list.getAttribute("dir")).toBe("rtl");
+    expect(list.style.getPropertyValue("--ds-color-surface-raised")).toBe(
+      "rgb(1, 2, 3)",
+    );
+    expect(list.className).toContain("ds-tone-raised");
+  });
+
+  it("highlights an option with the menu role, not surface.subtle", async () => {
+    render(<Fruit />);
+    await open();
+    const cls = screen.getByRole("option", { name: "Apple" }).className;
+    expect(cls).toContain("data-[highlighted]:bg-ds-menu-highlight");
+    expect(cls).toContain("data-[highlighted]:text-ds-menu-highlight-fg");
+    expect(cls).not.toContain("surface-subtle");
   });
 
   it("an explicit container wins over the ThemeScope", async () => {

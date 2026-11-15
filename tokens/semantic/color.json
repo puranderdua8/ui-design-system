@@ -186,6 +186,17 @@
       "$description": "Gap between a control and its focus ring."
     }
   },
+  "menu": {
+    "$type": "color",
+    "highlight-bg": {
+      "$value": "{color.accent.700}",
+      "$description": "Fill of the option the keyboard or pointer is on in an open list (Select); 3:1 against surface.raised, the list surface. Default alias, so a custom theme may omit it."
+    },
+    "highlight-fg": {
+      "$value": "{color.white}",
+      "$description": "Text and icons on menu.highlight-bg; 4.5:1."
+    }
+  },
   "disabled": {
     "$type": "color",
     "bg": {

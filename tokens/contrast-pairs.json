@@ -77,6 +77,11 @@
     { "fg": "input.border-hover", "bg": "surface.subtle", "min": "ui" },
     { "fg": "input.placeholder", "bg": "input.bg", "min": "text" },
 
+    { "fg": "menu.highlight-fg", "bg": "menu.highlight-bg", "min": "text" },
+    { "fg": "menu.highlight-bg", "bg": "surface.raised", "min": "ui" },
+    { "fg": "menu.highlight-bg", "bg": "surface.canvas", "min": "ui" },
+    { "fg": "menu.highlight-bg", "bg": "surface.subtle", "min": "ui" },
+
     { "fg": "feedback.danger.fg", "bg": "surface.canvas", "min": "text" },
     { "fg": "feedback.danger.fg", "bg": "surface.subtle", "min": "text" },
     { "fg": "feedback.danger.fg", "bg": "surface.raised", "min": "text" },

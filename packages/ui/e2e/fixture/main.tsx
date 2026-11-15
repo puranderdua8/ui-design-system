@@ -17,6 +17,11 @@ import {
   RadioGroup,
   RadioGroupItem,
   Section,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Sidebar,
   Split,
   Stack,
@@ -25,6 +30,7 @@ import {
   TabsList,
   TabsTrigger,
   Text,
+  ThemeScope,
   type SectionTone,
 } from "../../src";
 import "./fixture.css";
@@ -312,6 +318,109 @@ const cases: Record<string, ReactNode> = {
     >
       <Text>Video</Text>
     </Banner>
+  ),
+  // R22: a ThemeScope inside an ancestor that clips and transforms. The open
+  // list must still be fully visible and clickable.
+  "select-clip": (
+    <div
+      data-testid="clip"
+      style={{
+        transform: "translateX(40px)",
+        overflow: "hidden",
+        height: 120,
+      }}
+    >
+      <ThemeScope
+        theme="nature"
+        vars={{ "--ds-surface-raised": "rgb(10, 20, 30)" }}
+        data-testid="scope"
+      >
+        <Select defaultValue="a">
+          <SelectTrigger aria-label="Letter" data-testid="trigger">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {["a", "b", "c", "d", "e", "f", "g", "h"].map((v) => (
+              <SelectItem key={v} value={v} data-testid={`opt-${v}`}>
+                Option {v}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </ThemeScope>
+    </div>
+  ),
+  // R18: Tabs and RadioGroup under an RTL ThemeScope.
+  "rtl-tabs": (
+    <ThemeScope theme="base" vars={{}} dir="rtl">
+      <Tabs defaultValue="one">
+        <TabsList aria-label="RTL tabs">
+          <TabsTrigger value="one" data-testid="rtab-one">
+            One
+          </TabsTrigger>
+          <TabsTrigger value="two" data-testid="rtab-two">
+            Two
+          </TabsTrigger>
+          <TabsTrigger value="three" data-testid="rtab-three">
+            Three
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="one">First panel</TabsContent>
+      </Tabs>
+      <RadioGroup defaultValue="a" aria-label="RTL radios">
+        {["a", "b", "c"].map((v) => (
+          <RadioGroupItem
+            key={v}
+            value={v}
+            aria-label={`radio ${v}`}
+            data-testid={`rradio-${v}`}
+          />
+        ))}
+      </RadioGroup>
+    </ThemeScope>
+  ),
+  // R19: every state indicator, for the forced-colours tests.
+  states: (
+    <Stack gap="md">
+      <Tabs defaultValue="one">
+        <TabsList aria-label="State tabs">
+          <TabsTrigger value="one" data-testid="stab-one">
+            One
+          </TabsTrigger>
+          <TabsTrigger value="two" data-testid="stab-two">
+            Two
+          </TabsTrigger>
+          <TabsTrigger value="three" disabled data-testid="stab-off">
+            Three
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+      <Cluster gap="md">
+        <Checkbox defaultChecked aria-label="on" data-testid="check-on" />
+        <Checkbox aria-label="off" data-testid="check-off" />
+        <Checkbox disabled aria-label="disabled" data-testid="check-disabled" />
+        <RadioGroup defaultValue="a">
+          <RadioGroupItem value="a" aria-label="a" data-testid="radio-on" />
+          <RadioGroupItem value="b" aria-label="b" data-testid="radio-off" />
+        </RadioGroup>
+      </Cluster>
+      <Select defaultValue="b">
+        <SelectTrigger aria-label="Pick" data-testid="state-trigger">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="a" data-testid="sopt-a">
+            A
+          </SelectItem>
+          <SelectItem value="b" data-testid="sopt-b">
+            B
+          </SelectItem>
+          <SelectItem value="c" disabled data-testid="sopt-c">
+            C
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </Stack>
   ),
   controls: (
     <Stack gap="md">
