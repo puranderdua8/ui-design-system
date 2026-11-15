@@ -87,7 +87,10 @@ export const RadioGroupItem = ({
       data-slot="radio-group-indicator"
       className="flex items-center justify-center"
     >
-      <CircleIcon aria-hidden="true" className="size-2 fill-current" />
+      <CircleIcon
+        aria-hidden="true"
+        className="size-ds-icon-dot fill-current"
+      />
     </RadioGroupPrimitive.Indicator>
   </RadioGroupPrimitive.Item>
 );

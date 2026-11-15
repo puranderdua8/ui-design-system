@@ -24,9 +24,13 @@ How to write and consume styles in the design system (Tier 3).
 | `--ease-ds-*`             | `ease-ds-standard`, `ease-ds-emphasized`                                                                                                                                                     |
 | `--container-ds-*`        | `max-w-ds-sm\|md\|lg\|xl`                                                                                                                                                                    |
 | `--spacing-ds-control-*`  | `h-ds-control-sm\|md`, `px-ds-control-px-sm\|md`                                                                                                                                             |
+| `--spacing-ds-*` (parts)  | `size-ds-icon-sm\|md\|dot`, `gap-ds-control-gap`, `p-ds-menu`, `px-ds-menu-item-x`, `py-ds-menu-item-y`, `pe-ds-menu-item-end`, `translate-y-ds-menu-offset`, `h-ds-marker`, `min-w-ds-menu` |
+| `--font-weight-ds-*`      | `font-ds-control` (label weight of Button, Link, Tabs)                                                                                                                                       |
 | `--spacing-ds-*` (layout) | `gap-ds-gap-xs\|sm\|md\|lg\|xl`, `py-ds-section-sm\|md\|lg`, `px-ds-gutter`, `w-ds-sidebar`                                                                                                  |
 
-Tailwind has no namespace for border width or transition duration, so those two are recipes (below).
+Tailwind has no namespace for border width or transition duration, so those two are recipes (below). Two values have no namespace either and read their token through the variable shorthand: `underline-offset-(--ds-link-underline-offset)` and `decoration-(length:--ds-selection-marker-width)` (Link).
+
+**What stays on Tailwind's own scale (R13).** Values that are not design decisions: `0`, `px`, `full`, `min-w-0`, `w-full`, `opacity-0` and `opacity-100`, `h-px` hairlines, `inset-*` and `-bottom-px` offsets that position a marker on a border, `flex-*`, and `aspect-square`. The Banner scrim opacity (`opacity-85`) also stays: it is a contrast-checked constant of the scrim, not a theme value (a theme changes the scrim colour). Anything else that a theme or the playground's density knob should reach is a token.
 
 ## Recipes
 
@@ -34,6 +38,8 @@ Tailwind has no namespace for border width or transition duration, so those two 
 - `.ds-focus-ring`: `:focus-visible` outline from `focus.ring-width`, `focus.ring-offset` and `focus.ring` (no Tailwind namespace exists for outline width/offset).
 - `.ds-border`, `.ds-border-strong`: solid border with `border-width.default` / `border-width.strong`. Colour comes from `border-ds-*`.
 - `.ds-transition`, `.ds-transition-fast`: colour, shadow, opacity and transform transitions with `motion.duration.normal|fast` and `motion.easing.standard`. Under `prefers-reduced-motion: reduce` the duration is 0s.
+- `.ds-transition-marker`: the same motion tokens for the `::after` marker of a selected tab (a pseudo-element cannot take `.ds-transition`).
+- `@media print` (R24): the dark tones fall back to the base roles and lose their fill; checkbox, radio and button keep theirs with `print-color-adjust: exact`.
 
 Add a recipe only when utilities cannot express the composite.
 

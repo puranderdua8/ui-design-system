@@ -7,10 +7,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+// The print block deliberately resets the dark tones to the base roles (R24),
+// so it is not a recipe; drop it (its closing brace is the first one at two
+// spaces of indent).
 const css = readFileSync(
   join(root, "packages/ui/src/styles/theme.css"),
   "utf8",
-);
+).replace(/@media print \{[\s\S]*?\n {2}\}\n/, "");
 const { contexts } = JSON.parse(
   readFileSync(join(root, "tokens/contrast-pairs.json"), "utf8"),
 );

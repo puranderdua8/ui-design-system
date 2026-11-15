@@ -42,11 +42,11 @@ export const Checkbox = ({
         {/* Both icons are rendered; `data-state` picks one, so it also works uncontrolled (F14). */}
         <CheckIcon
           aria-hidden="true"
-          className="size-3.5 group-data-[state=indeterminate]/checkbox:hidden"
+          className="size-ds-icon-sm group-data-[state=indeterminate]/checkbox:hidden"
         />
         <MinusIcon
           aria-hidden="true"
-          className="hidden size-3.5 group-data-[state=indeterminate]/checkbox:block"
+          className="hidden size-ds-icon-sm group-data-[state=indeterminate]/checkbox:block"
         />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>

@@ -1017,6 +1017,50 @@ test.describe("overlays, direction and forced colours (H15)", () => {
   });
 });
 
+test.describe("print (R24)", () => {
+  test("dark tones print as dark text on paper and the checked fill is kept", async ({
+    page,
+  }) => {
+    await open(page, "tones", 600);
+    await page.emulateMedia({ media: "print" });
+    for (const tone of ["inverse", "brand"]) {
+      const style = (id: string) =>
+        page
+          .getByTestId(`${id}-${tone}`)
+          .evaluate((el) => getComputedStyle(el).color);
+      // Text must read on white, the paper, not on the dark tone fill. Polled:
+      // a link transitions its colour and the switch to print starts a fade.
+      for (const id of ["text", "muted", "link"])
+        await expect
+          .poll(async () => contrast(await style(id), "rgb(255, 255, 255)"), {
+            message: `${id} in ${tone}`,
+          })
+          .toBeGreaterThanOrEqual(4.5);
+      const fill = await page
+        .getByTestId(`tone-${tone}`)
+        .evaluate((el) => getComputedStyle(el).backgroundImage);
+      expect(fill).toBe("none");
+    }
+
+    // The filled Button keeps its fill too (checked below on the tones case).
+    expect(
+      await page
+        .getByTestId("primary-inverse")
+        .evaluate((el) => getComputedStyle(el).printColorAdjust),
+    ).toBe("exact");
+
+    await open(page, "states");
+    await page.emulateMedia({ media: "print" });
+    for (const id of ["check-on", "radio-on"])
+      expect(
+        await page
+          .getByTestId(id)
+          .evaluate((el) => getComputedStyle(el).printColorAdjust),
+        id,
+      ).toBe("exact");
+  });
+});
+
 test.describe("motion", () => {
   test("Button and Link transition, and stop under reduced motion", async ({
     page,

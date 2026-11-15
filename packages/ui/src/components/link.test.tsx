@@ -159,7 +159,9 @@ describe("Link", () => {
 
   it("variant class maps are static", () => {
     expect(linkVariants({ variant: "inline" })).toContain("underline");
-    expect(linkVariants({ variant: "standalone" })).toContain("font-medium");
+    expect(linkVariants({ variant: "standalone" })).toContain(
+      "font-ds-control",
+    );
   });
 
   it("types a ref from the anchor element", () => {

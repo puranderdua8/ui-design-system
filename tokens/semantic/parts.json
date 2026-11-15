@@ -1,0 +1,67 @@
+{
+  "icon": {
+    "$type": "dimension",
+    "size": {
+      "sm": {
+        "$value": "{size.icon.sm}",
+        "$description": "Small icon: the check inside a Checkbox."
+      },
+      "md": {
+        "$value": "{size.icon.md}",
+        "$description": "Default icon, and the visual size of Checkbox and RadioGroup controls."
+      },
+      "dot": {
+        "$value": "{space.2}",
+        "$description": "The dot inside a selected radio."
+      }
+    }
+  },
+  "menu": {
+    "padding": {
+      "$type": "dimension",
+      "$value": "{space.1}",
+      "$description": "Inner padding of a menu or listbox."
+    },
+    "offset": {
+      "$type": "dimension",
+      "$value": "{space.1}",
+      "$description": "Distance a menu slides in from its trigger, and the vertical margin of a separator."
+    },
+    "min-width": {
+      "$type": "dimension",
+      "$value": "{size.menu.min}",
+      "$description": "Smallest menu width."
+    },
+    "item": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{space.2}",
+        "$description": "Horizontal padding of a menu item and label."
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{space.1-5}",
+        "$description": "Vertical padding of a menu item and label."
+      },
+      "padding-end": {
+        "$type": "dimension",
+        "$value": "{space.8}",
+        "$description": "Padding on the end side of an item, leaving room for the selection check."
+      }
+    }
+  },
+  "link": {
+    "underline-offset": {
+      "$type": "dimension",
+      "$value": "{space.1}",
+      "$description": "Gap between link text and its underline."
+    }
+  },
+  "selection": {
+    "marker-width": {
+      "$type": "dimension",
+      "$value": "{border-width.2}",
+      "$description": "Thickness of the active-tab bar and similar selection markers."
+    }
+  }
+}

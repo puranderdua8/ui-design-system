@@ -6,6 +6,10 @@
  * Primitives are never mapped here: components use semantic tokens only.
  */
 
+/* The package's own classes: Tailwind scans the folder this file ships in, so
+   a consumer needs no @source line of their own (R20). */
+@source "./";
+
 @theme inline {
   /* Colors: bg-ds-*, text-ds-*, border-ds-*, ... */
   --color-ds-text: var(--ds-text-primary);
@@ -105,7 +109,12 @@
 
   /* Control label sizes: text-ds-control-sm / text-ds-control-md */
   --text-ds-control-sm: var(--ds-control-sm-font-size);
+  --text-ds-control-sm--line-height: var(--ds-control-sm-line-height);
   --text-ds-control-md: var(--ds-control-md-font-size);
+  --text-ds-control-md--line-height: var(--ds-control-md-line-height);
+
+  /* Control label weight: font-ds-control */
+  --font-weight-ds-control: var(--ds-control-font-weight);
 
   /* Radius: rounded-ds-control, rounded-ds-card, rounded-ds-pill */
   --radius-ds-control: var(--ds-radius-control);
@@ -133,6 +142,20 @@
   --spacing-ds-control-px-sm: var(--ds-control-sm-padding-x);
   --spacing-ds-control-px-md: var(--ds-control-md-padding-x);
   --spacing-ds-target-min: var(--ds-control-target-min);
+  --spacing-ds-control-gap: var(--ds-control-gap);
+
+  /* Spacing namespace, parts: size-ds-icon-md, p-ds-menu, px-ds-menu-item-x,
+     h-ds-marker */
+  --spacing-ds-icon-sm: var(--ds-icon-size-sm);
+  --spacing-ds-icon-md: var(--ds-icon-size-md);
+  --spacing-ds-icon-dot: var(--ds-icon-size-dot);
+  --spacing-ds-menu: var(--ds-menu-padding);
+  --spacing-ds-menu-offset: var(--ds-menu-offset);
+  --spacing-ds-menu-item-x: var(--ds-menu-item-padding-x);
+  --spacing-ds-menu-item-y: var(--ds-menu-item-padding-y);
+  --spacing-ds-menu-item-end: var(--ds-menu-item-padding-end);
+  --spacing-ds-marker: var(--ds-selection-marker-width);
+  --container-ds-menu: var(--ds-menu-min-width);
 
   /* Spacing namespace, layout: gap-ds-gap-md, py-ds-section-md, px-ds-gutter,
      w-ds-sidebar */
@@ -212,9 +235,16 @@
     transition-duration: var(--ds-motion-duration-fast);
     transition-timing-function: var(--ds-motion-easing-standard);
   }
+  /* The ::after marker of a selected tab fades in; same motion tokens. */
+  .ds-transition-marker::after {
+    transition-property: opacity;
+    transition-duration: var(--ds-motion-duration-normal);
+    transition-timing-function: var(--ds-motion-easing-standard);
+  }
   @media (prefers-reduced-motion: reduce) {
     .ds-transition,
-    .ds-transition-fast {
+    .ds-transition-fast,
+    .ds-transition-marker::after {
       transition-duration: 0s;
     }
   }
@@ -426,6 +456,43 @@
     --ds-action-secondary-border: var(--ds-on-raised-action-secondary-border);
     background-color: var(--ds-surface-raised);
     color: var(--ds-text-primary);
+  }
+
+  /* Print (R24). Browsers do not print backgrounds by default, so text that
+     sits on a dark tone would print light grey on white. In print the dark
+     tones fall back to the base roles (dark text on paper, as `unset` hands
+     the vars back to the parent) and drop their fills. The fills that carry
+     state, a checked box or the filled button, are kept with
+     print-color-adjust: exact. */
+  @media print {
+    .ds-tone-inverse,
+    .ds-tone-brand,
+    .ds-tone-gradient {
+      --ds-text-primary: unset;
+      --ds-text-muted: unset;
+      --ds-text-link: unset;
+      --ds-text-link-hover: unset;
+      --ds-text-accent: unset;
+      --ds-accent-border: unset;
+      --ds-focus-ring: unset;
+      --ds-border-control: unset;
+      --ds-action-primary-bg: unset;
+      --ds-action-primary-bg-hover: unset;
+      --ds-action-primary-bg-active: unset;
+      --ds-action-primary-fg: unset;
+      --ds-action-secondary-bg: unset;
+      --ds-action-secondary-bg-hover: unset;
+      --ds-action-secondary-bg-active: unset;
+      --ds-action-secondary-fg: unset;
+      --ds-action-secondary-border: unset;
+      background: none;
+    }
+    [data-slot="checkbox"],
+    [data-slot="radio-group-item"],
+    [data-slot="button"] {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
   }
 
   /* Pointer target of at least control.target-min (WCAG 2.2 SC 2.5.8) around a

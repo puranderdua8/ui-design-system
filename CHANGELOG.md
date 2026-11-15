@@ -34,6 +34,16 @@
 - `Grid` with `cols` collapsed to zero width inside a `Cluster` or a `Stack` with `align` other than `stretch`, and its `className` landed on the inner element. The outermost element now fills its parent (`w-full min-w-0`) and takes `className`, `style` and `data-*`; `as`, `ref`, `role`, `id` and `aria-*` stay on the grid element inside it. `cols` needs a definite width.
 - `data-slot` is set after the props spread everywhere, so a caller can no longer overwrite it (`SelectGroup` and `SelectValue` did).
 
+**Tokens and styling (H17):**
+
+- New semantic tokens, all aliasing existing primitives so every theme resolves them: `icon.size.sm|md|dot`, `control.gap`, `control.font-weight`, `control.sm|md.line-height`, `menu.padding|offset|min-width`, `menu.item.padding-x|padding-y|padding-end`, `link.underline-offset`, `selection.marker-width`. Components use them instead of Tailwind's scale (`size-4`, `font-medium`, `py-1.5`, …), so a theme can change them. Bridge utilities: `size-ds-icon-*`, `font-ds-control`, `p-ds-menu`, `h-ds-marker` and others (see `docs/styling-rules.md`).
+- **Custom themes need three new primitives:** `size.icon.sm`, `size.icon.md` and `size.menu.min` (the four shipped themes define them as 0.875rem, 1rem and 8rem). A theme exported from the playground before 0.9.0 must be exported again.
+- `text-ds-control-sm|md` now also set `line-height` (1.5, unitless), so Button, Input, Select items and Tabs triggers no longer inherit it from where they sit.
+- The Tabs marker fade uses the motion tokens and stops under reduced motion (`.ds-transition-marker`).
+- `foundations.css` has a `@media print` block: dark tones print as dark text on white and checked Checkbox, selected Radio and Button keep their fill. It also scans its own folder (`@source "./"`), so the `@source` line in the README setup is no longer needed.
+- Theme CSS selector is now `:root, [data-ds-mode="light"]` and sets `color-scheme: light`; `ThemeScope` and `ScopedPortal` set `color-scheme: light` inline (D-092, R28). Dark mode will add a `[data-ds-mode="dark"]` block without changing this shape.
+- README documents the supported CSS setups: palette-reset order, no `prefix()`, unlayered CSS beats the components.
+
 **Dependencies:**
 
 - `tailwindcss` `^4.0.0` is a peer dependency (it was only in the install line).

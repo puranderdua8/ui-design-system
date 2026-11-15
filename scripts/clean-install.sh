@@ -160,7 +160,12 @@ new_app app-package
 APP_B="$WORK/app-package"
 cd "$APP_B"
 npm i "${TARBALL:-@puranderdua/ui@$VERSION}"
-edit_css "$APP_B" 'css.replace("@import \"tailwindcss\";", "@import \"tailwindcss\";\n@import \"@puranderdua/ui/foundations.css\";\n@import \"@puranderdua/ui/themes/base.css\";\n@source \"../../node_modules/@puranderdua/ui/dist\";")'
+# Two documented setups at once (R20): no `@source` line, because foundations.css
+# scans its own folder, and a palette reset placed before the package imports
+# (after them it would delete every ds-* colour utility). The class checks in
+# serve_and_check fail if either one regresses.
+printf '@theme {\n  --color-*: initial;\n}\n' >src/app/palette-reset.css
+edit_css "$APP_B" 'css.replace("@import \"tailwindcss\";", "@import \"tailwindcss\";\n@import \"./palette-reset.css\";\n@import \"@puranderdua/ui/foundations.css\";\n@import \"@puranderdua/ui/themes/base.css\";")'
 cat >src/app/page.tsx <<'TSX'
 import {
   Button,

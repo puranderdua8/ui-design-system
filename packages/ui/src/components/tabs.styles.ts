@@ -19,17 +19,17 @@ export const tabsListClasses =
 // Both roles are re-mapped per tone (3:1 for the bar, 4.5:1 for the label).
 export const tabsTriggerClasses =
   "relative inline-flex min-h-ds-control-sm shrink-0 items-center justify-center gap-ds-gap-xs px-ds-control-px-md " +
-  "font-ds-body text-ds-control-md font-medium whitespace-nowrap text-ds-text-muted rounded-ds-control ds-transition ds-focus-ring " +
+  "font-ds-body text-ds-control-md font-ds-control whitespace-nowrap text-ds-text-muted rounded-ds-control ds-transition ds-transition-marker ds-focus-ring " +
   "hover:text-ds-text data-[state=active]:text-ds-accent " +
   "disabled:pointer-events-none disabled:text-ds-disabled-fg " +
-  "after:absolute after:bg-ds-accent-border after:opacity-0 after:transition-opacity data-[state=active]:after:opacity-100 " +
+  "after:absolute after:bg-ds-accent-border after:opacity-0 data-[state=active]:after:opacity-100 " +
   // Forced colours repaint a background as Canvas but keep borders, so the bar
   // is also drawn as a border there (R19).
   "forced-colors:group-data-[orientation=horizontal]/tabs:after:border-t-2 forced-colors:group-data-[orientation=vertical]/tabs:after:border-s-2 " +
-  "group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:-bottom-px group-data-[orientation=horizontal]/tabs:after:h-0.5 " +
+  "group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:-bottom-px group-data-[orientation=horizontal]/tabs:after:h-ds-marker " +
   "group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start " +
-  "group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-px group-data-[orientation=vertical]/tabs:after:w-0.5 " +
-  "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+  "group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-px group-data-[orientation=vertical]/tabs:after:w-ds-marker " +
+  "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-ds-icon-md";
 
 // The panel is focusable when it has no focusable content (Radix sets tabindex
 // 0), so it needs the same visible focus ring.
