@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
 import { useFieldContext, useFieldControlProps } from "./field";
 import { selectTriggerVariants } from "./select.styles";
-import { usePortalContainer } from "./theme-scope";
+import { ScopedPortal } from "./theme-scope";
 
 export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
 
@@ -83,8 +83,9 @@ export type SelectContentProps = React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.Content
 > & {
   /**
-   * Element the list is portalled into. Defaults to the nearest `ThemeScope`,
-   * then `document.body`; an explicit value wins.
+   * Element the list is portalled into. Defaults to `document.body`, where the
+   * nearest `ThemeScope`'s theme and direction are re-applied (`ScopedPortal`,
+   * D-091); an explicit value wins.
    */
   container?: HTMLElement | null;
   ref?: StrictRef<HTMLDivElement>;
@@ -97,37 +98,34 @@ export const SelectContent = ({
   position = "popper",
   align = "center",
   ...props
-}: SelectContentProps) => {
-  const scope = usePortalContainer();
-  return (
-    <SelectPrimitive.Portal container={container ?? scope}>
-      <SelectPrimitive.Content
-        {...props}
-        data-slot="select-content"
-        position={position}
-        align={align}
+}: SelectContentProps) => (
+  <ScopedPortal asChild container={container}>
+    <SelectPrimitive.Content
+      {...props}
+      data-slot="select-content"
+      position={position}
+      align={align}
+      className={cn(
+        "relative ds-layer-dropdown max-h-(--radix-select-content-available-height) min-w-32 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto ds-border border-ds-border bg-ds-surface-raised font-ds-body text-ds-text shadow-ds-overlay rounded-ds-control",
+        position === "popper" &&
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className,
+      )}
+    >
+      <SelectScrollUpButton />
+      <SelectPrimitive.Viewport
         className={cn(
-          "relative ds-layer-dropdown max-h-(--radix-select-content-available-height) min-w-32 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto ds-border border-ds-border bg-ds-surface-raised font-ds-body text-ds-text shadow-ds-overlay rounded-ds-control",
+          "p-1",
           position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-          className,
+            "w-full min-w-(--radix-select-trigger-width) scroll-my-1",
         )}
       >
-        <SelectScrollUpButton />
-        <SelectPrimitive.Viewport
-          className={cn(
-            "p-1",
-            position === "popper" &&
-              "w-full min-w-(--radix-select-trigger-width) scroll-my-1",
-          )}
-        >
-          {children}
-        </SelectPrimitive.Viewport>
-        <SelectScrollDownButton />
-      </SelectPrimitive.Content>
-    </SelectPrimitive.Portal>
-  );
-};
+        {children}
+      </SelectPrimitive.Viewport>
+      <SelectScrollDownButton />
+    </SelectPrimitive.Content>
+  </ScopedPortal>
+);
 
 export type SelectLabelProps = React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.Label
@@ -158,9 +156,16 @@ export const SelectItem = ({
     {...props}
     data-slot="select-item"
     className={cn(
-      "relative flex w-full cursor-default items-center gap-ds-gap-xs rounded-ds-control py-1.5 ps-2 pe-8 text-ds-control-md outline-hidden select-none ds-transition " +
-        "focus:bg-ds-surface-subtle focus:text-ds-text " +
+      // The highlighted option is a solid fill (menu.highlight-*, 3:1 against the
+      // list and 4.5:1 for its text; R35). Forced colours drop the fill, so the
+      // same option also gets an outline, which they keep (R19).
+      "relative flex w-full cursor-default items-center gap-ds-gap-xs rounded-ds-control py-1.5 ps-2 pe-8 text-ds-control-md outline-none select-none ds-transition " +
+        "data-[highlighted]:bg-ds-menu-highlight data-[highlighted]:text-ds-menu-highlight-fg " +
+        "forced-colors:data-[highlighted]:outline-solid forced-colors:data-[highlighted]:outline-2 forced-colors:data-[highlighted]:-outline-offset-2 " +
         "data-[disabled]:pointer-events-none data-[disabled]:text-ds-disabled-fg " +
+        // A div has no UA disabled styling, so forced colours would paint it like
+        // an enabled option. GrayText is the OS palette, not a design decision.
+        "forced-colors:data-[disabled]:text-[GrayText] " +
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
       className,
     )}

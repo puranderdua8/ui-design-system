@@ -138,6 +138,8 @@
   --ds-focus-ring: var(--ds-color-brand-600); /** Keyboard focus ring colour; meets 3:1 against the canvas. */
   --ds-focus-ring-width: var(--ds-ring-width); /** Keyboard focus ring thickness. */
   --ds-focus-ring-offset: var(--ds-ring-offset); /** Gap between a control and its focus ring. */
+  --ds-menu-highlight-bg: var(--ds-color-accent-700); /** Fill of the option the keyboard or pointer is on in an open list (Select); 3:1 against surface.raised, the list surface. Default alias, so a custom theme may omit it. */
+  --ds-menu-highlight-fg: var(--ds-color-white); /** Text and icons on menu.highlight-bg; 4.5:1. */
   --ds-disabled-bg: var(--ds-color-neutral-100); /** Disabled control fill. */
   --ds-disabled-fg: var(--ds-color-neutral-500); /** Disabled control text (exempt from contrast requirements). */
   --ds-disabled-border: var(--ds-color-neutral-200); /** Disabled control outline. */

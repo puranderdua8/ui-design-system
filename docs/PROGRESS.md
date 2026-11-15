@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 (#60) and H12 (#61) are merged; H13 is done on branch `h13-build-chain-dead-code`.
-- **Next session:** H14 (form wiring) or H18 (site performance); they are independent and can run in parallel. Release 2 (dark mode) waits for MH2.
+- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 (#60) and H12 (#61) are merged; H13 and H14 are merged; H15 is done on branch `h15-radix-packages`.
+- **Next session:** H16 (public API surface) or H18 (site performance); they are independent. Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -600,6 +600,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `field-wiring.test.tsx` (14 tests): a control with its own `id` is labelled inside a Field for Input, Checkbox, SelectTrigger and RadioGroup; the warning; the hook; the helpers. Planting `id ?? field.controlId` back fails the Input, Checkbox and SelectTrigger tests.
 - Gotchas: (1) `@babel/core` 8 breaks the compiler 1.0 (`AssignmentPattern` Todo on every default prop), so it is pinned to 7. (2) Default mode "infer" silently skips the five components that `return renderAs(...)` (Text, Container, Stack, Cluster, Split), so the script uses `compilationMode: "all"`; a consumer's compiler in infer mode still will not optimise those five. (3) Fieldset did not compile until the `useMemo` dependency came from `hasContent(error)` rather than the `describeMessages` result (the compiler flagged it as possibly mutated). (4) Not done from R12: the `data-variant`/`data-size` fallbacks still repeat each cva default.
 - Next: H15, or H16 (needs H14).
+
+### H15 — Overlays, direction and selection — 2026-11-15
+
+- Done (branch `h15-radix-packages`, off `main` after #63): **R08/R22** `ScopedPortal` portals to `body` (or `container`) and re-applies the nearest `ThemeScope`'s theme, vars and `dir` plus `ds-tone-raised`; `asChild` puts the scope on the single child. `SelectContent` uses it. `usePortalContainer()` is `document.body` in the browser and `null` only on the server; `ThemeScope` holds no state (renders once). **R18** `DirectionProvider` (wraps Radix `Direction.Provider`) exported, `ThemeScope` takes `dir`. **R35** `menu.highlight-bg`/`-fg` (default alias accent.700 / white), four pairs in `contrast-pairs.json` (≥7.5:1 in all themes), used by `SelectItem`. **R19** Tabs bar also a border under `forced-colors`, highlighted option outlined, disabled option `GrayText`. Statuses set in the register.
+- Decisions: D-098 (tone on overlays is always raised, not the enclosing Section's; `usePortalContainer` contract).
+- Verified: `pnpm check` green. Seven new layout tests (`H15` describe); against the stashed 0.8.0 source six fail (only checked Checkbox/Radio indicator passed, as the register said).
+- Gotchas: (1) `-g` is ignored through `pnpm test:layout --`; use `pnpm exec playwright test --project=chromium -g H15`. (2) WebKit passes the forced-colours tests even on old code, so only Chromium/Firefox prove them. (3) Radix `Slot` and `Direction` still come from `radix-ui`; H16 swaps the imports (D-093). (4) A one-off node script (approved) set the five register cells; it was deleted. (5) `usePortalContainer` change is breaking for 0.x users: H19's CHANGELOG must list it, plus `ThemeScope` no longer being the portal root. (6) The site is pinned to 0.8.0, so its playground comment about portals is stale until it upgrades. (7) Five site playground tests (`engine.test.ts` contrast line-for-line; four in `export.test.ts`) compare the repo scripts with the pinned 0.8.0 package, so the new tokens broke them; the maintainer chose to skip them (`it.skip`, commented) until the site moves to 0.9.0. **H17 adds more tokens; whoever upgrades the site (H19/H20) must re-enable them.**
+- Next: H16 (needs H14, done).
 
 ### R6 — Security, DX, tooling, process + write-up — 2026-11-14
 

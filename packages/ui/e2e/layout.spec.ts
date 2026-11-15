@@ -822,6 +822,176 @@ test.describe("target size (F12)", () => {
   });
 });
 
+test.describe("overlays, direction and forced colours (H15)", () => {
+  test("R22: a Select list opened inside a clipping, transformed ancestor is fully visible and clickable", async ({
+    page,
+  }) => {
+    await open(page, "select-clip");
+    await page.getByTestId("trigger").click();
+    const list = page.getByRole("listbox");
+    await expect(list).toBeVisible();
+
+    // Not inside the clip box, and carrying the scope it was opened from.
+    expect(
+      await list.evaluate((el) => el.closest("[data-testid=clip]") === null),
+    ).toBe(true);
+    expect(await list.getAttribute("data-ds-theme")).toBe("nature");
+    expect(
+      await list.evaluate((el) => getComputedStyle(el).backgroundColor),
+    ).toBe("rgb(10, 20, 30)");
+
+    // The last option sits below the 120px clip box; it must be the element at
+    // its own centre, so a click reaches it.
+    const last = page.getByTestId("opt-h");
+    const box = await last.boundingBox();
+    if (!box) throw new Error("no box for the last option");
+    expect(box.y + box.height).toBeGreaterThan(
+      (await rect(page, "clip")).y + 120,
+    );
+    const hit = await page.evaluate(
+      ([x, y]) =>
+        document
+          .elementFromPoint(x!, y!)
+          ?.closest("[data-testid]")
+          ?.getAttribute("data-testid"),
+      [box.x + box.width / 2, box.y + box.height / 2],
+    );
+    expect(hit).toBe("opt-h");
+    await last.click();
+    await expect(page.getByTestId("trigger")).toContainText("Option h");
+  });
+
+  test("R18: under an RTL scope the tab row runs right to left and the arrow keys follow it", async ({
+    page,
+  }) => {
+    await open(page, "rtl-tabs", 600);
+    const [one, two, three] = await Promise.all(
+      ["rtab-one", "rtab-two", "rtab-three"].map((id) => rect(page, id)),
+    );
+    expect(one!.x).toBeGreaterThan(two!.x);
+    expect(two!.x).toBeGreaterThan(three!.x);
+
+    // `toBeFocused` waits: Radix moves focus on the next tick, so reading
+    // document.activeElement right after the key would race.
+    await page.getByTestId("rtab-one").focus();
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByTestId("rtab-two")).toBeFocused();
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByTestId("rtab-three")).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByTestId("rtab-two")).toBeFocused();
+    expect(await page.getByTestId("rtab-two").getAttribute("data-state")).toBe(
+      "active",
+    );
+  });
+
+  test("R18: a RadioGroup under an RTL scope moves with ArrowLeft to the next item", async ({
+    page,
+  }) => {
+    await open(page, "rtl-tabs", 600);
+    await expect(
+      page.getByTestId("rradio-a").locator("xpath=ancestor::*[@dir][1]"),
+    ).toHaveAttribute("dir", "rtl");
+    await page.getByTestId("rradio-a").focus();
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByTestId("rradio-b")).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByTestId("rradio-a")).toBeFocused();
+  });
+
+  test.describe("forced colours", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.emulateMedia({ forcedColors: "active" });
+    });
+
+    const css = (page: Page, id: string, prop: string, pseudo?: string) =>
+      page
+        .getByTestId(id)
+        .evaluate(
+          (el, [p, ps]) =>
+            getComputedStyle(el, ps || null)[
+              p as keyof CSSStyleDeclaration
+            ] as string,
+          [prop, pseudo ?? ""] as const,
+        );
+
+    test("R19: the active tab is marked by a border, which forced colours keep", async ({
+      page,
+    }) => {
+      await open(page, "states", 600);
+      expect(await css(page, "stab-one", "borderTopWidth", "::after")).toBe(
+        "2px",
+      );
+      const marker = await css(page, "stab-one", "borderTopColor", "::after");
+      const canvas = await page.evaluate(
+        () => getComputedStyle(document.body).backgroundColor,
+      );
+      expect(marker).not.toBe(canvas);
+      // The inactive tab's bar stays hidden.
+      expect(Number(await css(page, "stab-two", "opacity", "::after"))).toBe(0);
+    });
+
+    test("R19: a checked Checkbox and a checked Radio draw an indicator that differs from their fill", async ({
+      page,
+    }) => {
+      await open(page, "states", 600);
+      for (const id of ["check-on", "radio-on"]) {
+        const result = await page.getByTestId(id).evaluate((root) => {
+          const icon = root.querySelector("svg");
+          return {
+            hasIcon: icon !== null,
+            iconColor: icon ? getComputedStyle(icon).color : "",
+            fill: getComputedStyle(root).backgroundColor,
+          };
+        });
+        expect(result.hasIcon, `${id} icon`).toBe(true);
+        expect(result.iconColor, `${id} icon colour`).not.toBe(result.fill);
+      }
+      for (const id of ["check-off", "radio-off"])
+        expect(
+          await page.getByTestId(id).evaluate((el) => el.querySelector("svg")),
+          `${id} has no indicator`,
+        ).toBeNull();
+    });
+
+    test("R19: the highlighted Select option has an outline and the selected one a visible check", async ({
+      page,
+    }) => {
+      await open(page, "states", 600);
+      await page.getByTestId("state-trigger").click();
+      await expect(page.getByTestId("sopt-b")).toHaveAttribute(
+        "data-highlighted",
+        "",
+      );
+      expect(await css(page, "sopt-b", "outlineStyle")).toBe("solid");
+      expect(await css(page, "sopt-b", "outlineWidth")).toBe("2px");
+      expect(await css(page, "sopt-a", "outlineStyle")).toBe("none");
+      const check = await page.getByTestId("sopt-b").evaluate((el) => {
+        const icon = el.querySelector("[data-slot=select-item-indicator] svg");
+        return icon && getComputedStyle(icon).color;
+      });
+      expect(check).not.toBeNull();
+    });
+
+    test("R19: a disabled control reads differently from an enabled one", async ({
+      page,
+    }) => {
+      await open(page, "states", 600);
+      for (const [off, on] of [
+        ["stab-off", "stab-two"],
+        ["check-disabled", "check-off"],
+      ] as const)
+        expect(await css(page, off, "color"), `${off} vs ${on}`).not.toBe(
+          await css(page, on, "color"),
+        );
+      await page.getByTestId("state-trigger").click();
+      expect(await css(page, "sopt-c", "color")).not.toBe(
+        await css(page, "sopt-a", "color"),
+      );
+    });
+  });
+});
+
 test.describe("motion", () => {
   test("Button and Link transition, and stop under reduced motion", async ({
     page,

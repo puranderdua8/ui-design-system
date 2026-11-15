@@ -14,7 +14,7 @@ Import `foundations.css` plus **one** theme file, and load the theme's fonts (th
 @import "@puranderdua/ui/themes/nature.css";
 ```
 
-To switch at run time, apply the resolved var map from `@puranderdua/ui/themes/<name>.json` (`vars`) as inline CSS variables, for example with `ThemeScope`. Storybook does this with the **Theme** toolbar; portals (Select) stay themed because `ThemeScope` is their container.
+To switch at run time, apply the resolved var map from `@puranderdua/ui/themes/<name>.json` (`vars`) as inline CSS variables, for example with `ThemeScope`. Storybook does this with the **Theme** toolbar; portals (Select) stay themed because they portal to `body` through `ScopedPortal`, which re-applies the nearest `ThemeScope`'s theme, vars and direction (D-091).
 
 ## Fonts
 

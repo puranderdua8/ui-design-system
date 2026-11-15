@@ -57,7 +57,7 @@ docs/                       PLAN (current release), PROGRESS, DECISIONS, provena
 - **Guardrails (D-070).** Rules marked "from H<n>" apply once that session lands; follow them in any new code from then on.
   - `"use client"` files export components only. Variants, class strings and other values go in a plain `<name>.styles.ts` (`check-client-exports`, from H3).
   - Surface tones re-map role vars in scope (`.ds-tone-*`); any new colour role joins the contrast matrix for every tone (from H4).
-  - Portal components portal into `container ?? usePortalContainer()` (the nearest `ThemeScope`), falling back to `document.body`. Stacking uses the shared layer tokens (`tokens/primitives/layers.json`, `.ds-layer-*` recipes), never raw `z-*` (H5, D-075).
+  - Portal components render through `<ScopedPortal container={container}>`: it portals to `document.body` (an explicit `container` wins) and re-applies the nearest `ThemeScope`'s theme, vars and direction plus the raised tone (D-091, D-098; this replaces portalling into the scope, D-075). Never portal into a scope element. Stacking uses the shared layer tokens (`tokens/primitives/layers.json`, `.ds-layer-*` recipes), never raw `z-*` (H5, D-075).
   - Layout follows the container, not the viewport. DOM order = visual order: no `*-reverse` or `order-*` to reorder content (D-064).
   - Interactive targets are at least 24px (`.ds-hit-area`, from H6). Every user-visible string in a component is a prop with an English default.
   - Single controls use `Field`; groups of controls use `Fieldset` (from H6).
