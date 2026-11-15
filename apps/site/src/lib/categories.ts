@@ -50,5 +50,5 @@ export const categories = [
   },
 ] as const;
 
-export type Category = (typeof categories)[number];
+type Category = (typeof categories)[number];
 export type CategorySlug = Category["slug"];

@@ -67,7 +67,7 @@ export const parseShadow = (value: string | number): Shadow => {
   return { offsetX, offsetY, blur, spread, color: color.toLowerCase() };
 };
 
-export const formatShadow = (s: Shadow): string =>
+const formatShadow = (s: Shadow): string =>
   `${s.offsetX} ${s.offsetY} ${s.blur} ${s.spread} ${s.color}`;
 
 const hexByte = (n: number): string => n.toString(16).padStart(2, "0");
@@ -96,7 +96,7 @@ const scrimFrom = (start: VarMap, neutral950: string): string => {
 };
 
 /** Applies the knobs to the starting theme's primitives. Returns a new map. */
-export const applyKnobs = (primitives: VarMap, knobs: Knobs): VarMap => {
+const applyKnobs = (primitives: VarMap, knobs: Knobs): VarMap => {
   const out: VarMap = { ...primitives };
 
   if (knobs.brand !== undefined) {

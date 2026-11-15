@@ -1,7 +1,10 @@
-import { basename, dirname, resolve } from "node:path";
+import { basename, dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "tsup";
-import type { Plugin } from "esbuild";
+import { defineConfig, type Options } from "tsup";
+
+// The esbuild plugin type comes from tsup, so `esbuild` is not a dependency of
+// this package (R03).
+type Plugin = NonNullable<Options["esbuildPlugins"]>[number];
 
 const componentsDir = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -23,6 +26,15 @@ const componentsAsExternals: Plugin = {
       const target = args.path.startsWith("@/")
         ? resolve(componentsDir, "..", args.path.slice(2))
         : resolve(args.resolveDir, args.path);
+      // A component in a subfolder would be bundled into a chunk and lose its
+      // "use client" with no error, so refuse it (R14).
+      if (
+        target.startsWith(componentsDir + sep) &&
+        dirname(target) !== componentsDir
+      )
+        throw new Error(
+          `components-as-externals: ${args.path} (imported by ${args.importer}) is inside a subfolder of src/components. Components must live in the flat folder (D-065).`,
+        );
       if (dirname(target) !== componentsDir) return;
       const name = basename(target);
       const fromIndex = dirname(args.importer) !== componentsDir;

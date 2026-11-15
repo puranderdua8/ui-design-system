@@ -6,10 +6,10 @@
 // - `toCss` has the shape of `themes/<name>.css`: primitives as literals, then the
 //   semantic vars as `var()` references.
 import { shadowAliases, parseShadow } from "./engine";
-import type { ResolvedTheme, VarMap } from "./types";
+import type { ResolvedTheme } from "./types";
 
-export type DtcgNode = { [key: string]: DtcgNode | string | number | object };
-export type DtcgFiles = Record<
+type DtcgNode = { [key: string]: DtcgNode | string | number | object };
+type DtcgFiles = Record<
   "color.json" | "dimension.json" | "effects.json" | "typography.json",
   DtcgNode
 >;
@@ -223,5 +223,3 @@ export const toCss = (theme: ResolvedTheme): string => {
   }
   return `${CSS_HEADER}\n:root {\n${[...literals, ...semantics].join("\n")}\n}\n`;
 };
-
-export type { VarMap };

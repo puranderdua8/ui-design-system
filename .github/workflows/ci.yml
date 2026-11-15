@@ -80,6 +80,16 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter site exec playwright install --with-deps chromium firefox webkit
       - run: pnpm check
+      # The build writes a tracked file into src/ (ds-classes.ts). If it changed,
+      # the committed copy is stale (R14).
+      - name: Build leaves the tree clean
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "The build changed tracked or untracked files; commit the regenerated output:"
+            git status --porcelain
+            git diff
+            exit 1
+          fi
       - name: Shell scripts pass shellcheck
         run: shellcheck scripts/*.sh
 

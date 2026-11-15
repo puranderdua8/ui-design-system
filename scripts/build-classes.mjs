@@ -1,10 +1,11 @@
 // Writes packages/ui/src/lib/generated/ds-classes.ts: the class lists `cn()`
 // (tailwind-merge) needs, derived from styles/theme.css so the bridge stays the
-// single source and the lists cannot drift. Runs before tsup, which bundles
-// the file into dist/index.js.
+// single source and the lists cannot drift. Runs before tsup (via build-ui.mjs),
+// which bundles the file into dist/index.js.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { THEME_NAMESPACES, parseThemeClasses } from "./lib/theme-classes.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const theme = readFileSync(
@@ -12,21 +13,11 @@ const theme = readFileSync(
   "utf8",
 );
 
-const sizes = [...theme.matchAll(/--text-ds-([a-z0-9]+(?:-[a-z0-9]+)?):/g)]
-  .map((m) => `ds-${m[1]}`)
-  .filter((v, i, a) => a.indexOf(v) === i);
-const recipes = [...theme.matchAll(/^\s*\.(ds-type-[a-z0-9-]+)\s*\{/gm)].map(
-  (m) => m[1],
-);
-const toneRecipes = [
-  ...theme.matchAll(/^\s*\.(ds-tone-[a-z0-9-]+)\s*\{/gm),
-].map((m) => m[1]);
-const layerRecipes = [
-  ...theme.matchAll(/^\s*\.(ds-layer-[a-z0-9-]+)\s*\{/gm),
-].map((m) => m[1]);
+const { sizes, typeRecipes, toneRecipes, layerRecipes, themeValues } =
+  parseThemeClasses(theme);
 if (
   !sizes.length ||
-  !recipes.length ||
+  !typeRecipes.length ||
   !toneRecipes.length ||
   !layerRecipes.length
 ) {
@@ -35,25 +26,6 @@ if (
   );
   process.exit(1);
 }
-// Bridge namespaces that tailwind-merge sorts by value shape (T-shirt sizes,
-// numbers). Without these, `shadow-ds-raised` reads as a shadow colour,
-// `max-w-ds-md` and `rounded-ds-card` go ungrouped, and a later `shadow-md`
-// would not replace them. Keys are tailwind-merge theme keys.
-const THEME_NAMESPACES = {
-  shadow: "shadow",
-  radius: "radius",
-  container: "container",
-  spacing: "spacing",
-  ease: "ease",
-};
-const themeValues = Object.fromEntries(
-  Object.entries(THEME_NAMESPACES).map(([key, ns]) => [
-    key,
-    [...theme.matchAll(new RegExp(`--${ns}-(ds-[a-z0-9-]+):`, "g"))].map(
-      (m) => m[1],
-    ),
-  ]),
-);
 for (const [key, values] of Object.entries(themeValues))
   if (!values.length) {
     console.error(
@@ -73,7 +45,7 @@ writeFileSync(
 /** Values for the \`text-<size>\` utilities (font-size namespace). */
 export const dsFontSizes: string[] = ${list(sizes)};
 /** \`.ds-type-<role>\` recipe classes (each sets family, size, weight, leading, tracking). */
-export const dsTypeRecipes: string[] = ${list(recipes)};
+export const dsTypeRecipes: string[] = ${list(typeRecipes)};
 /** \`.ds-tone-<name>\` recipe classes (one tone applies at a time). */
 export const dsToneRecipes: string[] = ${list(toneRecipes)};
 /** \`.ds-layer-<name>\` recipe classes (stacking scale from layers.json). */
