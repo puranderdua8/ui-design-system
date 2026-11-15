@@ -30,7 +30,11 @@ type Rule = {
   value: (raw: string | number) => unknown;
 };
 
-const text = (raw: string | number): string => String(raw);
+// The files are DTCG Format Module 2025.10 (D-090): dimensions, durations,
+// colours and shadows are objects, not CSS strings. A value that is not in a
+// shape we can convert is written as it came, so `validate-tokens` reports it.
+
+const hexByte = (n: number): string => n.toString(16).padStart(2, "0");
 
 const hex8 = (raw: string | number): string => {
   const value = String(raw);
@@ -38,12 +42,82 @@ const hex8 = (raw: string | number): string => {
     value,
   );
   if (!match) return value;
-  const byte = (n: number): string => n.toString(16).padStart(2, "0");
   const alpha = Math.round(Number(match[4]) * 255 + 1e-6);
-  return `#${byte(Number(match[1]))}${byte(Number(match[2]))}${byte(Number(match[3]))}${alpha === 255 ? "" : byte(alpha)}`;
+  return `#${hexByte(Number(match[1]))}${hexByte(Number(match[2]))}${hexByte(Number(match[3]))}${alpha === 255 ? "" : hexByte(alpha)}`;
 };
 
-const shadow = (raw: string | number): object => parseShadow(raw);
+type Colour = {
+  colorSpace: "srgb";
+  components: number[];
+  alpha?: number;
+  hex: string;
+};
+
+/** "#rrggbb" / "#rrggbbaa" (or an `rgba()` string) -> a 2025.10 colour. */
+const colour = (raw: string | number): Colour | string => {
+  const value = hex8(raw);
+  const match = /^#([0-9a-fA-F]{6})([0-9a-fA-F]{2})?$/.exec(value);
+  if (!match) return value;
+  const n = parseInt(match[1], 16);
+  const result: Colour = {
+    colorSpace: "srgb",
+    components: [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(
+      (c) => +(c / 255).toFixed(4),
+    ),
+    hex: `#${match[1].toLowerCase()}`,
+  };
+  if (match[2] !== undefined) {
+    const a = parseInt(match[2], 16);
+    if (a !== 255) {
+      // The shortest decimal that rounds back to the same byte.
+      for (let digits = 2; digits <= 6; digits++) {
+        const alpha = +(a / 255).toFixed(digits);
+        if (Math.round(alpha * 255) === a) {
+          result.alpha = alpha;
+          break;
+        }
+      }
+    }
+  }
+  return result;
+};
+
+type Dimension = { value: number; unit: "px" | "rem" };
+
+/** "0.25rem" -> { value: 0.25, unit: "rem" }. */
+const dimension = (raw: string | number): Dimension | string => {
+  const match = /^(-?\d*\.?\d+)(px|rem)$/.exec(String(raw));
+  return match
+    ? { value: Number(match[1]), unit: match[2] as Dimension["unit"] }
+    : String(raw);
+};
+
+/** "100ms" -> { value: 100, unit: "ms" }. */
+const duration = (
+  raw: string | number,
+): { value: number; unit: "ms" | "s" } | string => {
+  const match = /^(\d*\.?\d+)(ms|s)$/.exec(String(raw));
+  return match
+    ? { value: Number(match[1]), unit: match[2] as "ms" | "s" }
+    : String(raw);
+};
+
+/** "-0.02em" -> -0.02: a multiple of the font size (2025.10 has no em unit). */
+const letterSpacing = (raw: string | number): number | string => {
+  const match = /^(-?\d*\.?\d+)em$/.exec(String(raw));
+  return match ? Number(match[1]) : String(raw);
+};
+
+const shadow = (raw: string | number): object => {
+  const s = parseShadow(raw);
+  return {
+    color: colour(s.color),
+    offsetX: dimension(s.offsetX),
+    offsetY: dimension(s.offsetY),
+    blur: dimension(s.blur),
+    spread: dimension(s.spread),
+  };
+};
 
 const bezier = (raw: string | number): number[] => {
   const match = /^cubic-bezier\(([^)]+)\)$/.exec(String(raw));
@@ -62,7 +136,7 @@ const RULES: Rule[] = [
     path: ["color"],
     type: "color",
     split: true,
-    value: hex8,
+    value: colour,
   },
   {
     prefix: "--ds-space-",
@@ -70,7 +144,7 @@ const RULES: Rule[] = [
     path: ["space"],
     type: "dimension",
     split: false,
-    value: text,
+    value: dimension,
   },
   {
     prefix: "--ds-size-",
@@ -78,7 +152,7 @@ const RULES: Rule[] = [
     path: ["size"],
     type: "dimension",
     split: true,
-    value: text,
+    value: dimension,
   },
   {
     prefix: "--ds-radius-",
@@ -86,7 +160,7 @@ const RULES: Rule[] = [
     path: ["radius"],
     type: "dimension",
     split: false,
-    value: text,
+    value: dimension,
   },
   {
     prefix: "--ds-border-width-",
@@ -94,7 +168,7 @@ const RULES: Rule[] = [
     path: ["border-width"],
     type: "dimension",
     split: false,
-    value: text,
+    value: dimension,
   },
   {
     prefix: "--ds-ring-",
@@ -102,7 +176,7 @@ const RULES: Rule[] = [
     path: ["ring"],
     type: "dimension",
     split: false,
-    value: text,
+    value: dimension,
   },
   {
     prefix: "--ds-shadow-",
@@ -118,7 +192,7 @@ const RULES: Rule[] = [
     path: ["duration"],
     type: "duration",
     split: false,
-    value: text,
+    value: duration,
   },
   {
     prefix: "--ds-easing-",
@@ -142,7 +216,7 @@ const RULES: Rule[] = [
     path: ["font", "size"],
     type: "dimension",
     split: false,
-    value: text,
+    value: dimension,
   },
   {
     prefix: "--ds-font-weight-",
@@ -164,9 +238,9 @@ const RULES: Rule[] = [
     prefix: "--ds-font-letter-spacing-",
     file: "typography.json",
     path: ["font", "letter-spacing"],
-    type: "dimension",
+    type: "number",
     split: false,
-    value: text,
+    value: letterSpacing,
   },
 ];
 

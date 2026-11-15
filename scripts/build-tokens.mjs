@@ -10,6 +10,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import StyleDictionary from "style-dictionary";
 import { fileHeader, formattedVariables } from "style-dictionary/utils";
+import { LETTER_SPACING_PATH, toLegacyValue } from "./lib/dtcg.mjs";
 import { loadResolver } from "./lib/resolver.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -76,6 +77,47 @@ StyleDictionary.registerFormat({
   },
 });
 
+// The sources hold DTCG 2025.10 values (objects for dimension, duration,
+// colour and shadow, D-090). Style Dictionary 4's CSS transforms read the
+// string forms, so this preprocessor converts each raw value before any
+// transform runs; aliases stay as they are. Letter-spacing numbers become
+// `em`, as the generated CSS has always had them.
+const PREPROCESSOR = "dtcg-2025-10";
+const isNode = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+function convert(node, path, inheritedType) {
+  const out = {};
+  for (const [key, child] of Object.entries(node)) {
+    if (key.startsWith("$") || !isNode(child)) {
+      out[key] = child;
+      continue;
+    }
+    const type = child.$type ?? inheritedType;
+    if (!("$value" in child)) {
+      out[key] = convert(child, [...path, key], type);
+      continue;
+    }
+    const full = [...path, key];
+    const token = { ...child };
+    const raw = child.$value;
+    if (
+      type === "number" &&
+      LETTER_SPACING_PATH.every((p, i) => full[i] === p) &&
+      typeof raw === "number"
+    ) {
+      token.$type = "dimension";
+      token.$value = `${raw}em`;
+    } else if (typeof raw !== "string") {
+      token.$value = toLegacyValue(type, raw);
+    }
+    out[key] = token;
+  }
+  return out;
+}
+StyleDictionary.registerPreprocessor({
+  name: PREPROCESSOR,
+  preprocessor: (dictionary) => convert(dictionary, [], undefined),
+});
+
 // Builds every theme in the manifest; returns the output dir and theme names.
 export async function buildTokens(
   outDir = DEFAULT_OUT,
@@ -86,6 +128,7 @@ export async function buildTokens(
   for (const [name, sources] of Object.entries(themes)) {
     const sd = new StyleDictionary({
       usesDtcg: true,
+      preprocessors: [PREPROCESSOR],
       source: [...sources, ...semantic],
       // Typography composites become per-property tokens, e.g.
       // --ds-type-body-font-size.

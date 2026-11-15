@@ -4,33 +4,81 @@
     "$description": "Raw shadow recipes. Components use the semantic elevation.* tokens. Diffuse: large blur, warm tint.",
     "sm": {
       "$value": {
-        "color": "#0d0b0514",
-        "offsetX": "0px",
-        "offsetY": "2px",
-        "blur": "8px",
-        "spread": "0px"
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.051, 0.0431, 0.0196],
+          "hex": "#0d0b05",
+          "alpha": 0.08
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 2,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 8,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
       }
     },
     "lg": {
       "$value": {
-        "color": "#0d0b0524",
-        "offsetX": "0px",
-        "offsetY": "12px",
-        "blur": "40px",
-        "spread": "0px"
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.051, 0.0431, 0.0196],
+          "hex": "#0d0b05",
+          "alpha": 0.14
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 40,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
       }
     }
   },
   "duration": {
+    "100": {
+      "$value": {
+        "value": 200,
+        "unit": "ms"
+      }
+    },
+    "200": {
+      "$value": {
+        "value": 350,
+        "unit": "ms"
+      }
+    },
     "$type": "duration",
-    "$description": "Raw transition lengths. Gentle.",
-    "100": { "$value": "200ms" },
-    "200": { "$value": "350ms" }
+    "$description": "Raw transition lengths. Gentle."
   },
   "easing": {
     "$type": "cubicBezier",
     "$description": "Raw timing curves. Slow in, slow out.",
-    "in-out": { "$value": [0.45, 0.05, 0.35, 1] },
-    "out-strong": { "$value": [0.25, 0.1, 0.1, 1] }
+    "in-out": {
+      "$value": [0.45, 0.05, 0.35, 1]
+    },
+    "out-strong": {
+      "$value": [0.25, 0.1, 0.1, 1]
+    }
   }
 }

@@ -443,6 +443,18 @@ describe("contrast", () => {
   });
 });
 
+// DTCG 2025.10 value objects -> the CSS strings of the resolved var map.
+type Obj = Record<string, unknown>;
+const hexByte = (n: number): string => n.toString(16).padStart(2, "0");
+const cssColour = (c: Obj): string => {
+  const rgb = (c.components as number[])
+    .map((n) => hexByte(Math.round(n * 255)))
+    .join("");
+  const alpha = c.alpha === undefined ? 255 : Math.round(Number(c.alpha) * 255);
+  return `#${rgb}${alpha === 255 ? "" : hexByte(alpha)}`;
+};
+const cssUnit = (d: Obj): string => `${d.value}${d.unit}`;
+
 // Flattens a DTCG document into var names and values (the way the build names tokens).
 const flatten = (
   node: object,
@@ -455,9 +467,14 @@ const flatten = (
     let text: string | number;
     if (Array.isArray(value)) text = `cubic-bezier(${value.join(", ")})`;
     else if (value && typeof value === "object") {
-      const s = value as Record<string, string>;
-      text = `${s.offsetX} ${s.offsetY} ${s.blur} ${s.spread} ${s.color}`;
+      const s = value as Obj;
+      if ("components" in s) text = cssColour(s);
+      else if ("offsetX" in s)
+        text = `${cssUnit(s.offsetX as Obj)} ${cssUnit(s.offsetY as Obj)} ${cssUnit(s.blur as Obj)} ${cssUnit(s.spread as Obj)} ${cssColour(s.color as Obj)}`;
+      else text = cssUnit(s);
     } else text = value as string | number;
+    // Letter-spacing is a unitless multiple in the source; the build writes em.
+    if (path[0] === "font" && path[1] === "letter-spacing") text = `${text}em`;
     out[`--ds-${path.join("-")}`] = text;
     return out;
   }
@@ -561,16 +578,49 @@ describe("DTCG output", () => {
       "Inter, system-ui, sans-serif",
     );
     const dimension = files["dimension.json"];
-    expect(at(dimension, "space", "1-5", "$value")).toBe("0.375rem");
-    expect(at(dimension, "size", "target", "min", "$value")).toBe("1.5rem");
-    expect(at(dimension, "size", "sidebar", "$value")).toBe("16rem");
+    // DTCG 2025.10 value shapes (D-090, R21).
+    expect(at(dimension, "space", "1-5", "$value")).toEqual({
+      value: 0.375,
+      unit: "rem",
+    });
+    expect(at(dimension, "size", "target", "min", "$value")).toEqual({
+      value: 1.5,
+      unit: "rem",
+    });
+    expect(at(dimension, "size", "sidebar", "$value")).toEqual({
+      value: 16,
+      unit: "rem",
+    });
+    expect(at(typography, "font", "letter-spacing", "$type")).toBe("number");
+    expect(at(typography, "font", "letter-spacing", "tight", "$value")).toBe(
+      -0.02,
+    );
+    expect(at(files["color.json"], "color", "white", "$value")).toEqual({
+      colorSpace: "srgb",
+      components: [1, 1, 1],
+      hex: "#ffffff",
+    });
+    expect(at(files["color.json"], "color", "scrim", "$value")).toMatchObject({
+      colorSpace: "srgb",
+      hex: "#0d0f12",
+      alpha: expect.closeTo(0.7, 2),
+    });
     const effects = files["effects.json"];
+    expect(at(effects, "duration", "100", "$value")).toEqual({
+      value: 100,
+      unit: "ms",
+    });
     expect(at(effects, "shadow", "sm", "$value")).toEqual({
-      color: "#0d0f121a",
-      offsetX: "0px",
-      offsetY: "1px",
-      blur: "3px",
-      spread: "0px",
+      color: {
+        colorSpace: "srgb",
+        components: [0.051, 0.0588, 0.0706],
+        alpha: 0.1,
+        hex: "#0d0f12",
+      },
+      offsetX: { value: 0, unit: "px" },
+      offsetY: { value: 1, unit: "px" },
+      blur: { value: 3, unit: "px" },
+      spread: { value: 0, unit: "px" },
     });
     expect(at(effects, "easing", "in-out", "$value")).toEqual([0.4, 0, 0.2, 1]);
   });

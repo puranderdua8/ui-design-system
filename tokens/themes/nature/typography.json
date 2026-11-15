@@ -13,31 +13,95 @@
     },
     "size": {
       "$type": "dimension",
-      "xs": { "$value": "0.75rem", "$description": "12px" },
-      "sm": { "$value": "0.875rem", "$description": "14px" },
-      "base": { "$value": "1.0625rem", "$description": "17px" },
-      "lg": { "$value": "1.25rem", "$description": "20px" },
-      "xl": { "$value": "1.625rem", "$description": "26px" },
-      "2xl": { "$value": "2.125rem", "$description": "34px" },
-      "3xl": { "$value": "3.25rem", "$description": "52px" }
+      "xs": {
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        },
+        "$description": "12px"
+      },
+      "sm": {
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "$description": "14px"
+      },
+      "base": {
+        "$value": {
+          "value": 1.0625,
+          "unit": "rem"
+        },
+        "$description": "17px"
+      },
+      "lg": {
+        "$value": {
+          "value": 1.25,
+          "unit": "rem"
+        },
+        "$description": "20px"
+      },
+      "xl": {
+        "$value": {
+          "value": 1.625,
+          "unit": "rem"
+        },
+        "$description": "26px"
+      },
+      "2xl": {
+        "$value": {
+          "value": 2.125,
+          "unit": "rem"
+        },
+        "$description": "34px"
+      },
+      "3xl": {
+        "$value": {
+          "value": 3.25,
+          "unit": "rem"
+        },
+        "$description": "52px"
+      }
     },
     "weight": {
       "$type": "fontWeight",
-      "regular": { "$value": 400 },
-      "medium": { "$value": 500 },
-      "semibold": { "$value": 600 },
-      "bold": { "$value": 700 }
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      },
+      "bold": {
+        "$value": 700
+      }
     },
     "line-height": {
       "$type": "number",
-      "tight": { "$value": 1.25, "$description": "Unitless; headings." },
-      "normal": { "$value": 1.6, "$description": "Unitless; body text." },
-      "relaxed": { "$value": 1.8, "$description": "Unitless; lead text." }
+      "tight": {
+        "$value": 1.25,
+        "$description": "Unitless; headings."
+      },
+      "normal": {
+        "$value": 1.6,
+        "$description": "Unitless; body text."
+      },
+      "relaxed": {
+        "$value": 1.8,
+        "$description": "Unitless; lead text."
+      }
     },
     "letter-spacing": {
-      "$type": "dimension",
-      "tight": { "$value": "-0.01em" },
-      "normal": { "$value": "0em" }
+      "$type": "number",
+      "tight": {
+        "$value": -0.01
+      },
+      "normal": {
+        "$value": 0
+      },
+      "$description": "Unitless: a multiple of the font size. The build writes it as em, so it follows each element's own size."
     }
   }
 }

@@ -44,6 +44,12 @@
 - Theme CSS selector is now `:root, [data-ds-mode="light"]` and sets `color-scheme: light`; `ThemeScope` and `ScopedPortal` set `color-scheme: light` inline (D-092, R28). Dark mode will add a `[data-ds-mode="dark"]` block without changing this shape.
 - README documents the supported CSS setups: palette-reset order, no `prefix()`, unlayered CSS beats the components.
 
+**Token source format (H17b, D-090, D-101):**
+
+- The token sources in `tokens/` and the playground's exported files are now Design Tokens Format Module 2025.10: dimensions are `{ "value": 0.25, "unit": "rem" }` (`px` or `rem`), durations `{ "value": 100, "unit": "ms" }` (`ms` or `s`), colours `{ "colorSpace": "srgb", "components": [r, g, b], "alpha"?, "hex"? }`, and shadow layers hold those objects. The generated `themes/<name>.css` and `.json` are byte-identical to 0.8.0 plus the H17 additions; only the source shape changed.
+- `font.letter-spacing.*` is a unitless `number` (a multiple of the font size, `-0.02`) because 2025.10 has no `em` unit; the build still writes `em`, so headings look the same.
+- **A custom theme folder written in the old string form (`"0.25rem"`, `"#ffffff"`, `"100ms"`, `"-0.02em"`) no longer validates.** Convert it, or export it again from the playground. `pnpm tokens:check` names every value it rejects.
+
 **Dependencies:**
 
 - `tailwindcss` `^4.0.0` is a peer dependency (it was only in the install line).
