@@ -8,6 +8,16 @@ export type LayoutGap = "xs" | "sm" | "md" | "lg" | "xl";
 export const listRole = (as: string): "list" | undefined =>
   as === "ul" || as === "ol" ? "list" : undefined;
 
+/** Cross-axis alignment shared by Stack and Split (R12). */
+export type LayoutAlign = "start" | "center" | "end" | "stretch";
+
+export const alignClasses: Record<LayoutAlign, string> = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  stretch: "items-stretch",
+};
+
 export const gapClasses: Record<LayoutGap, string> = {
   xs: "gap-ds-gap-xs",
   sm: "gap-ds-gap-sm",

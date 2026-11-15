@@ -6,7 +6,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
-import { useFieldContext } from "./field";
+import { useFieldContext, useFieldControlProps } from "./field";
 import { selectTriggerVariants } from "./select.styles";
 import { usePortalContainer } from "./theme-scope";
 
@@ -51,17 +51,19 @@ export const SelectTrigger = ({
   "aria-describedby": ariaDescribedBy,
   ...props
 }: SelectTriggerProps) => {
-  const field = useFieldContext();
-  const describedBy =
-    [field?.describedBy, ariaDescribedBy].filter(Boolean).join(" ") ||
-    undefined;
+  // `required` belongs to the Select root, which reads it from the Field.
+  const control = useFieldControlProps({
+    id,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+  });
 
   return (
     <SelectPrimitive.Trigger
       {...props}
-      id={id ?? field?.controlId}
-      aria-invalid={ariaInvalid ?? (field?.invalid ? true : undefined)}
-      aria-describedby={describedBy}
+      id={control.id}
+      aria-invalid={control["aria-invalid"]}
+      aria-describedby={control["aria-describedby"]}
       data-slot="select-trigger"
       data-size={size ?? "md"}
       className={cn(selectTriggerVariants({ size }), className)}

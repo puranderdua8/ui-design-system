@@ -10,13 +10,14 @@ import {
   sectionToneClasses,
   type SectionTone,
 } from "./section";
-import { Split, splitAlignClasses, splitRatioClasses } from "./split";
+import { Split, splitRatioClasses } from "./split";
 import {
   Sidebar,
   sidebarAsideClasses,
   sidebarContentClasses,
-  sidebarSideClasses,
+  sidebarRowClasses,
 } from "./sidebar";
+import { alignClasses } from "@/lib/layout";
 
 const themeCss = readFileSync(
   resolve(__dirname, "../styles/theme.css"),
@@ -273,8 +274,8 @@ describe("static class maps", () => {
     ...Object.values(sectionToneClasses),
     ...Object.values(sectionPaddingClasses),
     ...Object.values(splitRatioClasses),
-    ...Object.values(splitAlignClasses),
-    ...Object.values(sidebarSideClasses),
+    ...Object.values(alignClasses),
+    sidebarRowClasses,
     sidebarAsideClasses,
     sidebarContentClasses,
   ];

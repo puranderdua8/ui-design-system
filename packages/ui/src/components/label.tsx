@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
+import { RequiredMarker } from "./field-parts";
 import { Text } from "./text";
 
 export type LabelProps = ElementProps<"label"> & {
@@ -22,12 +23,6 @@ export const Label = ({
     className={cn("block", className)}
   >
     {children}
-    {required ? (
-      // The marker is decorative: the control's `required` is what assistive
-      // technology announces.
-      <span aria-hidden="true" className="ms-1 text-ds-danger-fg">
-        *
-      </span>
-    ) : null}
+    {required ? <RequiredMarker /> : null}
   </Text>
 );

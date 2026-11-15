@@ -525,3 +525,9 @@ A new themeable token must have a default alias to an existing primitive, so a c
 The 1.0.0 contract is `docs/versioning.md` (R17): what is public, what counts as breaking, how deprecation works (development warning, one minor of overlap, removal in the next major), and that the package is ESM-only.
 
 **Why:** there was no written contract.
+
+### D-097
+
+Inside a `Field`, the Field's id wins (R06). A control's own `id` is ignored there and logs a development warning that names `<Field id>`. `Field id` is the id of the control inside; `Fieldset id` is the `<fieldset>`'s own id. Controls resolve their wiring through one hook, `useFieldControlProps`, internal for now (not exported from the package index); making it public for outside controls is a 1.0.0 question. `babel-plugin-react-compiler` and `@babel/core` (pinned to 7: the compiler 1.0 does not read Babel 8's AST) are root devDependencies that run `pnpm check:compiler` (R15).
+
+**Why:** the label, description and error all point at one id, so two ids can never disagree; the alternative (Field reading its child's id) needs child inspection that breaks for wrapped controls.

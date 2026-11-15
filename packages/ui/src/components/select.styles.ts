@@ -1,4 +1,5 @@
 import { cva } from "class-variance-authority";
+import { controlSizeClasses } from "@/lib/control";
 
 // Plain module, no "use client": Server Components can call this (D-065, H3).
 export const selectTriggerVariants = cva(
@@ -10,10 +11,7 @@ export const selectTriggerVariants = cva(
     "*:data-[slot=select-value]:line-clamp-1 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
-      size: {
-        sm: "h-ds-control-sm px-ds-control-px-sm text-ds-control-sm",
-        md: "h-ds-control-md px-ds-control-px-md text-ds-control-md",
-      },
+      size: controlSizeClasses,
     },
     defaultVariants: { size: "md" },
   },

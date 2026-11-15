@@ -1,16 +1,15 @@
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
-import { gapClasses, listRole, type LayoutGap } from "@/lib/layout";
+import {
+  alignClasses,
+  gapClasses,
+  listRole,
+  type LayoutAlign,
+  type LayoutGap,
+} from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
-export type StackAlign = "start" | "center" | "end" | "stretch";
-
-export const stackAlignClasses: Record<StackAlign, string> = {
-  start: "items-start",
-  center: "items-center",
-  end: "items-end",
-  stretch: "items-stretch",
-};
+export type StackAlign = LayoutAlign;
 
 export type StackElement = "div" | "section" | "ul" | "ol" | "nav" | "article";
 
@@ -34,7 +33,7 @@ export const Stack = ({
     className: cn(
       "flex flex-col",
       gapClasses[gap],
-      stackAlignClasses[align],
+      alignClasses[align],
       className,
     ),
   });
