@@ -2,8 +2,12 @@ import type { VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
 import type { AsProps, ElementProps } from "@/lib/types";
-import { Heading, type HeadingElement, type HeadingProps } from "./heading";
-import { Text } from "./text";
+import {
+  headingVariants,
+  type HeadingElement,
+  type HeadingProps,
+} from "./heading";
+import { textVariants } from "./text";
 import {
   cardContentClasses,
   cardFooterClasses,
@@ -26,8 +30,8 @@ export type CardProps = VariantProps<typeof cardVariants> &
 export const Card = ({ as = "div", variant, className, ...props }: CardProps) =>
   renderAs(as, {
     ...props,
-    "data-slot": "card",
     className: cn(cardVariants({ variant }), className),
+    "data-slot": "card",
   });
 
 export type CardMediaProps = ElementProps<"div">;
@@ -56,16 +60,32 @@ export type CardTitleProps = Omit<HeadingProps, "as"> & {
   as?: HeadingElement;
 };
 
+/** A heading in the Card's title style; its own `data-slot="card-title"`. */
 export const CardTitle = ({
-  as = "h3",
+  as: Comp = "h3",
   variant = "h3",
+  className,
   ...props
-}: CardTitleProps) => <Heading {...props} as={as} variant={variant} />;
+}: CardTitleProps) => (
+  <Comp
+    {...props}
+    data-slot="card-title"
+    className={cn(headingVariants({ variant }), className)}
+  />
+);
 
 export type CardDescriptionProps = ElementProps<"p">;
 
-export const CardDescription = (props: CardDescriptionProps) => (
-  <Text {...props} variant="caption" />
+/** Caption text under the title; its own `data-slot="card-description"`. */
+export const CardDescription = ({
+  className,
+  ...props
+}: CardDescriptionProps) => (
+  <p
+    {...props}
+    data-slot="card-description"
+    className={cn(textVariants({ variant: "caption" }), className)}
+  />
 );
 
 export type CardContentProps = ElementProps<"div">;

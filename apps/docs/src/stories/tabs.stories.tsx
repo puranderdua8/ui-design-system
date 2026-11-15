@@ -84,7 +84,7 @@ export const InTones: Story = {
         <Section
           key={tone}
           tone={tone}
-          container="md"
+          contentWidth="md"
           padding="sm"
           aria-label={`${tone} section`}
         >

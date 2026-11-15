@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { ExternalLink } from "lucide-react";
-import { Slot } from "radix-ui";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
 
@@ -19,6 +19,10 @@ export const linkVariants = cva(
     defaultVariants: { variant: "inline" },
   },
 );
+
+export type LinkVariant = NonNullable<
+  VariantProps<typeof linkVariants>["variant"]
+>;
 
 export type LinkProps = VariantProps<typeof linkVariants> &
   ElementProps<"a"> & {
@@ -39,7 +43,7 @@ export const Link = ({
   children,
   ...props
 }: LinkProps) => {
-  const Comp = asChild ? Slot.Root : "a";
+  const Comp = asChild ? Slot : "a";
   // Keep a caller's rel tokens (e.g. nofollow) next to the ones a new tab needs.
   const rel = external
     ? [
@@ -61,7 +65,7 @@ export const Link = ({
       className={cn(linkVariants({ variant }), className)}
     >
       {/* Slottable lets asChild keep a single child while the icon is added beside its content. */}
-      <Slot.Slottable>{children}</Slot.Slottable>
+      <Slottable>{children}</Slottable>
       {external ? (
         <>
           {/* The space sits before the icon so the underline does not trail past it. */}{" "}

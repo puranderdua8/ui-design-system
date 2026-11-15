@@ -1,5 +1,9 @@
+// Public surface of @puranderdua/ui (docs/versioning.md). Style exports are
+// `*Variants` cva functions for components that stand for a role on another
+// element (Text, Heading, Button, Link, Input); every other class string and
+// cva function is private (R09).
 export { Text, textVariants } from "./components/text";
-export type { TextProps, TextElement } from "./components/text";
+export type { TextProps, TextElement, TextVariant } from "./components/text";
 export { Heading, headingVariants } from "./components/heading";
 export type {
   HeadingProps,
@@ -51,9 +55,13 @@ export type {
   SidebarAsideElement,
 } from "./components/sidebar";
 export { Button, buttonVariants } from "./components/button";
-export type { ButtonProps } from "./components/button";
+export type {
+  ButtonProps,
+  ButtonVariant,
+  ButtonSize,
+} from "./components/button";
 export { Link, linkVariants } from "./components/link";
-export type { LinkProps } from "./components/link";
+export type { LinkProps, LinkVariant } from "./components/link";
 export { Label } from "./components/label";
 export type { LabelProps } from "./components/label";
 export { Field, useFieldContext } from "./components/field";
@@ -69,12 +77,10 @@ export type {
 } from "./components/fieldset";
 export { Input } from "./components/input";
 export { inputVariants } from "./components/input.styles";
-export type { InputProps } from "./components/input";
+export type { InputProps, InputSize } from "./components/input";
 export { Checkbox } from "./components/checkbox";
-export { checkboxClasses } from "./components/checkbox.styles";
 export type { CheckboxProps } from "./components/checkbox";
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
-export { radioGroupItemClasses } from "./components/radio-group.styles";
 export type {
   RadioGroupProps,
   RadioGroupItemProps,
@@ -88,8 +94,6 @@ export {
   SelectLabel,
   SelectItem,
   SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
 } from "./components/select";
 export {
   DirectionProvider,
@@ -103,17 +107,16 @@ export type {
   TextDirection,
   ThemeScopeProps,
 } from "./components/theme-scope";
-export { selectTriggerVariants } from "./components/select.styles";
 export type {
   SelectProps,
   SelectGroupProps,
   SelectValueProps,
   SelectTriggerProps,
+  SelectTriggerSize,
   SelectContentProps,
   SelectLabelProps,
   SelectItemProps,
   SelectSeparatorProps,
-  SelectScrollButtonProps,
 } from "./components/select";
 export {
   Card,
@@ -124,7 +127,7 @@ export {
   CardContent,
   CardFooter,
 } from "./components/card";
-export { cardVariants } from "./components/card.styles";
+export type { CardVariant } from "./components/card.styles";
 export type {
   CardProps,
   CardElement,
@@ -136,12 +139,6 @@ export type {
   CardFooterProps,
 } from "./components/card";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/tabs";
-export {
-  tabsClasses,
-  tabsListClasses,
-  tabsTriggerClasses,
-  tabsContentClasses,
-} from "./components/tabs.styles";
 export type {
   TabsProps,
   TabsListProps,
@@ -149,10 +146,11 @@ export type {
   TabsContentProps,
 } from "./components/tabs";
 export { Banner } from "./components/banner";
-export { bannerVariants } from "./components/banner.styles";
 export type { BannerProps, BannerElement } from "./components/banner";
-export type { BannerTone, BannerScrim } from "./components/banner.styles";
 export type {
-  BannerVideoSource,
-  BannerVideoProps,
-} from "./components/banner-video";
+  BannerTone,
+  BannerScrim,
+  BannerHeight,
+  BannerJustify,
+} from "./components/banner.styles";
+export type { BannerVideoSource } from "./components/banner-video";

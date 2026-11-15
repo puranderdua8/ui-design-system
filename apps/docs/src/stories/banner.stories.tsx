@@ -39,14 +39,14 @@ const meta = {
     docs: {
       description: {
         component:
-          "Full-screen hero band. `height` screen (100svh) | tall (75svh), `align` start | center, `tone` canvas | brand | inverse | gradient. `media` takes any image (covered with `object-cover`) under an `overlay.scrim` layer; `video` takes `{ src, poster }`, plays muted and looped, shows only the poster under `prefers-reduced-motion` and has a visible pause button. Text over media is light, so `canvas` is not offered with it. Scrim `strong` keeps light text at 7:1 over a white pixel, `medium` at 4.5:1 (checked per theme).",
+          "Full-screen hero band. `height` screen (100svh) | tall (75svh), `justify` start | center, `tone` canvas | brand | inverse | gradient. `media` takes any image (covered with `object-cover`) under an `overlay.scrim` layer; `video` takes `{ src, poster }`, plays muted and looped, shows only the poster under `prefers-reduced-motion` and has a visible pause button. Text over media is light, so `canvas` is not offered with it. Scrim `strong` keeps light text at 7:1 over a white pixel, `medium` at 4.5:1 (checked per theme).",
       },
     },
   },
-  args: { height: "tall", align: "center", tone: "canvas" },
+  args: { height: "tall", justify: "center", tone: "canvas" },
   argTypes: {
     height: { control: "inline-radio", options: ["screen", "tall"] },
-    align: { control: "inline-radio", options: ["start", "center"] },
+    justify: { control: "inline-radio", options: ["start", "center"] },
     tone: {
       control: "inline-radio",
       options: ["canvas", "brand", "inverse", "gradient"],
@@ -85,7 +85,7 @@ export const Tones: Story = {
 
 export const ContentAtStart: Story = {
   render: () => (
-    <Banner tone="gradient" align="start" aria-label="Welcome">
+    <Banner tone="gradient" justify="start" aria-label="Welcome">
       <Content />
     </Banner>
   ),

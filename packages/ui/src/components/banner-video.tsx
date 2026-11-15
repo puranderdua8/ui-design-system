@@ -30,7 +30,7 @@ export type BannerVideoSource = {
   playLabel?: string;
 };
 
-export type BannerVideoProps = BannerVideoSource & {
+type BannerVideoProps = BannerVideoSource & {
   /** Rendered after the video layer: the scrim, the content, and then the button. */
   children?: React.ReactNode;
 };

@@ -244,7 +244,6 @@ describe("Sidebar", () => {
         </Sidebar>
         <Sidebar
           sidebar="b"
-          sidebarClassName="p-1"
           sidebarProps={{ "aria-label": "Related", className: "p-2" }}
         >
           y

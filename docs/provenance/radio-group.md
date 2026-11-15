@@ -8,11 +8,11 @@
 
 ## Dependencies
 
-| Package                  | Why                                                     |
-| ------------------------ | ------------------------------------------------------- |
-| `radix-ui`               | `RadioGroup` primitive from the unified package (D-049) |
-| `lucide-react`           | `CircleIcon` for the selected dot                       |
-| `clsx`, `tailwind-merge` | via our `cn` (`@/lib/utils`)                            |
+| Package                       | Why                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| `@radix-ui/react-radio-group` | `RadioGroup` primitive from the individual package (D-093; upstream uses the unified `radix-ui`) |
+| `lucide-react`                | `CircleIcon` for the selected dot                                                                |
+| `clsx`, `tailwind-merge`      | via our `cn` (`@/lib/utils`)                                                                     |
 
 ## Changes from upstream
 

@@ -8,11 +8,11 @@
 
 ## Dependencies
 
-| Package                    | Why                                                                                   |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `class-variance-authority` | variant maps (as upstream)                                                            |
-| `radix-ui`                 | `asChild` via `Slot.Root`, imported from the unified package as upstream does (D-049) |
-| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                                                          |
+| Package                    | Why                                                                                             |
+| -------------------------- | ----------------------------------------------------------------------------------------------- |
+| `class-variance-authority` | variant maps (as upstream)                                                                      |
+| `@radix-ui/react-slot`     | `asChild` via `Slot`, from the individual package (D-093; upstream uses the unified `radix-ui`) |
+| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                                                                    |
 
 ## Changes from upstream
 

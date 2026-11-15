@@ -77,7 +77,7 @@ Layout (0.3.0), all with a typed `as`. `Grid`, `Stack` and `Cluster` add `role="
 - `Stack`: vertical flow with `gap`, `align`. `Cluster`: wrapping row with `gap`, `justify`, `align`.
 - `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; optional inner `Container`.
 - `Split`: two columns 1:1, 1:2 or 2:1; stacks when its container is too narrow (not the viewport). Put padding on an inner element so the ratio stays exact.
-- `Sidebar`: `sidebar` slot, `side`; the content wraps below the aside when it would be narrower than half the row. DOM order is visual order: for `side="end"` the content comes first and the aside after it (stacked, the aside is below). `sidebarProps` goes on the aside (`aria-label`, `id`); name each aside when a page has more than one.
+- `Sidebar`: `sidebar` slot, `sidebarSide`; the content wraps below the aside when it would be narrower than half the row. DOM order is visual order: for `sidebarSide="end"` the content comes first and the aside after it (stacked, the aside is below). `sidebarProps` goes on the aside (`className`, `aria-label`, `id`) and `contentProps` on the content column; name each aside when a page has more than one.
 
 Forms (0.4.0). The controls are client components; a Server Component page can still import them:
 

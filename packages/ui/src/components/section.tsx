@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
-import type { AsProps } from "@/lib/types";
+import { warnRenamedProp } from "@/lib/deprecate";
+import type { AsProps, ElementProps } from "@/lib/types";
 import { Container, type ContainerSize } from "./container";
 
 export type SectionTone = "canvas" | "subtle" | "inverse" | "brand";
@@ -30,7 +31,14 @@ export type SectionElement = "section" | "div" | "header" | "footer" | "aside";
 export type SectionProps = {
   tone?: SectionTone;
   padding?: SectionPadding;
-  /** Wrap the children in a `Container` of this size. Omit for a bare band. */
+  /** Wrap the children in a `Container` of this width. Omit for a bare band. */
+  contentWidth?: ContainerSize;
+  /**
+   * Props for the inner `Container` (`className`, `id`, `data-*`, `ref`). Only
+   * used with `contentWidth`.
+   */
+  contentProps?: Omit<ElementProps<"div">, "children">;
+  /** @deprecated Renamed `contentWidth` (D-089). Removed in 1.0.0. */
   container?: ContainerSize;
 } & AsProps<"section", Exclude<SectionElement, "section">>;
 
@@ -39,22 +47,30 @@ export const Section = ({
   as = "section",
   tone = "canvas",
   padding = "md",
+  contentWidth,
+  contentProps,
   container,
   className,
   children,
   ...props
 }: SectionProps) => {
+  if (container !== undefined) {
+    warnRenamedProp("Section", "container", "contentWidth");
+  }
+  const width = contentWidth ?? container;
   return renderAs(as, {
     ...props,
-    "data-slot": "section",
     className: cn(
       "w-full",
       sectionToneClasses[tone],
       sectionPaddingClasses[padding],
       className,
     ),
-    children: container ? (
-      <Container size={container}>{children}</Container>
+    "data-slot": "section",
+    children: width ? (
+      <Container {...contentProps} size={width}>
+        {children}
+      </Container>
     ) : (
       children
     ),

@@ -11,7 +11,7 @@ export const bannerVariants = cva(
     variants: {
       // Banner height recipes (theme.css): min-height in svh, so text can grow it.
       height: { screen: "ds-banner-screen", tall: "ds-banner-tall" },
-      align: { start: "justify-start", center: "justify-center" },
+      justify: { start: "justify-start", center: "justify-center" },
       // Tone recipes (theme.css, contexts in contrast-pairs.json).
       tone: {
         canvas: "ds-tone-canvas",
@@ -20,11 +20,13 @@ export const bannerVariants = cva(
         gradient: "ds-tone-gradient",
       },
     },
-    defaultVariants: { height: "screen", align: "center", tone: "canvas" },
+    defaultVariants: { height: "screen", justify: "center", tone: "canvas" },
   },
 );
 
 export type BannerVariantProps = VariantProps<typeof bannerVariants>;
+export type BannerHeight = NonNullable<BannerVariantProps["height"]>;
+export type BannerJustify = NonNullable<BannerVariantProps["justify"]>;
 
 /**
  * Background layer for an image or video: fills the band, `object-cover` on

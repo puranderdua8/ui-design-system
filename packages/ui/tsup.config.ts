@@ -61,5 +61,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   esbuildPlugins: [componentsAsExternals],
-  external: ["react", "react-dom", "react/jsx-runtime", "radix-ui"],
+  external: ["react", "react-dom", "react/jsx-runtime", /^@radix-ui\/react-/],
 });

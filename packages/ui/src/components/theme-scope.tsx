@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { Direction, Slot } from "radix-ui";
+import { Slot } from "@radix-ui/react-slot";
+import { Provider as DirectionPrimitive } from "@radix-ui/react-direction";
 import type { CSSProperties, ReactNode } from "react";
 import type { ElementProps } from "@/lib/types";
 
@@ -83,9 +84,9 @@ export const ScopedPortal = ({
 
   return createPortal(
     asChild ? (
-      <Slot.Root {...scopeProps} className="ds-tone-raised">
+      <Slot {...scopeProps} className="ds-tone-raised">
         {children}
-      </Slot.Root>
+      </Slot>
     ) : (
       <div {...scopeProps} className="contents ds-tone-raised">
         {children}
@@ -110,9 +111,9 @@ export const DirectionProvider = ({
   dir,
   children,
 }: DirectionProviderProps) => (
-  <Direction.Provider dir={dir}>
+  <DirectionPrimitive dir={dir}>
     <DirectionContext value={dir}>{children}</DirectionContext>
-  </Direction.Provider>
+  </DirectionPrimitive>
 );
 
 export type ThemeScopeProps = Omit<ElementProps<"div">, "style" | "dir"> & {

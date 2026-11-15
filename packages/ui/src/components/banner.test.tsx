@@ -113,10 +113,10 @@ describe("Banner structure", () => {
     expect(cls).toContain("ds-tone-canvas");
   });
 
-  it("maps height, align and tone to static classes", () => {
+  it("maps height, justify and tone to static classes", () => {
     stubMotion(false);
     expect(bannerVariants({ height: "tall" })).toContain("ds-banner-tall");
-    expect(bannerVariants({ align: "start" })).toContain("justify-start");
+    expect(bannerVariants({ justify: "start" })).toContain("justify-start");
     expect(bannerVariants({ tone: "brand" })).toContain("ds-tone-brand");
     expect(bannerVariants({ tone: "inverse" })).toContain("ds-tone-inverse");
     expect(bannerVariants({ tone: "gradient" })).toContain("ds-tone-gradient");

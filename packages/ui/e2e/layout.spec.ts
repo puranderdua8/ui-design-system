@@ -233,6 +233,31 @@ test.describe("Grid", () => {
     expect(sideBySide(a, b)).toBe(true);
   });
 
+  test("cols fills a Cluster and a centred Stack instead of collapsing to zero (R07)", async ({
+    page,
+  }) => {
+    for (const name of ["grid-in-cluster", "grid-in-stack-centre"]) {
+      await open(page, name, 800);
+      const outer = await rect(page, "outer");
+      const [a, b] = [await rect(page, "a"), await rect(page, "b")];
+      expect(outer.width, name).toBeGreaterThan(700);
+      expect(a.width, name).toBeGreaterThan(100);
+      expect(b.width, name).toBeGreaterThan(100);
+      expect(sideBySide(a, b), name).toBe(true);
+    }
+  });
+
+  test("className reaches the element that is the flex item (R07)", async ({
+    page,
+  }) => {
+    await open(page, "grid-in-stack-start-capped", 800);
+    const max = await px(page, "var(--ds-layout-container-sm)");
+    const outer = await rect(page, "outer");
+    expect(max).toBeLessThan(800);
+    expect(outer.width).toBeLessThanOrEqual(max + 1);
+    expect(outer.width).toBeGreaterThan(100);
+  });
+
   test("minItemWidth fits as many columns as the container allows", async ({
     page,
   }) => {

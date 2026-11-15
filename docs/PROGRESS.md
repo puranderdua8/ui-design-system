@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 (#60) and H12 (#61) are merged; H13 and H14 are merged; H15 is done on branch `h15-radix-packages`.
-- **Next session:** H16 (public API surface) or H18 (site performance); they are independent. Release 2 (dark mode) waits for MH2.
+- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 (#60) and H12 (#61) are merged; H13, H14 and H15 are merged; H16 is done on branch `h16-public-api`.
+- **Next session:** H17 (tokens), H18 (site performance) or H19; H17 and H18 are independent. Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -608,6 +608,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `pnpm check` green. Seven new layout tests (`H15` describe); against the stashed 0.8.0 source six fail (only checked Checkbox/Radio indicator passed, as the register said).
 - Gotchas: (1) `-g` is ignored through `pnpm test:layout --`; use `pnpm exec playwright test --project=chromium -g H15`. (2) WebKit passes the forced-colours tests even on old code, so only Chromium/Firefox prove them. (3) Radix `Slot` and `Direction` still come from `radix-ui`; H16 swaps the imports (D-093). (4) A one-off node script (approved) set the five register cells; it was deleted. (5) `usePortalContainer` change is breaking for 0.x users: H19's CHANGELOG must list it, plus `ThemeScope` no longer being the portal root. (6) The site is pinned to 0.8.0, so its playground comment about portals is stale until it upgrades. (7) Five site playground tests (`engine.test.ts` contrast line-for-line; four in `export.test.ts`) compare the repo scripts with the pinned 0.8.0 package, so the new tokens broke them; the maintainer chose to skip them (`it.skip`, commented) until the site moves to 0.9.0. **H17 adds more tokens; whoever upgrades the site (H19/H20) must re-enable them.**
 - Next: H16 (needs H14, done).
+
+### H16 — Public API surface — 2026-11-15
+
+- Done (branch `h16-public-api`, off `main` after #64): **R09** `index.ts` exports only the five `*Variants`; the six `*Classes`, `selectTriggerVariants`, `bannerVariants`, `cardVariants`, both Select scroll buttons and `BannerVideoProps` are private; new variant types `TextVariant`, `ButtonVariant`, `ButtonSize`, `LinkVariant`, `InputSize`, `SelectTriggerSize`, `CardVariant`, `BannerHeight`, `BannerJustify`. **R10** D-089 renames (`contentWidth`, `sidebarSide`, `justify`) with the old names kept and one development warning per prop (`lib/deprecate.ts`). **R11** `contentProps`/`layerProps`/`rowProps`, `sidebarClassName` removed, `card-title`/`card-description` slots, `data-slot` after the spread everywhere. **R07** Grid wrapper fills a flex parent and takes `className`/`style`/`data-*`; `cols`/`minItemWidth` is a union. **R25** `tailwindcss` ^4 peer. **R42** six `@radix-ui/react-*` packages replace `radix-ui` (CLAUDE.md, PLAN, provenance docs updated). CHANGELOG has a 0.9.0 (unreleased) section.
+- Decisions: D-099 (Grid wrapper keeps `ref` on the grid element; the public style-export rule).
+- Verified: see the check run in the session wrap-up; the two Grid layout tests fail with width 0 when `w-full min-w-0` is removed.
+- Gotchas: (1) `check:rsc` list shrank to the five `*Variants` plus `cn` and now fails on any other value export. (2) The site is pinned to 0.8.0, so its demos still use the old prop names; they keep working only because the site installs the published package. Whoever moves the site to 0.9.0 (H19/H20) must rename `container`, `side` and `align` there. (3) `Section`/`Banner`/`Sidebar` call `warnRenamedProp` during render; `check:compiler` still compiles all of them.
+- Next: H17 (tokens), H18 (site performance) or H19.
 
 ### R6 — Security, DX, tooling, process + write-up — 2026-11-14
 

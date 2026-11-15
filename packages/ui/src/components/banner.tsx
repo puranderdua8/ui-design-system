@@ -1,6 +1,7 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
+import { warnRenamedProp } from "@/lib/deprecate";
 import type { AsProps } from "@/lib/types";
 import { Container, type ContainerSize } from "./container";
 import { BannerVideo, type BannerVideoSource } from "./banner-video";
@@ -9,19 +10,28 @@ import {
   bannerMediaClasses,
   bannerScrimClasses,
   bannerVariants,
+  type BannerHeight,
+  type BannerJustify,
   type BannerScrim,
   type BannerTone,
-  type BannerVariantProps,
 } from "./banner.styles";
 
 export type BannerElement = "section" | "div" | "header";
 
 type BannerCommon = {
   /** `screen`: at least the full small viewport (100svh). `tall`: at least 75svh. */
-  height?: NonNullable<BannerVariantProps["height"]>;
-  /** Vertical position of the content. */
-  align?: NonNullable<BannerVariantProps["align"]>;
-  /** Width of the content column (a `Container` size). */
+  height?: BannerHeight;
+  /** Vertical position of the content (main axis of the column, like `Cluster`'s `justify`). */
+  justify?: BannerJustify;
+  /** Width of the content column (a `Container` size). Default `lg`. */
+  contentWidth?: ContainerSize;
+  /** Props for the content layer, the element above the media: `className`, `id`, `data-*`. */
+  layerProps?: Omit<React.ComponentPropsWithoutRef<"div">, "children">;
+  /** Props for the `Container` that holds the children: `className`, `id`, `data-*`. */
+  contentProps?: Omit<React.ComponentPropsWithoutRef<"div">, "children">;
+  /** @deprecated Renamed `justify` (D-089). Removed in 1.0.0. */
+  align?: BannerJustify;
+  /** @deprecated Renamed `contentWidth` (D-089). Removed in 1.0.0. */
   container?: ContainerSize;
 };
 
@@ -72,8 +82,12 @@ export const Banner = ({
   as = "section",
   tone,
   height,
+  justify,
+  contentWidth,
+  layerProps,
+  contentProps,
   align,
-  container = "lg",
+  container,
   media,
   video,
   scrim = "strong",
@@ -81,29 +95,39 @@ export const Banner = ({
   children,
   ...props
 }: BannerProps) => {
+  if (align !== undefined) warnRenamedProp("Banner", "align", "justify");
+  if (container !== undefined) {
+    warnRenamedProp("Banner", "container", "contentWidth");
+  }
   const hasMedia = media != null || video != null;
   const body = (
     <>
       {hasMedia ? (
         <div data-slot="banner-scrim" className={bannerScrimClasses[scrim]} />
       ) : null}
-      <div data-slot="banner-content" className={bannerContentClasses}>
-        <Container size={container}>{children}</Container>
+      <div
+        {...layerProps}
+        data-slot="banner-content"
+        className={cn(bannerContentClasses, layerProps?.className)}
+      >
+        <Container {...contentProps} size={contentWidth ?? container ?? "lg"}>
+          {children}
+        </Container>
       </div>
     </>
   );
 
   return renderAs(as, {
     ...props,
-    "data-slot": "banner",
     className: cn(
       bannerVariants({
         height,
-        align,
+        justify: justify ?? align,
         tone: tone ?? (hasMedia ? "inverse" : "canvas"),
       }),
       className,
     ),
+    "data-slot": "banner",
     children: (
       <>
         {media != null ? (

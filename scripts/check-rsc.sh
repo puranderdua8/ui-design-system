@@ -93,9 +93,7 @@ import {
   Checkbox, Cluster, Container, Field, Grid, Heading, Input, Link, Label,
   RadioGroup, RadioGroupItem, Section, Select, SelectContent, SelectItem,
   SelectTrigger, SelectValue, Sidebar, Split, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text,
-  bannerVariants, buttonVariants, cardVariants, checkboxClasses, cn, headingVariants, inputVariants, linkVariants,
-  radioGroupItemClasses, selectTriggerVariants, tabsClasses, tabsContentClasses, tabsListClasses,
-  tabsTriggerClasses, textVariants,
+  buttonVariants, cn, headingVariants, inputVariants, linkVariants, textVariants,
 } from "@puranderdua/ui";
 
 // Every server-safe export is called here, on the server (F01, F36). If one of
@@ -105,24 +103,16 @@ const serverSafe = [
   headingVariants({ variant: "display" }),
   inputVariants({ size: "md" }),
   linkVariants({ variant: "inline" }),
-  selectTriggerVariants({ size: "md" }),
   textVariants({ variant: "body" }),
   cn("a", "b"),
-  cardVariants({ variant: "raised" }),
-  bannerVariants({ tone: "gradient", height: "tall" }),
-  checkboxClasses,
-  radioGroupItemClasses,
-  tabsClasses,
-  tabsListClasses,
-  tabsTriggerClasses,
-  tabsContentClasses,
 ];
 
 // A value export that is neither a component nor a hook must be server-safe and
-// belong in the list above: a new one fails here until it is added.
+// belong in the list above: a new one fails here until it is added. The public
+// style exports are the five `*Variants` cva functions and `cn` (R09); the other
+// class strings and cva functions are private.
 const known = new Set(["buttonVariants", "headingVariants", "inputVariants", "linkVariants",
-  "selectTriggerVariants", "textVariants", "cn", "checkboxClasses", "radioGroupItemClasses",
-  "cardVariants", "bannerVariants", "tabsClasses", "tabsListClasses", "tabsTriggerClasses", "tabsContentClasses"]);
+  "textVariants", "cn"]);
 const unlisted = Object.keys(ui).filter((k) => !/^[A-Z]/.test(k) && !/^use[A-Z]/.test(k) && !known.has(k));
 if (unlisted.length > 0) throw new Error("Unlisted server-safe exports: " + unlisted.join(", "));
 
@@ -132,7 +122,7 @@ export default function Page() {
       <Heading as="h1" variant="display">RSC check</Heading>
       <Text>Rendered on the server.</Text>
       <p data-testid="server-safe">{serverSafe.every((v) => typeof v === "string" && v.length > 0) ? "server-safe ok" : "server-safe broken"}</p>
-      <Container><Stack><Cluster><Grid><Section><Split><div>a</div><div>b</div></Split><Sidebar sidebar="s">c</Sidebar></Section></Grid></Cluster></Stack></Container>
+      <Container><Stack><Cluster><Grid><Section contentWidth="md"><Split><div>a</div><div>b</div></Split><Sidebar sidebarSide="end" sidebar="s">c</Sidebar></Section></Grid></Cluster></Stack></Container>
       <Button>Go</Button>
       <Link href="/">Home</Link>
       <Label htmlFor="x">Label</Label>

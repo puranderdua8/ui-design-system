@@ -119,15 +119,56 @@ describe("Grid", () => {
     );
   });
 
-  it("minItemWidth switches to the auto-fit recipe and drops the column map", () => {
-    render(
-      <Grid cols={3} minItemWidth="md">
-        x
-      </Grid>,
-    );
+  it("minItemWidth uses the auto-fit recipe and no column map", () => {
+    render(<Grid minItemWidth="md">x</Grid>);
     const cls = screen.getByText("x").className;
     expect(cls).toContain("ds-grid-fit-md");
     expect(cls).not.toContain("grid-cols");
+  });
+
+  it("cols and minItemWidth together are a type error (R07)", () => {
+    // Type-level only: the line below must not compile without the directive.
+    const both = () => (
+      // @ts-expect-error `cols` and `minItemWidth` are mutually exclusive
+      <Grid cols={3} minItemWidth="md" />
+    );
+    expect(typeof both).toBe("function");
+  });
+
+  it("className, style and data-* reach the outermost element in cols mode (R07)", () => {
+    render(
+      <Grid
+        cols={2}
+        className="col-span-2 self-start"
+        style={{ margin: 1 }}
+        data-testid="outer"
+        aria-label="grid"
+        id="inner-id"
+      >
+        x
+      </Grid>,
+    );
+    const outer = screen.getByTestId("outer");
+    expect(outer.className).toContain("col-span-2");
+    expect(outer.className).toContain("self-start");
+    expect(outer.className).toContain("w-full");
+    expect(outer.className).toContain("min-w-0");
+    expect(outer.style.margin).toBe("1px");
+    const grid = screen.getByLabelText("grid");
+    expect(grid).not.toBe(outer);
+    expect(grid.id).toBe("inner-id");
+    expect(grid.className).not.toContain("col-span-2");
+  });
+
+  it("className reaches the single element in auto-fit mode", () => {
+    render(
+      <Grid minItemWidth="md" className="col-span-2" data-testid="only">
+        x
+      </Grid>,
+    );
+    const only = screen.getByTestId("only");
+    expect(only.className).toContain("col-span-2");
+    expect(only.className).toContain("ds-grid-fit-md");
   });
 
   it("renders list elements", () => {

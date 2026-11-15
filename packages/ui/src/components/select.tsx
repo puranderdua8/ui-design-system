@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Select as SelectPrimitive } from "radix-ui";
+import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,7 @@ export type SelectGroupProps = React.ComponentPropsWithoutRef<
 > & { ref?: StrictRef<HTMLDivElement> };
 
 export const SelectGroup = (props: SelectGroupProps) => (
-  <SelectPrimitive.Group data-slot="select-group" {...props} />
+  <SelectPrimitive.Group {...props} data-slot="select-group" />
 );
 
 export type SelectValueProps = React.ComponentPropsWithoutRef<
@@ -33,8 +33,12 @@ export type SelectValueProps = React.ComponentPropsWithoutRef<
 > & { ref?: StrictRef<HTMLSpanElement> };
 
 export const SelectValue = (props: SelectValueProps) => (
-  <SelectPrimitive.Value data-slot="select-value" {...props} />
+  <SelectPrimitive.Value {...props} data-slot="select-value" />
 );
+
+export type SelectTriggerSize = NonNullable<
+  VariantProps<typeof selectTriggerVariants>["size"]
+>;
 
 export type SelectTriggerProps = VariantProps<typeof selectTriggerVariants> &
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
@@ -200,11 +204,12 @@ export const SelectSeparator = ({
   />
 );
 
-export type SelectScrollButtonProps = React.ComponentPropsWithoutRef<
+// Rendered by `SelectContent`; not part of the public API (R09).
+type SelectScrollButtonProps = React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.ScrollUpButton
 > & { ref?: StrictRef<HTMLDivElement> };
 
-export const SelectScrollUpButton = ({
+const SelectScrollUpButton = ({
   className,
   ...props
 }: SelectScrollButtonProps) => (
@@ -220,7 +225,7 @@ export const SelectScrollUpButton = ({
   </SelectPrimitive.ScrollUpButton>
 );
 
-export const SelectScrollDownButton = ({
+const SelectScrollDownButton = ({
   className,
   ...props
 }: SelectScrollButtonProps) => (

@@ -8,12 +8,12 @@
 
 ## Dependencies
 
-| Package                    | Why                                                 |
-| -------------------------- | --------------------------------------------------- |
-| `radix-ui`                 | `Select` primitive from the unified package (D-049) |
-| `lucide-react`             | `CheckIcon`, `ChevronDownIcon`, `ChevronUpIcon`     |
-| `class-variance-authority` | trigger `size` variants (as `Input`)                |
-| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                        |
+| Package                    | Why                                                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| `@radix-ui/react-select`   | `Select` primitive from the individual package (D-093; upstream uses the unified `radix-ui`) |
+| `lucide-react`             | `CheckIcon`, `ChevronDownIcon`, `ChevronUpIcon`                                              |
+| `class-variance-authority` | trigger `size` variants (as `Input`)                                                         |
+| `clsx`, `tailwind-merge`   | via our `cn` (`@/lib/utils`)                                                                 |
 
 ## Changes from upstream
 
