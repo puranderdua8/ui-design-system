@@ -1,10 +1,15 @@
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
-import { gapClasses, type LayoutGap } from "@/lib/layout";
+import {
+  alignClasses,
+  gapClasses,
+  type LayoutAlign,
+  type LayoutGap,
+} from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
 export type SplitRatio = "1:1" | "1:2" | "2:1";
-export type SplitAlign = "start" | "center" | "end" | "stretch";
+export type SplitAlign = LayoutAlign;
 
 /**
  * Recipes in theme.css. The columns sit side by side while each has at least
@@ -16,13 +21,6 @@ export const splitRatioClasses: Record<SplitRatio, string> = {
   "1:1": "ds-split",
   "1:2": "ds-split ds-split-1-2",
   "2:1": "ds-split ds-split-2-1",
-};
-
-export const splitAlignClasses: Record<SplitAlign, string> = {
-  start: "items-start",
-  center: "items-center",
-  end: "items-end",
-  stretch: "items-stretch",
 };
 
 export type SplitElement = "div" | "section";
@@ -49,7 +47,7 @@ export const Split = ({
     "data-slot": "split",
     className: cn(
       splitRatioClasses[ratio],
-      splitAlignClasses[align],
+      alignClasses[align],
       gapClasses[gap],
       className,
     ),

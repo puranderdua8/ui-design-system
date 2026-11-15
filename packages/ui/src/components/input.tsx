@@ -3,7 +3,7 @@
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
-import { useFieldContext } from "./field";
+import { useFieldControlProps } from "./field";
 import { inputVariants } from "./input.styles";
 
 export type InputProps = VariantProps<typeof inputVariants> &
@@ -20,19 +20,18 @@ export const Input = ({
   "aria-describedby": ariaDescribedBy,
   ...props
 }: InputProps) => {
-  const field = useFieldContext();
-  const describedBy =
-    [field?.describedBy, ariaDescribedBy].filter(Boolean).join(" ") ||
-    undefined;
+  const control = useFieldControlProps({
+    id,
+    required,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+  });
 
   return (
     <input
       {...props}
+      {...control}
       type={type}
-      id={id ?? field?.controlId}
-      required={required ?? field?.required}
-      aria-invalid={ariaInvalid ?? (field?.invalid ? true : undefined)}
-      aria-describedby={describedBy}
       data-slot="input"
       data-size={size ?? "md"}
       className={cn(inputVariants({ size }), className)}

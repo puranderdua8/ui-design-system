@@ -3,7 +3,9 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
-import { Text, textVariants } from "./text";
+import { FieldDescription, FieldError, RequiredMarker } from "./field-parts";
+import { describeMessages, hasContent, joinIds } from "./field.styles";
+import { textVariants } from "./text";
 
 export type FieldsetContextValue = {
   /** Id of the legend, so a group inside can be named by it. */
@@ -26,6 +28,11 @@ export type FieldsetProps = Omit<ElementProps<"fieldset">, "children"> & {
   error?: React.ReactNode;
   /** Shows the required marker and tells a `RadioGroup` inside it. */
   required?: boolean;
+  /**
+   * The id of the `<fieldset>` element itself; the legend, description and error
+   * ids derive from it. (On `Field`, `id` is the control's id instead.)
+   */
+  id?: string;
   /** The group of controls, such as a `RadioGroup` or a list of `Checkbox` fields. */
   children: React.ReactNode;
 };
@@ -49,24 +56,13 @@ export const Fieldset = ({
   const generatedId = React.useId();
   const baseId = id ?? generatedId;
   const legendId = `${baseId}-legend`;
-  const descriptionId = `${baseId}-description`;
-  const errorId = `${baseId}-error`;
-  const hasDescription =
-    description != null && description !== false && description !== "";
-  const hasError = error != null && error !== false && error !== "";
+  const { hasDescription, hasError, descriptionId, errorId, describedBy } =
+    describeMessages(baseId, description, error);
 
-  const describedBy =
-    [
-      hasDescription ? descriptionId : null,
-      hasError ? errorId : null,
-      ariaDescribedBy,
-    ]
-      .filter(Boolean)
-      .join(" ") || undefined;
-
+  const invalid = hasContent(error);
   const value = React.useMemo(
-    () => ({ legendId, invalid: hasError, required }),
-    [legendId, hasError, required],
+    () => ({ legendId, invalid, required }),
+    [legendId, invalid, required],
   );
 
   return (
@@ -76,7 +72,7 @@ export const Fieldset = ({
         id={id}
         data-slot="fieldset"
         data-invalid={hasError ? "" : undefined}
-        aria-describedby={describedBy}
+        aria-describedby={joinIds(describedBy, ariaDescribedBy)}
         className={cn(
           "flex min-w-0 flex-col gap-ds-gap-xs border-0 p-0 m-0",
           className,
@@ -88,30 +84,13 @@ export const Fieldset = ({
           className={cn(textVariants({ variant: "label" }), "mb-ds-gap-xs p-0")}
         >
           {legend}
-          {required ? (
-            // Decorative, like the Label marker: `required` on the controls is announced.
-            <span aria-hidden="true" className="ms-1 text-ds-danger-fg">
-              *
-            </span>
-          ) : null}
+          {required ? <RequiredMarker /> : null}
         </legend>
         {hasDescription ? (
-          <Text as="p" variant="caption" id={descriptionId}>
-            {description}
-          </Text>
+          <FieldDescription id={descriptionId}>{description}</FieldDescription>
         ) : null}
         {children}
-        {hasError ? (
-          <Text
-            as="p"
-            variant="caption"
-            id={errorId}
-            role="alert"
-            className="text-ds-danger-fg"
-          >
-            {error}
-          </Text>
-        ) : null}
+        {hasError ? <FieldError id={errorId}>{error}</FieldError> : null}
       </fieldset>
     </FieldsetContext>
   );

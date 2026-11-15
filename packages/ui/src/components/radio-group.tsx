@@ -5,7 +5,7 @@ import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { CircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
-import { useFieldContext } from "./field";
+import { useFieldContext, useFieldControlProps } from "./field";
 import { useFieldsetContext } from "./fieldset";
 import { radioGroupItemClasses } from "./radio-group.styles";
 
@@ -31,6 +31,15 @@ export const RadioGroup = ({
   const field = useFieldContext();
   const fieldset = useFieldsetContext();
   const wrongParent = field != null && fieldset == null;
+  // The Field's wiring. Inside a Fieldset the group takes the Fieldset's state
+  // instead (its own description and error sit on the `<fieldset>`).
+  const control = useFieldControlProps({
+    id,
+    required,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+  });
+  const fieldsetInvalid = fieldset?.invalid ? true : undefined;
 
   React.useEffect(() => {
     if (wrongParent && process.env.NODE_ENV !== "production") {
@@ -40,19 +49,20 @@ export const RadioGroup = ({
     }
   }, [wrongParent]);
 
-  const source = fieldset ?? field;
-  const describedBy =
-    [fieldset ? undefined : field?.describedBy, ariaDescribedBy]
-      .filter(Boolean)
-      .join(" ") || undefined;
+  const groupProps =
+    fieldset == null
+      ? control
+      : {
+          id,
+          required: required ?? fieldset.required,
+          "aria-invalid": ariaInvalid ?? fieldsetInvalid,
+          "aria-describedby": ariaDescribedBy,
+        };
 
   return (
     <RadioGroupPrimitive.Root
       {...props}
-      id={id ?? (fieldset ? undefined : field?.controlId)}
-      required={required ?? source?.required}
-      aria-invalid={ariaInvalid ?? (source?.invalid ? true : undefined)}
-      aria-describedby={describedBy}
+      {...groupProps}
       aria-labelledby={ariaLabelledBy ?? fieldset?.legendId ?? field?.labelId}
       data-slot="radio-group"
       className={cn("group grid gap-ds-gap-sm", className)}

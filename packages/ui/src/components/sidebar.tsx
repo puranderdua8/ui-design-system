@@ -13,10 +13,7 @@ export type SidebarAsideElement = "aside" | "nav" | "div";
  * the row wraps, the aside is therefore above the content for `start` and
  * below it for `end`. There is no `flex-row-reverse` and no `order-*`.
  */
-export const sidebarSideClasses: Record<SidebarSide, string> = {
-  start: "flex flex-wrap",
-  end: "flex flex-wrap",
-};
+export const sidebarRowClasses = "flex flex-wrap";
 
 /** Starts at the `layout.sidebar-width` token and takes almost none of the spare room. */
 export const sidebarAsideClasses = "grow basis-ds-sidebar";
@@ -78,7 +75,7 @@ export const Sidebar = ({
     ...props,
     "data-slot": "sidebar",
     "data-side": side,
-    className: cn(sidebarSideClasses[side], gapClasses[gap], className),
+    className: cn(sidebarRowClasses, gapClasses[gap], className),
     children:
       side === "end" ? (
         <>

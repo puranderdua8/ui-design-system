@@ -6,9 +6,9 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
 import { Container, containerSizeClasses } from "./container";
 import { Grid, gridColsClasses, gridFitClasses } from "./grid";
-import { Stack, stackAlignClasses } from "./stack";
+import { Stack } from "./stack";
 import { Cluster, clusterAlignClasses, clusterJustifyClasses } from "./cluster";
-import { gapClasses } from "@/lib/layout";
+import { alignClasses, gapClasses } from "@/lib/layout";
 
 const themeCss = readFileSync(
   resolve(__dirname, "../styles/theme.css"),
@@ -217,7 +217,7 @@ describe("static class maps", () => {
     ...Object.values(containerSizeClasses),
     ...Object.values(gridColsClasses),
     ...Object.values(gridFitClasses),
-    ...Object.values(stackAlignClasses),
+    ...Object.values(alignClasses),
     ...Object.values(clusterJustifyClasses),
     ...Object.values(clusterAlignClasses),
   ];

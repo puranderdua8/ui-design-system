@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
+import { controlSizeClasses } from "@/lib/control";
 import { cn } from "@/lib/utils";
 import type { ElementProps } from "@/lib/types";
 
@@ -16,10 +17,7 @@ export const buttonVariants = cva(base, {
       secondary:
         "border-ds-secondary-border bg-ds-secondary text-ds-secondary-fg hover:bg-ds-secondary-hover active:bg-ds-secondary-active",
     },
-    size: {
-      sm: "h-ds-control-sm px-ds-control-px-sm text-ds-control-sm",
-      md: "h-ds-control-md px-ds-control-px-md text-ds-control-md",
-    },
+    size: controlSizeClasses,
   },
   defaultVariants: { variant: "primary", size: "md" },
 });

@@ -5,7 +5,7 @@ import { Checkbox as CheckboxPrimitive } from "radix-ui";
 import { CheckIcon, MinusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StrictRef } from "@/lib/types";
-import { useFieldContext } from "./field";
+import { useFieldControlProps } from "./field";
 import { checkboxClasses } from "./checkbox.styles";
 
 export type CheckboxProps = React.ComponentPropsWithoutRef<
@@ -17,24 +17,21 @@ export const Checkbox = ({
   id,
   required,
   className,
-  checked,
   "aria-invalid": ariaInvalid,
   "aria-describedby": ariaDescribedBy,
   ...props
 }: CheckboxProps) => {
-  const field = useFieldContext();
-  const describedBy =
-    [field?.describedBy, ariaDescribedBy].filter(Boolean).join(" ") ||
-    undefined;
+  const control = useFieldControlProps({
+    id,
+    required,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+  });
 
   return (
     <CheckboxPrimitive.Root
       {...props}
-      checked={checked}
-      id={id ?? field?.controlId}
-      required={required ?? field?.required}
-      aria-invalid={ariaInvalid ?? (field?.invalid ? true : undefined)}
-      aria-describedby={describedBy}
+      {...control}
       data-slot="checkbox"
       className={cn(checkboxClasses, className)}
     >
