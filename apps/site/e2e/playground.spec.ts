@@ -166,7 +166,8 @@ test("export downloads DTCG JSON and CSS that carry the edit", async ({
 
   const css = await readDownload(page, "acme-brand.css");
   expect(css).toContain("--ds-color-brand-600: #1762b6;");
-  expect(css).toContain(":root {");
+  expect(css).toContain(':root,\n[data-ds-mode="light"] {');
+  expect(css).toContain("color-scheme: light;");
 });
 
 test("export warns about failing contrast", async ({ page }) => {
