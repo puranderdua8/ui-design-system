@@ -33,7 +33,11 @@ export default tseslint.config(
   {
     files: ["scripts/**/*.mjs", "packages/ui/playground/*.mjs"],
     languageOptions: {
-      globals: { console: "readonly", process: "readonly" },
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        fetch: "readonly",
+      },
     },
   },
 

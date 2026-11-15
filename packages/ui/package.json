@@ -40,8 +40,8 @@
     "*.css"
   ],
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "node ../../scripts/build-classes.mjs && tsup && node ../../scripts/build-foundations.mjs",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
+    "build": "node ../../scripts/build-ui.mjs",
     "playground:dev": "pnpm build && vite playground",
     "playground:check": "pnpm build && vite build playground && node playground/verify-css.mjs",
     "test": "vitest run",

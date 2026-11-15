@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   dsFontSizes,
+  dsLayerRecipes,
   dsThemeValues,
+  dsToneRecipes,
   dsTypeRecipes,
 } from "./generated/ds-classes";
 import { cn } from "./utils";
@@ -70,39 +72,36 @@ describe("cn", () => {
   });
 
   it("generated class lists match theme.css (run `pnpm build` if this fails)", async () => {
-    // No @types/node in this package, so type the two Node bits we need locally.
+    // No @types/node in this package, so type the Node bits we need locally.
+    // The parser is the generator's own (scripts/lib/theme-classes.mjs), so the
+    // test cannot drift from it.
     const nodeFs: string = "node:fs";
     const { readFileSync } = (await import(nodeFs)) as {
       readFileSync: (path: string, encoding: string) => string;
     };
     const dir = (import.meta as unknown as { dirname: string }).dirname;
+    const parserPath: string = `${dir}/../../../../scripts/lib/theme-classes.mjs`;
+    const { parseThemeClasses } = (await import(parserPath)) as {
+      parseThemeClasses: (css: string) => {
+        sizes: string[];
+        typeRecipes: string[];
+        toneRecipes: string[];
+        layerRecipes: string[];
+        themeValues: Record<string, string[]>;
+      };
+    };
     const css = readFileSync(`${dir}/../styles/theme.css`, "utf8");
-    const sizes = [
-      ...new Set(
-        [...css.matchAll(/--text-ds-([a-z0-9]+(?:-[a-z0-9]+)?):/g)].map(
-          (m) => `ds-${m[1]}`,
-        ),
-      ),
-    ];
-    const recipes = [...css.matchAll(/^\s*\.(ds-type-[a-z0-9-]+)\s*\{/gm)].map(
-      (m) => m[1],
-    );
+    const { sizes, typeRecipes, toneRecipes, layerRecipes, themeValues } =
+      parseThemeClasses(css);
     expect(dsFontSizes).toEqual(sizes);
-    expect(dsTypeRecipes).toEqual(recipes);
-    for (const [key, ns] of Object.entries({
-      shadow: "shadow",
-      radius: "radius",
-      container: "container",
-      spacing: "spacing",
-      ease: "ease",
-    })) {
-      const values = [
-        ...css.matchAll(new RegExp(`--${ns}-(ds-[a-z0-9-]+):`, "g")),
-      ].map((m) => m[1]);
-      expect(dsThemeValues[key]).toEqual(values);
+    expect(dsTypeRecipes).toEqual(typeRecipes);
+    expect(dsToneRecipes).toEqual(toneRecipes);
+    expect(dsLayerRecipes).toEqual(layerRecipes);
+    expect(dsThemeValues).toEqual(themeValues);
+    for (const list of [sizes, typeRecipes, toneRecipes, layerRecipes])
+      expect(list.length).toBeGreaterThan(0);
+    for (const values of Object.values(themeValues))
       expect(values.length).toBeGreaterThan(0);
-    }
-    expect(sizes.length).toBeGreaterThan(0);
     for (const size of sizes) {
       expect(cn("text-ds-text", `text-${size}`)).toBe(
         `text-ds-text text-${size}`,

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.mjs", ".claude/hooks/*.mjs"],
+      "project": ["scripts/**/*.mjs", ".claude/hooks/*.mjs"]
+    },
+    "packages/ui": {
+      "entry": [
+        "src/components/*.tsx",
+        "src/components/*.styles.ts",
+        "playground/vite.config.ts",
+        "playground/src/main.tsx"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}",
+        "playground/**/*.{ts,tsx,mjs}",
+        "e2e/**/*.ts",
+        "*.ts"
+      ],
+      "ignoreDependencies": ["tailwindcss"]
+    }
+  }
+}

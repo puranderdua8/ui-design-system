@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 // Modes the build emits. `dark` is reserved in the manifest (D-047).
-export const BUILT_MODES = ["light"];
+const BUILT_MODES = ["light"];
 
 export function loadResolver(tokensDir) {
   const file = join(tokensDir, "resolver.json");

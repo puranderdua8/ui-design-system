@@ -17,10 +17,10 @@ export const themeLabels: Record<ThemeName, string> = {
 };
 
 export const defaultTheme: ThemeName = "base";
-export const storageKey = "ds-theme";
+const storageKey = "ds-theme";
 
 // A few values (font weights) are numbers in the theme JSON.
-export type ThemeVars = Record<string, string | number>;
+type ThemeVars = Record<string, string | number>;
 export type StoredTheme = { name: ThemeName; vars?: ThemeVars };
 
 export const isThemeName = (value: unknown): value is ThemeName =>
@@ -33,10 +33,7 @@ export const isThemeName = (value: unknown): value is ThemeName =>
  * the file under a generated family name, so the leading family is swapped for the
  * font's variable and the theme's own fallback stack is kept.
  */
-export const themeFontVars: Record<
-  ThemeName,
-  { heading: string; body: string }
-> = {
+const themeFontVars: Record<ThemeName, { heading: string; body: string }> = {
   base: { heading: "--font-inter", body: "--font-inter" },
   corporate: { heading: "--font-plex", body: "--font-plex" },
   nature: { heading: "--font-fraunces", body: "--font-nunito" },
@@ -49,7 +46,7 @@ const bodyVar = "--ds-font-family-body";
 const swapFamily = (stack: string, cssVar: string): string =>
   stack.replace(/^[^,]+/, `var(${cssVar})`);
 
-export const withFonts = (name: ThemeName, vars: ThemeVars): ThemeVars => ({
+const withFonts = (name: ThemeName, vars: ThemeVars): ThemeVars => ({
   ...vars,
   [headingVar]: swapFamily(
     String(vars[headingVar] ?? ""),
