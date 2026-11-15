@@ -17,6 +17,7 @@
         { "$ref": "semantic/control.json" },
         { "$ref": "semantic/effects.json" },
         { "$ref": "semantic/layout.json" },
+        { "$ref": "semantic/parts.json" },
         { "$ref": "semantic/shape.json" },
         { "$ref": "semantic/tone.json" },
         { "$ref": "semantic/typography.json" }

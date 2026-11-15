@@ -221,5 +221,5 @@ export const toCss = (theme: ResolvedTheme): string => {
     else if (key in shadowAliases) literals.push(`  ${key}: ${value};`);
     else semantics.push(`  ${key}: ${value};`);
   }
-  return `${CSS_HEADER}\n:root {\n${[...literals, ...semantics].join("\n")}\n}\n`;
+  return `${CSS_HEADER}\n:root,\n[data-ds-mode="light"] {\n  color-scheme: light;\n${[...literals, ...semantics].join("\n")}\n}\n`;
 };

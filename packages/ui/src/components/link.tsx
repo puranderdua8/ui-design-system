@@ -10,10 +10,11 @@ export const linkVariants = cva(
     variants: {
       variant: {
         // Inside running text: the underline is the non-colour cue, always on.
-        inline: "underline underline-offset-4 hover:decoration-2",
+        inline:
+          "underline underline-offset-(--ds-link-underline-offset) hover:decoration-(length:--ds-selection-marker-width)",
         // Stand-alone (nav, call-to-action rows): underline on hover and focus.
         standalone:
-          "inline-flex items-center font-medium no-underline underline-offset-4 hover:underline focus-visible:underline",
+          "inline-flex items-center font-ds-control no-underline underline-offset-(--ds-link-underline-offset) hover:underline focus-visible:underline",
       },
     },
     defaultVariants: { variant: "inline" },
@@ -71,7 +72,7 @@ export const Link = ({
           {/* The space sits before the icon so the underline does not trail past it. */}{" "}
           <ExternalLink
             aria-hidden="true"
-            className="inline-block size-4 align-text-bottom"
+            className="inline-block size-ds-icon-md align-text-bottom"
           />
           <span className="sr-only">{externalLabel}</span>
         </>

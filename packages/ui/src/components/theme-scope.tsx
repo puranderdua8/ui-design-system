@@ -79,7 +79,9 @@ export const ScopedPortal = ({
     "data-slot": "scoped-portal",
     "data-ds-theme": scope?.theme,
     dir,
-    style: scope?.vars as CSSProperties | undefined,
+    style: scope
+      ? ({ colorScheme: "light", ...scope.vars } as CSSProperties)
+      : undefined,
   };
 
   return createPortal(
@@ -147,7 +149,7 @@ export const ThemeScope = ({
     dir={dir}
     data-slot="theme-scope"
     data-ds-theme={theme}
-    style={{ ...vars, ...style }}
+    style={{ colorScheme: "light", ...vars, ...style }}
   >
     <ScopeContext value={{ theme, vars }}>
       {dir ? (

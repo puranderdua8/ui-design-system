@@ -5,7 +5,21 @@
       "$value": "{size.target.min}",
       "$description": "Smallest pointer target for any interactive control. Small visuals (checkbox, radio) extend their hit area to this with .ds-hit-area."
     },
+    "gap": {
+      "$value": "{space.2}",
+      "$description": "Gap between a control's label and its icon."
+    },
+    "font-weight": {
+      "$type": "fontWeight",
+      "$value": "{font.weight.medium}",
+      "$description": "Label weight of Button, Link and Tabs triggers."
+    },
     "sm": {
+      "line-height": {
+        "$type": "number",
+        "$value": "{font.line-height.normal}",
+        "$description": "Small control label line height (unitless)."
+      },
       "height": {
         "$value": "{size.control.sm}",
         "$description": "Small control height."
@@ -20,6 +34,11 @@
       }
     },
     "md": {
+      "line-height": {
+        "$type": "number",
+        "$value": "{font.line-height.normal}",
+        "$description": "Medium control label line height (unitless)."
+      },
       "height": {
         "$value": "{size.control.md}",
         "$description": "Medium control height."

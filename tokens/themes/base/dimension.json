@@ -49,6 +49,19 @@
         "$description": "Smallest pointer target (WCAG 2.2 SC 2.5.8, 24 CSS px). A denser theme may not go below this."
       }
     },
+    "icon": {
+      "sm": {
+        "$value": "0.875rem"
+      },
+      "md": {
+        "$value": "1rem"
+      }
+    },
+    "menu": {
+      "min": {
+        "$value": "8rem"
+      }
+    },
     "container": {
       "sm": {
         "$value": "40rem"

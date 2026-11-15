@@ -76,7 +76,7 @@ export const SelectTrigger = ({
       <SelectPrimitive.Icon asChild>
         <ChevronDownIcon
           aria-hidden="true"
-          className="size-4 text-ds-text-muted"
+          className="size-ds-icon-md text-ds-text-muted"
         />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
@@ -110,18 +110,18 @@ export const SelectContent = ({
       position={position}
       align={align}
       className={cn(
-        "relative ds-layer-dropdown max-h-(--radix-select-content-available-height) min-w-32 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto ds-border border-ds-border bg-ds-surface-raised font-ds-body text-ds-text shadow-ds-overlay rounded-ds-control",
+        "relative ds-layer-dropdown max-h-(--radix-select-content-available-height) min-w-ds-menu origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto ds-border border-ds-border bg-ds-surface-raised font-ds-body text-ds-text shadow-ds-overlay rounded-ds-control",
         position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+          "data-[side=bottom]:translate-y-ds-menu-offset data-[side=left]:-translate-x-ds-menu-offset data-[side=right]:translate-x-ds-menu-offset data-[side=top]:-translate-y-ds-menu-offset",
         className,
       )}
     >
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          "p-1",
+          "p-ds-menu",
           position === "popper" &&
-            "w-full min-w-(--radix-select-trigger-width) scroll-my-1",
+            "w-full min-w-(--radix-select-trigger-width) scroll-my-ds-menu",
         )}
       >
         {children}
@@ -141,7 +141,7 @@ export const SelectLabel = ({ className, ...props }: SelectLabelProps) => (
     {...props}
     data-slot="select-label"
     className={cn(
-      "px-2 py-1.5 text-ds-control-sm text-ds-text-muted",
+      "px-ds-menu-item-x py-ds-menu-item-y text-ds-control-sm text-ds-text-muted",
       className,
     )}
   />
@@ -163,7 +163,7 @@ export const SelectItem = ({
       // The highlighted option is a solid fill (menu.highlight-*, 3:1 against the
       // list and 4.5:1 for its text; R35). Forced colours drop the fill, so the
       // same option also gets an outline, which they keep (R19).
-      "relative flex w-full cursor-default items-center gap-ds-gap-xs rounded-ds-control py-1.5 ps-2 pe-8 text-ds-control-md outline-none select-none ds-transition " +
+      "relative flex w-full cursor-default items-center gap-ds-gap-xs rounded-ds-control py-ds-menu-item-y ps-ds-menu-item-x pe-ds-menu-item-end text-ds-control-md outline-none select-none ds-transition " +
         "data-[highlighted]:bg-ds-menu-highlight data-[highlighted]:text-ds-menu-highlight-fg " +
         "forced-colors:data-[highlighted]:outline-solid forced-colors:data-[highlighted]:outline-2 forced-colors:data-[highlighted]:-outline-offset-2 " +
         "data-[disabled]:pointer-events-none data-[disabled]:text-ds-disabled-fg " +
@@ -176,10 +176,10 @@ export const SelectItem = ({
   >
     <span
       data-slot="select-item-indicator"
-      className="absolute end-2 flex size-4 items-center justify-center"
+      className="absolute end-ds-menu-item-x flex size-ds-icon-md items-center justify-center"
     >
       <SelectPrimitive.ItemIndicator>
-        <CheckIcon aria-hidden="true" className="size-4" />
+        <CheckIcon aria-hidden="true" className="size-ds-icon-md" />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -198,7 +198,7 @@ export const SelectSeparator = ({
     {...props}
     data-slot="select-separator"
     className={cn(
-      "pointer-events-none -mx-1 my-1 h-px bg-ds-border",
+      "pointer-events-none -mx-ds-menu my-ds-menu-offset h-px bg-ds-border",
       className,
     )}
   />
@@ -217,11 +217,11 @@ const SelectScrollUpButton = ({
     {...props}
     data-slot="select-scroll-up-button"
     className={cn(
-      "flex cursor-default items-center justify-center py-1 text-ds-text-muted",
+      "flex cursor-default items-center justify-center py-ds-menu text-ds-text-muted",
       className,
     )}
   >
-    <ChevronUpIcon aria-hidden="true" className="size-4" />
+    <ChevronUpIcon aria-hidden="true" className="size-ds-icon-md" />
   </SelectPrimitive.ScrollUpButton>
 );
 
@@ -233,10 +233,10 @@ const SelectScrollDownButton = ({
     {...props}
     data-slot="select-scroll-down-button"
     className={cn(
-      "flex cursor-default items-center justify-center py-1 text-ds-text-muted",
+      "flex cursor-default items-center justify-center py-ds-menu text-ds-text-muted",
       className,
     )}
   >
-    <ChevronDownIcon aria-hidden="true" className="size-4" />
+    <ChevronDownIcon aria-hidden="true" className="size-ds-icon-md" />
   </SelectPrimitive.ScrollDownButton>
 );

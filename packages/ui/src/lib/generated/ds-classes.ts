@@ -11,7 +11,7 @@ export const dsLayerRecipes: string[] = ["ds-layer-base", "ds-layer-sticky", "ds
 export const dsThemeValues: Record<string, string[]> = {
   shadow: ["ds-raised", "ds-overlay"],
   radius: ["ds-control", "ds-card", "ds-pill"],
-  container: ["ds-sm", "ds-md", "ds-lg", "ds-xl"],
-  spacing: ["ds-control-sm", "ds-control-md", "ds-control-px-sm", "ds-control-px-md", "ds-target-min", "ds-gap-xs", "ds-gap-sm", "ds-gap-md", "ds-gap-lg", "ds-gap-xl", "ds-section-sm", "ds-section-md", "ds-section-lg", "ds-gutter", "ds-sidebar"],
+  container: ["ds-sm", "ds-md", "ds-lg", "ds-xl", "ds-menu"],
+  spacing: ["ds-control-sm", "ds-control-md", "ds-control-px-sm", "ds-control-px-md", "ds-target-min", "ds-control-gap", "ds-icon-sm", "ds-icon-md", "ds-icon-dot", "ds-menu", "ds-menu-offset", "ds-menu-item-x", "ds-menu-item-y", "ds-menu-item-end", "ds-marker", "ds-gap-xs", "ds-gap-sm", "ds-gap-md", "ds-gap-lg", "ds-gap-xl", "ds-section-sm", "ds-section-md", "ds-section-lg", "ds-gutter", "ds-sidebar"],
   ease: ["ds-standard", "ds-emphasized"],
 };

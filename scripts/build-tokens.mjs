@@ -51,7 +51,11 @@ StyleDictionary.registerFormat({
       outputReferences: options?.outputReferences,
       usesDtcg: true,
     });
-    return `${await fileHeader({ file })}${options?.selector ?? ":root"} {\n${variables}\n}\n`;
+    // color-scheme belongs to the mode, so a dark mode block sets its own (D-092).
+    const scheme = options?.colorScheme
+      ? `  color-scheme: ${options.colorScheme};\n`
+      : "";
+    return `${await fileHeader({ file })}${options?.selector ?? ":root"} {\n${scheme}${variables}\n}\n`;
   },
 });
 
@@ -96,7 +100,12 @@ export async function buildTokens(
             {
               destination: `${name}.css`,
               format: FORMAT,
-              options: { outputReferences: true, selector: ":root" },
+              options: {
+                outputReferences: true,
+                // The light mode: the page, or any element marked as light (D-092).
+                selector: ':root,\n[data-ds-mode="light"]',
+                colorScheme: "light",
+              },
             },
             { destination: `${name}.json`, format: MAP_FORMAT },
           ],

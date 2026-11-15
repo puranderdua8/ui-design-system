@@ -10,16 +10,22 @@ npm install @puranderdua/ui react react-dom tailwindcss
 
 ## Tailwind setup
 
-Import Tailwind first, then the foundations (theme bridge and recipes, no token values), then exactly one theme (the token values), and tell Tailwind to scan the package so it generates the component classes. In your global CSS (adjust the `@source` path to where your CSS file lives):
+Import Tailwind first, then the foundations (theme bridge and recipes, no token values), then exactly one theme (the token values). `foundations.css` already tells Tailwind to scan the package, so no `@source` line is needed (from 0.9.0). In your global CSS:
 
 ```css
 @import "tailwindcss";
 @import "@puranderdua/ui/foundations.css";
 @import "@puranderdua/ui/themes/base.css";
-@source "../node_modules/@puranderdua/ui/dist";
 ```
 
-The `@source` path is relative to the CSS file that contains it, and the package's location depends on your package manager's layout:
+### Supported CSS setups
+
+- **Import order.** Tailwind, then `foundations.css`, then one theme. If you reset Tailwind's default palette (`@theme { --color-*: initial; }`), put the reset **before** the package imports. After them it deletes every `bg-ds-*`, `text-ds-*` and `rounded-ds-*` utility without an error.
+- **No `prefix()`.** `@import "tailwindcss" prefix(tw)` is not supported: the package's classes are written without a prefix and the build fails.
+- **Your own CSS and cascade layers.** Tailwind v4 puts utilities and the package's recipes in cascade layers, so an unlayered rule of yours (`button { padding: 0 }`) beats every component class. Put your rules in a layer (`@layer base { … }`, or a layer you declare after `components`) when you want the components to win.
+- **Printing.** In print the dark tones (inverse, brand, gradient) fall back to dark text on white, and the checked Checkbox, selected Radio and Button keep their fill (`print-color-adjust: exact`).
+
+If your setup cannot see `foundations.css`'s own `@source` (older Tailwind tooling), add it yourself. The path is relative to the CSS file that contains it, and the package's location depends on your package manager's layout:
 
 | Setup                                | `@source` (CSS file in `src/`)                                                         |
 | ------------------------------------ | -------------------------------------------------------------------------------------- |

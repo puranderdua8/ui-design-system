@@ -2,7 +2,9 @@
  * Do not edit directly, this file was auto-generated.
  */
 
-:root {
+:root,
+[data-ds-mode="light"] {
+  color-scheme: light;
   --ds-color-white: #ffffff; /** Pure white; page canvas and inverse text. */
   --ds-color-scrim: rgba(12, 9, 18, 0.7); /** Neutral 950 at 70% opacity; the backdrop behind overlays. */
   --ds-color-red-50: #ffefee;
@@ -53,6 +55,9 @@
   --ds-size-control-sm: 2.25rem;
   --ds-size-control-md: 2.75rem;
   --ds-size-target-min: 1.5rem; /** Smallest pointer target (WCAG 2.2 SC 2.5.8, 24 CSS px). A denser theme may not go below this. */
+  --ds-size-icon-sm: 0.875rem;
+  --ds-size-icon-md: 1rem;
+  --ds-size-menu-min: 8rem;
   --ds-size-container-sm: 40rem;
   --ds-size-container-md: 48rem;
   --ds-size-container-lg: 64rem;
@@ -140,13 +145,23 @@
   --ds-focus-ring-offset: var(--ds-ring-offset); /** Gap between a control and its focus ring. */
   --ds-menu-highlight-bg: var(--ds-color-accent-700); /** Fill of the option the keyboard or pointer is on in an open list (Select); 3:1 against surface.raised, the list surface. Default alias, so a custom theme may omit it. */
   --ds-menu-highlight-fg: var(--ds-color-white); /** Text and icons on menu.highlight-bg; 4.5:1. */
+  --ds-menu-padding: var(--ds-space-1); /** Inner padding of a menu or listbox. */
+  --ds-menu-offset: var(--ds-space-1); /** Distance a menu slides in from its trigger, and the vertical margin of a separator. */
+  --ds-menu-min-width: var(--ds-size-menu-min); /** Smallest menu width. */
+  --ds-menu-item-padding-x: var(--ds-space-2); /** Horizontal padding of a menu item and label. */
+  --ds-menu-item-padding-y: var(--ds-space-1-5); /** Vertical padding of a menu item and label. */
+  --ds-menu-item-padding-end: var(--ds-space-8); /** Padding on the end side of an item, leaving room for the selection check. */
   --ds-disabled-bg: var(--ds-color-neutral-100); /** Disabled control fill. */
   --ds-disabled-fg: var(--ds-color-neutral-500); /** Disabled control text (exempt from contrast requirements). */
   --ds-disabled-border: var(--ds-color-neutral-200); /** Disabled control outline. */
   --ds-control-target-min: var(--ds-size-target-min); /** Smallest pointer target for any interactive control. Small visuals (checkbox, radio) extend their hit area to this with .ds-hit-area. */
+  --ds-control-gap: var(--ds-space-2); /** Gap between a control's label and its icon. */
+  --ds-control-font-weight: var(--ds-font-weight-medium); /** Label weight of Button, Link and Tabs triggers. */
+  --ds-control-sm-line-height: var(--ds-font-line-height-normal); /** Small control label line height (unitless). */
   --ds-control-sm-height: var(--ds-size-control-sm); /** Small control height. */
   --ds-control-sm-padding-x: var(--ds-space-3); /** Small control horizontal padding. */
   --ds-control-sm-font-size: var(--ds-font-size-sm); /** Small control label size. */
+  --ds-control-md-line-height: var(--ds-font-line-height-normal); /** Medium control label line height (unitless). */
   --ds-control-md-height: var(--ds-size-control-md); /** Medium control height. */
   --ds-control-md-padding-x: var(--ds-space-4); /** Medium control horizontal padding. */
   --ds-control-md-font-size: var(--ds-font-size-base); /** Medium control label size. */
@@ -171,6 +186,11 @@
   --ds-layout-item-min-md: var(--ds-size-item-md); /** Default minimum item width in an auto-fit grid. */
   --ds-layout-item-min-lg: var(--ds-size-item-lg); /** Wide minimum item width in an auto-fit grid. */
   --ds-layout-sidebar-width: var(--ds-size-sidebar); /** Width of a sidebar column. */
+  --ds-icon-size-sm: var(--ds-size-icon-sm); /** Small icon: the check inside a Checkbox. */
+  --ds-icon-size-md: var(--ds-size-icon-md); /** Default icon, and the visual size of Checkbox and RadioGroup controls. */
+  --ds-icon-size-dot: var(--ds-space-2); /** The dot inside a selected radio. */
+  --ds-link-underline-offset: var(--ds-space-1); /** Gap between link text and its underline. */
+  --ds-selection-marker-width: var(--ds-border-width-2); /** Thickness of the active-tab bar and similar selection markers. */
   --ds-on-raised-text-primary: var(--ds-color-neutral-900); /** Default text inside a .ds-tone-raised scope; restores text.primary even when the scope sits in an inverse or brand tone. */
   --ds-on-raised-text-muted: var(--ds-color-neutral-600); /** Secondary text inside a .ds-tone-raised scope; restores text.muted. */
   --ds-on-raised-link: var(--ds-color-brand-700); /** Link text inside a .ds-tone-raised scope; restores text.link. */
