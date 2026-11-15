@@ -29,7 +29,7 @@ All fonts are free Google Fonts. The theme token names the family with a system 
 />
 ```
 
-Weights 400 to 700 are the ones the tokens use. If your site sends a Content-Security-Policy, allow `https://fonts.googleapis.com` in `style-src` and `https://fonts.gstatic.com` in `font-src` (this repo's site does, in `apps/site/next.config.ts`).
+Weights 400 to 700 are the ones the tokens use. If your site sends a Content-Security-Policy, allow `https://fonts.googleapis.com` in `style-src` and `https://fonts.gstatic.com` in `font-src` (this repo's site does not need to: it self-hosts every font with `next/font`, so its CSP names no font host).
 
 Other themes, same pattern (swap the `family=` parts):
 

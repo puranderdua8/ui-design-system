@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Text,
-} from "@puranderdua/ui";
+import { inputVariants, Text } from "@puranderdua/ui";
 import {
   activateTheme,
   defaultTheme,
@@ -16,6 +9,7 @@ import {
   getThemeSnapshot,
   isThemeName,
   readStoredTheme,
+  subscribeStoredTheme,
   subscribeTheme,
   themeLabels,
   themeNames,
@@ -35,6 +29,12 @@ export const ThemeSwitcher = () => {
     // cache; with nothing stored this marks Base as applied. A failed import leaves
     // whatever the head script applied.
     void activateTheme(readStoredTheme()?.name ?? defaultTheme).catch(() => {});
+    // Another tab chose a theme: follow it, without writing it back (R33).
+    return subscribeStoredTheme(() => {
+      void activateTheme(readStoredTheme()?.name ?? defaultTheme, {
+        remember: false,
+      }).catch(() => {});
+    });
   }, []);
 
   return (
@@ -42,23 +42,23 @@ export const ThemeSwitcher = () => {
       <Text as="span" variant="caption">
         Theme
       </Text>
-      <Select
+      {/* A native select (R30): the Radix Select, Floating UI and scroll lock
+          were a 31 KB chunk on every route for a list that is closed. */}
+      <select
+        aria-label="Theme"
+        className={inputVariants({ size: "sm" })}
         value={theme}
-        onValueChange={(value) => {
+        onChange={(event) => {
+          const { value } = event.target;
           if (isThemeName(value)) void activateTheme(value).catch(() => {});
         }}
       >
-        <SelectTrigger size="sm" aria-label="Theme">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {themeNames.map((name) => (
-            <SelectItem key={name} value={name}>
-              {themeLabels[name]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        {themeNames.map((name) => (
+          <option key={name} value={name}>
+            {themeLabels[name]}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };

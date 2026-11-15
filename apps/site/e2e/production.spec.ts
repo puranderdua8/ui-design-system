@@ -24,12 +24,14 @@ for (const path of ["/", "/components/forms"]) {
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      // Google Fonts only, for the theme fonts.
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
+      "style-src 'self' 'unsafe-inline'",
+      "font-src 'self'",
     ]) {
       expect(csp).toContain(directive);
     }
+    // Fonts are self-hosted by next/font: no Google Fonts host is allowed (R41).
+    expect(csp).not.toContain("googleapis");
+    expect(csp).not.toContain("gstatic");
     // The local test server runs over http without this directive (next.config.ts explains why).
     if (baseURL?.startsWith("https://")) {
       expect(csp).toContain("upgrade-insecure-requests");

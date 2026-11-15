@@ -33,6 +33,7 @@
 
 - `Grid` with `cols` collapsed to zero width inside a `Cluster` or a `Stack` with `align` other than `stretch`, and its `className` landed on the inner element. The outermost element now fills its parent (`w-full min-w-0`) and takes `className`, `style` and `data-*`; `as`, `ref`, `role`, `id` and `aria-*` stay on the grid element inside it. `cols` needs a definite width.
 - `data-slot` is set after the props spread everywhere, so a caller can no longer overwrite it (`SelectGroup` and `SelectValue` did).
+- `BannerVideo` (H18, R31) no longer starts on mount. The `<video>` has `preload="none"`, plays only while it is in view (`IntersectionObserver`) and pauses when it leaves; scrolling back does not restart a video the visitor paused. A video Banner far below the fold downloads nothing until it is reached. A Banner at the top of a page plays as before, once the observer first reports it; without `IntersectionObserver` the video plays on mount, as in 0.8.0.
 
 **Tokens and styling (H17):**
 

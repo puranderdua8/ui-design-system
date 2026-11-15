@@ -806,6 +806,24 @@ test.describe("Banner (S27)", () => {
     await expect(button).toHaveCount(0);
     await expect(page.locator('[data-slot="banner-video"] img')).toBeVisible();
   });
+
+  test("video far below the fold requests nothing until it is scrolled into view (R31)", async ({
+    page,
+  }) => {
+    const requested: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes("missing.mp4")) requested.push(request.url());
+    });
+    await open(page, "banner-video-far", 900);
+    await expect(page.locator("video")).toHaveCount(1);
+    await expect(page.locator("video")).toHaveAttribute("preload", "none");
+    // Give a wrongly eager video time to ask for its file.
+    await page.waitForTimeout(500);
+    expect(requested).toHaveLength(0);
+
+    await page.getByTestId("banner-video").scrollIntoViewIfNeeded();
+    await expect.poll(() => requested.length).toBeGreaterThan(0);
+  });
 });
 
 test.describe("target size (F12)", () => {

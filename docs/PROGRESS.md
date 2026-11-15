@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 (#60) and H12 (#61) are merged; H13, H14 and H15 are merged; H16 is done on branch `h16-public-api`.
-- **Next session:** H18 (site performance) or H19 (H17 and H17b are done on branches `h17b-dtcg`). Release 2 (dark mode) waits for MH2.
+- **Next session:** H19 (tests; H17 and H17b are merged, H18 is done on branch `h18-site-performance`). Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -634,6 +634,17 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: Style Dictionary 4 cannot read 2025.10 objects itself; the preprocessor is needed until SD v5. Not run: `pnpm --filter site test:e2e` (needs a built site on the pinned 0.8.0 package).
 - Next: H18 or H19.
 
+### H18 — Site performance and polish — 2026-11-15
+
+- Done (branch `h18-site-performance`, off `main` after #67): **R31** `BannerVideo` (package, ships in 0.9.0): `preload="none"`, plays only while an `IntersectionObserver` reports it in view, pauses on leaving, and does not restart after the visitor paused; falls back to play-on-mount without the observer. **R30** header: native `<select>` with `inputVariants`; `SiteHeader` is a Server Component, `HeaderNavLink` the only client part. **R32** Advanced rows mount only while their group is open; `TokenRow` is memoised and takes its own value and override flag. **R33** both stored states carry `version: 1` (0 = no field, read as is; newer is ignored) and sync across tabs through the `storage` event. **R34** category descriptions, `error.digest` and logging, styled `global-error.tsx`. **R39** card demo buttons named `Read more about <item>`. **R41** no Google Fonts host in the CSP (`production.spec.ts` asserts it; `docs/themes.md` corrected).
+- Tests: two unit tests for the in-view behaviour (IntersectionObserver stub), a layout test in three browsers (video far below the fold requests nothing until scrolled to), two `parseState` version tests; the theme e2e helper uses `selectOption` on the native select.
+- Verified: lint, typecheck, package tests (300), site unit tests, knip, React Compiler check, `check-client-exports`, `pnpm --filter site test:e2e` (312 passed, 3 skipped), `next build`.
+- Measured (my own script, gzip of the scripts in each prerendered page, Turbopack build): `/` and `/components` **195.4 KB** (review: 220.6), category pages 241.5 KB (review: 235.4), `/playground` 271.8 KB (review: 264.4). **The target "`/` within 10 KB of a blank page" is not met**: a blank page is 170.8 KB in the review and 171.6 KB here (webpack), so `/` is about 24 KB over. The only app chunk on `/` is 6.7 KB; the rest are framework chunks. The category and playground totals went up against the review; I did not find why (the review's R4 scripts are not in the repo, so the method may differ). R30 is therefore "partly fixed" and R01 stays open in the register.
+- Not measured: the Display page's transfer size. The video fix lives in the package and the site is pinned to 0.8.0, so the 1.1 MB video still loads there until the site moves to 0.9.0 (H19/H20); re-measure then.
+- Decisions: none new.
+- Gotchas: (1) the site and package pin skew continues: nothing in the site uses 0.9.0 yet, so the Select-free header works on 0.8.0 only because `inputVariants` already existed. (2) A webpack build of the site is far larger (275 KB for `/`); only Turbopack numbers are comparable with the review. (3) A native `<select>` is role `combobox`; e2e uses `selectOption` and `toHaveValue`. (4) I used a one-off scratchpad script for the register cells and prettier re-padded the whole table (large diff, no content change in other rows).
+- Next: H19, or decide the `/` budget and cut further (parking lot).
+
 ### R6 — Security, DX, tooling, process + write-up — 2026-11-14
 
 - Done (same branch): findings R40–R47 (R40 publish job runs the whole toolchain with `id-token: write`, R41 unused Google Fonts hosts in the CSP, R42 revisit D-049: 60 `@radix-ui` packages per consumer, R43 no API reference for outside teams, R44 DECISIONS.md 320 KB in one table and PLAN's 0.7.0, R45 revisit D-057: manual production deploys, R46 CI cost, R47 hook test and upstream sync unchecked). Every lead settled. Scorecard per area (A–N), priorities, and the proposed milestone **MH2 1.0.0 hardening, H11–H20**, with a prompt per session (0.9.0 for the breaking changes, then 1.0.0).
@@ -701,6 +712,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 ## Parking lot (out of scope, later)
 
+- H18: `/` ships 195.4 KB gzip against a 171 KB blank page (target was within 10 KB), and the category pages and `/playground` measure larger than in the review (241.5 and 271.8 KB). Find where the extra weight is (shared chunk split, `cn()`/tailwind-merge R02, the barrel import) and set a per-route budget; R01 and R30 stay open until then. Re-measure the Display page once the site installs 0.9.0 (video fix).
 - ~~When the site moves to 0.8.0 (S34), tighten `engine.test.ts` back to a value check.~~ Done in S34.
 
 - ~~Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).~~ Checked in S6: no change. Themes (M11) define their own palettes.

@@ -14,6 +14,29 @@ import type {
 
 export const storageKey = "ds-playground";
 
+/**
+ * Version of the stored shape. 0 is the unversioned original, whose fields are the
+ * same as 1, so `parseState` reads it unchanged. When a knob is renamed or added
+ * (R29's `mode`), bump this and add a step to `migrate` instead of dropping the
+ * user's work. A version newer than this code (written by a newer site in another
+ * tab) is not read, so the default state is shown rather than a lossy guess.
+ */
+export const stateVersion = 1;
+
+/** The stored form: the state plus its version. */
+export const serialiseState = (state: PlaygroundState) => ({
+  version: stateVersion,
+  ...state,
+});
+
+const migrate = (
+  input: Record<string, unknown>,
+): Record<string, unknown> | null => {
+  const version = input.version ?? 0;
+  if (version === 0 || version === stateVersion) return input;
+  return null;
+};
+
 export const defaultState: PlaygroundState = {
   start: "base",
   knobs: {},
@@ -71,8 +94,9 @@ export const sanitiseKnobs = (input: unknown): Knobs => {
 };
 
 /** Reads a stored or untrusted value back into a state, or `null` if it is not one. */
-export const parseState = (input: unknown): PlaygroundState | null => {
-  if (!isRecord(input) || !isThemeName(input.start)) return null;
+export const parseState = (raw: unknown): PlaygroundState | null => {
+  const input = isRecord(raw) ? migrate(raw) : null;
+  if (!input || !isThemeName(input.start)) return null;
   const overrides: Record<string, string> = {};
   if (isRecord(input.overrides))
     for (const [key, value] of Object.entries(input.overrides))

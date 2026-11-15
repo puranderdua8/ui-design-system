@@ -345,6 +345,24 @@ const cases: Record<string, ReactNode> = {
       <Text>Video</Text>
     </Banner>
   ),
+  // R31: a video Banner far below the fold must not download anything until it
+  // is scrolled into view.
+  "banner-video-far": (
+    <>
+      <div style={{ height: 3000 }} />
+      <Banner
+        height="tall"
+        aria-label="Video"
+        data-testid="banner-video"
+        video={{
+          src: "/missing.mp4",
+          poster: `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="#cccccc"/></svg>')}`,
+        }}
+      >
+        <Text>Video</Text>
+      </Banner>
+    </>
+  ),
   // R22: a ThemeScope inside an ancestor that clips and transforms. The open
   // list must still be fully visible and clickable.
   "select-clip": (

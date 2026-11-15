@@ -18,10 +18,19 @@ export const themeLabels: Record<ThemeName, string> = {
 
 export const defaultTheme: ThemeName = "base";
 const storageKey = "ds-theme";
+// Shape of the stored value. Version 0 is the unversioned original: it has the
+// same fields, so reading it needs no change beyond accepting it; a version this
+// code does not know (a newer site in another tab) is ignored, not overwritten
+// blindly. Bump this and extend `readStoredTheme` and `themeInitScript` together.
+const storedVersion = 1;
 
 // A few values (font weights) are numbers in the theme JSON.
 type ThemeVars = Record<string, string | number>;
-export type StoredTheme = { name: ThemeName; vars?: ThemeVars };
+export type StoredTheme = {
+  version?: number;
+  name: ThemeName;
+  vars?: ThemeVars;
+};
 
 export const isThemeName = (value: unknown): value is ThemeName =>
   typeof value === "string" &&
@@ -74,7 +83,10 @@ export const readStoredTheme = (): StoredTheme | null => {
     const parsed: unknown = raw ? JSON.parse(raw) : null;
     if (parsed && typeof parsed === "object" && "name" in parsed) {
       const { name } = parsed as { name: unknown };
-      if (isThemeName(name)) return parsed as StoredTheme;
+      const { version } = parsed as { version?: unknown };
+      // 0 (no version) migrates as is; anything newer is not ours to read.
+      if (isThemeName(name) && (version === undefined || version === 1))
+        return parsed as StoredTheme;
     }
   } catch {
     // Storage blocked or corrupt: behave as if nothing was stored.
@@ -84,7 +96,10 @@ export const readStoredTheme = (): StoredTheme | null => {
 
 const writeStoredTheme = (stored: StoredTheme): void => {
   try {
-    window.localStorage.setItem(storageKey, JSON.stringify(stored));
+    window.localStorage.setItem(
+      storageKey,
+      JSON.stringify({ version: storedVersion, ...stored }),
+    );
   } catch {
     // Private mode or quota: the choice just is not remembered.
   }
@@ -127,19 +142,35 @@ export const getServerThemeSnapshot = (): ThemeName => defaultTheme;
 // Only the latest request may apply: a slow import must not undo a later choice.
 let latestRequest = 0;
 
-/** Loads (if needed), applies and remembers a theme. Rejects if the chunk fails. */
-export const activateTheme = async (name: ThemeName): Promise<void> => {
+/**
+ * Loads (if needed), applies and remembers a theme. Rejects if the chunk fails.
+ * `remember: false` applies it without writing (used when another tab chose it).
+ */
+export const activateTheme = async (
+  name: ThemeName,
+  { remember = true }: { remember?: boolean } = {},
+): Promise<void> => {
   const request = ++latestRequest;
   if (name === "base") {
     applyTheme("base");
-    writeStoredTheme({ name });
+    if (remember) writeStoredTheme({ name });
     return;
   }
   const mod = await loaders[name]();
   if (request !== latestRequest) return;
   const vars = withFonts(name, mod.default.vars);
   applyTheme(name, vars);
-  writeStoredTheme({ name, vars });
+  if (remember) writeStoredTheme({ name, vars });
+};
+
+/** Calls `listener` when another tab changes the stored theme. Returns the unsubscribe. */
+export const subscribeStoredTheme = (listener: () => void): (() => void) => {
+  const onStorage = (event: StorageEvent) => {
+    // `key` is null when the storage was cleared.
+    if (event.key === null || event.key === storageKey) listener();
+  };
+  window.addEventListener("storage", onStorage);
+  return () => window.removeEventListener("storage", onStorage);
 };
 
 /**
@@ -148,4 +179,4 @@ export const activateTheme = async (name: ThemeName): Promise<void> => {
  */
 export const themeInitScript = `(function(){try{var s=JSON.parse(localStorage.getItem(${JSON.stringify(
   storageKey,
-)})||"null");if(!s||!s.vars||typeof s.name!=="string")return;var r=document.documentElement;for(var k in s.vars){if(k.indexOf("--ds-")===0)r.style.setProperty(k,String(s.vars[k]))}r.setAttribute("data-ds-theme",s.name)}catch(e){}})();`;
+)})||"null");if(!s||!s.vars||typeof s.name!=="string"||(s.version!==undefined&&s.version!==${storedVersion}))return;var r=document.documentElement;for(var k in s.vars){if(k.indexOf("--ds-")===0)r.style.setProperty(k,String(s.vars[k]))}r.setAttribute("data-ds-theme",s.name)}catch(e){}})();`;

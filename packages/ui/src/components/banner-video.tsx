@@ -55,18 +55,44 @@ export const BannerVideo = ({
     getServerSnapshot,
   );
   const [video, setVideo] = React.useState<HTMLVideoElement | null>(null);
-  const [playing, setPlaying] = React.useState(true);
+  const [playing, setPlaying] = React.useState(false);
+  // True once the user pressed Pause: scrolling back into view must not
+  // override that choice.
+  const userPausedRef = React.useRef(false);
 
-  // Start on mount. A browser that blocks autoplay rejects: show "Play".
+  // Play only while the video is in view (it downloads nothing before that,
+  // `preload="none"`). A browser that blocks autoplay rejects: the button
+  // shows "Play".
   React.useEffect(() => {
     if (!video) return;
-    Promise.resolve(video.play()).catch(() => setPlaying(false));
+    if (typeof IntersectionObserver === "undefined") {
+      // No observer (an old browser): behave as before and play on mount.
+      Promise.resolve(video.play()).catch(() => undefined);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry) return;
+      if (entry.isIntersecting) {
+        if (!userPausedRef.current) {
+          Promise.resolve(video.play()).catch(() => undefined);
+        }
+      } else {
+        video.pause();
+      }
+    });
+    observer.observe(video);
+    return () => observer.disconnect();
   }, [video]);
 
   const toggle = () => {
     if (!video) return;
-    if (video.paused) Promise.resolve(video.play()).catch(() => undefined);
-    else video.pause();
+    if (video.paused) {
+      userPausedRef.current = false;
+      Promise.resolve(video.play()).catch(() => undefined);
+    } else {
+      userPausedRef.current = true;
+      video.pause();
+    }
   };
 
   return (
@@ -82,7 +108,7 @@ export const BannerVideo = ({
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             tabIndex={-1}
             aria-hidden="true"
             onPlay={() => setPlaying(true)}
