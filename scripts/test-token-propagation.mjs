@@ -16,6 +16,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTokens } from "./build-tokens.mjs";
+import { hexToColor } from "./lib/dtcg.mjs";
 import { loadResolver } from "./lib/resolver.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -25,17 +26,17 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 // instead of var() references (it resolves shadow aliases before transform),
 // so their CSS lines change too.
 const CASES = [
-  ["color.json", ["color", "brand", "600"], "#123456"],
-  ["typography.json", ["font", "size", "base"], "1.125rem"],
+  ["color.json", ["color", "brand", "600"], hexToColor("#123456")],
+  ["typography.json", ["font", "size", "base"], { value: 1.125, unit: "rem" }],
   [
     "effects.json",
     ["shadow", "sm"],
     {
-      color: "#123456",
-      offsetX: "0px",
-      offsetY: "2px",
-      blur: "4px",
-      spread: "0px",
+      color: hexToColor("#123456"),
+      offsetX: { value: 0, unit: "px" },
+      offsetY: { value: 2, unit: "px" },
+      blur: { value: 4, unit: "px" },
+      spread: { value: 0, unit: "px" },
     },
     ["--ds-elevation-raised"],
   ],

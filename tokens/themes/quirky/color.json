@@ -2,59 +2,279 @@
   "color": {
     "$type": "color",
     "white": {
-      "$value": "#ffffff",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1],
+        "hex": "#ffffff"
+      },
       "$description": "Pure white; page canvas and inverse text."
     },
     "scrim": {
-      "$value": "#0c0912b3",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0471, 0.0353, 0.0706],
+        "hex": "#0c0912",
+        "alpha": 0.7
+      },
       "$description": "Neutral 950 at 70% opacity; the backdrop behind overlays."
     },
     "red": {
-      "$description": "Error and danger scale (OKLCH hue 25). A deep crimson, kept apart from the coral accent.",
-      "50": { "$value": "#ffefee" },
-      "600": { "$value": "#af2a2d" },
-      "700": { "$value": "#940015" }
+      "50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9373, 0.9333],
+          "hex": "#ffefee"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6863, 0.1647, 0.1765],
+          "hex": "#af2a2d"
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5804, 0, 0.0824],
+          "hex": "#940015"
+        }
+      },
+      "$description": "Error and danger scale (OKLCH hue 25). A deep crimson, kept apart from the coral accent."
     },
     "accent": {
-      "$description": "Coral scale (OKLCH hue 38, chroma 0.19 at the peak), the loud counterpoint to the violet brand (moved here from the red scale, D-082). accent.600 is the accent fill and border; accent.700 is accent text.",
-      "50": { "$value": "#fff4f0" },
-      "100": { "$value": "#ffe7df" },
-      "200": { "$value": "#ffd1c3" },
-      "300": { "$value": "#ffad93" },
-      "400": { "$value": "#f77b54" },
-      "500": { "$value": "#d24200" },
-      "600": { "$value": "#ac3400" },
-      "700": { "$value": "#872700" },
-      "800": { "$value": "#621800" },
-      "900": { "$value": "#3d0a00" }
+      "50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9569, 0.9412],
+          "hex": "#fff4f0"
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9059, 0.8745],
+          "hex": "#ffe7df"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.8196, 0.7647],
+          "hex": "#ffd1c3"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.6784, 0.5765],
+          "hex": "#ffad93"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9686, 0.4824, 0.3294],
+          "hex": "#f77b54"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8235, 0.2588, 0],
+          "hex": "#d24200"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6745, 0.2039, 0],
+          "hex": "#ac3400"
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5294, 0.1529, 0],
+          "hex": "#872700"
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3843, 0.0941, 0],
+          "hex": "#621800"
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2392, 0.0392, 0],
+          "hex": "#3d0a00"
+        }
+      },
+      "$description": "Coral scale (OKLCH hue 38, chroma 0.19 at the peak), the loud counterpoint to the violet brand (moved here from the red scale, D-082). accent.600 is the accent fill and border; accent.700 is accent text."
     },
     "brand": {
-      "$description": "Violet scale (OKLCH hue 295, chroma 0.2 at the peak). brand.600 is the primary.",
-      "50": { "$value": "#f7f5fe" },
-      "100": { "$value": "#eeeafe" },
-      "200": { "$value": "#ded6fe" },
-      "300": { "$value": "#c8b7ff" },
-      "400": { "$value": "#ad8dfe" },
-      "500": { "$value": "#8658e1" },
-      "600": { "$value": "#703dc6", "$description": "Primary." },
-      "700": { "$value": "#5928a4" },
-      "800": { "$value": "#3f127c" },
-      "900": { "$value": "#270154" }
+      "50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9686, 0.9608, 0.9961],
+          "hex": "#f7f5fe"
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9333, 0.9176, 0.9961],
+          "hex": "#eeeafe"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8706, 0.8392, 0.9961],
+          "hex": "#ded6fe"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7843, 0.7176, 1],
+          "hex": "#c8b7ff"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6784, 0.5529, 0.9961],
+          "hex": "#ad8dfe"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5255, 0.3451, 0.8824],
+          "hex": "#8658e1"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4392, 0.2392, 0.7765],
+          "hex": "#703dc6"
+        },
+        "$description": "Primary."
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.349, 0.1569, 0.6431],
+          "hex": "#5928a4"
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2471, 0.0706, 0.4863],
+          "hex": "#3f127c"
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1529, 0.0039, 0.3294],
+          "hex": "#270154"
+        }
+      },
+      "$description": "Violet scale (OKLCH hue 295, chroma 0.2 at the peak). brand.600 is the primary."
     },
     "neutral": {
-      "$description": "Violet-tinted neutrals (OKLCH hue 300, chroma 0.018).",
-      "0": { "$value": "#fcfbfe" },
-      "50": { "$value": "#f6f3ff" },
-      "100": { "$value": "#eeeaf7" },
-      "200": { "$value": "#e0dce8" },
-      "300": { "$value": "#c9c5d2" },
-      "400": { "$value": "#a6a2ae" },
-      "500": { "$value": "#7c7884" },
-      "600": { "$value": "#65616c" },
-      "700": { "$value": "#4e4b56" },
-      "800": { "$value": "#34313b" },
-      "900": { "$value": "#1e1b24" },
-      "950": { "$value": "#0c0912" }
+      "0": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9882, 0.9843, 0.9961],
+          "hex": "#fcfbfe"
+        }
+      },
+      "50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9647, 0.9529, 1],
+          "hex": "#f6f3ff"
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9333, 0.9176, 0.9686],
+          "hex": "#eeeaf7"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8784, 0.8627, 0.9098],
+          "hex": "#e0dce8"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7882, 0.7725, 0.8235],
+          "hex": "#c9c5d2"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.651, 0.6353, 0.6824],
+          "hex": "#a6a2ae"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4863, 0.4706, 0.5176],
+          "hex": "#7c7884"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3961, 0.3804, 0.4235],
+          "hex": "#65616c"
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3059, 0.2941, 0.3373],
+          "hex": "#4e4b56"
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2039, 0.1922, 0.2314],
+          "hex": "#34313b"
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1176, 0.1059, 0.1412],
+          "hex": "#1e1b24"
+        }
+      },
+      "950": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0471, 0.0353, 0.0706],
+          "hex": "#0c0912"
+        }
+      },
+      "$description": "Violet-tinted neutrals (OKLCH hue 300, chroma 0.018)."
     }
   }
 }

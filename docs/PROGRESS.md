@@ -6,7 +6,7 @@
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
 - **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11 (#60) and H12 (#61) are merged; H13, H14 and H15 are merged; H16 is done on branch `h16-public-api`.
-- **Next session:** H17 (tokens), H18 (site performance) or H19; H17 and H18 are independent. Release 2 (dark mode) waits for MH2.
+- **Next session:** H18 (site performance) or H19 (H17 and H17b are done on branches `h17b-dtcg`). Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -625,6 +625,14 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Verified: `tokens:check` (four themes), package tests 298 incl. `h17-tokens.test.ts`, layout tests incl. the new print test (3 browsers), lint, knip. The print test reads print-media computed styles; no PDF was rasterised. `scripts/clean-install.sh` PASS against the packed tarball (no `@source`, palette reset before the imports, axe 0 violations).
 - Gotchas: (1) A `$type` on a group in two semantic files collides in Style Dictionary (`menu` is also in `color.json`): type the leaves. (2) A new semantic file must be added to `tokens/resolver.json`. (3) A link transitions its colour, so a test that switches media and reads `color` must poll. (4) Five playground tests are skipped until the site moves to 0.9.0 (the pinned 0.8.0 theme JSON lacks the new primitives). (5) The Banner `opacity-85` stays (documented in `styling-rules.md`).
 - Next: H17b (R21), then H18 or H19.
+
+### H17b — DTCG 2025.10 token format — 2026-11-15
+
+- Done (branch `h17b-dtcg`, off `main` after #66): **R21**. All 17 token source files under `tokens/themes/` and `tokens/primitives/breakpoints.json` hold 2025.10 objects (dimension, duration, colour, shadow); `tokens/semantic/` was aliases only and is unchanged. `scripts/lib/dtcg.mjs` (value shapes) feeds a Style Dictionary preprocessor in `build-tokens.mjs` and the checks in `validate-tokens.mjs` (old string forms rejected; `hex` must match components). `contrast.mjs` reads the generated JSON, so it needed no change. The playground engine works on the resolved var map and is unchanged; `output.ts` exports 2025.10. Tests: `engine.test.ts` (value shapes, flatten), `playground.spec.ts` (colour object), `test-second-theme.mjs` (+ a legacy-string case), `test-token-propagation.mjs`. CHANGELOG 0.9.0 has an H17b section.
+- Decision: D-101. **Letter-spacing is a unitless `number`** that the build writes as `em`: 2025.10 has no `em` unit and `rem` would change every heading, so this is the only way to keep the output byte-identical. The composite's `letterSpacing` aliases a number (loose against the strict composite type).
+- Verified: `tokens:check` (generated output matches the committed files for all four themes, so byte-identical), package tests 298, site unit tests, typecheck, lint, knip. The ten playground tests skipped for the 0.8.0 skew were run once against the repo's generated themes (temporary config, not committed): the round-trip tests through `validate-tokens`, `build-tokens` and `contrast` and the "equals its tokens folder" tests pass; six other engine tests fail only because they read the pinned 0.8.0 CSS and JSON, as before.
+- Gotchas: Style Dictionary 4 cannot read 2025.10 objects itself; the preprocessor is needed until SD v5. Not run: `pnpm --filter site test:e2e` (needs a built site on the pinned 0.8.0 package).
+- Next: H18 or H19.
 
 ### R6 — Security, DX, tooling, process + write-up — 2026-11-14
 

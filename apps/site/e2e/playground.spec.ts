@@ -162,7 +162,11 @@ test("export downloads DTCG JSON and CSS that carry the edit", async ({
   await page.getByLabel("Theme name", { exact: true }).fill("Acme Brand");
 
   const colours = JSON.parse(await readDownload(page, "color.json"));
-  expect(colours.color.brand["600"].$value).toBe("#1762b6");
+  // DTCG 2025.10 colour object (D-090).
+  expect(colours.color.brand["600"].$value).toMatchObject({
+    colorSpace: "srgb",
+    hex: "#1762b6",
+  });
 
   const css = await readDownload(page, "acme-brand.css");
   expect(css).toContain("--ds-color-brand-600: #1762b6;");
@@ -212,7 +216,7 @@ test("export copies a file to the clipboard", async ({
     "Copied color.json.",
   );
   const text = await page.evaluate(() => navigator.clipboard.readText());
-  expect(JSON.parse(text).color.brand["600"].$value).toBe("#1762b6");
+  expect(JSON.parse(text).color.brand["600"].$value.hex).toBe("#1762b6");
 });
 
 test("the Playground link is in the header and marked current", async ({

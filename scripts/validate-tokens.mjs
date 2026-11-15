@@ -1,7 +1,8 @@
 // Sanity checks for the DTCG token source in tokens/ (or the dir in argv[2]).
 // - tokens/resolver.json lists the sources; every token file is listed
 // - every token has $value and an (own or inherited) $type
-// - primitives hold raw values in the right format for their $type
+// - primitives hold raw values in the right format for their $type (DTCG 2025.10
+//   objects for dimension, duration, colour and shadow)
 // - every theme defines exactly Base's themeable keys, with the same types (D-048)
 // - aliases resolve to existing tokens of the matching $type, in every theme
 // - semantic tokens alias primitives only (no raw values, no semantic -> semantic)
@@ -10,6 +11,12 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  colorHexMatches,
+  isColor,
+  isDimension,
+  isDuration,
+} from "./lib/dtcg.mjs";
 import { loadResolver } from "./lib/resolver.mjs";
 
 const root =
@@ -32,13 +39,12 @@ const PART_TYPES = {
   fontSize: "dimension",
   fontWeight: "fontWeight",
   lineHeight: "number",
-  letterSpacing: "dimension",
+  // A unitless multiple of the font size (the build writes em); 2025.10
+  // allows no em dimension.
+  letterSpacing: "number",
 };
-// Raw value formats for primitives.
-const isColor = (v) =>
-  typeof v === "string" && /^#[0-9a-f]{6}([0-9a-f]{2})?$/i.test(v);
-const isDimension = (v) =>
-  typeof v === "string" && /^-?(\d+|\d*\.\d+)(rem|em|px)$/.test(v);
+// Raw value formats for primitives: DTCG 2025.10 objects (D-090).
+const isColorValue = (v) => isColor(v) && colorHexMatches(v);
 const isUnit = (v) => typeof v === "number" && v >= 0 && v <= 1;
 // One shadow layer; a token may hold a single layer or an array of layers.
 const isShadowLayer = (v) =>
@@ -46,10 +52,10 @@ const isShadowLayer = (v) =>
   typeof v === "object" &&
   !Array.isArray(v) &&
   Object.keys(v).sort().join() === "blur,color,offsetX,offsetY,spread" &&
-  isColor(v.color) &&
+  isColorValue(v.color) &&
   [v.offsetX, v.offsetY, v.blur, v.spread].every(isDimension);
 const VALUE_CHECKS = {
-  color: isColor,
+  color: isColorValue,
   cubicBezier: (v) =>
     Array.isArray(v) &&
     v.length === 4 &&
@@ -57,7 +63,7 @@ const VALUE_CHECKS = {
     isUnit(v[0]) &&
     isUnit(v[2]),
   dimension: isDimension,
-  duration: (v) => typeof v === "string" && /^(\d+|\d*\.\d+)(ms|s)$/.test(v),
+  duration: isDuration,
   fontWeight: (v) => Number.isInteger(v) && v >= 1 && v <= 1000,
   number: (v) => typeof v === "number" && Number.isFinite(v),
   fontFamily: (v) => typeof v === "string" && v.trim() !== "",
@@ -67,10 +73,11 @@ const VALUE_CHECKS = {
       : isShadowLayer(v),
 };
 const FORMAT_HINT = {
-  color: "#rrggbb or #rrggbbaa",
+  color:
+    '{ "colorSpace": "srgb", "components": [r, g, b] (0-1), "alpha"?, "hex"? (#rrggbb matching the components) }',
   cubicBezier: "[x1, y1, x2, y2] with x1 and x2 between 0 and 1",
-  dimension: "a number with rem, em or px",
-  duration: "a number with ms or s",
+  dimension: '{ "value": number, "unit": "px" | "rem" }',
+  duration: '{ "value": number >= 0, "unit": "ms" | "s" }',
   fontWeight: "an integer 1-1000",
   number: "a finite number",
   fontFamily: "a non-empty font stack",

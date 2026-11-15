@@ -16,6 +16,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTokens } from "./build-tokens.mjs";
+import { hexToColor } from "./lib/dtcg.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const scripts = join(root, "scripts");
@@ -45,7 +46,7 @@ function scratchTokens(tmp, name, edit) {
   });
   const colorFile = join(dir, "themes/scratch/color.json");
   const color = readJson(colorFile);
-  color.color.brand["600"].$value = "#1e3a8a";
+  color.color.brand["600"].$value = hexToColor("#1e3a8a");
   edit?.({ dir, color, colorFile });
   writeJson(colorFile, color);
   const resolverFile = join(dir, "resolver.json");
@@ -106,7 +107,7 @@ try {
 
   // 3. A low-contrast primary fails the contrast check.
   const low = scratchTokens(tmp, "low", ({ color }) => {
-    color.color.brand["600"].$value = "#cccccc";
+    color.color.brand["600"].$value = hexToColor("#cccccc");
   });
   const lowOut = join(tmp, "low-out");
   await buildTokens(lowOut, low);
@@ -114,6 +115,16 @@ try {
   expect(
     !l.ok && l.output.includes("FAIL"),
     "a low-contrast theme fails the contrast check",
+  );
+
+  // 4. The pre-2025.10 string forms are rejected (D-090).
+  const legacy = scratchTokens(tmp, "legacy", ({ color }) => {
+    color.color.brand["600"].$value = "#1e3a8a";
+  });
+  const lg = run("validate-tokens.mjs", legacy);
+  expect(
+    !lg.ok && lg.output.includes("color.brand.600 has invalid color value"),
+    "a colour written as a hex string fails validation",
   );
 } finally {
   rmSync(tmp, { recursive: true, force: true });

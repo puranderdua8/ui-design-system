@@ -4,32 +4,72 @@
     "$description": "Raw shadow recipes. Components use the semantic elevation.* tokens.",
     "sm": {
       "$value": {
-        "color": "#0d0f121a",
-        "offsetX": "0px",
-        "offsetY": "1px",
-        "blur": "3px",
-        "spread": "0px"
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.051, 0.0588, 0.0706],
+          "hex": "#0d0f12",
+          "alpha": 0.1
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 3,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
       }
     },
     "lg": {
       "$value": {
-        "color": "#0d0f1229",
-        "offsetX": "0px",
-        "offsetY": "8px",
-        "blur": "24px",
-        "spread": "0px"
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.051, 0.0588, 0.0706],
+          "hex": "#0d0f12",
+          "alpha": 0.16
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
       }
     }
   },
   "duration": {
-    "$type": "duration",
-    "$description": "Raw transition lengths.",
     "100": {
-      "$value": "100ms"
+      "$value": {
+        "value": 100,
+        "unit": "ms"
+      }
     },
     "200": {
-      "$value": "200ms"
-    }
+      "$value": {
+        "value": 200,
+        "unit": "ms"
+      }
+    },
+    "$type": "duration",
+    "$description": "Raw transition lengths."
   },
   "easing": {
     "$type": "cubicBezier",
