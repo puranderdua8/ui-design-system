@@ -59,11 +59,35 @@ const stubMotion = (reduced: boolean) => {
   };
 };
 
+// jsdom has no IntersectionObserver either (H18, R31): the video plays only
+// while one reports it in view.
+const observers = new Set<(entries: { isIntersecting: boolean }[]) => void>();
+const view = {
+  set: (inView: boolean) =>
+    act(() => observers.forEach((cb) => cb([{ isIntersecting: inView }]))),
+};
+
 const playback = { play: vi.fn(), pause: vi.fn() };
 let paused = true;
 
 beforeEach(() => {
   paused = true;
+  observers.clear();
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class {
+      private readonly cb: (entries: { isIntersecting: boolean }[]) => void;
+      constructor(cb: (entries: { isIntersecting: boolean }[]) => void) {
+        this.cb = cb;
+      }
+      observe() {
+        observers.add(this.cb);
+      }
+      disconnect() {
+        observers.delete(this.cb);
+      }
+    },
+  );
   playback.play = vi.fn(function (this: HTMLVideoElement) {
     paused = false;
     this.dispatchEvent(new Event("play"));
@@ -84,7 +108,10 @@ beforeEach(() => {
   );
 });
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 const getBanner = () => screen.getByLabelText("Welcome");
 
@@ -210,6 +237,7 @@ describe("Banner video", () => {
   it("plays a muted, looping, inline video that assistive technology skips", () => {
     stubMotion(false);
     render(<Banner aria-label="Welcome" video={video} />);
+    view.set(true);
     const el = getBanner().querySelector("video");
     expect(el).not.toBeNull();
     expect(el?.muted).toBe(true);
@@ -219,7 +247,41 @@ describe("Banner video", () => {
     expect(el?.getAttribute("src")).toBe("hero.mp4");
     expect(el?.getAttribute("aria-hidden")).toBe("true");
     expect(el?.tabIndex).toBe(-1);
+  });
+
+  it("downloads nothing and stays paused until it is in view (R31)", () => {
+    stubMotion(false);
+    render(<Banner aria-label="Welcome" video={video} />);
+    expect(getBanner().querySelector("video")?.getAttribute("preload")).toBe(
+      "none",
+    );
+    expect(playback.play).not.toHaveBeenCalled();
+    // No `src` at all until it is wanted: `preload` alone is not honoured by
+    // every browser.
+    expect(getBanner().querySelector("video")?.hasAttribute("src")).toBe(false);
+    expect(screen.getByRole("button", { name: "Play video" })).not.toBeNull();
+    view.set(true);
+    expect(getBanner().querySelector("video")?.getAttribute("src")).toBe(
+      "hero.mp4",
+    );
     expect(playback.play).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: "Pause video" })).not.toBeNull();
+  });
+
+  it("pauses when it leaves the view and resumes on return, unless the user paused", async () => {
+    stubMotion(false);
+    const user = userEvent.setup();
+    render(<Banner aria-label="Welcome" video={video} />);
+    view.set(true);
+    view.set(false);
+    expect(playback.pause).toHaveBeenCalledTimes(1);
+    view.set(true);
+    expect(playback.play).toHaveBeenCalledTimes(2);
+    await user.click(screen.getByRole("button", { name: "Pause video" }));
+    view.set(false);
+    view.set(true);
+    expect(playback.play).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole("button", { name: "Play video" })).not.toBeNull();
   });
 
   it("uses a <source> with its type when a type is given", () => {
@@ -227,6 +289,8 @@ describe("Banner video", () => {
     render(
       <Banner aria-label="Welcome" video={{ ...video, type: "video/mp4" }} />,
     );
+    expect(getBanner().querySelector("source")).toBeNull();
+    view.set(true);
     const el = getBanner().querySelector("video");
     expect(el?.hasAttribute("src")).toBe(false);
     expect(el?.querySelector("source")?.getAttribute("type")).toBe("video/mp4");
@@ -254,6 +318,7 @@ describe("Banner video", () => {
     stubMotion(false);
     const user = userEvent.setup();
     render(<Banner aria-label="Welcome" video={video} />);
+    view.set(true);
     const pause = screen.getByRole("button", { name: "Pause video" });
     await user.click(pause);
     expect(playback.pause).toHaveBeenCalledTimes(1);
@@ -267,6 +332,7 @@ describe("Banner video", () => {
     stubMotion(false);
     const user = userEvent.setup();
     render(<Banner aria-label="Welcome" video={video} />);
+    view.set(true);
     await user.tab();
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "Pause video" }),
@@ -283,6 +349,7 @@ describe("Banner video", () => {
         video={{ ...video, pauseLabel: "Video anhalten" }}
       />,
     );
+    view.set(true);
     expect(
       screen.getByRole("button", { name: "Video anhalten" }),
     ).not.toBeNull();
@@ -295,6 +362,7 @@ describe("Banner video", () => {
       playback.play,
     );
     render(<Banner aria-label="Welcome" video={video} />);
+    view.set(true);
     expect(
       await screen.findByRole("button", { name: "Play video" }),
     ).not.toBeNull();
@@ -322,6 +390,7 @@ describe("Banner video", () => {
     expect(screen.queryByRole("button")).toBeNull();
     motion.set(false);
     expect(getBanner().querySelector("video")).not.toBeNull();
+    view.set(true);
     expect(screen.getByRole("button", { name: "Pause video" })).not.toBeNull();
   });
 

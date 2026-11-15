@@ -28,7 +28,13 @@ export const Demo = () => (
           <Text>{item.text}</Text>
         </CardContent>
         <CardFooter>
-          <Button variant="secondary" size="sm">
+          {/* The visible text is the start of the name (WCAG 2.5.3); the rest
+              tells the three buttons apart (WCAG 2.4.6). */}
+          <Button
+            variant="secondary"
+            size="sm"
+            aria-label={`Read more about ${item.name}`}
+          >
             Read more
           </Button>
         </CardFooter>

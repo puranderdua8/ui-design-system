@@ -17,7 +17,11 @@ export const generateMetadata = async ({
 }: PageProps): Promise<Metadata> => {
   const { category } = await params;
   const found = categories.find((c) => c.slug === category);
-  return { title: found?.title ?? "Components" };
+  return {
+    title: found?.title ?? "Components",
+    // Each category says what it holds instead of sharing the site description (R34).
+    ...(found ? { description: found.description } : {}),
+  };
 };
 
 const CategoryPage = async ({ params }: PageProps) => {

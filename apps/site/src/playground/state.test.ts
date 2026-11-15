@@ -10,7 +10,9 @@ import {
   safeResolve,
   sanitiseKnobs,
   semanticKeys,
+  serialiseState,
   startFrom,
+  stateVersion,
   withKnobs,
   withOverride,
 } from "./state";
@@ -23,6 +25,25 @@ describe("parseState", () => {
       overrides: { "--ds-action-primary-bg": "#112233" },
     };
     expect(parseState(JSON.parse(JSON.stringify(state)))).toEqual(state);
+  });
+
+  it("writes a version, and reads the unversioned original (R33)", () => {
+    const state = {
+      start: "quirky" as const,
+      knobs: { radiusScale: 2 },
+      overrides: {},
+    };
+    const stored = serialiseState(state);
+    expect(stored.version).toBe(stateVersion);
+    expect(parseState(JSON.parse(JSON.stringify(stored)))).toEqual(state);
+    // What 0.8.0-era sites stored: no `version` at all.
+    expect(parseState(JSON.parse(JSON.stringify(state)))).toEqual(state);
+  });
+
+  it("does not guess at a version newer than it knows", () => {
+    expect(
+      parseState({ version: stateVersion + 1, start: "base", knobs: {} }),
+    ).toBeNull();
   });
 
   it.each([null, 3, "x", [], { start: "nope" }, { knobs: {} }])(

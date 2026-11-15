@@ -22,12 +22,11 @@ if (allowHttp && process.env.VERCEL) {
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-  // Google Fonts (theme fonts, docs/themes.md): the stylesheet comes from
-  // fonts.googleapis.com and the font files from fonts.gstatic.com. Nothing else
-  // is opened up (no script-src, connect-src or img-src change).
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  // Every font is self-hosted by `next/font` (docs/themes.md), so no font host
+  // is allowed (R41).
+  "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
-  "font-src 'self' https://fonts.gstatic.com",
+  "font-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

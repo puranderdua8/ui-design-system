@@ -55,18 +55,67 @@ export const BannerVideo = ({
     getServerSnapshot,
   );
   const [video, setVideo] = React.useState<HTMLVideoElement | null>(null);
-  const [playing, setPlaying] = React.useState(true);
+  const [playing, setPlaying] = React.useState(false);
+  // True once the user pressed Pause: scrolling back into view must not
+  // override that choice.
+  const userPausedRef = React.useRef(false);
+  const [inView, setInView] = React.useState(false);
+  // The file is attached only once the video has been wanted (in view, or the
+  // visitor pressed Play): `preload="none"` alone is not honoured by every
+  // browser (WebKit on Linux fetched it), an absent `src` is.
+  const [started, setStarted] = React.useState(false);
+  // Set when the visitor pressed Play while the video was out of view.
+  const [asked, setAsked] = React.useState(false);
 
-  // Start on mount. A browser that blocks autoplay rejects: show "Play".
   React.useEffect(() => {
     if (!video) return;
-    Promise.resolve(video.play()).catch(() => setPlaying(false));
+    if (typeof IntersectionObserver === "undefined") {
+      // No observer (an old browser): behave as before and play on mount.
+      let cancelled = false;
+      queueMicrotask(() => {
+        if (cancelled) return;
+        setInView(true);
+        setStarted(true);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry) return;
+      setInView(entry.isIntersecting);
+      if (entry.isIntersecting) setStarted(true);
+      else setAsked(false);
+    });
+    observer.observe(video);
+    return () => observer.disconnect();
   }, [video]);
+
+  // Play while in view (or asked for), pause when not, never against the
+  // visitor's Pause. A browser that blocks autoplay rejects: the button shows
+  // "Play".
+  React.useEffect(() => {
+    if (!video || !started) return;
+    if (!userPausedRef.current && (inView || asked)) {
+      Promise.resolve(video.play()).catch(() => undefined);
+    } else if (!video.paused) {
+      video.pause();
+    }
+  }, [video, started, inView, asked]);
 
   const toggle = () => {
     if (!video) return;
-    if (video.paused) Promise.resolve(video.play()).catch(() => undefined);
-    else video.pause();
+    if (video.paused) {
+      userPausedRef.current = false;
+      if (started) Promise.resolve(video.play()).catch(() => undefined);
+      else {
+        setStarted(true);
+        setAsked(true);
+      }
+    } else {
+      userPausedRef.current = true;
+      video.pause();
+    }
   };
 
   return (
@@ -77,18 +126,18 @@ export const BannerVideo = ({
         ) : (
           <video
             ref={setVideo}
-            src={type ? undefined : src}
+            src={type || !started ? undefined : src}
             poster={poster}
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             tabIndex={-1}
             aria-hidden="true"
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
           >
-            {type ? <source src={src} type={type} /> : null}
+            {type && started ? <source src={src} type={type} /> : null}
           </video>
         )}
       </div>

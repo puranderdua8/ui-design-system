@@ -28,8 +28,7 @@ const token = (page: Page, name: string) =>
   );
 
 const chooseTheme = async (page: Page, label: string) => {
-  await page.getByRole("combobox", { name: "Theme" }).click();
-  await page.getByRole("option", { name: label, exact: true }).click();
+  await page.getByRole("combobox", { name: "Theme" }).selectOption({ label });
 };
 
 test.describe("axe on every showcase page in every theme", () => {
@@ -133,8 +132,8 @@ test.describe("theme switcher", () => {
       ),
     ).toBe("quirky");
     expect(await token(page, "--ds-color-brand-600")).toBe("#703dc6");
-    await expect(page.getByRole("combobox", { name: "Theme" })).toContainText(
-      "Quirky",
+    await expect(page.getByRole("combobox", { name: "Theme" })).toHaveValue(
+      "quirky",
     );
 
     // A second page keeps it too.

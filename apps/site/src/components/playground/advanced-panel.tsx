@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useState } from "react";
 import { Button, Heading, Input, Stack, Text } from "@puranderdua/ui";
 import { themeMaps } from "@/playground/data";
 import {
@@ -8,24 +9,27 @@ import {
   semanticKeys,
   withOverride,
 } from "@/playground/state";
-import { setState } from "@/playground/store";
+import { getSnapshot, setState } from "@/playground/store";
 import type { PlaygroundState, ResolvedTheme } from "@/playground/types";
 
 type AdvancedPanelProps = { state: PlaygroundState; resolved: ResolvedTheme };
 
 const shortName = (key: string) => key.replace(/^--ds-/, "");
 
-const TokenRow = ({
+// Reads the latest state itself, so the handler is stable and a row re-renders
+// only when its own value or override changes (R32).
+const edit = (key: string, value: string) =>
+  setState(withOverride(getSnapshot(), key, value));
+
+const TokenRow = memo(function TokenRow({
   tokenKey,
   value,
   overridden,
-  state,
 }: {
   tokenKey: string;
   value: string;
   overridden: boolean;
-  state: PlaygroundState;
-}) => {
+}) {
   const name = shortName(tokenKey);
   const picker = asPickerColour(value);
   return (
@@ -39,30 +43,64 @@ const TokenRow = ({
           size="sm"
           aria-label={`${name} colour`}
           value={picker}
-          onChange={(event) =>
-            setState(withOverride(state, tokenKey, event.target.value))
-          }
+          onChange={(event) => edit(tokenKey, event.target.value)}
         />
       ) : null}
       <Input
         size="sm"
         aria-label={`${name} value`}
         value={value}
-        onChange={(event) =>
-          setState(withOverride(state, tokenKey, event.target.value))
-        }
+        onChange={(event) => edit(tokenKey, event.target.value)}
       />
       {overridden ? (
         <Button
           variant="secondary"
           size="sm"
           aria-label={`Reset ${name}`}
-          onClick={() => setState(withOverride(state, tokenKey, ""))}
+          onClick={() => edit(tokenKey, "")}
         >
           Reset
         </Button>
       ) : null}
     </li>
+  );
+});
+
+// The rows are mounted only while their group is open: a closed `<details>`
+// hides its content but React would still render it (R32).
+const Group = ({
+  id,
+  keys,
+  vars,
+  overrides,
+}: {
+  id: string;
+  keys: string[];
+  vars: ResolvedTheme["vars"];
+  overrides: PlaygroundState["overrides"];
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <details
+      className="ds-border rounded-ds-card border-ds-border p-ds-gap-sm"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
+      <summary className="ds-focus-ring cursor-pointer font-semibold">
+        {id} ({keys.length})
+      </summary>
+      {open ? (
+        <ul className="mt-ds-gap-sm flex flex-col gap-ds-gap-sm" role="list">
+          {keys.map((key) => (
+            <TokenRow
+              key={key}
+              tokenKey={key}
+              value={String(vars[key] ?? "")}
+              overridden={key in overrides}
+            />
+          ))}
+        </ul>
+      ) : null}
+    </details>
   );
 };
 
@@ -83,28 +121,13 @@ export const AdvancedPanel = ({ state, resolved }: AdvancedPanelProps) => {
       </Text>
       <Stack gap="sm">
         {groups.map((group) => (
-          <details
+          <Group
             key={group.id}
-            className="ds-border rounded-ds-card border-ds-border p-ds-gap-sm"
-          >
-            <summary className="ds-focus-ring cursor-pointer font-semibold">
-              {group.id} ({group.keys.length})
-            </summary>
-            <ul
-              className="mt-ds-gap-sm flex flex-col gap-ds-gap-sm"
-              role="list"
-            >
-              {group.keys.map((key) => (
-                <TokenRow
-                  key={key}
-                  tokenKey={key}
-                  value={String(resolved.vars[key] ?? "")}
-                  overridden={key in state.overrides}
-                  state={state}
-                />
-              ))}
-            </ul>
-          </details>
+            id={group.id}
+            keys={group.keys}
+            vars={resolved.vars}
+            overrides={state.overrides}
+          />
         ))}
       </Stack>
     </Stack>
