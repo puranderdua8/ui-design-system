@@ -1,5 +1,7 @@
+import { Children } from "react";
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
+import { warnOnce } from "@/lib/deprecate";
 import {
   alignClasses,
   gapClasses,
@@ -42,6 +44,12 @@ export const Split = ({
   className,
   ...props
 }: SplitProps) => {
+  const count = Children.toArray(props.children).length;
+  if (count !== 2)
+    warnOnce(
+      "Split.children",
+      `<Split> expects exactly two children but got ${count} (a fragment counts as one). Wrap extra content in an element, or use Stack or Grid.`,
+    );
   return renderAs(as, {
     ...props,
     "data-slot": "split",

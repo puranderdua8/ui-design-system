@@ -33,6 +33,14 @@ const Options = () => (
 const meta = {
   title: "Components/Select",
   component: SelectTrigger,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** Compose `Select`, `SelectTrigger` (`size` sm | md), `SelectValue`, `SelectContent` and `SelectItem` (`value` required); `SelectGroup`, `SelectLabel` and `SelectSeparator` group items. The list renders in `document.body` through `ScopedPortal`, which re-applies the nearest `ThemeScope`'s theme and direction, so an open list keeps the theme and is not clipped by an ancestor with `overflow`. A `container` prop on `SelectContent` wins over that.\n\n**Accessibility.** The trigger needs a name: a `Field` label or an `aria-label`. Arrow keys, Home, End and type-ahead work as in a native list. For right-to-left pages set `dir` (see `RadioGroup`).",
+      },
+    },
+  },
   args: { "aria-label": "Produce", size: "md" },
   argTypes: { size: { control: "inline-radio", options: ["sm", "md"] } },
 } satisfies Meta<typeof SelectTrigger>;

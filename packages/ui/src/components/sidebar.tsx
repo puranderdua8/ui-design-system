@@ -2,7 +2,6 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
 import { gapClasses, type LayoutGap } from "@/lib/layout";
-import { warnRenamedProp } from "@/lib/deprecate";
 import type { AsProps } from "@/lib/types";
 
 export type SidebarSide = "start" | "end";
@@ -31,8 +30,6 @@ export type SidebarProps = {
   sidebar: React.ReactNode;
   /** Which edge the aside sits on when the row has room. */
   sidebarSide?: SidebarSide;
-  /** @deprecated Renamed `sidebarSide` (D-089). Removed in 1.0.0. */
-  side?: SidebarSide;
   /** Element for the aside. `aside` is a landmark; inside `<main>` prefer `div` or `nav`. */
   sidebarAs?: SidebarAsideElement;
   gap?: LayoutGap;
@@ -50,8 +47,7 @@ export type SidebarProps = {
 export const Sidebar = ({
   as = "div",
   sidebar,
-  sidebarSide,
-  side,
+  sidebarSide = "start",
   sidebarAs = "aside",
   gap = "lg",
   sidebarProps,
@@ -60,8 +56,7 @@ export const Sidebar = ({
   children,
   ...props
 }: SidebarProps) => {
-  if (side !== undefined) warnRenamedProp("Sidebar", "side", "sidebarSide");
-  const edge = sidebarSide ?? side ?? "start";
+  const edge = sidebarSide;
   const aside = renderAs(sidebarAs, {
     ...sidebarProps,
     className: cn(sidebarAsideClasses, sidebarProps?.className),

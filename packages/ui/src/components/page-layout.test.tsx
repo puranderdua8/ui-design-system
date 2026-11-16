@@ -107,7 +107,7 @@ describe("Section", () => {
   it("wraps children in a Container only when asked", () => {
     const { rerender } = render(<Section>x</Section>);
     expect(screen.getByText("x").dataset.slot).toBe("section");
-    rerender(<Section container="md">x</Section>);
+    rerender(<Section contentWidth="md">x</Section>);
     const inner = screen.getByText("x");
     expect(inner.dataset.slot).toBe("container");
     expect(inner.className).toContain("max-w-ds-md");
@@ -206,7 +206,7 @@ describe("Sidebar", () => {
     expect(root.className).not.toMatch(/reverse|(^| )order-/);
     expect(root.className).not.toMatch(/(^| )(sm|md|lg):/);
     rerender(
-      <Sidebar sidebar="s" side="end">
+      <Sidebar sidebar="s" sidebarSide="end">
         x
       </Sidebar>,
     );
@@ -214,11 +214,11 @@ describe("Sidebar", () => {
     expect(root.className).not.toMatch(/reverse|(^| )order-/);
   });
 
-  it("side=end renders the content first and the aside after it (DOM order = visual order)", () => {
+  it("sidebarSide=end renders the content first and the aside after it (DOM order = visual order)", () => {
     render(
       <>
         <Sidebar sidebar={<span>start-aside</span>}>start-content</Sidebar>
-        <Sidebar side="end" sidebar={<span>end-aside</span>}>
+        <Sidebar sidebarSide="end" sidebar={<span>end-aside</span>}>
           end-content
         </Sidebar>
       </>,

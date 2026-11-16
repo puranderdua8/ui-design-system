@@ -1,7 +1,6 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
-import { warnRenamedProp } from "@/lib/deprecate";
 import type { AsProps } from "@/lib/types";
 import { Container, type ContainerSize } from "./container";
 import { BannerVideo, type BannerVideoSource } from "./banner-video";
@@ -29,10 +28,6 @@ type BannerCommon = {
   layerProps?: Omit<React.ComponentPropsWithoutRef<"div">, "children">;
   /** Props for the `Container` that holds the children: `className`, `id`, `data-*`. */
   contentProps?: Omit<React.ComponentPropsWithoutRef<"div">, "children">;
-  /** @deprecated Renamed `justify` (D-089). Removed in 1.0.0. */
-  align?: BannerJustify;
-  /** @deprecated Renamed `contentWidth` (D-089). Removed in 1.0.0. */
-  container?: ContainerSize;
 };
 
 type BannerPlain = {
@@ -86,8 +81,6 @@ export const Banner = ({
   contentWidth,
   layerProps,
   contentProps,
-  align,
-  container,
   media,
   video,
   scrim = "strong",
@@ -95,10 +88,6 @@ export const Banner = ({
   children,
   ...props
 }: BannerProps) => {
-  if (align !== undefined) warnRenamedProp("Banner", "align", "justify");
-  if (container !== undefined) {
-    warnRenamedProp("Banner", "container", "contentWidth");
-  }
   const hasMedia = media != null || video != null;
   const body = (
     <>
@@ -110,7 +99,7 @@ export const Banner = ({
         data-slot="banner-content"
         className={cn(bannerContentClasses, layerProps?.className)}
       >
-        <Container {...contentProps} size={contentWidth ?? container ?? "lg"}>
+        <Container {...contentProps} size={contentWidth ?? "lg"}>
           {children}
         </Container>
       </div>
@@ -122,7 +111,7 @@ export const Banner = ({
     className: cn(
       bannerVariants({
         height,
-        justify: justify ?? align,
+        justify,
         tone: tone ?? (hasMedia ? "inverse" : "canvas"),
       }),
       className,

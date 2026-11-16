@@ -42,6 +42,15 @@ You can also point `@source` at the whole package folder (`@source "../node_modu
 grep -l "ds-focus-ring" .next/static/css/*.css   # Next.js; use your build output folder
 ```
 
+## Rules to know
+
+- **Bundle cost (R02).** Components merge `className` through `cn()`, which is `tailwind-merge` plus `clsx`. In a client bundle that imports any component this is about 10 KB gzip (measured: a `Text`-only import is 30.9 KB minified, 9.8 KB gzip, of which `tailwind-merge` is 28.3 KB minified). shadcn/ui pays the same cost. Server Components render on the server and ship none of it; the cost is paid once per client bundle, not once per component. It buys correct overrides: your `className` wins over the component's class on the same property.
+- **Field `id` is the control's id.** `<Field id="email">` sets the id of the input inside, not of the wrapper `div`; label, description and error are wired to it. `Fieldset`'s `id` is the fieldset's own. One control with one label is a `Field`; a group of controls is a `Fieldset` (a `RadioGroup` inside a `Field` warns in development).
+- **Errors and focus are yours.** `Field` and `Fieldset` announce an `error` and mark the control invalid. An error summary and moving focus to the first invalid control after a failed submit are the app's job; the site's signup form is a worked example.
+- **Overlays and themes.** Overlays render in `document.body` through `ScopedPortal`, which re-applies the nearest `ThemeScope`. Do not portal into a scope element yourself. Right-to-left needs `dir` on `ThemeScope` or a `DirectionProvider` (see Theme scopes and portals below).
+- **CSS setup.** Import order, no `prefix()` and unlayered CSS are covered under "Supported CSS setups".
+- **Development warnings.** In development the package warns once per message about a `RadioGroup` inside a `Field`, a control with its own `id` inside a `Field`, a `Split` without exactly two children, and a `Grid` given both `cols` and `minItemWidth` from JavaScript. Production builds are silent. Upgrading from 0.8: see `docs/migration-0.8-to-1.0.md` in the repository.
+
 ## Themes
 
 | Theme       | Import                                 | Fonts                            | Since |
@@ -81,7 +90,7 @@ Layout (0.3.0), all with a typed `as`. `Grid`, `Stack` and `Cluster` add `role="
 - `Container`: `size` sm to xl | full; `gutter`.
 - `Grid`: `cols` or `minItemWidth` (auto-fit); `gap`. Both follow the Grid's own width (container queries), not the viewport. A `cols` Grid renders a wrapper `div` (the `@container`) around the grid; `as`, `ref`, `role`, `className` and other props stay on the grid itself.
 - `Stack`: vertical flow with `gap`, `align`. `Cluster`: wrapping row with `gap`, `justify`, `align`.
-- `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; optional inner `Container`.
+- `Section`: `tone` canvas | subtle | inverse | brand; padding from tokens; `contentWidth` adds an inner `Container` of that size (`contentProps` goes on it).
 - `Split`: two columns 1:1, 1:2 or 2:1; stacks when its container is too narrow (not the viewport). Put padding on an inner element so the ratio stays exact.
 - `Sidebar`: `sidebar` slot, `sidebarSide`; the content wraps below the aside when it would be narrower than half the row. DOM order is visual order: for `sidebarSide="end"` the content comes first and the aside after it (stacked, the aside is below). `sidebarProps` goes on the aside (`className`, `aria-label`, `id`) and `contentProps` on the content column; name each aside when a page has more than one.
 
@@ -99,7 +108,7 @@ Display (0.6.0):
 
 - `Card`: `variant` outline | raised | accent; `as` div, article, section, li, aside. Parts: `CardMedia`, `CardHeader`, `CardTitle` (a `Heading`; set `as` to fit the page outline), `CardDescription`, `CardContent`, `CardFooter`. A raised Card restores the base colour roles, so it is readable inside an inverse or brand `Section`.
 - `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`: arrow keys, Home/End, `activationMode` automatic | manual, `orientation`.
-- `Banner`: full-screen hero. `height` screen | tall, `align` start | center, `tone` canvas | brand | inverse | gradient. `media` takes any `<img>` (object-cover) under a scrim (`scrim` strong | medium; the scrim is contrast-checked per theme over white). `video={{ src, poster, type?, pauseLabel?, playLabel? }}` plays muted and looped; with `prefers-reduced-motion` only the poster shows, and a pause/play button is always visible.
+- `Banner`: full-screen hero. `height` screen | tall, `justify` start | center (position on the column's main axis), `contentWidth` (a `ContainerSize`, default `lg`), `tone` canvas | brand | inverse | gradient. `media` takes any `<img>` (object-cover) under a scrim (`scrim` strong | medium; the scrim is contrast-checked per theme over white). `video={{ src, poster, type?, pauseLabel?, playLabel? }}` plays muted and looped; with `prefers-reduced-motion` only the poster shows, and a pause/play button is always visible.
 
 Theme scopes and portals (0.5.0):
 

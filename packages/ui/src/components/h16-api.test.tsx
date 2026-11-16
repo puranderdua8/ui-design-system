@@ -8,7 +8,7 @@ import {
   type MockInstance,
 } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { resetRenamedPropWarnings } from "@/lib/deprecate";
+import { resetWarnings } from "@/lib/deprecate";
 import { Banner } from "./banner";
 import { Card, CardDescription, CardTitle } from "./card";
 import { Checkbox } from "./checkbox";
@@ -20,7 +20,7 @@ import { Sidebar } from "./sidebar";
 let warn: MockInstance<typeof console.warn>;
 
 beforeEach(() => {
-  resetRenamedPropWarnings();
+  resetWarnings();
   warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
@@ -28,9 +28,9 @@ afterEach(() => {
   warn.mockRestore();
 });
 
-describe("H16: D-089 renames keep the old names for one release", () => {
-  it("Section `contentWidth` wraps in a Container; `container` still works and warns once", () => {
-    const { rerender } = render(
+describe("1.0.0: the D-089 names are `contentWidth`, `sidebarSide` and `justify`", () => {
+  it("Section `contentWidth` wraps in a Container", () => {
+    render(
       <Section contentWidth="md" contentProps={{ id: "inner" }}>
         x
       </Section>,
@@ -40,35 +40,20 @@ describe("H16: D-089 renames keep the old names for one release", () => {
     expect(inner.id).toBe("inner");
     expect(inner.className).toContain("max-w-ds-md");
     expect(warn).not.toHaveBeenCalled();
-
-    rerender(<Section container="sm">x</Section>);
-    expect(screen.getByText("x").className).toContain("max-w-ds-sm");
-    rerender(<Section container="sm">x</Section>);
-    expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn.mock.calls[0]?.[0]).toContain("contentWidth");
   });
 
-  it("Sidebar `sidebarSide` and the deprecated `side` both put the aside last for `end`", () => {
-    const { rerender } = render(
+  it("Sidebar `sidebarSide=end` puts the aside last", () => {
+    render(
       <Sidebar sidebar="aside" sidebarSide="end" data-testid="row">
         content
       </Sidebar>,
     );
     expect(screen.getByTestId("row").dataset.side).toBe("end");
     expect(warn).not.toHaveBeenCalled();
-
-    rerender(
-      <Sidebar sidebar="aside" side="end" data-testid="row">
-        content
-      </Sidebar>,
-    );
-    expect(screen.getByTestId("row").dataset.side).toBe("end");
-    expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn.mock.calls[0]?.[0]).toContain("sidebarSide");
   });
 
-  it("Banner `justify` and `contentWidth`; `align` and `container` still work and warn", () => {
-    const { container, rerender } = render(
+  it("Banner `justify` and `contentWidth`", () => {
+    const { container } = render(
       <Banner justify="start" contentWidth="sm" aria-label="b">
         x
       </Banner>,
@@ -77,26 +62,30 @@ describe("H16: D-089 renames keep the old names for one release", () => {
     expect(banner?.className).toContain("justify-start");
     expect(screen.getByText("x").className).toContain("max-w-ds-sm");
     expect(warn).not.toHaveBeenCalled();
-
-    rerender(
-      <Banner align="start" container="md" aria-label="b">
-        x
-      </Banner>,
-    );
-    expect(
-      container.querySelector('[data-slot="banner"]')?.className,
-    ).toContain("justify-start");
-    expect(screen.getByText("x").className).toContain("max-w-ds-md");
-    expect(warn).toHaveBeenCalledTimes(2);
   });
 
-  it("the new name wins when both are given", () => {
-    render(
-      <Section contentWidth="sm" container="xl">
-        x
-      </Section>,
+  it("the 0.9.0 names are gone: a type error, and no longer read", () => {
+    const { container } = render(
+      <>
+        {/* @ts-expect-error `container` was removed in 1.0.0; use `contentWidth` */}
+        <Section container="sm">a</Section>
+        {/* @ts-expect-error `side` was removed in 1.0.0; use `sidebarSide` */}
+        <Sidebar sidebar="s" side="end" data-testid="row">
+          b
+        </Sidebar>
+        {/* @ts-expect-error `align` and `container` were removed in 1.0.0 */}
+        <Banner align="start" container="md" aria-label="b">
+          c
+        </Banner>
+      </>,
     );
-    expect(screen.getByText("x").className).toContain("max-w-ds-sm");
+    // Not wrapped in a Container, not moved to the end, not justified.
+    expect(screen.getByText("a").dataset.slot).toBe("section");
+    expect(screen.getByTestId("row").dataset.side).toBe("start");
+    expect(
+      container.querySelector('[data-slot="banner"]')?.className,
+    ).not.toContain("justify-start");
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 

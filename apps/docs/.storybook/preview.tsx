@@ -35,6 +35,9 @@ const withTheme: Decorator = (Story, context) => {
 };
 
 const preview: Preview = {
+  // Every component gets a Docs page: props table from the types, plus the
+  // usage and accessibility notes in each story file's `docs.description`.
+  tags: ["autodocs"],
   decorators: [withTheme],
   // `VITE_DS_THEME=nature pnpm test:stories` runs the whole story suite (axe
   // included) under one theme; unset means Base.

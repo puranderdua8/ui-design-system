@@ -4,6 +4,14 @@ import { Button } from "@puranderdua/ui";
 const meta = {
   title: "Components/Button",
   component: Button,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** `variant` primary | secondary, `size` sm | md. `type` is `"button"` by default, so set `type="submit"` for a form\'s submit button. `asChild` renders your element (a link, `next/link`) instead; it gets no default `type`.\n\n**Accessibility.** A native `<button>` with a visible focus ring and a target of at least 24px. A disabled button is not focusable. Give an icon-only button an `aria-label`.',
+      },
+    },
+  },
   args: { children: "Button" },
   argTypes: {
     variant: { control: "inline-radio", options: ["primary", "secondary"] },

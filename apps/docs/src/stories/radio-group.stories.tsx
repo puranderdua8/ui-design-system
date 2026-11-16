@@ -29,6 +29,14 @@ const Options = ({ disabledLast = false }: { disabledLast?: boolean }) => (
 const meta = {
   title: "Components/RadioGroup",
   component: RadioGroup,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** `RadioGroup` with one `RadioGroupItem` per option (`value` required). Use it inside a `Fieldset`, which names the group and passes name, invalid and required state; inside a `Field` it warns in development.\n\n**Accessibility.** Arrow keys move between options. Radix assumes left-to-right: for right-to-left pages give `ThemeScope` a `dir` or wrap the app in `DirectionProvider`, so the arrows follow the reading direction. Each item keeps a pointer target of at least 24px.",
+      },
+    },
+  },
   args: { "aria-label": "Plan", defaultValue: "free" },
 } satisfies Meta<typeof RadioGroup>;
 

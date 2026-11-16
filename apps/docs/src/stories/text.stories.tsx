@@ -4,6 +4,14 @@ import { Text } from "@puranderdua/ui";
 const meta = {
   title: "Components/Text",
   component: Text,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** `variant` is the visual role (body, lead, caption, label). `as` is the HTML element (p, span, div, label) and is independent of it.\n\n**Accessibility.** Choose the element for meaning, not looks: use `label` only for form labels, `span` inside a line of text. Type a `ref` from the same element you pass to `as`.",
+      },
+    },
+  },
   args: { children: "The quick brown fox jumps over the lazy dog." },
 } satisfies Meta<typeof Text>;
 

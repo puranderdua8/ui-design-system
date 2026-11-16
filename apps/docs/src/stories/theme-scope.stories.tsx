@@ -27,6 +27,14 @@ const warmVars = {
 const meta = {
   title: "Foundations/ThemeScope",
   component: ThemeScope,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** Applies a theme to a subtree: `theme` is a name (written to `data-ds-theme`), `vars` is the `vars` map from `themes/<name>.json` (applied as inline custom properties), and `dir` is `ltr` or `rtl`. It also sets `color-scheme: light`. Portals rendered through `ScopedPortal` (Select's list) re-apply the nearest scope, so they keep its theme and direction.\n\n**Accessibility.** `dir` sets the reading direction for the subtree and for Radix keyboard handling inside it. Pass the whole map from the JSON file; do not hand-write theme values.",
+      },
+    },
+  },
   args: { theme: "warm", vars: warmVars },
 } satisfies Meta<typeof ThemeScope>;
 

@@ -4,6 +4,14 @@ import { Checkbox, Cluster, Field, Label, Stack } from "@puranderdua/ui";
 const meta = {
   title: "Components/Checkbox",
   component: Checkbox,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** A Radix checkbox: `checked` (true, false or `"indeterminate"`), `defaultChecked`, `onCheckedChange`. Put one in a `Field layout="inline"`; put several in a `Fieldset`. Field wiring works as for `Input`.\n\n**Accessibility.** The box is 16px but the pointer target is at least 24px (WCAG 2.2 SC 2.5.8). It needs a name: a `Field` label or an `aria-label`. The checked and indeterminate marks are shapes, not only colour.',
+      },
+    },
+  },
   args: { "aria-label": "Example" },
   argTypes: { disabled: { control: "boolean" } },
 } satisfies Meta<typeof Checkbox>;

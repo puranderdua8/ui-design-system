@@ -27,6 +27,14 @@ const Plans = () => (
 const meta = {
   title: "Components/Fieldset",
   component: Fieldset,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** Groups related controls (a `RadioGroup`, a list of checkboxes) under one `legend`, with optional `description`, `error` and `required`. A `RadioGroup` inside takes its name, invalid and required state from it. `id` is the fieldset's own id and the base of the legend, description and error ids. One control with one label is a `Field`, not a `Fieldset`.\n\n**Accessibility.** Renders `<fieldset>` and `<legend>`, so assistive technology announces the legend with each control in the group. The error is announced (`role=\"alert\"`); focus after a failed submit is the app's job.",
+      },
+    },
+  },
   args: { legend: "Plan", children: <Plans /> },
 } satisfies Meta<typeof Fieldset>;
 
