@@ -4,6 +4,14 @@ import { Link, Text } from "@puranderdua/ui";
 const meta = {
   title: "Components/Link",
   component: Link,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** `inline` is always underlined (use it inside running text); `standalone` is underlined on hover and focus (navigation, lists of links). `asChild` wraps `next/link`. `external` adds `target="_blank"`, `rel="noopener noreferrer"`, an icon and a hidden hint; translate the hint with `externalLabel` (default "(opens in a new tab)").\n\n**Accessibility.** The underline is the non-colour cue for inline links (WCAG 1.4.1), so do not remove it. Use `standalone` only where the context already shows that the text is a link.',
+      },
+    },
+  },
   args: { children: "Link", href: "#example" },
   argTypes: {
     variant: { control: "inline-radio", options: ["inline", "standalone"] },

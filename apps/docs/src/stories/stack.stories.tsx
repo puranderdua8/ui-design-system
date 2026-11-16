@@ -10,6 +10,14 @@ const Box = ({ children }: { children: React.ReactNode }) => (
 const meta = {
   title: "Layout/Stack",
   component: Stack,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** Vertical flow with a `gap` step and cross-axis `align` (start, center, end, stretch). `as` is div, section, ul, ol, nav or article.\n\n**Accessibility.** `ul` and `ol` get `role="list"`. Children appear in the order you write them; do not use CSS to reorder.',
+      },
+    },
+  },
   args: { gap: "md", align: "stretch" },
   argTypes: {
     gap: { control: "inline-radio", options: ["xs", "sm", "md", "lg", "xl"] },

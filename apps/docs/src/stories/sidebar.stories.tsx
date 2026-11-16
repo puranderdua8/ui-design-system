@@ -30,6 +30,14 @@ const Content = () => (
 const meta = {
   title: "Layout/Sidebar",
   component: Sidebar,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** `sidebar` is the aside; the children are the content column. The content wraps below the aside when it would be narrower than half the row. `sidebarSide` is `start` or `end`; `sidebarProps` goes on the aside and `contentProps` on the content column.\n\n**Accessibility.** For `sidebarSide="end"` the content comes first in the DOM and the aside after it, so reading order matches what you see. Name each aside (`sidebarProps={{ "aria-label": ... }}`) when a page has more than one; use `sidebarAs="nav"` for navigation.',
+      },
+    },
+  },
   args: {
     sidebarSide: "start",
     gap: "lg",

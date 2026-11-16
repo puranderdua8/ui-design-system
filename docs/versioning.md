@@ -45,7 +45,7 @@ When unsure, treat a change that can make a consumer's build, tests or layout fa
 2. The old name keeps working for **one minor release of overlap** and logs a development-only warning (`console.warn` once per name when `process.env.NODE_ENV !== "production"`), naming the replacement.
 3. The old name is removed in the **next major**. Nothing is removed in a minor or patch.
 
-H16 applies this to the D-089 renames: `container` → `contentWidth`, Sidebar `side` → `sidebarSide`, Banner `align` → `justify` work with a warning in 0.9.0 (the overlap) and are removed in 1.0.0, the next major after 0.x. From 1.0.0 on, the one-minor overlap rule applies as written.
+H16 applied this to the D-089 renames: `container` → `contentWidth`, Sidebar `side` → `sidebarSide`, Banner `align` → `justify` worked with a warning in 0.9.0 (the overlap) and were removed in 1.0.0 (H20), the next major after 0.x. From 1.0.0 on, the one-minor overlap rule applies as written; a deprecated name warns through `warnOnce` in `packages/ui/src/lib/deprecate.ts`.
 
 ## New themeable tokens (D-095)
 

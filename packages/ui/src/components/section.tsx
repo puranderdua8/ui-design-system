@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
-import { warnRenamedProp } from "@/lib/deprecate";
 import type { AsProps, ElementProps } from "@/lib/types";
 import { Container, type ContainerSize } from "./container";
 
@@ -38,8 +37,6 @@ export type SectionProps = {
    * used with `contentWidth`.
    */
   contentProps?: Omit<ElementProps<"div">, "children">;
-  /** @deprecated Renamed `contentWidth` (D-089). Removed in 1.0.0. */
-  container?: ContainerSize;
 } & AsProps<"section", Exclude<SectionElement, "section">>;
 
 /** Full-width band. Give it an accessible name (`aria-label`) if it should be a landmark. */
@@ -49,15 +46,10 @@ export const Section = ({
   padding = "md",
   contentWidth,
   contentProps,
-  container,
   className,
   children,
   ...props
 }: SectionProps) => {
-  if (container !== undefined) {
-    warnRenamedProp("Section", "container", "contentWidth");
-  }
-  const width = contentWidth ?? container;
   return renderAs(as, {
     ...props,
     className: cn(
@@ -67,8 +59,8 @@ export const Section = ({
       className,
     ),
     "data-slot": "section",
-    children: width ? (
-      <Container {...contentProps} size={width}>
+    children: contentWidth ? (
+      <Container {...contentProps} size={contentWidth}>
         {children}
       </Container>
     ) : (

@@ -23,6 +23,15 @@ const Body = ({ label }: { label: string }) => (
 const meta = {
   title: "Layout/Section",
   component: Section,
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          '**Usage.** A page band: `tone` canvas | subtle | inverse | brand, vertical `padding` from tokens, and `contentWidth` (a `ContainerSize`) to add an inner Container; `contentProps` goes on that Container. A tone re-maps the colour roles in its subtree, so links, focus rings and controls stay readable. Tones do not nest; a raised Card restores the base roles inside an inverse or brand Section.\n\n**Accessibility.** A `section` is a landmark only when it has an accessible name. Use `as="div"` for a purely visual band.',
+      },
+    },
+  },
   args: { tone: "canvas", padding: "md", contentWidth: "md" },
   argTypes: {
     tone: {
@@ -35,7 +44,6 @@ const meta = {
       options: [undefined, "sm", "md", "lg", "xl", "full"],
     },
   },
-  parameters: { layout: "fullscreen" },
   render: (args) => (
     <Section {...args}>
       <Body label="Section" />

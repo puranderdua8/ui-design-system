@@ -10,6 +10,14 @@ const Pane = ({ children }: { children: React.ReactNode }) => (
 const meta = {
   title: "Layout/Split",
   component: Split,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** Exactly two children in a 1:1, 1:2 or 2:1 ratio. The columns stack when the Split's own width is too narrow (not the viewport). Put padding on an inner element, not on a column, so the ratio stays exact.\n\n**Accessibility.** DOM order is visual order, also when stacked: the second child comes second.",
+      },
+    },
+  },
   args: { ratio: "1:1", align: "stretch", gap: "lg" },
   argTypes: {
     ratio: { control: "inline-radio", options: ["1:1", "1:2", "2:1"] },

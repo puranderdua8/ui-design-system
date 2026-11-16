@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.0.0 — 2026-11-16
+
+The first stable release. It is 0.9.0 with the deprecated names removed; the public API is the contract in [`docs/versioning.md`](docs/versioning.md) and the upgrade steps from 0.8 are in [`docs/migration-0.8-to-1.0.md`](docs/migration-0.8-to-1.0.md).
+
+**Removed (deprecated in 0.9.0, D-089):**
+
+| Component | Removed     | Use            |
+| --------- | ----------- | -------------- |
+| `Section` | `container` | `contentWidth` |
+| `Banner`  | `container` | `contentWidth` |
+| `Banner`  | `align`     | `justify`      |
+| `Sidebar` | `side`      | `sidebarSide`  |
+
+The development warning that came with these names is gone too. TypeScript reports the old names as errors; plain JavaScript ignores them.
+
+**Added:**
+
+- Development warnings (once per message, silent in production) for `Split` without exactly two children and for `Grid` given both `cols` and `minItemWidth` from JavaScript.
+- Storybook Docs pages: a props table generated from the types, and a usage and accessibility note on every component page. `CONTRIBUTING.md`.
+- The package README has a "Rules to know" section: the cost of `cn()` (`tailwind-merge`, about 10 KB gzip in a client bundle, R02), the `Field` id rule, errors and focus being the app's job, overlays and themes, CSS setup.
+
+**Migration:** upgrade to 0.9.0 first and fix every `@puranderdua/ui:` warning, then to 1.0.0. No token, CSS or dependency changes.
+
 ## 0.9.0 — 2026-11-16
 
 0.9.0 is the last release that may break before 1.0.0. This section lists the public-API changes from MH2 (H11–H19). Renamed props keep working for this release and log a development warning once per prop; **they are removed in 1.0.0** (D-089).
@@ -35,6 +58,14 @@
 - `Grid` with `cols` collapsed to zero width inside a `Cluster` or a `Stack` with `align` other than `stretch`, and its `className` landed on the inner element. The outermost element now fills its parent (`w-full min-w-0`) and takes `className`, `style` and `data-*`; `as`, `ref`, `role`, `id` and `aria-*` stay on the grid element inside it. `cols` needs a definite width.
 - `data-slot` is set after the props spread everywhere, so a caller can no longer overwrite it (`SelectGroup` and `SelectValue` did).
 - `BannerVideo` (H18, R31) no longer starts on mount. The `<video>` has `preload="none"` and gets no `src` (or `<source>`) until it first comes into view or the visitor presses Play, because WebKit on Linux fetched the file despite `preload`. It plays only while it is in view (`IntersectionObserver`) and pauses when it leaves; scrolling back does not restart a video the visitor paused. A video Banner far below the fold downloads nothing until it is reached. A Banner at the top of a page plays as before, once the observer first reports it; without `IntersectionObserver` the video plays on mount, as in 0.8.0.
+
+**Overlays, direction and form wiring (H14, H15; added to these notes after 0.9.0 was published, they were missing from the first version):**
+
+- **Breaking: overlays no longer portal into the theme scope.** `SelectContent` renders in `document.body` (or in its `container` prop) through the new `ScopedPortal`, which re-applies the nearest `ThemeScope`'s `data-ds-theme`, vars, `dir` and the raised tone there (D-098). `usePortalContainer()` returns `document.body` in the browser and `null` on the server; it never returns a scope element. `ThemeScope` holds no state and is not a portal root any more. A test or style that looked for an open `Select` list inside the scope element must look in `body`.
+- Added `ScopedPortal` (use it for your own portals; `asChild` puts the scope on the single child), `DirectionProvider` and a `dir` prop on `ThemeScope`. Radix components assume `ltr`: for a right-to-left page set `dir` on `ThemeScope` or wrap the app in `DirectionProvider`, and the arrow keys follow the reading direction.
+- Added `menu.highlight-bg` and `menu.highlight-fg` (default aliases `accent.700` and white; four contrast pairs per theme) for the highlighted option in a `Select`; a custom theme may omit them.
+- Forced colours: the active Tabs marker also has a border, the highlighted `Select` option is outlined and a disabled option uses `GrayText`.
+- `Field`'s `id` is the **control's** id and wins everywhere inside the Field; a control that sets its own `id` inside a `Field` logs a development warning naming `<Field id>` (D-097). `Fieldset`'s `id` is the fieldset's own.
 
 **Tokens and styling (H17):**
 

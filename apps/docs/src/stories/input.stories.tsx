@@ -4,6 +4,14 @@ import { Input, Stack } from "@puranderdua/ui";
 const meta = {
   title: "Components/Input",
   component: Input,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** `size` sm | md, plus every native `<input>` prop except the native `size`. Inside a `Field` it takes its `id`, `required`, `aria-invalid` and `aria-describedby` from it; a prop you set yourself wins.\n\n**Accessibility.** An input needs a name: put it in a `Field` with a `label`, or give it an `aria-label`. With a `Field` `error` it is also marked `aria-invalid` and linked to the message.",
+      },
+    },
+  },
   args: { "aria-label": "Example", placeholder: "Type here" },
   argTypes: {
     size: { control: "inline-radio", options: ["sm", "md"] },

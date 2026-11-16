@@ -21,6 +21,14 @@ const tags = [
 const meta = {
   title: "Layout/Cluster",
   component: Cluster,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** A wrapping row for buttons, tags and links. `justify` is the main (horizontal) axis, `align` the cross (vertical) axis, `gap` a step. `as` is div, ul, ol or nav.\n\n**Accessibility.** `ul` and `ol` get `role="list"`; name a `nav` with `aria-label` when the page has more than one.',
+      },
+    },
+  },
   args: { gap: "sm", justify: "start", align: "center" },
   argTypes: {
     gap: { control: "inline-radio", options: ["xs", "sm", "md", "lg", "xl"] },

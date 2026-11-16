@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { renderAs } from "@/lib/render-as";
+import { warnOnce } from "@/lib/deprecate";
 import { gapClasses, listRole, type LayoutGap } from "@/lib/layout";
 import type { AsProps } from "@/lib/types";
 
@@ -67,13 +68,19 @@ const isOuterProp = (name: string) =>
  */
 export const Grid = ({
   as = "div",
-  cols = 1,
+  cols,
   minItemWidth,
   gap = "md",
   className,
   ...props
 }: GridProps) => {
   if (minItemWidth) {
+    // TypeScript rejects both; this catches it from JavaScript (R07, R43).
+    if (cols !== undefined)
+      warnOnce(
+        "Grid.cols+minItemWidth",
+        "<Grid> got both `cols` and `minItemWidth`; `cols` is ignored. Use one.",
+      );
     return renderAs(as, {
       role: listRole(as),
       ...props,
@@ -102,7 +109,7 @@ export const Grid = ({
       {renderAs(as, {
         role: listRole(as),
         ...inner,
-        className: cn("grid", gridColsClasses[cols], gapClasses[gap]),
+        className: cn("grid", gridColsClasses[cols ?? 1], gapClasses[gap]),
         "data-slot": "grid",
       })}
     </div>

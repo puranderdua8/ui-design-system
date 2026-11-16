@@ -13,6 +13,14 @@ const cells = (n: number) =>
 const meta = {
   title: "Layout/Grid",
   component: Grid,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** Give `cols` (1, 2, 3, 4, 6, 12) or `minItemWidth` (auto-fit), never both (a type error). Columns follow the Grid\'s own width (container queries), not the viewport, so `cols` needs a parent with a definite width; the outer wrapper fills it and takes `className`, `style` and `data-*`.\n\n**Accessibility.** `as="ul"` or `"ol"` adds `role="list"`, so VoiceOver keeps the list semantics even though the bullets are gone. DOM order is visual order: do not reorder with CSS.',
+      },
+    },
+  },
   args: { cols: 3, gap: "md" },
   argTypes: {
     cols: { control: "inline-radio", options: [1, 2, 3, 4, 6, 12] },

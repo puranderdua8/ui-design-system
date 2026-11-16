@@ -4,6 +4,14 @@ import { Container, Text } from "@puranderdua/ui";
 const meta = {
   title: "Layout/Container",
   component: Container,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Usage.** Centres content and limits its width: `size` sm to xl, or `full`; `gutter` sets the side padding. `as` is div, section, main, article, header or footer.\n\n**Accessibility.** Use `as="main"` once per page for the main landmark. A `section` is a landmark only when it has an accessible name (`aria-label` or `aria-labelledby`).',
+      },
+    },
+  },
   args: { size: "md" },
   argTypes: {
     size: {

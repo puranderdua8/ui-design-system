@@ -4,6 +4,14 @@ import { Heading } from "@puranderdua/ui";
 const meta = {
   title: "Components/Heading",
   component: Heading,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "**Usage.** `variant` is the look (display, h1, h2, h3); `as` is the element (h1 to h6). By default `as` follows `variant`.\n\n**Accessibility.** Set `as` from the page outline, not from the size you want: one `h1` per page, no skipped levels. Use `variant` to change the look. The ref is an `HTMLHeadingElement`.",
+      },
+    },
+  },
   args: { children: "Design systems, in tokens" },
 } satisfies Meta<typeof Heading>;
 
