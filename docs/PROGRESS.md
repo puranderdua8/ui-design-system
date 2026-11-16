@@ -5,9 +5,9 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11–H18 are merged; H19 is done on branch `h19-test-environments` (the screenshot baselines still have to be made on CI, see the H19 entry).
+- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11–H18 are merged; H19 is done on branch `h19-test-environments`.
 - **Next session:** H20 (docs and 1.0.0; also moves the site to 0.9.0 and re-measures the Display page). Release 2 (dark mode) waits for MH2.
-- **Blockers:** the 113 screenshot baselines (`apps/docs/e2e/__screenshots__/`) do not exist yet: CI's `check` job fails on the screenshot step until the maintainer runs `update-screenshots` (or takes them from the failed run's `screenshot-results` artifact) and commits them.
+- **Blockers:** none. (The 113 screenshot baselines in `apps/docs/e2e/__screenshots__/` came from CI run 43820559277's `screenshot-results` artifact.)
 
 ## Brand (filled in S1)
 
@@ -642,7 +642,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Planted, then reverted (`git checkout`): R18 (`DirectionProvider` ignores `dir`): 4 tests fail (two in the new environments suite); R19 (Tabs forced-colours border removed): 1 fails; R07 (Grid wrapper loses `w-full min-w-0`): 2 fail. A random-markup client component makes the hydration test fail.
 - Decisions: D-102. Devs deps added: `@vitest/coverage-v8@5.1.0` (`packages/ui`) and `@playwright/test@1.65.0` (`apps/docs`, same pin as elsewhere, asked and approved).
 - Gotchas: (1) the first RTL run failed because the fixture had no `DirectionProvider`: Radix parts assume `ltr` (README, D-098), so the environment is the documented setup, not a bare `<html dir>`. (2) Playwright's WebKit does not apply forced colours; that describe skips there. Tailwind's `hover:` also does not match in WebKit under Playwright, so the Link hover check runs in Chromium and Firefox and the focus check in all three. (3) A disabled Button sets `pointer-events: none`, not a cursor. (4) A screenshot baseline made on macOS differs from Linux, so the suite skips off Linux and the baselines come from CI; `pnpm check` stays green on a Mac. (5) A planted hydration mismatch must be a component that renders differently each call; `Math.random()` evaluated once at module load matches on both sides. (6) My first state-style run had a WebKit timeout under parallel load that did not repeat (two clean runs of the group). (7) I changed the two register cells with a one-off scratchpad script, padded to the old width so no other line moved (the cell has room for 453 characters).
-- Not done: the Tailwind utility class assertions for layout and spacing in `layout.test.tsx`, `page-layout.test.tsx` and `h16-api.test.tsx`, and the hover and active class checks, remain (R38 is partly fixed). The screenshot baselines are not committed yet (see Blockers).
+- Not done: the Tailwind utility class assertions for layout and spacing in `layout.test.tsx`, `page-layout.test.tsx` and `h16-api.test.tsx`, and the hover and active class checks, remain (R38 is partly fixed). The screenshot baselines were made by the first CI run on the PR (its failed `check` uploaded the actual images) and committed afterwards, because `update-screenshots.yml` can only be dispatched once it is on `main`.
 - Next: H20.
 
 ### H18 — Site performance and polish — 2026-11-15
