@@ -650,6 +650,7 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 
 - Done (branch `h20-1.0.0-release`, off `main` after #69): the package was still 0.8.0 with the 0.9.0 CHANGELOG marked "unreleased", so H20 starts with a release-prep PR (decided with the maintainer: prep 0.9.0 first). `packages/ui` bumped to 0.9.0, CHANGELOG dated 2026-11-16 (and a mangled "Changed" heading fixed), root README release line updated.
 - Not done yet: the maintainer merges the PR, tags `v0.9.0`, approves the `npm-publish` deployment (D-069). Only then can the site move to 0.9.0 (pin, `minimumReleaseAgeExclude`), the deploy and the Display re-measure happen, and the rest of H20 continue. Screen-reader results are not recorded yet (maintainer runs the R5 script).
+- First publish attempt failed (#70 merged, `v0.9.0` pushed): `npm publish "release/puranderdua-ui-0.9.0.tgz"` was read as a GitHub `owner/repo` shorthand and ran `git ls-remote ssh://git@github.com/release/...` (Permission denied). Fix: `./release/...` in `release.yml` (branch `h20-fix-release-publish`). The `verify` job and the dry run never reach this step's argument parsing, so only a real publish could find it. Nothing was published; the tag must move to the fixed commit (maintainer).
 - Next: H20b after 0.9.0 is published.
 
 ### H18 — Site performance and polish — 2026-11-15
