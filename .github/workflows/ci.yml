@@ -80,6 +80,20 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter site exec playwright install --with-deps chromium firefox webkit
       - run: pnpm check
+      # Coverage is reported on the run summary and never fails the job (H19).
+      - name: Coverage report (not enforced)
+        run: |
+          pnpm --filter @puranderdua/ui test:coverage
+          node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+      # A screenshot that differs is easier to judge as an image: keep the
+      # expected, actual and diff files from a failed run.
+      - name: Keep screenshot diffs
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshot-results
+          path: apps/docs/test-results/
+          if-no-files-found: ignore
       # The build writes a tracked file into src/ (ds-classes.ts). If it changed,
       # the committed copy is stale (R14).
       - name: Build leaves the tree clean

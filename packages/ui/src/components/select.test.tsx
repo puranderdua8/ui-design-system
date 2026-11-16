@@ -185,28 +185,20 @@ describe("Select", () => {
     scope.remove();
   });
 
-  it("sizes the trigger and uses token classes only", async () => {
-    const user = userEvent.setup();
+  // Disabled fill and the open list's surface and shadow are checked as painted
+  // in `layout.spec.ts`; the focus ring is a recipe, so its class is the contract.
+  it("sizes the trigger and uses the focus-ring recipe", () => {
     render(<Fruit triggerProps={{ size: "sm" }} />);
     const trigger = screen.getByRole("combobox");
     expect(trigger.getAttribute("data-size")).toBe("sm");
-    expect(trigger.className).toContain("h-ds-control-sm");
     expect(trigger.className).toContain("ds-focus-ring");
-    expect(trigger.className).toContain(
-      "aria-invalid:enabled:border-ds-danger-border",
-    );
-    expect(trigger.className).toContain("disabled:bg-ds-disabled");
-    await user.click(trigger);
-    const content = (await screen.findByRole("listbox")).closest(
-      "[data-slot=select-content]",
-    )!;
-    expect(content.className).toContain("bg-ds-surface-raised");
-    expect(content.className).toContain("shadow-ds-overlay");
   });
 
-  it("has no axe violations (closed and open)", async () => {
+  // The only axe run left in jsdom: no story opens the list, so the open state
+  // is not covered by the story gate (H19, R38).
+  it("has no axe violations with the list open", async () => {
     const user = userEvent.setup();
-    const { container } = render(
+    render(
       <Field label="Fruit" description="Pick one">
         <Fruit
           triggerProps={{ "aria-label": undefined }}
@@ -214,7 +206,6 @@ describe("Select", () => {
         />
       </Field>,
     );
-    expect(await axe(container)).toHaveNoViolations();
     await user.click(screen.getByRole("combobox"));
     await screen.findByRole("listbox");
     // The test page has no landmarks, so the page-level "region" rule is off.

@@ -4,7 +4,6 @@ import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "vitest-axe";
 import { Checkbox } from "./checkbox";
 import { Field } from "./field";
 import { Fieldset } from "./fieldset";
@@ -74,23 +73,11 @@ describe("Checkbox", () => {
     expect(document.getElementById(ids[1]!)?.textContent).toBe("Required");
   });
 
-  it("uses token classes only for state", () => {
+  // The state styles (checked, disabled, invalid) are checked as painted in
+  // `layout.spec.ts`; the focus ring is a recipe, so its class is the contract.
+  it("uses the focus-ring recipe", () => {
     render(<Checkbox aria-label="x" />);
-    const cls = screen.getByRole("checkbox").className;
-    expect(cls).toContain("border-ds-border-control");
-    expect(cls).toContain("data-[state=checked]:bg-ds-primary");
-    expect(cls).toContain("ds-focus-ring");
-    expect(cls).toContain("disabled:bg-ds-disabled");
-    expect(cls).toContain("aria-invalid:enabled:border-ds-danger-border");
-  });
-
-  it("has no axe violations", async () => {
-    const { container } = render(
-      <Field label="Terms" description="Read first">
-        <Checkbox defaultChecked />
-      </Field>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
+    expect(screen.getByRole("checkbox").className).toContain("ds-focus-ring");
   });
 });
 
@@ -207,15 +194,6 @@ describe("RadioGroup", () => {
     );
     expect(warn).not.toHaveBeenCalled();
     warn.mockRestore();
-  });
-
-  it("has no axe violations", async () => {
-    const { container } = render(
-      <Fieldset legend="Letter" description="Pick one">
-        <Group defaultValue="b" />
-      </Fieldset>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 });
 

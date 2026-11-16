@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { axe } from "vitest-axe";
 import { Container, containerSizeClasses } from "./container";
 import { Grid, gridColsClasses, gridFitClasses } from "./grid";
 import { Stack } from "./stack";
@@ -280,27 +279,5 @@ describe("static class maps", () => {
     for (const size of ["sm", "md", "lg", "xl"])
       expect(themeCss).toContain(`--container-ds-${size}:`);
     expect(themeCss).toContain("--spacing-ds-gutter:");
-  });
-});
-
-describe("a11y", () => {
-  it("has no violations when composed", async () => {
-    const { container } = render(
-      <main>
-        <Container as="section" aria-label="demo">
-          <Stack>
-            <Grid as="ul" cols={2}>
-              <li>one</li>
-              <li>two</li>
-            </Grid>
-            <Cluster as="ul">
-              <li>a</li>
-              <li>b</li>
-            </Cluster>
-          </Stack>
-        </Container>
-      </main>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 });

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { axe } from "vitest-axe";
 import { Text, textVariants } from "./text";
 
 describe("Text", () => {
@@ -52,19 +51,6 @@ describe("Text", () => {
     const ref = React.createRef<HTMLParagraphElement>();
     render(<Text ref={ref}>x</Text>);
     expect(ref.current?.tagName).toBe("P");
-  });
-
-  it("has no a11y violations", async () => {
-    const { container } = render(
-      <main>
-        <Text>body</Text>
-        <Text as="label" htmlFor="f" variant="label">
-          Name
-        </Text>
-        <input id="f" />
-      </main>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("variant map has no template interpolation", () => {

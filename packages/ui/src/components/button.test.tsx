@@ -2,7 +2,6 @@ import * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "vitest-axe";
 import { Button, buttonVariants } from "./button";
 
 describe("Button", () => {
@@ -41,7 +40,6 @@ describe("Button", () => {
     expect((el as HTMLButtonElement).disabled).toBe(true);
     await user.click(el);
     expect(onClick).not.toHaveBeenCalled();
-    expect(el.className).toContain("disabled:bg-ds-disabled");
   });
 
   it("has the focus-visible ring recipe", () => {
@@ -56,13 +54,6 @@ describe("Button", () => {
     expect(buttonVariants({ variant: "secondary" })).toContain(
       "active:bg-ds-secondary-active",
     );
-  });
-
-  it("applies size classes", () => {
-    const { rerender } = render(<Button size="sm">Go</Button>);
-    expect(screen.getByRole("button").className).toContain("h-ds-control-sm");
-    rerender(<Button size="md">Go</Button>);
-    expect(screen.getByRole("button").className).toContain("h-ds-control-md");
   });
 
   it("uses no arbitrary values or primitive colours", () => {
@@ -104,24 +95,4 @@ describe("Button", () => {
     );
     expect(node).toBe(screen.getByRole("button"));
   });
-
-  it.each(["primary", "secondary"] as const)(
-    "axe clean: %s",
-    async (variant) => {
-      const { container } = render(
-        <>
-          <Button variant={variant} size="sm">
-            Small
-          </Button>
-          <Button variant={variant} size="md">
-            Medium
-          </Button>
-          <Button variant={variant} disabled>
-            Off
-          </Button>
-        </>,
-      );
-      expect(await axe(container)).toHaveNoViolations();
-    },
-  );
 });

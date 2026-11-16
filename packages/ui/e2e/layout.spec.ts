@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { contrast } from "./colour";
 
 // Rendered-layout tests: real Chromium measures boxes. The frame width is set
 // by `w`, independent of the 1280px viewport, so these also prove the layouts
@@ -359,27 +360,6 @@ test.describe("Container, Stack, Cluster, Section", () => {
   });
 });
 
-// WCAG relative luminance and contrast from computed `rgb()` strings.
-const channels = (css: string): [number, number, number] => {
-  const m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(css);
-  if (!m) throw new Error(`unexpected computed colour: ${css}`);
-  return [Number(m[1]), Number(m[2]), Number(m[3])];
-};
-const luminance = (css: string) => {
-  const [r, g, b] = channels(css).map((c) => {
-    const s = c / 255;
-    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-  }) as [number, number, number];
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
-const contrast = (a: string, b: string) => {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [
-    number,
-    number,
-  ];
-  return (hi + 0.05) / (lo + 0.05);
-};
-
 test.describe("surface tones (F02)", () => {
   for (const tone of ["canvas", "subtle", "inverse", "brand"]) {
     test(`inside ${tone}, text, link, focus ring and actions meet their minimums`, async ({
@@ -607,12 +587,18 @@ test.describe("Tabs (S26)", () => {
       await page.keyboard.press("Shift+Tab");
       await page.keyboard.press("Tab");
       await page.getByTestId(`tab-one-${tone}`).focus();
-      expect(await style(page, `tab-one-${tone}`, "outlineStyle")).toBe(
+      await expect(page.getByTestId(`tab-one-${tone}`)).toHaveCSS(
+        "outline-style",
         "solid",
       );
-      expect(
-        contrast(await style(page, `tab-one-${tone}`, "outlineColor"), surface),
-      ).toBeGreaterThanOrEqual(3);
+      await expect
+        .poll(async () =>
+          contrast(
+            await style(page, `tab-one-${tone}`, "outlineColor"),
+            surface,
+          ),
+        )
+        .toBeGreaterThanOrEqual(3);
     });
   }
 
@@ -878,10 +864,8 @@ test.describe("overlays, direction and forced colours (H15)", () => {
     expect(
       await list.evaluate((el) => el.closest("[data-testid=clip]") === null),
     ).toBe(true);
-    expect(await list.getAttribute("data-ds-theme")).toBe("nature");
-    expect(
-      await list.evaluate((el) => getComputedStyle(el).backgroundColor),
-    ).toBe("rgb(10, 20, 30)");
+    await expect(list).toHaveAttribute("data-ds-theme", "nature");
+    await expect(list).toHaveCSS("background-color", "rgb(10, 20, 30)");
 
     // The last option sits below the 120px clip box; it must be the element at
     // its own centre, so a click reaches it.
@@ -923,7 +907,8 @@ test.describe("overlays, direction and forced colours (H15)", () => {
     await expect(page.getByTestId("rtab-three")).toBeFocused();
     await page.keyboard.press("ArrowRight");
     await expect(page.getByTestId("rtab-two")).toBeFocused();
-    expect(await page.getByTestId("rtab-two").getAttribute("data-state")).toBe(
+    await expect(page.getByTestId("rtab-two")).toHaveAttribute(
+      "data-state",
       "active",
     );
   });
@@ -1006,9 +991,18 @@ test.describe("overlays, direction and forced colours (H15)", () => {
         "data-highlighted",
         "",
       );
-      expect(await css(page, "sopt-b", "outlineStyle")).toBe("solid");
-      expect(await css(page, "sopt-b", "outlineWidth")).toBe("2px");
-      expect(await css(page, "sopt-a", "outlineStyle")).toBe("none");
+      await expect(page.getByTestId("sopt-b")).toHaveCSS(
+        "outline-style",
+        "solid",
+      );
+      await expect(page.getByTestId("sopt-b")).toHaveCSS(
+        "outline-width",
+        "2px",
+      );
+      await expect(page.getByTestId("sopt-a")).toHaveCSS(
+        "outline-style",
+        "none",
+      );
       const check = await page.getByTestId("sopt-b").evaluate((el) => {
         const icon = el.querySelector("[data-slot=select-item-indicator] svg");
         return icon && getComputedStyle(icon).color;
@@ -1028,7 +1022,9 @@ test.describe("overlays, direction and forced colours (H15)", () => {
           await css(page, on, "color"),
         );
       await page.getByTestId("state-trigger").click();
-      expect(await css(page, "sopt-c", "color")).not.toBe(
+      await expect(page.getByTestId("sopt-a")).toBeVisible();
+      await expect(page.getByTestId("sopt-c")).not.toHaveCSS(
+        "color",
         await css(page, "sopt-a", "color"),
       );
     });
@@ -1076,6 +1072,103 @@ test.describe("print (R24)", () => {
           .evaluate((el) => getComputedStyle(el).printColorAdjust),
         id,
       ).toBe("exact");
+  });
+});
+
+// R38: these states used to be asserted as class names in jsdom, which pass when
+// a class is present but wrong (R19 passed every test). Here the browser
+// computes the style, and each pair differs only in the state under test.
+test.describe("state styles are what the browser paints (R38)", () => {
+  const read = (page: Page, testId: string, prop: string) =>
+    page
+      .getByTestId(testId)
+      .evaluate(
+        (el, p) =>
+          getComputedStyle(el)[p as keyof CSSStyleDeclaration] as string,
+        prop,
+      );
+
+  test.beforeEach(async ({ page }) => {
+    await open(page, "styles", 900);
+  });
+
+  test("Button: disabled has its own fill and cursor; sm and md follow the control scale", async ({
+    page,
+  }) => {
+    expect(await read(page, "btn-off", "backgroundColor")).not.toBe(
+      await read(page, "btn-on", "backgroundColor"),
+    );
+    // A disabled Button takes no pointer events (it does not set a cursor).
+    expect(await read(page, "btn-off", "pointerEvents")).toBe("none");
+    const [sm, md] = [await rect(page, "btn-sm"), await rect(page, "btn-md")];
+    expect(sm.height).toBeLessThan(md.height);
+    // The same control tokens drive Input, so the heights match.
+    expect(
+      Math.abs(sm.height - (await rect(page, "in-sm")).height),
+    ).toBeLessThan(1);
+    expect(
+      Math.abs(md.height - (await rect(page, "in-on")).height),
+    ).toBeLessThan(1);
+  });
+
+  test("Input: disabled has its own fill and cursor; invalid has its own border", async ({
+    page,
+  }) => {
+    expect(await read(page, "in-off", "backgroundColor")).not.toBe(
+      await read(page, "in-on", "backgroundColor"),
+    );
+    expect(await read(page, "in-off", "cursor")).toBe("not-allowed");
+    expect(await read(page, "in-bad", "borderTopColor")).not.toBe(
+      await read(page, "in-on", "borderTopColor"),
+    );
+  });
+
+  test("Checkbox: checked, disabled and invalid each look different from the plain one", async ({
+    page,
+  }) => {
+    const plain = await read(page, "cb-on", "backgroundColor");
+    expect(await read(page, "cb-checked", "backgroundColor")).not.toBe(plain);
+    expect(await read(page, "cb-off", "backgroundColor")).not.toBe(plain);
+    expect(await read(page, "cb-off", "cursor")).toBe("not-allowed");
+    expect(await read(page, "cb-bad", "borderTopColor")).not.toBe(
+      await read(page, "cb-on", "borderTopColor"),
+    );
+  });
+
+  test("Select: a disabled trigger has its own fill; the open list is a raised, shadowed surface", async ({
+    page,
+  }) => {
+    expect(await read(page, "sel-off", "backgroundColor")).not.toBe(
+      await read(page, "sel-on", "backgroundColor"),
+    );
+    const raised = await read(page, "card-raised", "backgroundColor");
+    await page.getByTestId("sel-on").click();
+    const list = page.getByRole("listbox");
+    await expect(list).toBeVisible();
+    await expect(list).toHaveCSS("background-color", raised);
+    await expect(list).not.toHaveCSS("box-shadow", "none");
+  });
+
+  test("Link: inline is underlined; standalone is underlined only on focus or hover", async ({
+    page,
+    browserName,
+  }) => {
+    await expect(page.getByTestId("link-inline")).toHaveCSS(
+      "text-decoration-line",
+      /underline/,
+    );
+    const standalone = page.getByTestId("link-standalone");
+    await expect(standalone).not.toHaveCSS("text-decoration-line", /underline/);
+    await standalone.focus();
+    await expect(standalone).toHaveCSS("text-decoration-line", /underline/);
+    await standalone.blur();
+    await expect(standalone).not.toHaveCSS("text-decoration-line", /underline/);
+    // Tailwind applies `hover:` only where the browser reports hover support,
+    // which Playwright's WebKit does not.
+    if (browserName !== "webkit") {
+      await standalone.hover();
+      await expect(standalone).toHaveCSS("text-decoration-line", /underline/);
+    }
   });
 });
 

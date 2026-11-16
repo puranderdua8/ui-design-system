@@ -7,6 +7,8 @@
     "storybook": "pnpm --filter @puranderdua/ui build && storybook dev -p 6006",
     "build-storybook": "pnpm --filter @puranderdua/ui build && storybook build -o storybook-static",
     "test:stories": "pnpm --filter @puranderdua/ui build && vitest run",
+    "test:screenshots": "playwright test",
+    "test:screenshots:update": "playwright test --update-snapshots",
     "typecheck": "pnpm --filter @puranderdua/ui build && tsc --noEmit"
   },
   "dependencies": {
@@ -15,6 +17,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.0",
     "@storybook/addon-a11y": "^10.6.6",
     "@storybook/addon-vitest": "10.6.6",
     "@storybook/react-vite": "^10.6.6",

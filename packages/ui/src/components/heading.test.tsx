@@ -1,7 +1,6 @@
 import * as React from "react";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { axe } from "vitest-axe";
 import { Heading, headingDefaultElement, headingVariants } from "./heading";
 
 describe("Heading", () => {
@@ -45,16 +44,6 @@ describe("Heading", () => {
     const ref = React.createRef<HTMLHeadingElement>();
     render(<Heading ref={ref}>t</Heading>);
     expect(ref.current?.tagName).toBe("H1");
-  });
-
-  it("has no a11y violations", async () => {
-    const { container } = render(
-      <main>
-        <Heading variant="display">Title</Heading>
-        <Heading variant="h2">Section</Heading>
-      </main>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("variant and element maps are static", () => {

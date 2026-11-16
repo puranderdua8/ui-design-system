@@ -12,7 +12,11 @@ import {
   Checkbox,
   Cluster,
   Container,
+  DirectionProvider,
+  Field,
+  Fieldset,
   Grid,
+  Input,
   Link,
   RadioGroup,
   RadioGroupItem,
@@ -40,6 +44,10 @@ import "./fixture.css";
 const params = new URLSearchParams(location.search);
 const width = params.get("w");
 const name = params.get("case") ?? "";
+// `dir=rtl` puts the page in right-to-left the documented way: `<html dir>` plus
+// a `DirectionProvider`, which the Radix parts (Tabs, RadioGroup, Select) need.
+const dir = params.get("dir") === "rtl" ? "rtl" : null;
+if (dir) document.documentElement.dir = dir;
 
 const Box = ({ id, children }: { id: string; children?: ReactNode }) => (
   // No horizontal padding on the measured box: Split's ratio applies to content boxes.
@@ -48,7 +56,167 @@ const Box = ({ id, children }: { id: string; children?: ReactNode }) => (
   </div>
 );
 
+// Every interactive component once, for the environment tests (H19, R37). The
+// ids are the contract of `environments.spec.ts`.
+const Gallery = () => (
+  <Stack gap="md" data-testid="gallery">
+    <Cluster gap="sm" data-testid="actions">
+      <Button data-testid="button-primary">Primary</Button>
+      <Button variant="secondary" data-testid="button-secondary">
+        Secondary
+      </Button>
+      <Link href="#x" data-testid="link">
+        Link
+      </Link>
+    </Cluster>
+    <Field label="Email" description="We never share it.">
+      <Input data-testid="input" />
+    </Field>
+    <Field label="Subscribe" layout="inline" data-testid="checkbox-field">
+      <Checkbox data-testid="checkbox" />
+    </Field>
+    <Fieldset legend="Plan">
+      <RadioGroup defaultValue="a" aria-label="Plan">
+        <RadioGroupItem value="a" aria-label="A" data-testid="radio-a" />
+        <RadioGroupItem value="b" aria-label="B" data-testid="radio-b" />
+      </RadioGroup>
+    </Fieldset>
+    <Select defaultValue="a">
+      <SelectTrigger aria-label="Letter" data-testid="select-trigger">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="a">Option a</SelectItem>
+        <SelectItem value="b">Option b</SelectItem>
+      </SelectContent>
+    </Select>
+    <Tabs defaultValue="one">
+      <TabsList aria-label="Sections">
+        <TabsTrigger value="one" data-testid="tab-one">
+          One
+        </TabsTrigger>
+        <TabsTrigger value="two" data-testid="tab-two">
+          Two
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="one">First panel</TabsContent>
+      <TabsContent value="two">Second panel</TabsContent>
+    </Tabs>
+  </Stack>
+);
+
+// R07 class of defect: a component that is itself a flex item in a parent that
+// sizes it to its content. Each control sits directly in the parent, once per
+// parent, so a control that collapses (zero width) or overlaps is caught.
+const flexItems = (prefix: string) => [
+  <Button key="b" data-testid={`${prefix}-button`}>
+    Button
+  </Button>,
+  <Link key="l" href="#x" data-testid={`${prefix}-link`}>
+    Link
+  </Link>,
+  <Input key="i" aria-label="Name" data-testid={`${prefix}-input`} />,
+  <Checkbox key="c" aria-label="Agree" data-testid={`${prefix}-checkbox`} />,
+  <RadioGroup key="r" defaultValue="a" aria-label="Pick">
+    <RadioGroupItem value="a" aria-label="A" data-testid={`${prefix}-radio`} />
+  </RadioGroup>,
+  <Select key="s" defaultValue="a">
+    <SelectTrigger aria-label="Letter" data-testid={`${prefix}-select`}>
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="a">Option a</SelectItem>
+    </SelectContent>
+  </Select>,
+  <Tabs key="t" defaultValue="one">
+    <TabsList aria-label="Sections">
+      <TabsTrigger value="one" data-testid={`${prefix}-tab`}>
+        One
+      </TabsTrigger>
+    </TabsList>
+    <TabsContent value="one">Panel</TabsContent>
+  </Tabs>,
+];
+
 const cases: Record<string, ReactNode> = {
+  environments: <Gallery />,
+  // State styles side by side, for the computed-style tests that replaced class
+  // assertions (H19, R38): each pair differs only in the state under test.
+  styles: (
+    <Stack gap="sm">
+      <Cluster gap="sm" align="center">
+        <Button data-testid="btn-on">On</Button>
+        <Button disabled data-testid="btn-off">
+          Off
+        </Button>
+        <Button size="sm" data-testid="btn-sm">
+          Small
+        </Button>
+        <Button size="md" data-testid="btn-md">
+          Medium
+        </Button>
+        <Input aria-label="Normal" data-testid="in-on" />
+        <Input aria-label="Disabled" disabled data-testid="in-off" />
+        <Input aria-label="Invalid" aria-invalid data-testid="in-bad" />
+        <Input aria-label="Small" size="sm" data-testid="in-sm" />
+      </Cluster>
+      <Cluster gap="sm" align="center">
+        <Checkbox aria-label="Normal" data-testid="cb-on" />
+        <Checkbox aria-label="Disabled" disabled data-testid="cb-off" />
+        <Checkbox aria-label="Invalid" aria-invalid data-testid="cb-bad" />
+        <Checkbox
+          aria-label="Checked"
+          defaultChecked
+          data-testid="cb-checked"
+        />
+        <Select defaultValue="a">
+          <SelectTrigger aria-label="Normal" data-testid="sel-on">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent data-testid="sel-list">
+            <SelectItem value="a">A</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select defaultValue="a" disabled>
+          <SelectTrigger aria-label="Disabled" data-testid="sel-off">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="a">A</SelectItem>
+          </SelectContent>
+        </Select>
+      </Cluster>
+      <Text>
+        <Link href="#x" data-testid="link-inline">
+          Inline
+        </Link>{" "}
+        <Link href="#x" variant="standalone" data-testid="link-standalone">
+          Standalone
+        </Link>
+      </Text>
+      <Cluster gap="md" align="start">
+        <Card variant="raised" data-testid="card-raised">
+          <CardContent>Raised</CardContent>
+        </Card>
+        <Card variant="outline" data-testid="card-outline">
+          <CardContent>Outline</CardContent>
+        </Card>
+      </Cluster>
+    </Stack>
+  ),
+  "flex-items": (
+    <Stack gap="md">
+      <div style={{ display: "flex", gap: 8 }} data-testid="row">
+        {flexItems("row")}
+      </div>
+      <Cluster gap="sm" data-testid="cluster">
+        {flexItems("cluster")}
+      </Cluster>
+      <Stack align="center" gap="sm" data-testid="centre">
+        {flexItems("centre")}
+      </Stack>
+    </Stack>
+  ),
   "split-1-1": (
     <Split ratio="1:1">
       <Box id="a" />
@@ -478,8 +646,10 @@ const cases: Record<string, ReactNode> = {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <div id="frame" style={{ width: width ? `${width}px` : "100%" }}>
-      {cases[name] ?? <p>unknown case</p>}
-    </div>
+    <DirectionProvider dir={dir ?? "ltr"}>
+      <div id="frame" style={{ width: width ? `${width}px` : "100%" }}>
+        {cases[name] ?? <p>unknown case</p>}
+      </div>
+    </DirectionProvider>
   </StrictMode>,
 );

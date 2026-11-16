@@ -2,10 +2,8 @@ import * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "vitest-axe";
 import { Field } from "./field";
 import { Input } from "./input";
-import { inputVariants } from "./input.styles";
 import { Label } from "./label";
 
 describe("Label", () => {
@@ -41,11 +39,6 @@ describe("Input", () => {
     const el = screen.getByRole("textbox", { name: "Name" });
     expect(el.getAttribute("type")).toBe("text");
     expect(el.getAttribute("data-size")).toBe("md");
-  });
-
-  it("supports sizes from the control tokens", () => {
-    expect(inputVariants({ size: "sm" })).toContain("h-ds-control-sm");
-    expect(inputVariants({ size: "md" })).toContain("h-ds-control-md");
   });
 
   it("takes typed text and blocks input when disabled", async () => {
@@ -176,25 +169,5 @@ describe("Field", () => {
     const input = screen.getByRole("textbox");
     expect(input.id).toBe("email");
     expect((input as HTMLInputElement).required).toBe(false);
-  });
-
-  it("has no axe violations in each state", async () => {
-    const { container } = render(
-      <>
-        <Field label="Plain">
-          <Input />
-        </Field>
-        <Field label="Described" description="Help" required>
-          <Input size="sm" />
-        </Field>
-        <Field label="Invalid" error="Broken">
-          <Input />
-        </Field>
-        <Field label="Disabled">
-          <Input disabled />
-        </Field>
-      </>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 });

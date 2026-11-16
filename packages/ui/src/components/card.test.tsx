@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { axe } from "vitest-axe";
 import {
   Card,
   CardContent,
@@ -58,22 +57,19 @@ const Sample = ({ variant }: { variant?: "outline" | "raised" | "accent" }) => (
 );
 
 describe("Card", () => {
-  it("defaults to an outline div with the card radius", () => {
+  // Radius, border and elevation are checked as painted in `layout.spec.ts`.
+  it("defaults to an outline div that does not use the raised tone", () => {
     render(<Sample />);
     const card = screen.getByLabelText("Plan");
     expect(card.tagName).toBe("DIV");
     expect(card.getAttribute("data-slot")).toBe("card");
-    expect(card.className).toContain("rounded-ds-card");
-    expect(card.className).toContain("border-ds-border");
-    expect(card.className).not.toContain("shadow-ds-raised");
     expect(card.className).not.toContain("ds-tone-raised");
   });
 
-  it("raised uses the raised tone recipe, which exists in theme.css, and the elevation", () => {
+  it("raised uses the raised tone recipe, which exists in theme.css", () => {
     render(<Sample variant="raised" />);
     const cls = screen.getByLabelText("Plan").className;
     expect(cls).toContain("ds-tone-raised");
-    expect(cls).toContain("shadow-ds-raised");
     expect(themeCss).toContain(".ds-tone-raised {");
     expect(themeCss).toContain("--shadow-ds-raised");
     expect(themeCss).toContain("--radius-ds-card");
@@ -145,16 +141,4 @@ describe("Card", () => {
     expect(media?.className).toContain("overflow-hidden");
     expect(media?.className).toContain("first:rounded-t-ds-card");
   });
-
-  it.each(["outline", "raised"] as const)(
-    "%s card has no axe violations",
-    async (variant) => {
-      const { container } = render(
-        <main>
-          <Sample variant={variant} />
-        </main>,
-      );
-      expect(await axe(container)).toHaveNoViolations();
-    },
-  );
 });
