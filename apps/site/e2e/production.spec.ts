@@ -32,12 +32,49 @@ for (const path of ["/", "/components/forms"]) {
     // Fonts are self-hosted by next/font: no Google Fonts host is allowed (R41).
     expect(csp).not.toContain("googleapis");
     expect(csp).not.toContain("gstatic");
+    // Web Analytics is same-origin (S37): the policy names no host at all.
+    expect(csp).not.toMatch(/https?:\/\//);
+    expect(csp).not.toContain("vercel-scripts");
+    expect(csp).not.toContain("vitals.vercel");
     // The local test server runs over http without this directive (next.config.ts explains why).
     if (baseURL?.startsWith("https://")) {
       expect(csp).toContain("upgrade-insecure-requests");
     }
   });
 }
+
+test("a page makes no request to a third-party host", async ({
+  page,
+  baseURL,
+}) => {
+  const own = new URL(baseURL ?? "http://localhost:3000").origin;
+  const foreign: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (url.protocol.startsWith("http") && url.origin !== own) {
+      foreign.push(request.url());
+    }
+  });
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  expect(foreign).toEqual([]);
+});
+
+test("the privacy note says what is counted", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("contentinfo")
+    .getByRole("link", { name: "About and privacy" })
+    .click();
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "About and privacy" }),
+  ).toBeVisible();
+  await expect(page.getByText("sets no cookies")).toBeVisible();
+  await expect(
+    page.getByText("We do not record anything about the designs you make"),
+  ).toBeVisible();
+});
 
 test("an unknown path shows the not-found page with status 404", async ({
   page,
@@ -72,6 +109,7 @@ test("sitemap.xml lists home, the index and every category", async ({
     "/components/forms",
     "/components/actions",
     "/components/display",
+    "/about",
   ]) {
     expect(body).toContain(`${path}</loc>`);
   }

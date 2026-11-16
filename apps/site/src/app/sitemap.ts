@@ -8,6 +8,7 @@ const sitemap = (): MetadataRoute.Sitemap =>
     "/components",
     ...categories.map((c) => `/components/${c.slug}`),
     "/playground",
+    "/about",
   ].map((path) => ({ url: `${siteUrl}${path === "/" ? "" : path}` }));
 
 export default sitemap;

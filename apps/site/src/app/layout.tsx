@@ -7,6 +7,7 @@ import {
   Inter,
   Nunito_Sans,
 } from "next/font/google";
+import { SiteAnalytics } from "@/components/site-analytics";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { siteName, siteUrl } from "@/lib/site";
@@ -85,6 +86,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       <SiteHeader />
       <div className="flex-1">{children}</div>
       <SiteFooter />
+      <SiteAnalytics />
     </body>
   </html>
 );
