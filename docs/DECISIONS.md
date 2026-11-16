@@ -567,3 +567,259 @@ How H19 tests the environments the standard suites never visit (R37, R38). **Env
 How H20 closes MH2 and ships 1.0.0 (R43, R02, and the rows that stay open). **Release shape:** 0.9.0 was prepared and published first (the package was still 0.8.0 when H20 began), then H20 removes the D-089 names (`container` on `Section` and `Banner`, `align` on `Banner`, `side` on `Sidebar`) and bumps to 1.0.0; nothing else changes in the package API. The 0.9.0 CHANGELOG had omitted H14 and H15 (portals to `body` through `ScopedPortal`, `DirectionProvider`, `menu.highlight-*`, Field `id`), so those were added to its notes after publication and to the migration guide. **R43:** Storybook autodocs through `@storybook/addon-docs@10.6.6` (approved dev dependency), a usage and accessibility note in every story's `docs.description`, `CONTRIBUTING.md`, the package README's "Rules to know", and development warnings for `Split` without two children and `Grid` with both `cols` and `minItemWidth` (`warnOnce`). **R02:** `tailwind-merge` stays; the cost (about 10 KB gzip in a client bundle) is documented in the package README. **Accepted for 1.0.0, with the reason:** (1) **R01 and R30**, the `/` budget: `/` ships 195.4 KB gzip against a 174.3 KB blank page (21.1 KB over; the target was 10 KB). 11 KB of the gap is `tailwind-merge` (R02, kept) and 6.7 KB is the site's own code; closing the rest needs a bundle architecture change for a portfolio page, not a package defect, and the Display video (the largest asset) no longer loads until it is in view. Revisit with a per-route budget in CI if the site grows. (2) **R12**, what is left: each cva default repeats in its `data-variant`/`data-size` fallback; the duplicated logic that could drift (Field wiring, size and align maps) is shared. (3) **R38**, what is left: Tailwind utility assertions for layout and spacing in three unit test files and the hover and active class checks; the computed-style and environment suites cover the behaviour, and a class refactor costs a test edit, not a missed defect. **Handed to Release 2:** R26, R27 and R29 (dark-mode blockers in applying themes, the build and the playground), and what is left of R28 (the literal shadows and the scrim; `color-scheme` is fixed, D-092).
 
 **Why:** 1.0.0 should carry no known defect and no unwritten promise: every register row is fixed, accepted here with a reason, or owned by the next release.
+
+## Release 2: the Builder (S36, 2026-11-16)
+
+D-104 to D-141 are the maintainer's answers in the Release 2 interview and the review that followed; the design they add up to is `docs/builder-spec.md`.
+
+### D-104
+
+Audience: the Builder is for everyone (a solo maker, a designer who does not code, a brand or marketing person, a developer). When a Guided wording or layout choice cannot suit all of them, the least technical person wins; designers and developers get their speed from Studio and "Use it".
+
+**Why:** the maintainer wants one simple process for all; a design for everyone needs a tie-break or it serves no one.
+
+### D-105
+
+Output: tokens work in any stack (CSS variables, a DTCG file, later Tailwind, shadcn and JSON); ready-made components stay React (`@puranderdua/ui`), and the site says so plainly.
+
+**Why:** "any frontend web app" is honest for decisions, not for components; other frameworks would be months of work.
+
+### D-106
+
+Evidence: only the maintainer has used the site so far. Every audience need in the spec is an assumption until a test round says otherwise, and no research result is written before it exists.
+
+**Why:** the site has no analytics and no observed users; invented user data would steer the build wrongly.
+
+### D-107
+
+The site becomes product-first: the home page presents the tool with one action ("Start building"); today's portfolio text moves to `/about`.
+
+**Why:** a go-to tool needs a front door about the tool, not its author.
+
+### D-108
+
+One project, two views: **Guided** (default) and **Studio** (every control and token name). Guided is an expanding step list in one panel, all steps visible with their current choice and one open at a time, not a page per step. Each step still has its own URL.
+
+**Why:** novices need one decision at a time; NN/g notes that wizards hide context and limit creative work, and shadcn/create and tweakcn both keep every choice in view beside the preview.
+
+### D-109
+
+Release 2 covers look and feel only (colour, typography, shape, spacing, depth, motion) on the fixed set of components. No per-component style choices and no choosing of building blocks.
+
+**Why:** it is what the engine supports; the rest needs new package variants.
+
+### D-110
+
+Three ways to start, on one screen: a ready-made look, a brand colour (typed, picked, or taken from an image read in the browser), and three plain questions. No AI-generated start.
+
+**Why:** recognition is easier than specification; AI would need a backend, a paid model and abuse limits.
+
+### D-111
+
+The preview shows real example pages plus an "All components" sheet, instead of only a specimen sheet.
+
+**Why:** people judge a look on a screen they recognise; experts still need every state at a glance.
+
+### D-112
+
+Hand-off for non-technical people: a share link, a printable style guide and a design-tool tokens file (DTCG). A design tool is named in the UI only after its import has been done by hand once. No zip pack.
+
+**Why:** the link doubles as the hand-off to a developer; native DTCG import in Figma could not be confirmed from a primary source.
+
+### D-113
+
+Developer install is one file per stack with at most three lines of instructions. No CLI.
+
+**Why:** a CLI is a new published package to maintain; a file is enough for a theme.
+
+### D-114
+
+Work is saved as named projects in the browser, with undo/redo, duplicate, and file export/import. No accounts and no server.
+
+**Why:** today's single draft is easy to lose; accounts would add auth, a database, a privacy policy and cost.
+
+### D-115
+
+A contrast failure is explained in plain words by cause, shown in the preview and fixable with "Fix it for me" (nearest passing shade). Export stays possible, with the warning shown.
+
+**Why:** a list of token pairs helps no beginner; silently changing a picked colour was rejected because the colour may not appear as chosen.
+
+### D-116
+
+Components pages become a gallery: one page per component, a plain "what it is, use it when", live examples in the visitor's own design system, code on demand with Copy, and a props table. The collapsed code and Copy button ship now as a quick win; the full gallery comes after launch.
+
+**Why:** the Forms page is 66% source code; non-technical readers need the picture first.
+
+### D-117
+
+Teaching aids: plain steps with "why it matters" at launch; a glossary page, "inspect the preview" and a "how it fits together" map after launch. Help sits beside a choice, never over it.
+
+**Why:** the maintainer wants people to understand what they build; NN/g advises keeping help beside the fields.
+
+### D-118
+
+Dark mode comes after the Builder, as Release 3. The Builder is built mode-ready (a reserved `mode` in the state, a reserved slot in the preview toolbar).
+
+**Why:** the usability problem is the pressing one, and dark mode doubles every colour decision. It is also the largest gap against competing builders, so it is revisited at launch.
+
+### D-119
+
+New controls go into the npm package first (D-055 holds), and only the four with a concrete use: RadioCard, Slider, ToggleGroup, AlertDialog. Popover, Tooltip, Accordion, Switch and Dialog wait for a verified need.
+
+**Why:** the first draft listed eight "because a friendlier builder needs them"; four had no use yet, and native `<details>` covers disclosure.
+
+### D-120
+
+The area is called the Builder: nav "Build", URL `/build`. `/playground` stays live until launch, then redirects. The expert view is "Studio".
+
+**Why:** "Playground" suggests experimenting, not producing something real.
+
+### D-121
+
+Guided choices are named picture options with an optional fine-tune slider. Exact numbers live in Studio. Each option takes one dimension from one of the four shipped looks, so the same choice gives the same result whichever look a project started from.
+
+**Why:** multipliers in number boxes ask for recall; the shipped looks' values are already reviewed and checked in CI.
+
+### D-122
+
+Fonts: curated pairings (self-hosted) and "I have my own font" at launch; any Google Font after launch.
+
+**Why:** brand people often have their own font; the full catalogue needs the site's first server route, which should not sit on the path to launch.
+
+### D-123
+
+Export formats: CSS variables, a DTCG file and the package theme at launch; Tailwind v4, shadcn/ui variables and JSON/TypeScript after launch.
+
+**Why:** each format is a maintenance and verification cost; the first three cover any site, design tools and this package.
+
+### D-124
+
+The full Google Fonts catalogue is served through our own site (the server fetches, we serve and cache). Visitors never contact Google, and the CSP keeps `font-src 'self'`.
+
+**Why:** loading from Google sends each visitor's IP address to Google and needs a looser policy. Google's own terms are read at the start of that session.
+
+### D-125
+
+Step order is brand-first: Start, Colour, Typography, Shape, Spacing, Depth and motion, Check, Use it. Depth and motion is optional, and "Use it" is always reachable, because the first choice already gives a complete design system.
+
+**Why:** the most personal decisions first make the preview feel like "mine" quickly; nothing should block someone from leaving with a result.
+
+### D-126
+
+Guided is designed for phones too; Studio is desktop-first but reflows and stays accessible.
+
+**Why:** one decision at a time suits a small screen; a dense expert view does not.
+
+### D-127
+
+Success is measured by usability rounds and cookieless analytics. Rounds report problems by severity (critical, serious, minor), never percentages. The launch gate is no open critical or serious finding.
+
+**Why:** NN/g: small rounds find problems; numbers need at least 20 users, which a round of six cannot give.
+
+### D-128
+
+The tool's own chrome stays in a fixed neutral look. Only previews and examples wear the user's design system, chosen with "Showing examples in" (which replaces the header "Theme" switcher).
+
+**Why:** a risky colour choice must never make the tool itself hard to use; it also separates the tool from the work.
+
+### D-129
+
+Order of work: quick wins on today's pages, the Guided builder, the product home at launch, then Studio, teaching aids and the gallery.
+
+**Why:** five of the ten measured problems need no new component; a launch needs a front door; the rest is re-ordered by test evidence.
+
+### D-130
+
+The maintainer moderates the test rounds with the kit in `docs/research/usability-test-kit.md`: six people per round, two per audience (maker, designer, marketer), after one pilot.
+
+**Why:** NN/g suggests 3 to 4 per distinct group or small frequent rounds; two per group, repeated, fits one moderator.
+
+### D-131
+
+Release 2 is the Builder. Dark mode moves to Release 3; the remaining components and navigation follow. The Release 1 plan is archived in `docs/plans/release-1.md`.
+
+**Why:** the maintainer's priority is that anyone can use the tool.
+
+### D-132
+
+The product keeps the name "UI Design System" for now.
+
+**Why:** the name lives in one place and is cheap to change later; it is an open branding item.
+
+### D-133
+
+The UI keeps British spelling ("colour"); code and token names stay `color`.
+
+**Why:** consistency with every existing page, doc and test string.
+
+### D-134
+
+Analytics is Vercel Web Analytics, with the URL hash removed before any event is sent. The funnel is read from page views of the step URLs.
+
+**Why:** the site is already on Vercel; it is cookieless. On Hobby there are no custom events and one month of data (checked 2026-11-16), so each step needs its own URL and figures are copied monthly into `docs/research/`.
+
+### D-135
+
+The props table reads a generated JSON file shipped in the package, built when the gallery needs it (a later minor).
+
+**Why:** the site installs the published package, so only a shipped file always matches the installed version.
+
+### D-136
+
+The Colour step asks for three things: brand colour, highlight colour (suggested, changeable) and background feel (cool, neutral, warm, tinted). Shades and the error colour are generated.
+
+**Why:** hue in degrees and chroma as a decimal are not beginner decisions.
+
+### D-137
+
+The Typography step asks for a pairing and a text size. First-class weight, line-height and letter-spacing controls are a later "developer mode"; raw token overrides stay in Studio.
+
+**Why:** the maintainer's choice; those are the hardest ideas to explain.
+
+### D-138
+
+The preview's example pages are Landing page, Sign-up form, Settings screen and Article, plus "All components" for anything they do not use. All are built from package components only.
+
+**Why:** they are the screens people picture first, and together they show marketing, forms, an app and reading.
+
+### D-139
+
+Exported files start with a one-line credit comment, and the style guide has a small credit footer.
+
+**Why:** it helps people find the tool and is easy to delete.
+
+### D-140
+
+The Guided builder is built in full before people test it; there is no throwaway prototype. The risk is reduced by testing the quick-wins site first (it carries the new wording and the pinned preview), by the dark launch, and by leaving everything after launch unspecified.
+
+**Why:** the maintainer's choice. Recorded because the review recommended a prototype first.
+
+### D-141
+
+Quick wins go first, on today's pages and with existing components only: a pinned preview, tabs, plain labels, one "use in your app" file, and collapsed code with a Copy button.
+
+**Why:** visitors get a better site within days and most of the work carries into the Builder.
+
+### D-142
+
+Where Release 2's documents live. `docs/PLAN.md` holds goals, working rules and one prompt per session, specified only up to launch (S36 to S63); each later milestone writes its sessions at its own kickoff (rolling wave). `docs/builder-spec.md` holds the product and technical design, the decision list and the review record; a session reads only the sections its prompt names. `docs/research/` holds the test kit and the findings of each round.
+
+**Why:** sessions read one short, current plan (D-054); 34 sessions specified before any user evidence was false precision.
+
+### D-143
+
+Working rules for Release 2: one PR per session (branch `s<n>-<slug>`), no branch older than three sessions; the Builder is dark-launched at an unlinked, `noindex` `/build` while `/playground` stays live; every milestone ends with a deployment and an e2e run against it; an independent, review-only session comes before launch; every PROGRESS entry records the session's start and end time.
+
+**Why:** Release 1's retros: production sat on a 24-day-old build, independent reviews and real-deployment runs were what caught real bugs, 23 feature sessions needed 26 review and hardening sessions, and time per session was never tracked.
+
+### D-144
+
+Anything read from a URL, a file or storage is untrusted. A value is accepted only if it parses under an allow-list grammar for its token type, on load and again in every export; names are plain text with a length limit and a strict character set; nothing imported is written as HTML. The shared view is read-only, labelled as someone else's and never overwrites a local project.
+
+**Why:** today `parseState` accepts any string for any `--ds-*` override and `toCss` writes it raw. That was harmless with one private draft; with share links, a crafted value could add rules to the CSS file a developer downloads.
+
+### D-145
+
+Corrections made in S36 against the approved plan. (1) No screenshot suite is added: D-102 stands (the maintainer built one in H19 and removed it); the plan's "screenshot matrix" came from not having read D-102. Look changes are asserted as computed styles in e2e. (2) R26, R27, R29 and the rest of R28, handed to "Release 2" in D-103, follow dark mode to Release 3. (3) The story files already carry usage and accessibility notes (H20c), so the gallery can reuse them for developers; only the plain "what it is" lines are new. (4) RadioCard has no shadcn source; S41 records how D-049 applies to it.
+
+**Why:** the plan was approved before these facts were checked in the repo; the repo wins.

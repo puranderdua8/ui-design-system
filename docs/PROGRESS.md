@@ -4,10 +4,11 @@
 
 ## Current state
 
-- **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11–H19 are merged, 0.9.0 is published and H20 is done on branch `h20-1.0.0` (site on 0.9.0 in #72, docs, removals and the 1.0.0 bump in the next PR).
-- **Next session:** after the maintainer publishes 1.0.0 (merge, tag `v1.0.0`, approve `npm-publish`): pin the site to 1.0.0 and deploy it. Then Release 2 (dark mode), starting with R26, R27, R29 and the rest of R28 (handed over in D-103).
-- **Blockers:** none.
+- **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
+- **Current milestone:** **M13 Groundwork** (S36–S37). S36 is done on branch `s36-release-2-kickoff`.
+- **Next session:** **S37** (analytics and privacy note), then M14 quick wins (S38–S40), then the maintainer's first usability round (T0). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
+- **Blockers:** none for S37–S40. **Maintainer to-dos:** (1) `v1.0.0` was not tagged on origin on 2026-11-16 (#73 is merged): push the tag and approve `npm-publish`; S37 then pins the site to 1.0.0 and the maintainer deploys (D-094). (2) Enable Web Analytics for the site's Vercel project before S37. (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
+- **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
 ## Brand (filled in S1)
 
@@ -79,6 +80,42 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 | S33 Playground engine                       | M12       | ☑      |
 | S34 Playground UI                           | M12       | ☑      |
 | S35 Export + Release 1 wrap-up              | M12       | ☑      |
+
+### Release 2
+
+Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
+
+| Session                                           | Milestone | Status |
+| ------------------------------------------------- | --------- | ------ |
+| S36 Release 2 kickoff                             | M13       | ☑      |
+| S37 Analytics and privacy note                    | M13       | ☐      |
+| S38 Playground quick wins                         | M14       | ☐      |
+| S39 Export quick win                              | M14       | ☐      |
+| S40 Components quick wins                         | M14       | ☐      |
+| T0 First usability round (maintainer)             | M14       | ☐      |
+| S41 RadioCard and Slider                          | M15       | ☐      |
+| S42 ToggleGroup and AlertDialog                   | M15       | ☐      |
+| S43 1.1.0 release prep                            | M15       | ☐      |
+| S44 Content file and plain-language rules         | M16       | ☐      |
+| S45 State v2, projects and history                | M16       | ☐      |
+| S46 Presets, three questions and shuffle          | M16       | ☐      |
+| S47 Explain and fix                               | M16       | ☐      |
+| S48 Value grammar, share link, project file       | M16       | ☐      |
+| S49 CSS-variables and DTCG-file formats           | M16       | ☐      |
+| S50 Site on 1.1.0, neutral chrome, examples scope | M17       | ☐      |
+| S51 Builder shell                                 | M17       | ☐      |
+| S52 Preview pages                                 | M17       | ☐      |
+| S53 Start and Colour                              | M17       | ☐      |
+| S54 Typography                                    | M17       | ☐      |
+| S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☐      |
+| S56 Check                                         | M17       | ☐      |
+| S57 Use it and the shared view                    | M17       | ☐      |
+| S58 Style guide and print                         | M17       | ☐      |
+| S59 Phones, accessibility, e2e suite              | M17       | ☐      |
+| S60 Independent review                            | M17       | ☐      |
+| T1 Second usability round (maintainer)            | M17       | ☐      |
+| S61, S62 Fix review and T1 findings               | M17       | ☐      |
+| S63 Product home, About and launch                | M17       | ☐      |
 
 ## Log
 
@@ -692,6 +729,18 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Follow-up (same day, the maintainer asked to re-run the stopped forced-colours probe server): served it again on port 4317 through the Browser pane and re-ran the probes. R19 reproduced exactly. R18's arrow-key evidence had been a race (Radix moves focus on the next tick; the R3 probe read `document.activeElement` at once); re-measured with a wait, the keys ignore the page direction in both LTR and RTL, so R18 stands with corrected evidence. The repo's own tests do not have this race (direct reads only follow Tab; arrow keys use `toBeFocused`). The H15 and H19 prompts now say to use auto-waiting assertions. Server stopped afterwards and its `.claude/launch.json` entry removed.
 - Gotchas: (1) A preview server never finishes, so a "long-running" probe server is normal; start one through `.claude/launch.json` and the Browser pane, and stop it when the probes are done. (2) After a key press on a Radix composite (Tabs, RadioGroup, Select), wait for focus before reading it.
 
+### S36 — Release 2 kickoff — 2026-11-16
+
+- Time: 17:22 to 17:30 IST by the machine clock, for writing the docs (the planning conversation before it is not counted: a walkthrough of the live site, a 38-decision interview and a critical review of the first draft).
+- Done (branch `s36-release-2-kickoff`, off `main` after #73; docs only): the Release 1 plan moved to `docs/plans/release-1.md` (links fixed); new `docs/PLAN.md` for Release 2 with goals, working rules, the Definition of Done and one prompt per session for S37–S63; `docs/builder-spec.md` (measured problems, decisions, product and technical design, verified facts, risks, review record, sources); `docs/research/usability-test-kit.md`; D-104 to D-145; CLAUDE.md intro, Release 2 rules and layout; README roadmap and links.
+- Measured on the live site at 1024×768 (the spec's section 1): `/playground` is 5,017px tall with a 4,639px unpinned preview; `/components/forms` is 8,046px tall, 66% of it source code (288 lines), with no copy button, on-page navigation or search.
+- Decisions: D-104 to D-145.
+- **Corrected against the approved plan (D-145):** it proposed a screenshot matrix, which D-102 had already tried and removed, so none is planned; it said the stories' usage notes were missing, and they exist (H20c); R26–R29 follow dark mode to Release 3.
+- Not verified, stated as open in the spec: native DTCG import in Figma (only secondary sources); Google Fonts' own privacy and licence wording (the page could not be read).
+- Gotchas: (1) the plan's ideas were approved before being checked against DECISIONS, which is how the screenshot matrix slipped in; a kickoff should grep the decisions for each new practice it proposes. (2) `parseState` accepts any string for any `--ds-*` override and `toCss` writes it raw: harmless today, a real hole once links are shared (D-144, S48). (3) Vercel Web Analytics on Hobby has no custom events and keeps one month, so the funnel depends on one URL per step.
+- Verified: `pnpm lint` (ESLint and Prettier) passes.
+- Next: S37. The maintainer: tag `v1.0.0` and approve the publish, enable Web Analytics on the Vercel project, read the test kit and recruit for T0.
+
 ## Retro (Release 1)
 
 - **Time per session:** not tracked per session. From merge times: S13–S25 and H1 on 2026-10-19 and 10-20 (thirteen sessions in about two days, the plan's 60-minute slots were not the limit); MH H1–H10 from 10-21 to 11-12 (H3–H7 within about 4 hours on 11-11); S26–S28 on 11-12 and 11-13 (18:10 to 18:42 on 11-12 for S26–S28 prep); S29–S31 on 11-13 (14:35 to 15:44); S32 on 11-14 (11:22 to 11:49), S33 12:52, A1 13:06 to 13:20, S34 14:52, S35 the same day. The maintainer: add real figures.
@@ -756,9 +805,11 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - ~~Revisit brand vs neutral tint mismatch (D-025) when Button is built (S6).~~ Checked in S6: no change. Themes (M11) define their own palettes.
 - ~~Update-path checks for the registry~~ Dropped: registry retired (D-055).
 - ~~Update-path check for the package: consumer upgrades `@puranderdua/ui` 0.1.0 to a newer release and still builds.~~ Done in S17 (site 0.1.0 → 0.2.0).
-- Dark mode values per theme (the `mode` modifier is reserved, D-047). Planned for Release 2.
+- Dark mode values per theme (the `mode` modifier is reserved, D-047). Planned for Release 3 (D-118); the largest gap against competing builders, so revisit at the Builder's launch.
+- Light brand colours (yellow, lime) cannot carry white text: "keep my colour, use dark text on it" needs the on-brand roles re-mapped (spec section 7).
+- Client error reporting for the site (none today; decide after the Builder's launch).
 - More components: Textarea, Switch, Dialog, Toast, Tooltip, navigation.
-- Playground share URL (not in Release 1, D-052).
+- ~~Playground share URL (not in Release 1, D-052).~~ In Release 2: S48 (codec) and S57 (Use it).
 - Penpot boards (Release 0 S12 optional, not done); later one board per theme.
 - ~~Tones do not nest (D-074): S26 Card needs a surface that restores the base roles inside an inverse or brand Section.~~ Done in S26 with `.ds-tone-raised` (D-080). Still true for canvas and subtle: they do not restore the base roles inside an inverse or brand Section (use a raised Card, or a Section).
 - Everything else found on 2026-10-20 lives in `docs/audits/2026-10-20-production-readiness.md`, not here.
