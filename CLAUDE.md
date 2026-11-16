@@ -1,9 +1,10 @@
 # ui-design-system — rules for AI sessions
 
-You are helping the maintainer build Release 1 of a token-driven design system in short, single-task sessions: a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground. Before Display (S26), milestone **MH Production hardening** (sessions H1–H10, D-068) fixes every finding of the 2026-10-20 audit (`docs/audits/`).
-After Release 1, milestone **MR Release 1 review** (sessions R1–R6, D-087) reviews the whole repo against a semver 1.0.0 bar. It is review only (no fixes); findings go into `docs/audits/2026-11-14-release-1-review.md`.
-After the review, milestone **MH2 1.0.0 hardening** (sessions H11–H20, D-088) fixes those findings: H11–H19 ship as 0.9.0, H20 cuts 1.0.0. H-session rules apply; the audit rows are in the review register. The public-API contract is `docs/versioning.md` (D-096): follow it, and give every new themeable token a default alias (D-095).
-**Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>`, `H<n>` or `R<n>`). Do not read the whole plan, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status. In an R-session, also read the MR intro in `docs/PLAN.md` (working assumptions, finding format) and the review register.
+You are helping the maintainer build a token-driven design system in short, single-task sessions. **Release 2 (current, D-131) is the Builder:** the site becomes a guided, plain-language tool with which anyone can build a design system and understand it (plan `docs/PLAN.md`, sessions from S36; design `docs/builder-spec.md`).
+Release 1 is done (package 1.0.0): a single npm channel, a category-wise component showcase, three themes (Corporate, Nature, Quirky) and a theme playground, plus the milestones MH (H1–H10), MR (R1–R6, review only) and MH2 (H11–H20). Its plan is archived in `docs/plans/release-1.md`; its audit registers are in `docs/audits/`.
+The public-API contract is `docs/versioning.md` (D-096): follow it, and give every new themeable token a default alias (D-095).
+**Every session:** read this file, `docs/PROGRESS.md` and only the current session's section of `docs/PLAN.md` (sessions are `S<n>`, `H<n>` or `R<n>`), plus the sections of `docs/builder-spec.md` that the session's prompt names. Do not read the whole plan, the whole spec, other sessions or `docs/plans/` (archived releases) unless asked. In an H-session, also read the audit rows it names and update their status. In a review session, also read that review's register and its finding format.
+**Release 2 rules (D-143, D-144, D-104):** one PR per session on a branch `s<n>-<slug>`; the Builder is built at an unlinked `/build` until launch; record the session's start and end time in PROGRESS; every Guided string comes from the content file and uses no technical word; anything read from a URL, a file or storage is untrusted and must pass the value grammar; when audiences conflict, the least technical person wins in Guided; never write a research result that has not been observed.
 
 ## What this repo is
 
@@ -35,10 +36,11 @@ packages/ui/
   src/lib/utils.ts          cn()
   src/styles/generated/     GENERATED — never edit by hand (themes/<name>.css|json from S14)
   src/styles/theme.css      @theme inline bridge + recipes (hand-written)
-apps/site/                  Next.js portfolio + showcase + playground (consumer)
+apps/site/                  Next.js site: showcase + playground, the Builder at /build from S51 (consumer)
 apps/docs/                  Storybook (stories per component, theme toolbar)
-docs/                       PLAN (current release), PROGRESS, DECISIONS, provenance/, plans/ (archive),
-                            audits/ (findings registers), evidence/, releasing.md (from H2), themes.md (from S29)
+docs/                       PLAN (current release), builder-spec.md (Release 2 design), PROGRESS, DECISIONS,
+                            provenance/, plans/ (archive), audits/ (findings registers), evidence/,
+                            research/ (usability test kit and findings), releasing.md, themes.md
 ```
 
 ## Hard rules

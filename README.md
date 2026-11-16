@@ -58,14 +58,16 @@ Tailwind v4 only, configured through CSS (`@theme`); there is no `tailwind.confi
 
 ## Roadmap
 
-Release 1 ([plan](docs/PLAN.md)):
+Release 1, done ([plan](docs/plans/release-1.md)):
 
 1. A single npm channel.
 2. A component showcase by category on the site: Typography, Layout, Forms, Actions, Display.
 3. Three themes (Corporate, Nature, Quirky) alongside the default Base. A consumer ships one theme.
 4. A theme playground with live preview and DTCG/CSS export.
 
-Releases went out as npm minors 0.2.0 → 0.9.0; 0.7.0 added the Corporate, Nature and Quirky themes, 0.8.0 the accent colour role and 0.9.0 the hardening with its breaking changes. 1.0.0 removes the names 0.9.0 deprecated and is the first stable release (see the [CHANGELOG](CHANGELOG.md), the [migration guide](docs/migration-0.8-to-1.0.md) and [CONTRIBUTING](CONTRIBUTING.md)). The playground is site-only. Next: Release 2, dark mode per theme.
+Releases went out as npm minors 0.2.0 → 0.9.0; 0.7.0 added the Corporate, Nature and Quirky themes, 0.8.0 the accent colour role and 0.9.0 the hardening with its breaking changes. 1.0.0 removes the names 0.9.0 deprecated and is the first stable release (see the [CHANGELOG](CHANGELOG.md), the [migration guide](docs/migration-0.8-to-1.0.md) and [CONTRIBUTING](CONTRIBUTING.md)). The playground is site-only.
+
+Release 2, in progress ([plan](docs/PLAN.md), [design](docs/builder-spec.md)): **the Builder**. The site becomes a guided, plain-language tool for building a design system: pick a look, choose colours, type, shape and spacing as named options beside a live preview of real pages, get readability problems explained and fixed, then leave with a share link, a printable style guide and one file per stack. It starts with quick wins on today's playground and component pages, and ships package 1.1.0 (RadioCard, Slider, ToggleGroup, AlertDialog). Dark mode per theme follows as Release 3.
 
 ## Develop
 
@@ -85,6 +87,6 @@ pnpm --filter docs storybook        # Storybook on :6006
 
 ## Links
 
-[Plan](docs/PLAN.md) · [Progress and retro](docs/PROGRESS.md) · [Decisions](docs/DECISIONS.md) · [Changelog](CHANGELOG.md) · [Release 1 notes](docs/releases/v1.md) · [v0.1.0 release notes](docs/releases/v0.1.0.md) · [Clean-install evidence](docs/evidence/clean-install-2026-10-17.md)
+[Plan](docs/PLAN.md) · [Builder design](docs/builder-spec.md) · [Progress and retro](docs/PROGRESS.md) · [Decisions](docs/DECISIONS.md) · [Changelog](CHANGELOG.md) · [Release 1 notes](docs/releases/v1.md) · [v0.1.0 release notes](docs/releases/v0.1.0.md) · [Clean-install evidence](docs/evidence/clean-install-2026-10-17.md)
 
 MIT. Button is adapted from shadcn/ui (MIT); see [`docs/provenance/button.md`](docs/provenance/button.md).
