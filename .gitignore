@@ -154,8 +154,6 @@ vite.config.ts.timestamp-*
 /apps/site/playwright-report/
 /packages/ui/test-results/
 /packages/ui/coverage/
-/apps/docs/test-results/
-/apps/docs/playwright-report/
 
 # Claude Code: per-machine settings and session worktrees (may hold local paths)
 .claude/settings.local.json

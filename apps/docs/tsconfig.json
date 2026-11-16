@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": [".storybook", "src", "e2e", "playwright.config.ts"]
+  "include": [".storybook", "src"]
 }
