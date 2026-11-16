@@ -5,9 +5,9 @@
 ## Current state
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
-- **Current milestone:** **M13 Groundwork** (S36–S37). S36 is done on branch `s36-release-2-kickoff`.
-- **Next session:** **S37** (analytics and privacy note), then M14 quick wins (S38–S40), then the maintainer's first usability round (T0). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
-- **Blockers:** none for S37–S40. **Maintainer to-dos:** (1) `v1.0.0` was not tagged on origin on 2026-11-16 (#73 is merged): push the tag and approve `npm-publish`; S37 then pins the site to 1.0.0 and the maintainer deploys (D-094). (2) Enable Web Analytics for the site's Vercel project before S37. (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
+- **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
+- **Next session:** **S38** (playground quick wins), then S39, S40 (M14), then the maintainer's first usability round (T0). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
+- **Blockers:** none for S38–S40. **Maintainer to-dos:** (1) `v1.0.0` is **not** on npm (`npm view` shows 0.9.0) and not tagged on origin: push the tag and approve `npm-publish`. Then, in one small change, pin `apps/site` to `@puranderdua/ui` 1.0.0, swap the `minimumReleaseAgeExclude` entry in `pnpm-workspace.yaml` from `@puranderdua/ui@0.9.0` to `@puranderdua/ui@1.0.0`, refresh the lockfile, run the site e2e, and deploy (D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
 ## Brand (filled in S1)
@@ -88,7 +88,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | Session                                           | Milestone | Status |
 | ------------------------------------------------- | --------- | ------ |
 | S36 Release 2 kickoff                             | M13       | ☑      |
-| S37 Analytics and privacy note                    | M13       | ☐      |
+| S37 Analytics and privacy note                    | M13       | ☑      |
 | S38 Playground quick wins                         | M14       | ☐      |
 | S39 Export quick win                              | M14       | ☐      |
 | S40 Components quick wins                         | M14       | ☐      |
@@ -740,6 +740,19 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) the plan's ideas were approved before being checked against DECISIONS, which is how the screenshot matrix slipped in; a kickoff should grep the decisions for each new practice it proposes. (2) `parseState` accepts any string for any `--ds-*` override and `toCss` writes it raw: harmless today, a real hole once links are shared (D-144, S48). (3) Vercel Web Analytics on Hobby has no custom events and keeps one month, so the funnel depends on one URL per step.
 - Verified: `pnpm lint` (ESLint and Prettier) passes.
 - Next: S37. The maintainer: tag `v1.0.0` and approve the publish, enable Web Analytics on the Vercel project, read the test kit and recruit for T0.
+
+### S37 — Analytics and privacy note — 2026-11-16
+
+- Time: 18:34 to about 18:45 IST by the machine clock.
+- S36 check: finished. #74 is merged on `origin/main` (0d9a31e); PROGRESS, PLAN, spec, D-104 to D-145 and the test kit are in.
+- Done (branch `s37-analytics-privacy`, off `origin/main`): `@vercel/analytics` ^2.0.1 added to `apps/site`; `SiteAnalytics` (client component, `<Analytics beforeSend={stripHash} />`) rendered in the root layout; `lib/analytics.ts` `stripHash` removes everything from `#` in an event's URL (4 unit tests); `/about` page ("About and privacy": page views are counted, no cookies, nothing about your designs, the hash of a shared design is removed first) linked from the footer and listed in the sitemap. `production.spec.ts`: the CSP names no host (no `http(s)://`), a page load makes no request to another origin, the privacy note is reachable from the footer; `/about` joins the showcase heading, axe and 320px checks.
+- Docs checked first (Vercel, `@vercel/analytics` 2.x): the script, view and event paths are same-origin build-time defaults, so the CSP needed no change (`script-src 'self'`, `connect-src` falls back to `default-src 'self'`).
+- Verified: site lint, typecheck, Prettier, 96 unit tests, `pnpm --filter site test:e2e` (327 passed, 3 skipped, three browsers).
+- **Not verified here:** analytics only loads on Vercel, so the local run proves the headers and that nothing foreign is requested, not that a page view arrives. The "Done when" dashboard check (a page view appears and its URL has no hash) needs the maintainer's deploy. If the CSP blocks the script in production, `production.spec.ts` with `SITE_URL` will show it as a console error; check there first.
+- **Package 1.0.0 (maintainer's extra request):** `packages/ui/package.json` is already 1.0.0 (H20). The site stays on 0.9.0 by the maintainer's decision, because 1.0.0 is not on npm and the pin would break install and CI. The steps for the pin are in "Current state".
+- Decisions: none new (D-144 covers it).
+- Gotchas: `beforeSend` is a function, so it needs a client component and cannot be passed from the server layout. The `stripHash` helper lives in `lib/` because `"use client"` files export components only.
+- Next: S38.
 
 ## Retro (Release 1)
 

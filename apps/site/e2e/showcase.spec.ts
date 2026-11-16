@@ -9,6 +9,7 @@ const paths = [
   "/components/forms",
   "/components/actions",
   "/components/display",
+  "/about",
 ];
 
 for (const path of paths) {
