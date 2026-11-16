@@ -5,7 +5,7 @@ const tones = ["canvas", "brand", "inverse", "gradient"] as const;
 export const Demo = () => (
   <Stack gap="md" className="w-full">
     {tones.map((tone) => (
-      <Banner key={tone} as="div" tone={tone} height="tall" align="center">
+      <Banner key={tone} as="div" tone={tone} height="tall" justify="center">
         <Stack gap="sm">
           <Heading as="h3" variant="h2">
             {tone} tone

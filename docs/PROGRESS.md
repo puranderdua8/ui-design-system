@@ -651,7 +651,16 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Done (branch `h20-1.0.0-release`, off `main` after #69): the package was still 0.8.0 with the 0.9.0 CHANGELOG marked "unreleased", so H20 starts with a release-prep PR (decided with the maintainer: prep 0.9.0 first). `packages/ui` bumped to 0.9.0, CHANGELOG dated 2026-11-16 (and a mangled "Changed" heading fixed), root README release line updated.
 - Not done yet: the maintainer merges the PR, tags `v0.9.0`, approves the `npm-publish` deployment (D-069). Only then can the site move to 0.9.0 (pin, `minimumReleaseAgeExclude`), the deploy and the Display re-measure happen, and the rest of H20 continue. Screen-reader results are not recorded yet (maintainer runs the R5 script).
 - First publish attempt failed (#70 merged, `v0.9.0` pushed): `npm publish "release/puranderdua-ui-0.9.0.tgz"` was read as a GitHub `owner/repo` shorthand and ran `git ls-remote ssh://git@github.com/release/...` (Permission denied). Fix: `./release/...` in `release.yml` (branch `h20-fix-release-publish`). The `verify` job and the dry run never reach this step's argument parsing, so only a real publish could find it. Nothing was published; the tag must move to the fixed commit (maintainer).
-- Next: H20b after 0.9.0 is published.
+- Published by the maintainer on 2026-11-16: `@puranderdua/ui@0.9.0` (after #71 and a re-tag).
+- Next: H20b (site on 0.9.0, below).
+
+### H20b — Site on 0.9.0 — 2026-11-16
+
+- Done (branch `h20-docs-1.0.0`, off `main` after #71): `apps/site` pinned to `@puranderdua/ui@0.9.0` (and the `minimumReleaseAgeExclude` entry; the 0.8.0 one dropped, `--frozen-lockfile` passes). Demos moved to the new names (`Section contentWidth`, `Banner justify`) so 1.0.0 can drop the old ones. The five tests skipped since H15/H17 (`engine.test.ts`, `export.test.ts`) are re-enabled and pass (site unit tests 92 of 92).
+- Test changes the new package forced: (1) the accent-knob test accepts `--ds-menu-highlight-bg` as a moved var (it aliases `accent.700`, H15); (2) the Select popover now renders in `document.body` (ScopedPortal, D-098), so the e2e looks for the listbox on the page and checks it carries the preview's theme var; (3) the Banner video test scrolls the video into view before looking for Pause (R31).
+- Display page re-measured (Chromium against `next start`, my own script): before scrolling no media request and about 49 KB of counted response bytes (only responses with a `content-length` header count, so it is a floor); after scrolling to the video, `flower.mp4` (1,128,375 bytes) loads. In 0.8.0 the 1.1 MB video loaded on page load.
+- Verified: site lint, typecheck, unit tests; e2e before the test fixes 307 passed, 5 failed (the two tests above, three browsers); after the fixes the full run is 312 passed, 3 skipped.
+- Next: H20c (docs, CONTRIBUTING, dev warnings, migration guide, removal of the deprecated names, 1.0.0).
 
 ### H18 — Site performance and polish — 2026-11-15
 
