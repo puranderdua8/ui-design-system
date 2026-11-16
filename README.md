@@ -65,7 +65,7 @@ Release 1 ([plan](docs/PLAN.md)):
 3. Three themes (Corporate, Nature, Quirky) alongside the default Base. A consumer ships one theme.
 4. A theme playground with live preview and DTCG/CSS export.
 
-Releases went out as npm minors 0.2.0 → 0.8.0; 0.7.0 added the Corporate, Nature and Quirky themes and 0.8.0 the accent colour role (see [CHANGELOG](CHANGELOG.md)). The playground is site-only, so Release 1's package is 0.8.0. Next: Release 2, dark mode per theme.
+Releases went out as npm minors 0.2.0 → 0.9.0; 0.7.0 added the Corporate, Nature and Quirky themes, 0.8.0 the accent colour role and 0.9.0 the MH2 hardening with its breaking changes (see [CHANGELOG](CHANGELOG.md)). The playground is site-only. Next: 1.0.0, then Release 2, dark mode per theme.
 
 ## Develop
 

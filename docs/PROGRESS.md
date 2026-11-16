@@ -5,8 +5,8 @@
 ## Current state
 
 - **Release:** 1 (single npm channel → showcase → themes → playground). Plan: `docs/PLAN.md`. Release 0 is done (v0.1.0) and archived in `docs/plans/release-0.md`.
-- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11–H18 are merged; H19 is done on branch `h19-test-environments`.
-- **Next session:** H20 (docs and 1.0.0; also moves the site to 0.9.0 and re-measures the Display page). Release 2 (dark mode) waits for MH2.
+- **Current milestone:** **MH2 1.0.0 hardening** (H11–H20, D-088; plan in `docs/PLAN.md`). MR review is merged (#58, #59); register `docs/audits/2026-11-14-release-1-review.md`. H11–H19 are merged; H20 is in progress on branch `h20-1.0.0-release`, starting with the 0.9.0 release prep (version bump, dated CHANGELOG).
+- **Next session:** H20 continues after the maintainer tags and publishes 0.9.0: the site moves to 0.9.0 and the Display page is re-measured, then docs, migration guide, removal of the deprecated names and 1.0.0. Release 2 (dark mode) waits for MH2.
 - **Blockers:** none.
 
 ## Brand (filled in S1)
@@ -645,6 +645,12 @@ S12: Storybook and release docs are done; the optional Penpot board was not made
 - Gotchas: (1) the first RTL run failed because the fixture had no `DirectionProvider`: Radix parts assume `ltr` (README, D-098), so the environment is the documented setup, not a bare `<html dir>`. (2) Playwright's WebKit does not apply forced colours; that describe skips there. Tailwind's `hover:` also does not match in WebKit under Playwright, so the Link hover check runs in Chromium and Firefox and the focus check in all three. (3) A disabled Button sets `pointer-events: none`, not a cursor. (4) A planted hydration mismatch must be a component that renders differently each call; `Math.random()` evaluated once at module load matches on both sides. (5) My first state-style run had a WebKit timeout under parallel load that did not repeat (two clean runs of the group). (6) I changed the two register cells with a one-off scratchpad script, padded to the old width so no other line moved (the cell has room for 453 characters).
 - Not done: the Tailwind utility class assertions for layout and spacing in `layout.test.tsx`, `page-layout.test.tsx` and `h16-api.test.tsx`, and the hover and active class checks, remain (R38 is partly fixed). Visual regression (screenshots) is not done, on purpose (see above).
 - Next: H20.
+
+### H20a — 0.9.0 release prep — 2026-11-16
+
+- Done (branch `h20-1.0.0-release`, off `main` after #69): the package was still 0.8.0 with the 0.9.0 CHANGELOG marked "unreleased", so H20 starts with a release-prep PR (decided with the maintainer: prep 0.9.0 first). `packages/ui` bumped to 0.9.0, CHANGELOG dated 2026-11-16 (and a mangled "Changed" heading fixed), root README release line updated.
+- Not done yet: the maintainer merges the PR, tags `v0.9.0`, approves the `npm-publish` deployment (D-069). Only then can the site move to 0.9.0 (pin, `minimumReleaseAgeExclude`), the deploy and the Display re-measure happen, and the rest of H20 continue. Screen-reader results are not recorded yet (maintainer runs the R5 script).
+- Next: H20b after 0.9.0 is published.
 
 ### H18 — Site performance and polish — 2026-11-15
 
