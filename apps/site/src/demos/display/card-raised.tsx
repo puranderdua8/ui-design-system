@@ -9,7 +9,7 @@ import {
 
 export const Demo = () => (
   <>
-    <Section tone="subtle" padding="sm" container="sm">
+    <Section tone="subtle" padding="sm" contentWidth="sm">
       <Card variant="raised">
         <CardContent>
           <CardTitle as="h3">Raised on subtle</CardTitle>
@@ -17,7 +17,7 @@ export const Demo = () => (
         </CardContent>
       </Card>
     </Section>
-    <Section tone="inverse" padding="sm" container="sm">
+    <Section tone="inverse" padding="sm" contentWidth="sm">
       <Card variant="raised">
         <CardContent>
           <CardTitle as="h3">Raised on inverse</CardTitle>

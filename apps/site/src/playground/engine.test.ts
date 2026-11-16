@@ -163,13 +163,14 @@ describe("knobs", () => {
     expect(resolved.vars["--ds-accent-border"]).toBe(
       resolved.vars["--ds-color-accent-600"],
     );
-    // Nothing outside the accent scale and its roles moved.
+    // Nothing outside the accent scale and its roles moved. The Select highlight
+    // (`menu.highlight-bg`, H15) aliases accent.700 by default, so it follows.
     const baseVars: VarMap = base.vars;
     const moved = Object.keys(baseVars).filter(
       (key) => resolved.vars[key] !== baseVars[key],
     );
     expect(moved.length).toBeGreaterThan(10);
-    for (const key of moved) expect(key).toMatch(/accent/);
+    for (const key of moved) expect(key).toMatch(/accent|menu-highlight-bg/);
   });
 
   it("swaps heading and body fonts independently", () => {
@@ -392,9 +393,7 @@ describe("contrast", () => {
     expect(report.skipped).toBeGreaterThan(0);
   });
 
-  // SKIPPED until the site moves to 0.9.0 (H15, menu.highlight-* tokens): the
-  // repo script checks pairs the pinned 0.8.0 theme JSON does not define yet.
-  it.skip("matches scripts/contrast.mjs for Base, line for line", () => {
+  it("matches scripts/contrast.mjs for Base, line for line", () => {
     const script = execFileSync(
       process.execPath,
       [
@@ -551,10 +550,8 @@ describe("DTCG output", () => {
   );
 
   // Names and values, accent scale included (the site is on the release that
-  // ships the repo's tokens, 0.8.0).
-  // SKIPPED until the site moves to 0.9.0 (H17, size.icon.* and size.menu.*
-  // primitives): the pinned 0.8.0 theme JSON lacks them. Re-enable with H19/H20.
-  it.skip.each(names)(
+  // ships the repo's tokens, 0.9.0).
+  it.each(names)(
     "an unchanged %s state equals its tokens/themes folder, names and values",
     (name) => {
       expect(normalise(emitted(state(name)))).toEqual(

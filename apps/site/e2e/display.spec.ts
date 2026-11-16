@@ -52,8 +52,10 @@ test.describe("Display page", () => {
     await expect(video).toHaveCount(1);
     await expect(video).toHaveJSProperty("muted", true);
     await expect(video).toHaveJSProperty("loop", true);
+    // 0.9.0 (R31): the video plays only while in view, so bring it into view first.
+    await video.scrollIntoViewIfNeeded();
     const pause = page.getByRole("button", { name: /pause/i });
-    await pause.scrollIntoViewIfNeeded();
+    await expect(pause).toBeVisible();
     await pause.click();
     await expect(video).toHaveJSProperty("paused", true);
     await page.getByRole("button", { name: /play/i }).click();

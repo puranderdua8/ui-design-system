@@ -106,11 +106,14 @@ test("the accent knob drives the accent card and the scope's accent scale", asyn
   await expect.poll(border).not.toBe(before);
 });
 
-test("a Select popover opens inside the themed preview", async ({ page }) => {
+test("a Select popover opens in the body and carries the preview's theme", async ({
+  page,
+}) => {
   await page.getByRole("combobox", { name: "Starting theme" }).click();
   await page.getByRole("option", { name: "Quirky", exact: true }).click();
   await preview(page).getByRole("combobox", { name: "Produce" }).click();
-  const list = preview(page).getByRole("listbox");
+  // ScopedPortal (D-091, D-098) portals to document.body and re-applies the scope's theme.
+  const list = page.getByRole("listbox");
   await expect(list).toBeVisible();
   await expect(list).toHaveCSS("--ds-color-brand-600", "#703dc6");
 });
