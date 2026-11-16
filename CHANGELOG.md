@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.9.0 — unreleased (MH2, in progress)
+## 0.9.0 — 2026-11-16
 
-0.9.0 is the last release that may break before 1.0.0. This section lists the public-API changes from H16; later MH2 sessions add theirs. Renamed props keep working for this release and log a development warning once per prop; **they are removed in 1.0.0** (D-089).
+0.9.0 is the last release that may break before 1.0.0. This section lists the public-API changes from MH2 (H11–H19). Renamed props keep working for this release and log a development warning once per prop; **they are removed in 1.0.0** (D-089).
 
 **Renamed (old name works in 0.9.0, removed in 1.0.0):**
 
@@ -25,7 +25,8 @@
 
 - Variant types: `TextVariant`, `ButtonVariant`, `ButtonSize`, `LinkVariant`, `InputSize`, `SelectTriggerSize`, `CardVariant`, `BannerHeight`, `BannerJustify` (`HeadingVariant`, `BannerTone` and `BannerScrim` already existed).
 - Props for inner elements: `Section` and `Banner` `contentProps` (the inner `Container`), `Banner` `layerProps` (the content layer), `Sidebar` `contentProps` (the content column), `Field` `rowProps` (the inline row, with `data-slot="field-row"`).
-  **Changed:**
+
+**Changed:**
 
 - `CardTitle` and `CardDescription` have their own `data-slot`: `card-title` and `card-description` (they were `heading` and `text`). A selector on `[data-slot="heading"]` or `[data-slot="text"]` no longer matches inside a Card.
 
