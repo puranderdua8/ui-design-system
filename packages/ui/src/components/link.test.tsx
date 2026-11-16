@@ -2,31 +2,28 @@ import * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "vitest-axe";
 import { Link, linkVariants } from "./link";
 
 describe("Link", () => {
-  it("renders an anchor, inline by default, underlined", () => {
+  // The underline rules (inline always, standalone on hover and focus) are
+  // checked as painted in `layout.spec.ts`.
+  it("renders an anchor, inline by default, with the focus-ring recipe", () => {
     render(<Link href="/a">Docs</Link>);
     const el = screen.getByRole("link", { name: "Docs" });
     expect(el.tagName).toBe("A");
     expect(el.getAttribute("data-variant")).toBe("inline");
-    expect(el.className).toContain("underline");
-    expect(el.className).toContain("text-ds-link");
     expect(el.className).toContain("ds-focus-ring");
   });
 
-  it("standalone is not underlined at rest but underlines on hover and focus", () => {
+  it("marks the standalone variant", () => {
     render(
       <Link href="/a" variant="standalone">
         Docs
       </Link>,
     );
-    const el = screen.getByRole("link");
-    expect(el.getAttribute("data-variant")).toBe("standalone");
-    expect(el.className).toContain("no-underline");
-    expect(el.className).toContain("hover:underline");
-    expect(el.className).toContain("focus-visible:underline");
+    expect(screen.getByRole("link").getAttribute("data-variant")).toBe(
+      "standalone",
+    );
   });
 
   it("does not add target, rel or an icon unless external", () => {
@@ -172,22 +169,5 @@ describe("Link", () => {
       </Link>,
     );
     expect(ref.current?.tagName).toBe("A");
-  });
-
-  it("has no axe violations", async () => {
-    const { container } = render(
-      <p>
-        Read the <Link href="/docs">docs</Link>, the{" "}
-        <Link href="https://example.com" external>
-          spec
-        </Link>{" "}
-        or{" "}
-        <Link href="/more" variant="standalone">
-          more
-        </Link>
-        .
-      </p>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 });

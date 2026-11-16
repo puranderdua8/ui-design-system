@@ -65,7 +65,7 @@ test("a reload keeps the edit, and Reset clears it", async ({ page }) => {
     "2",
   );
   await expect.poll(() => background(page)).toBe("rgb(23, 98, 182)");
-  expect(await scopeVar(page, "--ds-radius-md")).toBe("1rem");
+  await expect.poll(() => scopeVar(page, "--ds-radius-md")).toBe("1rem");
 
   await page.getByRole("button", { name: "Reset to Base" }).click();
   await expect.poll(() => background(page)).not.toBe("rgb(23, 98, 182)");
@@ -81,7 +81,9 @@ test("the starting theme picker loads a theme's values", async ({ page }) => {
   await page.getByRole("combobox", { name: "Starting theme" }).click();
   await page.getByRole("option", { name: "Nature", exact: true }).click();
   await expect(preview(page)).toHaveAttribute("data-ds-theme", "nature");
-  expect(await scopeVar(page, "--ds-color-brand-600")).toBe("#2f7442");
+  await expect
+    .poll(() => scopeVar(page, "--ds-color-brand-600"))
+    .toBe("#2f7442");
   // Picking a theme clears the earlier knobs.
   await expect(page.getByLabel("Brand colour", { exact: true })).toHaveValue(
     "#2f7442",
@@ -110,11 +112,7 @@ test("a Select popover opens inside the themed preview", async ({ page }) => {
   await preview(page).getByRole("combobox", { name: "Produce" }).click();
   const list = preview(page).getByRole("listbox");
   await expect(list).toBeVisible();
-  expect(
-    await list.evaluate((el) =>
-      getComputedStyle(el).getPropertyValue("--ds-color-brand-600").trim(),
-    ),
-  ).toBe("#703dc6");
+  await expect(list).toHaveCSS("--ds-color-brand-600", "#703dc6");
 });
 
 test("a failing brand colour shows failing contrast pairs, and recovers", async ({

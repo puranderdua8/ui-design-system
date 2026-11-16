@@ -2,7 +2,6 @@ import * as React from "react";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "vitest-axe";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import {
   tabsContentClasses,
@@ -197,14 +196,5 @@ describe("Tabs", () => {
     expect(tabsContentClasses).toContain("ds-focus-ring");
     // No raw colour, arbitrary value, or primitive reference.
     expect(all).not.toMatch(/\[#|\[\d+px\]|(neutral|brand|red)-\d{2,3}/);
-  });
-
-  it("has no axe violations", async () => {
-    const { container } = render(
-      <main>
-        <Sample />
-      </main>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 });

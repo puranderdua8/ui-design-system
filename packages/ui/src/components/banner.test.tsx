@@ -216,19 +216,6 @@ describe("Banner media", () => {
     expect(scrim?.className).toContain("opacity-85");
     expect(bannerScrimClasses.strong).toContain("opacity-100");
   });
-
-  it("is axe-clean with an image, a heading and an action", async () => {
-    stubMotion(false);
-    const { container } = render(
-      <main>
-        <Banner aria-label="Welcome" media={<img src="a.jpg" alt="" />}>
-          <h1>Build faster</h1>
-          <a href="#start">Get started</a>
-        </Banner>
-      </main>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
 });
 
 describe("Banner video", () => {
@@ -394,25 +381,17 @@ describe("Banner video", () => {
     expect(screen.getByRole("button", { name: "Pause video" })).not.toBeNull();
   });
 
-  it("is axe-clean while playing and under reduced motion", async () => {
-    stubMotion(false);
-    const playing = render(
-      <main>
-        <Banner aria-label="Welcome" video={video}>
-          <h1>Build faster</h1>
-        </Banner>
-      </main>,
-    );
-    expect(await axe(playing.container)).toHaveNoViolations();
-    playing.unmount();
+  // Kept in jsdom: the story gate runs without reduced motion, so the poster-only
+  // state is not covered there (H19, R38).
+  it("is axe-clean under reduced motion, with the poster only", async () => {
     stubMotion(true);
-    const still = render(
+    const { container } = render(
       <main>
         <Banner aria-label="Welcome" video={video}>
           <h1>Build faster</h1>
         </Banner>
       </main>,
     );
-    expect(await axe(still.container)).toHaveNoViolations();
+    expect(await axe(container)).toHaveNoViolations();
   });
 });

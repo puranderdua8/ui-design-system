@@ -82,9 +82,9 @@ test.describe("theme switcher", () => {
     await expect
       .poll(() => token(page, "--ds-color-brand-600"))
       .toBe("#595959");
-    expect(
-      await page.evaluate(() => document.documentElement.style.length),
-    ).toBe(0);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.style.length))
+      .toBe(0);
   });
 
   test("the primary button follows the theme", async ({ page }) => {
@@ -126,12 +126,15 @@ test.describe("theme switcher", () => {
     expect(cached.vars["--ds-color-brand-600"]).toBe("#703dc6");
 
     await page.reload();
+    // Recorded by the init script while the document loaded: a plain read, no event follows it.
     expect(
       await page.evaluate(
         () => (window as unknown as { __themeAtBody?: string }).__themeAtBody,
       ),
     ).toBe("quirky");
-    expect(await token(page, "--ds-color-brand-600")).toBe("#703dc6");
+    await expect
+      .poll(() => token(page, "--ds-color-brand-600"))
+      .toBe("#703dc6");
     await expect(page.getByRole("combobox", { name: "Theme" })).toHaveValue(
       "quirky",
     );

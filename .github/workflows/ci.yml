@@ -80,6 +80,11 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter site exec playwright install --with-deps chromium firefox webkit
       - run: pnpm check
+      # Coverage is reported on the run summary and never fails the job (H19).
+      - name: Coverage report (not enforced)
+        run: |
+          pnpm --filter @puranderdua/ui test:coverage
+          node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
       # The build writes a tracked file into src/ (ds-classes.ts). If it changed,
       # the committed copy is stale (R14).
       - name: Build leaves the tree clean

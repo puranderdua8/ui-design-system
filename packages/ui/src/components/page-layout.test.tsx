@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { axe } from "vitest-axe";
 import {
   Section,
   sectionPaddingClasses,
@@ -233,8 +232,8 @@ describe("Sidebar", () => {
     expect(follows("end-content", "end-aside")).toBe(true);
   });
 
-  it("sidebarProps reach the aside, so two sidebars can be named", async () => {
-    const { container } = render(
+  it("sidebarProps reach the aside, so two sidebars can be named", () => {
+    render(
       <main>
         <Sidebar
           sidebar="a"
@@ -255,7 +254,6 @@ describe("Sidebar", () => {
     const related = screen.getByRole("complementary", { name: "Related" });
     expect(related.className).toContain("basis-ds-sidebar");
     expect(related.className).toContain("p-2");
-    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("sidebarAs swaps the aside element", () => {
@@ -298,27 +296,5 @@ describe("static class maps", () => {
       "--color-ds-on-brand:",
     ])
       expect(themeCss).toContain(c);
-  });
-});
-
-describe("a11y", () => {
-  it("has no violations when composed", async () => {
-    const { container } = render(
-      <main>
-        <Section tone="inverse" container="lg" aria-label="intro">
-          <Split ratio="1:2">
-            <p>one</p>
-            <p>two</p>
-          </Split>
-        </Section>
-        <Section tone="brand" aria-label="promo">
-          <p>brand</p>
-        </Section>
-        <Sidebar sidebar={<p>side</p>} sidebarAs="div" side="end">
-          <p>content</p>
-        </Sidebar>
-      </main>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
   });
 });
