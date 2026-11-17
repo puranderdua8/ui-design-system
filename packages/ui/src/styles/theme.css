@@ -221,9 +221,10 @@
     border-style: solid;
     border-width: var(--ds-border-width-strong);
   }
-  /* Strong border for a selected item (RadioCard). Recipes are plain classes,
-     so a state variant such as data-[state=checked]: cannot apply to them. */
-  .ds-border-selected[data-state="checked"] {
+  /* Strong border for a selected item (RadioCard, ToggleGroup). Recipes are plain
+     classes, so a state variant such as data-[state=checked]: cannot apply to them. */
+  .ds-border-selected[data-state="checked"],
+  .ds-border-selected[data-state="on"] {
     border-width: var(--ds-border-width-strong);
   }
 
