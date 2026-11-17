@@ -42,18 +42,20 @@ export const ContrastPanel = ({ report }: { report: ContrastReport }) => {
   return (
     <Stack gap="md">
       <Heading as="h2" variant="h3">
-        Contrast
+        Readability check
       </Heading>
-      <Text role="status" data-testid="contrast-summary">
+      <Text>
+        Checks that text can be read on the colour behind it (contrast), for{" "}
+        {report.results.length} combinations.
         {failing.length === 0
-          ? `All ${report.results.length} pairs pass.`
-          : `${failing.length} of ${report.results.length} pairs fail.`}
+          ? " All of them are readable."
+          : ` ${failing.length} of them need fixing.`}
       </Text>
       {failing.length > 0 ? (
         <ul
           className="flex flex-col gap-ds-gap-sm"
           role="list"
-          aria-label="Failing pairs"
+          aria-label="Combinations to fix"
         >
           {failing.map((result, index) => (
             <Row key={index} result={result} />
@@ -62,7 +64,7 @@ export const ContrastPanel = ({ report }: { report: ContrastReport }) => {
       ) : null}
       <details className="ds-border rounded-ds-card border-ds-border p-ds-gap-sm">
         <summary className="ds-focus-ring cursor-pointer font-semibold">
-          Passing pairs ({passing.length})
+          Readable combinations ({passing.length})
         </summary>
         <ul className="mt-ds-gap-sm flex flex-col gap-ds-gap-sm" role="list">
           {passing.map((result, index) => (
