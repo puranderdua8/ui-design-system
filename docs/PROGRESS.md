@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S47** (Explain and fix; S46 Presets is done on branch `s46-presets`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S48** (Value grammar, share link, project file; S47 Explain and fix is done on branch `s47-explain-fix`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -99,7 +99,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S44 Content file and plain-language rules         | M16       | ☑      |
 | S45 State v2, projects and history                | M16       | ☑      |
 | S46 Presets, three questions and shuffle          | M16       | ☑      |
-| S47 Explain and fix                               | M16       | ☐      |
+| S47 Explain and fix                               | M16       | ☑      |
 | S48 Value grammar, share link, project file       | M16       | ☐      |
 | S49 CSS-variables and DTCG-file formats           | M16       | ☐      |
 | S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☐      |
@@ -835,6 +835,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) Outline Thin/Bold is the existing `borderWidth` fine-tune, not a preset. (2) `shuffle` clears the fine-tunes of the dimensions it replaces. (3) Nothing in the UI uses presets yet (S53–S55); `knip` passes because tests and `engine.ts` import them. (4) The three-questions option names are drafts, like the other copy (vocabulary gate still open).
 - Verified: site unit tests 187 passed (new `presets.test.ts`: one preset giving identical values from all four looks, untouched state equal to its starting look, 24px control floor across presets, density and 200 shuffles, Flat, type scale floor, content names match, questions, highlights, shuffle). Site typecheck, build, `knip` and Prettier clean. Site e2e not re-run (no UI change).
 - Next: S47.
+
+### S47 — Explain and fix — 2026-11-17
+
+- Branch `s47-explain-fix` cut from `origin/main` (060aeeb, S46 merged as #84). Started about 14:31, ended about 14:40 (local).
+- Done: `playground/explain.ts` (`explain`, `analyse`, `roleName`: failing results grouped by cause with a plain sentence, count and example) and `playground/fix.ts` (`fix`: nearest passing shade in OKLCH lightness, same hue; re-runs the check; returns before and after). Content file: `check.causes`, `affectedOne/Many`, `roleNames` replace the three older check sentences (nothing used them).
+- Decisions: D-152.
+- Gotchas: (1) Nothing in the UI uses these yet (S56 Check); `knip` passes because tests import them. (2) The background-feel fix lowers tint, not lightness, because neutral steps keep their own lightness; the shipped looks never fail it, so it is covered by a synthetic report. (3) The property tests take about 40 seconds together (1080 brand fixes, 144 dark-brand and highlight fixes). (4) The plain place names are drafts like the rest of the copy (vocabulary gate still open).
+- Verified: site unit tests 204 passed (new `explain.test.ts`, 17 tests: a sentence for every cause, and a property test over 360 hues at three chroma levels where the brand fix leaves no failure for that cause and keeps the hue; dark brand and highlight fixes over 72 hues). Site typecheck, build, `knip` and Prettier clean. Site e2e not re-run (no UI change).
+- Next: S48.
 
 ## Retro (Release 1)
 
