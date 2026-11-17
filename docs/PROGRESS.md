@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S51** (Builder shell; S50 neutral chrome and examples scope is done on branch `s50-neutral-chrome`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S52** (Preview pages; S51 Builder shell is done on branch `s51-builder-shell`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -103,7 +103,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S48 Value grammar, share link, project file       | M16       | ☑      |
 | S49 CSS-variables and DTCG-file formats           | M16       | ☑      |
 | S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☑      |
-| S51 Builder shell                                 | M17       | ☐      |
+| S51 Builder shell                                 | M17       | ☑      |
 | S52 Preview pages                                 | M17       | ☐      |
 | S53 Start and Colour                              | M17       | ☐      |
 | S54 Typography                                    | M17       | ☐      |
@@ -871,6 +871,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) The playground preview already had its own `ThemeScope` fed by the playground state, so it was not changed; the playground page chrome now stays Base too. (2) Pre-hydration paint is covered by the style rule, then `ThemeScope` sets the same vars inline after hydration. (3) The header switcher still has no projects entry (S51). (4) `docs/themes.md` updated to the new flow.
 - Verified: site unit tests 268 passed, typecheck, ESLint, `knip`, Prettier clean, `next build` clean; full site e2e 364 passed, 5 skipped in Chromium, Firefox and WebKit (including `themes.spec.ts`, 31 tests per browser).
 - Next: S51 (Builder shell).
+
+### S51 — Builder shell — 2026-11-17
+
+- Branch `s51-builder-shell` cut from `origin/main` (c0c61d9, S50 merged as #88). Started about 15:45, ended about 16:00 (local).
+- Done: `/build` (project chooser), `/build/[step]` (eight static step pages, one title each) and `/build/studio` (today's `Playground`, unchanged), all `noindex` and unlinked. New `components/build/` (`top-bar`, `builder-shell`, `project-chooser`, `use-builder`); `playground/steps.ts` (step URLs, neighbours, current choice in words); `store.ts` exposes the full projects view and actions; `lib/project-look.ts` plus `applyProjectLook` in `lib/theme.ts` add the person's projects to "Showing examples in"; new `shell` strings and `errors.stateInvalid` in `content/builder.ts`.
+- Decisions: D-156.
+- Gotchas: (1) The picture choices are not built (S53–S55): an open step shows its current choice and a "on their way" note. (2) Focus goes to the step heading only after the first page load (a module flag), so arriving keeps the normal tab order. (3) The status pill and the Check row use the same contrast report as Studio (computed in both the top bar and the shell; cheap, not shared). (4) The project the examples wear follows its edits through the store subscription, and a deleted project falls back to Base. (5) `Preview` still has its hard-coded "Preview" heading and its sample sections; S52 reworks the preview pages. (6) "Use it" links to `/build/use`, which is the step page for now. (7) The header nav is unchanged (the Builder stays unlinked until launch).
+- Verified: site unit tests 278 passed (new `steps.test.ts`, 10 tests); typecheck, ESLint, `knip` and Prettier clean; `next build` lists the three new routes; new `e2e/build.spec.ts` (11 tests: titles, one current step, keyboard walk with focus on each heading, Back and Forward, current choices, skip link, rename in place, Guided and Studio, Studio panels, chooser rename, duplicate and delete with the dialog, projects in the header switcher) and axe on every step, Studio, the chooser and the dialog; full site e2e 397 passed, 5 skipped in Chromium, Firefox and WebKit.
+- Next: S52 (Preview pages).
 
 ## Retro (Release 1)
 

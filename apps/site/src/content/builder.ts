@@ -29,7 +29,7 @@ export const bannedWords = [
 /** The longest sentence allowed in a Guided string, in words. */
 export const maxSentenceWords = 25;
 
-type StepId =
+export type StepId =
   | "start"
   | "colour"
   | "typography"
@@ -378,6 +378,48 @@ export const builderContent = {
       "This link is a snapshot. Make a new link after you change anything.",
   },
 
+  /** The Builder's frame: top bar, step list, project chooser (S51). */
+  shell: {
+    name: "Builder",
+    /** Page title of a step: `{step}`. The site adds its own name after it. */
+    stepTitle: "{step} · Builder",
+    projectsTitle: "Your design systems",
+    studioTitle: "Studio",
+    stepListLabel: "Steps",
+    topBarLabel: "Your design system",
+    previewLabel: "Preview of your design system",
+    previewHeading: "Preview",
+    skipToPreview: "Skip to the preview",
+    skipToSteps: "Skip to the steps",
+    projectName: "Name of your design system",
+    viewLabel: "View",
+    guided: "Guided",
+    studio: "Studio",
+    /** Shown in a step's row while its picture choices are not built yet. */
+    yourChoice: "Your choice now",
+    comingSoon: "The picture choices for this step are on their way.",
+    /** The current value matches none of the picture choices. */
+    sameAsLook: "As in your starting look",
+    brandColour: "Brand colour",
+    brandFromLook: "Brand colour: from your starting look",
+    outlineThin: "Thin",
+    outlineBold: "Bold",
+    checkReadable: "Readable",
+    useSummary: "Share, print or hand over",
+    /** The chooser at the start of the Builder. */
+    chooser: {
+      lead: "Pick one to keep working on, or start a new one.",
+      current: "Open now",
+      open: "Open",
+      newProject: "New design system",
+      renameLabel: "New name",
+      deleteConfirm: "Delete it",
+      list: "Your projects",
+    },
+    /** The "Showing examples in" group that lists your projects. */
+    examplesGroup: "Your design systems",
+  },
+
   /** What the Check step says about a cause. `{count}` places are affected. */
   check: {
     /** One sentence per cause (S47). `explain.ts` adds `affected` after it. */
@@ -464,6 +506,10 @@ export const builderContent = {
     fileInvalid: {
       message: "That file is not a design system we can read.",
       fix: "Choose a project file that you downloaded from this tool.",
+    },
+    stateInvalid: {
+      message: "We could not apply your choices.",
+      fix: "We show your starting look instead.",
     },
     deleteProject: {
       message: "Delete this project?",
