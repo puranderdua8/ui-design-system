@@ -829,3 +829,9 @@ Corrections made in S36 against the approved plan. (1) No screenshot suite is ad
 RadioCard (S41) is our own component on the adopted RadioGroup item, not an adaptation of a shadcn file (none exists). It follows the rules for adopted components in spirit: individual `@radix-ui/react-*` package, tokens only, a provenance doc (`docs/provenance/radio-card.md`) that says there is no upstream source. The selected state is a heavier border plus a check mark. Slider (S41) is adapted from shadcn new-york-v4 on `@radix-ui/react-slider`, horizontal only (no `orientation` prop yet). Neither adds a colour role, so no new contrast pair or default alias was needed.
 
 **Why:** D-049 covers adopted components; RadioCard has no source to adopt, and silence would hide that. Vertical Slider has no use in the Builder, so it is left out instead of shipped unstyled.
+
+### D-147
+
+ToggleGroup and AlertDialog (S42) are adapted from shadcn new-york-v4 on `@radix-ui/react-toggle-group` and `@radix-ui/react-alert-dialog` (pre-approved), with provenance docs. AlertDialog renders its scrim and panel through `ScopedPortal` as siblings in its wrapper, not through the Radix `Portal`, so it carries the nearest `ThemeScope`'s theme, vars and direction and a `container` prop wins (D-091, D-098). A pressed ToggleGroup item is a fill plus the strong border width, via the existing `.ds-border-selected` recipe, which now also matches `data-state="on"`. No new colour role: the scrim is `overlay.scrim`, so no contrast pair or default alias changed.
+
+**Why:** the Radix `Portal` would leave the dialog outside the scope's theme; reusing the recipe keeps one rule for "selected is not colour alone".

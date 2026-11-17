@@ -94,7 +94,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S40 Components quick wins                         | M14       | ☑      |
 | T0 First usability round (maintainer)             | M14       | ☐      |
 | S41 RadioCard and Slider                          | M15       | ☑      |
-| S42 ToggleGroup and AlertDialog                   | M15       | ☐      |
+| S42 ToggleGroup and AlertDialog                   | M15       | ☑      |
 | S43 1.1.0 release prep                            | M15       | ☐      |
 | S44 Content file and plain-language rules         | M16       | ☐      |
 | S45 State v2, projects and history                | M16       | ☐      |
@@ -791,6 +791,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Decisions: D-146 (RadioCard has no upstream source; Slider is horizontal only).
 - Gotchas: (1) jsdom lacks `ResizeObserver` and pointer capture, which Radix Slider needs, so `test/setup.ts` stubs them. (2) Radix selects a radio on arrow keys only while the key is still down, so the RadioCard test holds the key (as `choice.test.tsx` does). (3) No new colour role: both use existing roles, so the contrast matrix and default aliases did not change. (4) No rendered-layout test was added for the two new components; the story axe tests render them in Chromium.
 - Next: S42 ToggleGroup and AlertDialog.
+
+### S42 — ToggleGroup and AlertDialog — 2026-11-17
+
+- Time: about 11:30 to 11:50 (+0530). Branch `s42-togglegroup-alertdialog` cut from `origin/main` (S41 merged as #79).
+- Done: `ToggleGroup`/`ToggleGroupItem` (on `@radix-ui/react-toggle-group`, pre-approved; single and multiple, Radix arrow-key navigation; pressed = filled primary plus the strong border width, with an outline in forced colours) and `AlertDialog` with Trigger, Content, Header, Title, Description, Footer, Action, Cancel (on `@radix-ui/react-alert-dialog`, pre-approved; scrim and panel rendered through `ScopedPortal`, `ds-layer-overlay`/`ds-layer-modal`, `bg-ds-scrim`, `container` wins; Action and Cancel use the Button styles, their text is a required `children`). Plain `*.styles.ts` files, exports in `index.ts`, 13 tests in `toggle-group-alert-dialog.test.tsx`, a hydration case each, stories, two provenance docs, D-147. `.ds-border-selected` in `theme.css` now also matches `data-state="on"`.
+- Verified: package tests 340 pass; `test:layout` 243 passed, 3 skipped (three browsers); `docs test:stories` 125 pass (axe); `check-client-exports` ok (13 client files); `tokens:check`, lint (0 errors; the older `Children.toArray` warning), knip, Prettier, typecheck and build green. The overlay test shows the dialog inside a `ThemeScope` carries its theme, vars, direction and the raised tone, outside the scope element, and that an explicit `container` wins.
+- Decisions: D-147.
+- Gotchas: (1) The dialog does not use the Radix `Portal`, so the scrim and panel are siblings in `ScopedPortal`'s `display: contents` wrapper. (2) A modal dialog sets `pointer-events: none` on `body`, so a "click outside" test must target the scrim. (3) No new colour role (the scrim is `overlay.scrim`), so the contrast matrix and default aliases did not change. (4) No rendered-layout test was added for the two new components; the story axe tests render ToggleGroup and the closed AlertDialog in Chromium, and the open dialog is axe-checked in jsdom.
+- Next: S43 1.1.0 release prep.
 
 ## Retro (Release 1)
 

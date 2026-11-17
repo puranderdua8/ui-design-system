@@ -13,6 +13,16 @@ import { Input } from "./input";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { RadioCard } from "./radio-card";
 import { Slider } from "./slider";
+import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./alert-dialog";
 import {
   Select,
   SelectContent,
@@ -127,6 +137,35 @@ const cases: Record<string, Record<string, React.ReactNode>> = {
         <RadioCard value="a" label="A" description="First" media={<i />} />
         <RadioCard value="b" label="B" disabled />
       </RadioGroup>
+    ),
+  },
+  "alert-dialog": {
+    "AlertDialog, closed": (
+      <AlertDialog>
+        <AlertDialogTrigger>Delete</AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogTitle>Delete?</AlertDialogTitle>
+          <AlertDialogDescription>Cannot be undone.</AlertDialogDescription>
+          <AlertDialogCancel>Keep</AlertDialogCancel>
+          <AlertDialogAction>Delete</AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog>
+    ),
+  },
+  "toggle-group": {
+    "ToggleGroup (single and multiple)": (
+      <>
+        <ToggleGroup type="single" aria-label="One" defaultValue="a">
+          <ToggleGroupItem value="a">A</ToggleGroupItem>
+          <ToggleGroupItem value="b">B</ToggleGroupItem>
+        </ToggleGroup>
+        <ToggleGroup type="multiple" aria-label="Many" defaultValue={["a"]}>
+          <ToggleGroupItem value="a">A</ToggleGroupItem>
+          <ToggleGroupItem value="b" disabled>
+            B
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </>
     ),
   },
   select: { "Select, closed": select },
