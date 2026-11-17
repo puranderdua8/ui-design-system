@@ -16,9 +16,9 @@ import {
 } from "@/lib/theme";
 
 export const ThemeSwitcher = () => {
-  // The applied theme is <html data-ds-theme>; the head script may have set it from
-  // the cache before React ran, so the label is right on the first client render.
-  const theme = useSyncExternalStore(
+  // The chosen look lives in the store (D-128): it reaches examples only, never the
+  // chrome. The server and hydration read Base; the cached choice follows at once.
+  const { name: theme } = useSyncExternalStore(
     subscribeTheme,
     getThemeSnapshot,
     getServerThemeSnapshot,
@@ -39,13 +39,13 @@ export const ThemeSwitcher = () => {
 
   return (
     <div className="flex items-center gap-ds-gap-sm">
-      <Text as="span" variant="caption">
-        Theme
+      <Text as="span" variant="caption" aria-hidden="true">
+        Showing examples in
       </Text>
       {/* A native select (R30): the Radix Select, Floating UI and scroll lock
           were a 31 KB chunk on every route for a list that is closed. */}
       <select
-        aria-label="Theme"
+        aria-label="Showing examples in"
         className={inputVariants({ size: "sm" })}
         value={theme}
         onChange={(event) => {

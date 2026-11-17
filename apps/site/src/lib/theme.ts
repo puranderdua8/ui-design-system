@@ -1,10 +1,12 @@
-// Theme switching for the showcase (S32). Plain module: no "use client", so the
-// server layout can read `themeInitScript` and the client switcher shares the rest.
+// "Showing examples in" (S32, reworked in S50 for D-128). Plain module: no "use client",
+// so the server layout can read `themeInitScript` and the client parts share the rest.
 //
-// Flow: the user picks a theme, `activateTheme` import()s that theme's resolved JSON
-// map (one chunk per theme, only the chosen one loads), applies its `vars` inline on
-// <html> and caches the map in localStorage. `themeInitScript` (inline in <head>)
-// applies the cached map before first paint, so a reload does not flash Base.
+// The tool's own chrome always wears Base: nothing is applied to <html>. The chosen
+// look only reaches examples, through `ExamplesScope` (a ThemeScope that reads this
+// store). Flow: the user picks a look, `activateTheme` import()s its resolved JSON map
+// (one chunk per look), updates the store and caches the map in localStorage.
+// `themeInitScript` (inline in <head>) turns the cached map into a style rule for
+// `[data-examples-scope]`, so a reload does not flash Base in the examples.
 
 export const themeNames = ["base", "corporate", "nature", "quirky"] as const;
 export type ThemeName = (typeof themeNames)[number];
@@ -105,25 +107,19 @@ const writeStoredTheme = (stored: StoredTheme): void => {
   }
 };
 
-/** Replaces the inline `--ds-*` vars on <html> with `vars` (none = back to Base). */
-const applyTheme = (name: ThemeName, vars?: ThemeVars): void => {
-  const root = document.documentElement;
-  const stale: string[] = [];
-  for (let i = 0; i < root.style.length; i++) {
-    const prop = root.style.item(i);
-    if (prop.startsWith("--ds-")) stale.push(prop);
-  }
-  for (const prop of stale) root.style.removeProperty(prop);
-  for (const [prop, value] of Object.entries(vars ?? {})) {
-    root.style.setProperty(prop, String(value));
-  }
-  root.setAttribute("data-ds-theme", name);
+/** The look the examples wear: its name and resolved var map (none = Base). */
+export type Look = { name: ThemeName; vars: ThemeVars };
+
+const baseLook: Look = { name: defaultTheme, vars: {} };
+// Read lazily from storage on the first client snapshot (the server and hydration
+// use `baseLook`), then replaced whole on every change so snapshots stay stable.
+let current: Look | undefined;
+const listeners = new Set<() => void>();
+
+const setLook = (look: Look): void => {
+  current = look;
   for (const listener of listeners) listener();
 };
-
-// The applied theme lives on <html data-ds-theme>, which the head script may already
-// have set before React runs. These three feed `useSyncExternalStore`.
-const listeners = new Set<() => void>();
 
 export const subscribeTheme = (listener: () => void): (() => void) => {
   listeners.add(listener);
@@ -132,12 +128,20 @@ export const subscribeTheme = (listener: () => void): (() => void) => {
   };
 };
 
-export const getThemeSnapshot = (): ThemeName => {
-  const applied = document.documentElement.getAttribute("data-ds-theme");
-  return isThemeName(applied) ? applied : defaultTheme;
+export const getThemeSnapshot = (): Look => {
+  if (!current) {
+    const stored = readStoredTheme();
+    current =
+      stored && stored.name !== "base" && stored.vars
+        ? { name: stored.name, vars: stored.vars }
+        : stored
+          ? { name: stored.name, vars: {} }
+          : baseLook;
+  }
+  return current;
 };
 
-export const getServerThemeSnapshot = (): ThemeName => defaultTheme;
+export const getServerThemeSnapshot = (): Look => baseLook;
 
 // Only the latest request may apply: a slow import must not undo a later choice.
 let latestRequest = 0;
@@ -152,14 +156,14 @@ export const activateTheme = async (
 ): Promise<void> => {
   const request = ++latestRequest;
   if (name === "base") {
-    applyTheme("base");
+    setLook({ name, vars: {} });
     if (remember) writeStoredTheme({ name });
     return;
   }
   const mod = await loaders[name]();
   if (request !== latestRequest) return;
   const vars = withFonts(name, mod.default.vars);
-  applyTheme(name, vars);
+  setLook({ name, vars });
   if (remember) writeStoredTheme({ name, vars });
 };
 
@@ -174,9 +178,11 @@ export const subscribeStoredTheme = (listener: () => void): (() => void) => {
 };
 
 /**
- * Runs inline in <head>, before first paint: applies the cached map. It only trusts
- * `--ds-*` keys and ignores anything malformed. ES5 on purpose: it is not transpiled.
+ * Runs inline in <head>, before first paint: writes the cached map as one style rule
+ * for `[data-examples-scope]`, never on <html>, so the chrome stays Base. Stored
+ * values are untrusted: only `--ds-*` keys whose value has no `;{}<>`, double quote
+ * or backslash and balanced single quotes are kept, and anything malformed is ignored. ES5 on purpose: it is not transpiled.
  */
 export const themeInitScript = `(function(){try{var s=JSON.parse(localStorage.getItem(${JSON.stringify(
   storageKey,
-)})||"null");if(!s||!s.vars||typeof s.name!=="string"||(s.version!==undefined&&s.version!==${storedVersion}))return;var r=document.documentElement;for(var k in s.vars){if(k.indexOf("--ds-")===0)r.style.setProperty(k,String(s.vars[k]))}r.setAttribute("data-ds-theme",s.name)}catch(e){}})();`;
+)})||"null");if(!s||!s.vars||typeof s.name!=="string"||(s.version!==undefined&&s.version!==${storedVersion}))return;var c="";for(var k in s.vars){var v=String(s.vars[k]);if(k.indexOf("--ds-")===0&&/^[-a-z0-9]+$/i.test(k.slice(5))&&!/[;{}<>"\\\\]/.test(v)&&v.split("'").length%2===1)c+=k+":"+v+";"}if(c){var e=document.createElement("style");e.setAttribute("data-examples-look","");e.textContent="[data-examples-scope]{"+c+"}";document.head.appendChild(e)}}catch(e){}})();`;

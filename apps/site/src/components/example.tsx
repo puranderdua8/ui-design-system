@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Cluster, Heading, Stack, Text } from "@puranderdua/ui";
 import { CopyCodeButton } from "@/components/copy-code-button";
+import { ExamplesScope } from "@/components/examples-scope";
 import { demos, type DemoName } from "@/demos/registry";
 
 type ExampleProps = {
@@ -16,7 +17,9 @@ type ExampleProps = {
   fill?: boolean;
 };
 
-const frame = "ds-border rounded-ds-card border-ds-border p-ds-gap-lg";
+// `ds-tone-canvas` so the frame wears the chosen look's own page colour and text.
+const frame =
+  "ds-tone-canvas ds-border rounded-ds-card border-ds-border p-ds-gap-lg font-ds-body";
 
 /** `src/demos`, found from this module's location so it does not depend on the working directory. */
 const demosDir = join(dirname(fileURLToPath(import.meta.url)), "..", "demos");
@@ -57,15 +60,15 @@ export const Example = ({
           {description}
         </Text>
       ) : null}
-      {fill ? (
-        <div className={frame}>
+      <ExamplesScope className={frame}>
+        {fill ? (
           <Demo />
-        </div>
-      ) : (
-        <Cluster gap="md" className={frame}>
-          <Demo />
-        </Cluster>
-      )}
+        ) : (
+          <Cluster gap="md">
+            <Demo />
+          </Cluster>
+        )}
+      </ExamplesScope>
       <details className="group">
         <summary className="ds-focus-ring w-fit cursor-pointer rounded-ds-control py-ds-gap-xs underline">
           Show code
