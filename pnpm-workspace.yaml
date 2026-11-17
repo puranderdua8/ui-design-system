@@ -8,4 +8,4 @@ allowBuilds:
   unrs-resolver: false
   style-dictionary: false
 minimumReleaseAgeExclude:
-  - "@puranderdua/ui@0.9.0"
+  - "@puranderdua/ui@1.0.0"

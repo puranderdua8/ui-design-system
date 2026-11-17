@@ -6,8 +6,8 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **T0**, the maintainer's first usability round (S38–S40 are done and M14's quick wins are complete; deploy them first). M15 (package 1.0.0) and M16 (engine) can run in parallel after that.
-- **Blockers:** none for S41 onward. **Maintainer to-dos:** (1) `v1.0.0` is **not** on npm (`npm view` shows 0.9.0) and not tagged on origin: push the tag and approve `npm-publish`. Then, in one small change, pin `apps/site` to `@puranderdua/ui` 1.0.0, swap the `minimumReleaseAgeExclude` entry in `pnpm-workspace.yaml` from `@puranderdua/ui@0.9.0` to `@puranderdua/ui@1.0.0`, refresh the lockfile, run the site e2e, and deploy (D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
+- **Next session:** **S45** (State v2, projects and history). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
 ## Brand (filled in S1)
@@ -96,7 +96,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S41 RadioCard and Slider                          | M15       | ☑      |
 | S42 ToggleGroup and AlertDialog                   | M15       | ☑      |
 | S43 1.0.0 release prep                            | M15       | ☑      |
-| S44 Content file and plain-language rules         | M16       | ☐      |
+| S44 Content file and plain-language rules         | M16       | ☑      |
 | S45 State v2, projects and history                | M16       | ☐      |
 | S46 Presets, three questions and shuffle          | M16       | ☐      |
 | S47 Explain and fix                               | M16       | ☐      |
@@ -808,6 +808,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Verified: `pnpm check` green; `pnpm check:rsc` PASS; `scripts/clean-install.sh` PASS (`TARBALL` = the packed 1.0.0, since it is not on npm); site e2e 355 passed, 5 skipped (Chromium, Firefox, WebKit); `pnpm audit --prod --audit-level high` clean. Audit register: only the dark-mode rows (R26, R27, R29, rest of R28) are open, handed to Release 3 (D-103, D-145), outside this release's scope.
 - Gotchas: (1) `next build` in `check-rsc.sh` and `clean-install.sh` refused the pinned create-next-app 16.4.2 with a known-vulnerability error; both pins are now 16.4.6 (the site is on 16.4.5, not changed here). (2) Radix single `ToggleGroup` does not render `role="group"`, so the RSC check asserts `data-slot="toggle-group"` instead. (3) `clean-install.sh` needs `TARBALL` until 1.0.0 is on npm.
 - Next: the maintainer merges, pushes `v1.0.0` and approves `npm-publish`; then the site is pinned to 1.0.0 (S50 also expects this). Then S44.
+
+### S44 — Content file and plain-language rules — 2026-11-17
+
+- Branch `s44-content-file` cut from `origin/main` (665b1a3). Started about 12:00, ended 12:35 (local).
+- Done: `apps/site/src/content/builder.ts` (all Guided strings as typed data: eight steps with question, what it is, where it shows up, choices, fine-tune, why it matters; buttons, status, Check causes, errors with a fix) and `builder.test.ts` (banned words, 25-word sentence limit, placeholders, the eight steps and spec choices, plus a self-check that the guards can fail). No component reads it yet. Also, as the maintainer asked: `apps/site` pinned to `@puranderdua/ui` 1.0.0 (now on npm), `minimumReleaseAgeExclude` swapped, lockfile refreshed.
+- Decisions: D-149.
+- Gotchas: (1) T0 has not run (only the test kit exists), so the draft vocabulary is used and the **vocabulary gate stays open**; the maintainer reads the copy once. (2) 1.0.0 removed Banner's `align`: `demos/display/banner-image.tsx` moved to `justify` (the only site usage; Cluster and Split keep `align`). (3) `pnpm install` rejected the lockfile until both 0.9.0 and 1.0.0 were temporarily excluded, because the old entry was under the release-age cutoff; the 0.9.0 exclude was then removed and a frozen install passes.
+- Verified: `pnpm --filter site test` 107 passed; site and docs typecheck, site build, `tokens:check`; site e2e 355 passed, 5 skipped.
+- Next: S45.
 
 ## Retro (Release 1)
 

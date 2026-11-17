@@ -841,3 +841,9 @@ ToggleGroup and AlertDialog (S42) are adapted from shadcn new-york-v4 on `@radix
 The four Release 2 components (RadioCard, Slider, ToggleGroup, AlertDialog) ship in **1.0.0**, not 1.1.0 (S43, maintainer's decision, 2026-11-17). 1.0.0 was prepared in H20 but never tagged or published (npm shows 0.9.0), so there is no released 1.0.0 to add to. `packages/ui` stays 1.0.0 and the 1.0.0 CHANGELOG entry gains the additions. The later release planned as 1.2.0 (package meta files, M18–M22) becomes **1.1.0**. `docs/versioning.md` still applies from the first release: after 1.0.0 is on npm, additions are minors.
 
 **Why:** a minor on top of an unpublished major would mean publishing two releases back to back with nothing consuming 1.0.0 alone; one first stable release with the controls the Builder needs is simpler, and the site pins it once (S50).
+
+### D-149
+
+Builder copy lives in `apps/site/src/content/builder.ts` as typed data (S44, spec 4.10). A vitest test (`builder.test.ts`) fails on any banned word (whole word, any case) in any string and on any sentence longer than **25 words** (the spec gave no number; 25 keeps one idea per sentence). Placeholders are `{step}` and `{count}` only. Studio copy is not covered. Option names are drafts: T0 has not run, so the vocabulary gate stays open.
+
+**Why:** one reviewable file, a mechanical guard on the plain-language rule, and no component reads it until S51.
