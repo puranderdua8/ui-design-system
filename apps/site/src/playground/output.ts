@@ -6,6 +6,7 @@
 // - `toCss` has the shape of `themes/<name>.css`: primitives as literals, then the
 //   semantic vars as `var()` references.
 import { shadowAliases, parseShadow } from "./engine";
+import { UnsafeValueError, parseAlias, safeValue, tokenType } from "./grammar";
 import type { ResolvedTheme } from "./types";
 
 type DtcgNode = { [key: string]: DtcgNode | string | number | object };
@@ -260,7 +261,8 @@ export const toDtcg = (theme: ResolvedTheme): DtcgOutput => {
     "effects.json": {},
     "typography.json": {},
   };
-  for (const [key, raw] of Object.entries(theme.primitives)) {
+  for (const [key, unchecked] of Object.entries(theme.primitives)) {
+    const raw = safeValue(key, unchecked);
     const rule = RULES.find((candidate) => key.startsWith(candidate.prefix));
     if (!rule) throw new Error(`no DTCG rule for ${key}`);
     let group = files[rule.file];
@@ -288,12 +290,19 @@ const CSS_HEADER = `/**
 export const toCss = (theme: ResolvedTheme): string => {
   const literals: string[] = [];
   const semantics: string[] = [];
+  // Every value is re-checked here (D-144): a value that does not parse for its token's
+  // type throws instead of being written, whatever path it took to get this far.
   for (const [key, value] of Object.entries(theme.vars)) {
-    if (key in theme.primitives) literals.push(`  ${key}: ${value};`);
-    else if (key in theme.refs)
-      semantics.push(`  ${key}: var(${theme.refs[key]});`);
-    else if (key in shadowAliases) literals.push(`  ${key}: ${value};`);
-    else semantics.push(`  ${key}: ${value};`);
+    if (key in theme.primitives)
+      literals.push(`  ${key}: ${safeValue(key, value)};`);
+    else if (key in theme.refs) {
+      const target = parseAlias(theme.refs[key] ?? "");
+      if (target === null || tokenType(target) === null)
+        throw new UnsafeValueError(key, theme.refs[key]);
+      semantics.push(`  ${key}: var(${target});`);
+    } else if (key in shadowAliases)
+      literals.push(`  ${key}: ${safeValue(key, value)};`);
+    else semantics.push(`  ${key}: ${safeValue(key, value)};`);
   }
   return `${CSS_HEADER}\n:root,\n[data-ds-mode="light"] {\n  color-scheme: light;\n${[...literals, ...semantics].join("\n")}\n}\n`;
 };

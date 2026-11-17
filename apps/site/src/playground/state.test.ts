@@ -109,10 +109,16 @@ describe("parseState", () => {
         bodyFont: "plex",
         neutral: { hue: "x", chroma: -1 },
       },
-      overrides: { "--ds-x": "1px", notDs: "1px", "--ds-y": 4, "--ds-z": "" },
+      overrides: {
+        "--ds-radius-card": "1px",
+        "--ds-x": "1px", // not a token (S48)
+        notDs: "1px",
+        "--ds-y": 4,
+        "--ds-z": "",
+      },
     });
     expect(parsed?.knobs).toEqual({ accent: "#e11d48", bodyFont: "plex" });
-    expect(parsed?.overrides).toEqual({ "--ds-x": "1px" });
+    expect(parsed?.overrides).toEqual({ "--ds-radius-card": "1px" });
     expect(safeResolve(parsed!, themeMaps).error).toBeUndefined();
   });
 });
