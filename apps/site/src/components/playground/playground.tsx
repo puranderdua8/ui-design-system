@@ -1,7 +1,18 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
-import { Container, Heading, Split, Stack, Text } from "@puranderdua/ui";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import {
+  Button,
+  Container,
+  Heading,
+  Split,
+  Stack,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Text,
+} from "@puranderdua/ui";
 import { evaluateContrast } from "@/playground/contrast";
 import { contrastSpec, themeMaps } from "@/playground/data";
 import { previewVars, safeResolve } from "@/playground/state";
@@ -34,6 +45,8 @@ export const Playground = () => {
     [resolved],
   );
   const vars = useMemo(() => previewVars(resolved.vars), [resolved]);
+  const failing = report.results.filter((result) => !result.ok).length;
+  const [tab, setTab] = useState("design");
 
   return (
     <main
@@ -49,8 +62,8 @@ export const Playground = () => {
               Playground
             </Heading>
             <Text variant="lead">
-              Start from a theme, turn the knobs and watch the components
-              change. Your last state is remembered in this browser.
+              Pick a starting look, change it to suit you and watch the examples
+              update. Your last changes are remembered in this browser.
             </Text>
           </Stack>
           {error ? (
@@ -62,15 +75,61 @@ export const Playground = () => {
               theme instead.
             </div>
           ) : null}
-          <Split ratio="1:2" align="start" gap="xl">
-            <Stack gap="xl">
-              <KnobPanel state={state} resolved={resolved} />
-              <ContrastPanel report={report} />
-              <AdvancedPanel state={state} resolved={resolved} />
-              <ExportPanel resolved={resolved} report={report} />
-            </Stack>
-            <Preview theme={state.start} vars={vars} />
-          </Split>
+          {/* The container query decides, not the viewport (D-064): from 56rem of
+              width the Split has two columns and the preview is pinned; narrower, it
+              stacks as before and nothing sticks. */}
+          <div className="@container">
+            <Split ratio="1:1" align="start" gap="xl">
+              <Stack gap="md">
+                <Text
+                  role="status"
+                  data-testid="contrast-summary"
+                  className="font-semibold"
+                >
+                  {failing === 0
+                    ? `All ${report.results.length} combinations are readable.`
+                    : `${failing} ${failing === 1 ? "thing" : "things"} to fix.`}
+                </Text>
+                {failing > 0 && tab !== "check" ? (
+                  <div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setTab("check")}
+                    >
+                      See what to fix
+                    </Button>
+                  </div>
+                ) : null}
+                <Tabs value={tab} onValueChange={setTab}>
+                  <TabsList aria-label="Controls">
+                    <TabsTrigger value="design">Design</TabsTrigger>
+                    <TabsTrigger value="check">Check</TabsTrigger>
+                    <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                    <TabsTrigger value="export">Export</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="design">
+                    <KnobPanel state={state} resolved={resolved} />
+                  </TabsContent>
+                  <TabsContent value="check">
+                    <ContrastPanel report={report} />
+                  </TabsContent>
+                  <TabsContent value="advanced">
+                    <AdvancedPanel state={state} resolved={resolved} />
+                  </TabsContent>
+                  <TabsContent value="export">
+                    <ExportPanel resolved={resolved} report={report} />
+                  </TabsContent>
+                </Tabs>
+              </Stack>
+              <div
+                data-testid="preview-pin"
+                className="@4xl:sticky @4xl:top-0 @4xl:max-h-dvh @4xl:overflow-y-auto"
+              >
+                <Preview theme={state.start} vars={vars} />
+              </div>
+            </Split>
+          </div>
         </Stack>
       </Container>
     </main>
