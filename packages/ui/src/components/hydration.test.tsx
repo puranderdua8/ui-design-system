@@ -11,6 +11,8 @@ import { Field } from "./field";
 import { Fieldset } from "./fieldset";
 import { Input } from "./input";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
+import { RadioCard } from "./radio-card";
+import { Slider } from "./slider";
 import {
   Select,
   SelectContent,
@@ -119,7 +121,27 @@ const cases: Record<string, Record<string, React.ReactNode>> = {
       </RadioGroup>
     ),
   },
+  "radio-card": {
+    "RadioCard (media, description, disabled)": (
+      <RadioGroup defaultValue="a" aria-label="Layout">
+        <RadioCard value="a" label="A" description="First" media={<i />} />
+        <RadioCard value="b" label="B" disabled />
+      </RadioGroup>
+    ),
+  },
   select: { "Select, closed": select },
+  slider: {
+    "Slider (single and range)": (
+      <>
+        <Slider aria-label="Size" defaultValue={[4]} />
+        <Slider
+          aria-label="Width"
+          defaultValue={[10, 20]}
+          thumbLabels={["Min", "Max"]}
+        />
+      </>
+    ),
+  },
   tabs: {
     "Tabs (horizontal and vertical)": (
       <>

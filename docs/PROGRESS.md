@@ -93,7 +93,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S39 Export quick win                              | M14       | ☑      |
 | S40 Components quick wins                         | M14       | ☑      |
 | T0 First usability round (maintainer)             | M14       | ☐      |
-| S41 RadioCard and Slider                          | M15       | ☐      |
+| S41 RadioCard and Slider                          | M15       | ☑      |
 | S42 ToggleGroup and AlertDialog                   | M15       | ☐      |
 | S43 1.1.0 release prep                            | M15       | ☐      |
 | S44 Content file and plain-language rules         | M16       | ☐      |
@@ -782,6 +782,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Decisions: none new.
 - Gotchas: (1) A `<nav aria-labelledby>` pointing at a visible label crashed Firefox ("Page crashed") inside axe on `/components/forms` and `/display` about half the time; baseline `main` passed 12 of 12 with the same probe, removing the nav or the `aria-labelledby` made it pass 12 of 12. The nav now uses `aria-label`. The crash does not appear outside the Playwright runner, so it is not guaranteed to be gone for every Firefox version. (2) `ds-hit-area` puts an absolutely positioned pseudo-element on its element, so the `summary` uses padding for its 24px target instead. (3) The inline-link Tab test now allows 40 Tab presses because the "On this page" links come first.
 - Next: T0 (the maintainer's first usability round), then S41.
+
+### S41 — RadioCard and Slider — 2026-11-17
+
+- Time: about 11:00 to 11:15 (+0530). Branch `s41-radiocard-slider` cut from `origin/main` (S40 merged as #78).
+- Done: `Slider` (on `@radix-ui/react-slider`, pre-approved; horizontal; visible value as `<output>` with `showValue`/`formatValue`; `aria-valuetext` as a string or a function; `thumbLabels` for a range; a `Field` names and describes it; thumbs keep a 24px target) and `RadioCard` (on the adopted RadioGroup item; whole card is the radio; `media`, `label`, `description`; selected = heavier border plus a check mark; used in `RadioGroup` in a `Fieldset`). Plain `*.styles.ts` files, exports in `index.ts`, 17 tests in `slider-radio-card.test.tsx` (keys, value text, valuetext, Field, disabled, axe, ref), hydration cases, stories, provenance docs for both, D-146.
+- Verified: package tests 322 pass; `test:layout` 243 passed, 3 skipped (three browsers); `docs test:stories` 121 pass (axe); `check-client-exports` ok (11 client files); `tokens:check`, lint (0 errors; one older `Children.toArray` warning), typecheck, Prettier and build green.
+- Decisions: D-146 (RadioCard has no upstream source; Slider is horizontal only).
+- Gotchas: (1) jsdom lacks `ResizeObserver` and pointer capture, which Radix Slider needs, so `test/setup.ts` stubs them. (2) Radix selects a radio on arrow keys only while the key is still down, so the RadioCard test holds the key (as `choice.test.tsx` does). (3) No new colour role: both use existing roles, so the contrast matrix and default aliases did not change. (4) No rendered-layout test was added for the two new components; the story axe tests render them in Chromium.
+- Next: S42 ToggleGroup and AlertDialog.
 
 ## Retro (Release 1)
 
