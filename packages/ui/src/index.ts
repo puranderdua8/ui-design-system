@@ -145,6 +145,10 @@ export type {
   TabsTriggerProps,
   TabsContentProps,
 } from "./components/tabs";
+export { Slider } from "./components/slider";
+export type { SliderProps } from "./components/slider";
+export { RadioCard } from "./components/radio-card";
+export type { RadioCardProps } from "./components/radio-card";
 export { Banner } from "./components/banner";
 export type { BannerProps, BannerElement } from "./components/banner";
 export type {

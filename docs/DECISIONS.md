@@ -823,3 +823,9 @@ Anything read from a URL, a file or storage is untrusted. A value is accepted on
 Corrections made in S36 against the approved plan. (1) No screenshot suite is added: D-102 stands (the maintainer built one in H19 and removed it); the plan's "screenshot matrix" came from not having read D-102. Look changes are asserted as computed styles in e2e. (2) R26, R27, R29 and the rest of R28, handed to "Release 2" in D-103, follow dark mode to Release 3. (3) The story files already carry usage and accessibility notes (H20c), so the gallery can reuse them for developers; only the plain "what it is" lines are new. (4) RadioCard has no shadcn source; S41 records how D-049 applies to it.
 
 **Why:** the plan was approved before these facts were checked in the repo; the repo wins.
+
+### D-146
+
+RadioCard (S41) is our own component on the adopted RadioGroup item, not an adaptation of a shadcn file (none exists). It follows the rules for adopted components in spirit: individual `@radix-ui/react-*` package, tokens only, a provenance doc (`docs/provenance/radio-card.md`) that says there is no upstream source. The selected state is a heavier border plus a check mark. Slider (S41) is adapted from shadcn new-york-v4 on `@radix-ui/react-slider`, horizontal only (no `orientation` prop yet). Neither adds a colour role, so no new contrast pair or default alias was needed.
+
+**Why:** D-049 covers adopted components; RadioCard has no source to adopt, and silence would hide that. Vertical Slider has no use in the Builder, so it is left out instead of shipped unstyled.
