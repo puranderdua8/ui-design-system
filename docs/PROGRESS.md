@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S52** (Preview pages; S51 Builder shell is done on branch `s51-builder-shell`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S53** (Start and Colour; S52 Preview pages is done on branch `s52-preview-pages`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -104,7 +104,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S49 CSS-variables and DTCG-file formats           | M16       | ☑      |
 | S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☑      |
 | S51 Builder shell                                 | M17       | ☑      |
-| S52 Preview pages                                 | M17       | ☐      |
+| S52 Preview pages                                 | M17       | ☑      |
 | S53 Start and Colour                              | M17       | ☐      |
 | S54 Typography                                    | M17       | ☐      |
 | S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☐      |
@@ -880,6 +880,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) The picture choices are not built (S53–S55): an open step shows its current choice and a "on their way" note. (2) Focus goes to the step heading only after the first page load (a module flag), so arriving keeps the normal tab order. (3) The status pill and the Check row use the same contrast report as Studio (computed in both the top bar and the shell; cheap, not shared). (4) The project the examples wear follows its edits through the store subscription, and a deleted project falls back to Base. (5) `Preview` still has its hard-coded "Preview" heading and its sample sections; S52 reworks the preview pages. (6) "Use it" links to `/build/use`, which is the step page for now. (7) The header nav is unchanged (the Builder stays unlinked until launch).
 - Verified: site unit tests 278 passed (new `steps.test.ts`, 10 tests); typecheck, ESLint, `knip` and Prettier clean; `next build` lists the three new routes; new `e2e/build.spec.ts` (11 tests: titles, one current step, keyboard walk with focus on each heading, Back and Forward, current choices, skip link, rename in place, Guided and Studio, Studio panels, chooser rename, duplicate and delete with the dialog, projects in the header switcher) and axe on every step, Studio, the chooser and the dialog; full site e2e 397 passed, 5 skipped in Chromium, Firefox and WebKit.
 - Next: S52 (Preview pages).
+
+### S52 — Preview pages — 2026-11-17
+
+- Branch `s52-preview-pages` cut from `origin/main` (8458eca, S51 merged as #89). Started about 16:05, ended about 16:40 (local).
+- Done: `Preview` has five tabs (Landing page, Sign-up form, Settings screen, Article, All components) from package components only, in `components/preview/`, and a Phone / Tablet / Desktop ToggleGroup that sets the frame's width (the frame is a container, so the layout reflows by its own width). Links and forms never act (capture-phase `preventDefault`). Studio's preview is now a labelled `section#preview` with a skip link, like the shell's. Strings in `content/builder.ts` (`preview`).
+- Decisions: D-157.
+- Gotchas: (1) The old preview's sample sections are gone, so `playground.spec.ts` moved to the new pages: the primary button is "Get started", the accent card is "Highlights", the Select is "Country" on the Sign-up tab. (2) All components has tabs of its own, so e2e waits for `preview-frame`, not a tabpanel. (3) A Banner defaults to a full-screen height; the landing hero overrides it with `min-h-0`. (4) The preview's dark/light slot is not built (reserved for Release 3).
+- Verified: site unit tests 283 passed (new `pages.test.ts`, 5 tests); typecheck, ESLint, `knip` and Prettier clean; new `e2e/preview.spec.ts` (14 tests: axe on every tab in Base, Corporate, Nature and Quirky; one labelled region after the controls and a skip link; no landmark and h1/h2 only the preview title; links and forms do not act; width switch; every tab reflows at Phone; a dialog in the look) green; full site e2e 439 passed, 5 skipped (clipboard and video, as before) in Chromium, Firefox and WebKit. The tab list wraps to a second row in a narrow pane (a sideways scroll made WebKit miss a click in Corporate). Not looked at by eye in the browser pane (no dev server was left running); the e2e checks stand in.
+- Next: S53 (Start and Colour).
 
 ## Retro (Release 1)
 

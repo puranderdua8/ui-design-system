@@ -4,7 +4,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 const preview = (page: Page) => page.getByTestId("preview");
 const primaryButton = (page: Page) =>
-  preview(page).getByRole("button", { name: "Primary md" });
+  preview(page).getByRole("button", { name: "Get started" });
 const background = (page: Page) =>
   primaryButton(page).evaluate((el) => getComputedStyle(el).backgroundColor);
 const scopeVar = (page: Page, name: string) =>
@@ -203,7 +203,7 @@ test("the accent knob drives the accent card and the scope's accent scale", asyn
   const border = () =>
     preview(page)
       .locator('[data-slot="card"]')
-      .filter({ hasText: "Accent card" })
+      .filter({ hasText: "Highlights" })
       .evaluate((el) => getComputedStyle(el).borderTopColor);
   const before = await border();
   await page.getByLabel("Highlight colour", { exact: true }).fill("#e11d48");
@@ -218,7 +218,8 @@ test("a Select popover opens in the body and carries the preview's theme", async
 }) => {
   await page.getByRole("combobox", { name: "Starting look" }).click();
   await page.getByRole("option", { name: "Quirky", exact: true }).click();
-  await preview(page).getByRole("combobox", { name: "Produce" }).click();
+  await preview(page).getByRole("tab", { name: "Sign-up form" }).click();
+  await preview(page).getByRole("combobox", { name: "Country" }).click();
   // ScopedPortal (D-091, D-098) portals to document.body and re-applies the scope's theme.
   const list = page.getByRole("listbox");
   await expect(list).toBeVisible();
