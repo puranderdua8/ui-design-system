@@ -393,6 +393,49 @@ export const builderContent = {
       larger: "Larger than standard",
     },
   },
+  /** The Shape, Spacing and Depth and motion steps' own controls (S55). */
+  look: {
+    cornersSample: "Sample",
+    outlineSample: "Sample",
+    cornersFineTune: "Fine-tune the corners",
+    cornersWord: {
+      squarer: "Squarer than the choice",
+      same: "As in the choice",
+      rounder: "Rounder than the choice",
+    },
+    outlineFineTune: "Fine-tune the outline thickness",
+    outlineWord: "{count} pixels thick",
+    spacingFineTune: "Fine-tune the spacing",
+    spacingWord: {
+      tighter: "Tighter than the choice",
+      same: "As in the choice",
+      roomier: "Roomier than the choice",
+    },
+    tapNote: "Buttons always stay easy to tap, even in the tightest spacing.",
+    shadowSample: "Card",
+    shadowFineTune: "Fine-tune the shadows",
+    shadowWord: {
+      lighter: "Lighter than the choice",
+      same: "As in the choice",
+      darker: "Darker than the choice",
+    },
+    motionFineTune: "Fine-tune the speed",
+    motionWord: {
+      slower: "Slower than the choice",
+      same: "As in the choice",
+      faster: "Faster than the choice",
+    },
+    playHint: "Press Play to see how things move.",
+    playSample: "Moving sample",
+    reducedMotion:
+      "Your device asks for less movement, so the sample jumps instead of moving.",
+  },
+
+  /** "Try another combination" in the top bar (S55). */
+  shuffle: {
+    keepColours: "Keep my colours",
+    done: "Here is another combination.",
+  },
 
   /** Buttons say where they go. `{step}` is replaced with the next step's name. */
   buttons: {

@@ -22,6 +22,7 @@ import {
 } from "@/playground/steps";
 import { ColourStep } from "./colour-step";
 import { StartStep } from "./start-step";
+import { DepthStep, ShapeStep, SpacingStep } from "./preset-steps";
 import { TypographyStep } from "./typography-step";
 import { useBuilder } from "./use-builder";
 
@@ -160,6 +161,21 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
                                 />
                               ) : step === "typography" ? (
                                 <TypographyStep
+                                  state={view.state}
+                                  vars={resolved.vars as VarRecord}
+                                />
+                              ) : step === "shape" ? (
+                                <ShapeStep
+                                  state={view.state}
+                                  vars={resolved.vars as VarRecord}
+                                />
+                              ) : step === "spacing" ? (
+                                <SpacingStep
+                                  state={view.state}
+                                  vars={resolved.vars as VarRecord}
+                                />
+                              ) : step === "depth" ? (
+                                <DepthStep
                                   state={view.state}
                                   vars={resolved.vars as VarRecord}
                                 />
