@@ -253,6 +253,62 @@ const child = (node: DtcgNode, key: string): DtcgNode => {
   return created;
 };
 
+const leafPath = (rule: Rule, key: string): string[] => {
+  const rest = key.slice(rule.prefix.length);
+  const dash = rest.indexOf("-");
+  return rule.split && dash > 0
+    ? [rest.slice(0, dash), rest.slice(dash + 1)]
+    : [rest];
+};
+
+/** Where a value goes in a DTCG file: its path, its `$type` and how the value converts. */
+export type DtcgSlot = {
+  path: string[];
+  type: string;
+  convert: (raw: string | number) => unknown;
+};
+
+/** The DTCG slot of a themeable primitive var (`--ds-color-brand-600`), or `null`. */
+export const primitiveSlot = (key: string): DtcgSlot | null => {
+  const rule = RULES.find((candidate) => key.startsWith(candidate.prefix));
+  return rule
+    ? {
+        path: [...rule.path, ...leafPath(rule, key)],
+        type: rule.type,
+        convert: rule.value,
+      }
+    : null;
+};
+
+/** The DTCG type and conversion for a role that holds a value of its own, by its token type. */
+export const literalSlot = (
+  key: string,
+): Pick<DtcgSlot, "type" | "convert"> | null => {
+  switch (tokenType(key)) {
+    case "colour":
+      return { type: "color", convert: colour };
+    case "dimension":
+      return { type: "dimension", convert: dimension };
+    case "duration":
+      return { type: "duration", convert: duration };
+    case "easing":
+      return { type: "cubicBezier", convert: bezier };
+    case "shadow":
+      return { type: "shadow", convert: shadow };
+    case "fontFamily":
+      return { type: "fontFamily", convert: family };
+    case "number":
+      if (key.includes("font-weight"))
+        return { type: "fontWeight", convert: Number };
+      return {
+        type: "number",
+        convert: key.includes("letter-spacing") ? letterSpacing : Number,
+      };
+    default:
+      return null;
+  }
+};
+
 /** The themeable primitives as the four DTCG files of a theme folder. */
 export const toDtcg = (theme: ResolvedTheme): DtcgOutput => {
   const files: DtcgFiles = {
@@ -268,12 +324,7 @@ export const toDtcg = (theme: ResolvedTheme): DtcgOutput => {
     let group = files[rule.file];
     for (const segment of rule.path) group = child(group, segment);
     group.$type = rule.type;
-    const rest = key.slice(rule.prefix.length);
-    const dash = rest.indexOf("-");
-    const path =
-      rule.split && dash > 0
-        ? [rest.slice(0, dash), rest.slice(dash + 1)]
-        : [rest];
+    const path = leafPath(rule, key);
     let node = group;
     for (const segment of path.slice(0, -1)) node = child(node, segment);
     node[path[path.length - 1]] = { $value: rule.value(raw) as string };
