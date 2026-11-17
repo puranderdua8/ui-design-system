@@ -2,10 +2,10 @@
 // `useSyncExternalStore`: the server and the first client render see the default
 // state (no hydration mismatch), then the client switches to what localStorage holds.
 // Since S45 the state is the open project of a projects store (`projects-store.ts`).
-// That store already has undo, redo and the project list (tested); this file exposes
-// only what the site uses today, and S51 adds the rest when the Builder shell needs it.
+// That store has undo, redo and the project list (tested); this file exposes them to
+// the Builder shell (S51) next to the single-state snapshot the playground uses.
 import { projectsKey } from "./projects";
-import { createProjectsStore } from "./projects-store";
+import { createProjectsStore, type StoreView } from "./projects-store";
 import { defaultState, storageKey } from "./state";
 import type { PlaygroundState } from "./types";
 
@@ -19,11 +19,39 @@ const makeId = (): string => {
   return `p${random}${counter.toString(36)}`;
 };
 
+export type { StoreView };
+
 const store = createProjectsStore(() => window.localStorage, makeId);
 
 export const getSnapshot = (): PlaygroundState => store.getSnapshot();
 
 export const getServerSnapshot = (): PlaygroundState => defaultState;
+
+// The whole view (S51): the open project, the list, undo and redo, the storage status.
+// The server and hydration see one default project, like `getServerSnapshot`.
+const serverView: StoreView = {
+  state: defaultState,
+  projects: [{ id: "server", name: "My design system" }],
+  currentId: "server",
+  canUndo: false,
+  canRedo: false,
+  storage: "ok",
+};
+
+export const getView = (): StoreView => store.getView();
+
+export const getServerView = (): StoreView => serverView;
+
+export const getProject = (id: string) => store.getProject(id);
+
+export const undo = (): void => store.undo();
+export const redo = (): void => store.redo();
+export const newProject = (name?: string): void => store.newProject(name);
+export const openProject = (id: string): void => store.openProject(id);
+export const renameProject = (id: string, name: string): void =>
+  store.rename(id, name);
+export const duplicateProject = (id: string): void => store.duplicate(id);
+export const removeProject = (id: string): void => store.remove(id);
 
 // Another tab wrote the state: take its value (R33). The event never fires in
 // the tab that wrote, so a write and this cannot loop.

@@ -32,7 +32,15 @@ export type StoredTheme = {
   version?: number;
   name: ThemeName;
   vars?: ThemeVars;
+  /** Set when the examples wear one of the person's own projects (S51). */
+  project?: string;
 };
+
+const projectIdPattern = /^[A-Za-z0-9_-]{1,64}$/;
+
+/** A stored project id is untrusted text: only a plain id is kept. */
+const readProjectId = (value: unknown): string | undefined =>
+  typeof value === "string" && projectIdPattern.test(value) ? value : undefined;
 
 export const isThemeName = (value: unknown): value is ThemeName =>
   typeof value === "string" &&
@@ -107,8 +115,11 @@ const writeStoredTheme = (stored: StoredTheme): void => {
   }
 };
 
-/** The look the examples wear: its name and resolved var map (none = Base). */
-export type Look = { name: ThemeName; vars: ThemeVars };
+/**
+ * The look the examples wear: its name and resolved var map (none = Base). For one of
+ * the person's own projects, `name` is the look it started from and `project` its id.
+ */
+export type Look = { name: ThemeName; vars: ThemeVars; project?: string };
 
 const baseLook: Look = { name: defaultTheme, vars: {} };
 // Read lazily from storage on the first client snapshot (the server and hydration
@@ -131,9 +142,10 @@ export const subscribeTheme = (listener: () => void): (() => void) => {
 export const getThemeSnapshot = (): Look => {
   if (!current) {
     const stored = readStoredTheme();
+    const project = readProjectId(stored?.project);
     current =
-      stored && stored.name !== "base" && stored.vars
-        ? { name: stored.name, vars: stored.vars }
+      stored && stored.vars && (stored.name !== "base" || project)
+        ? { name: stored.name, vars: stored.vars, ...(project && { project }) }
         : stored
           ? { name: stored.name, vars: {} }
           : baseLook;
@@ -145,6 +157,23 @@ export const getServerThemeSnapshot = (): Look => baseLook;
 
 // Only the latest request may apply: a slow import must not undo a later choice.
 let latestRequest = 0;
+
+/** Starts a request: every earlier one that has not finished yet will be dropped. */
+export const beginRequest = (): number => ++latestRequest;
+
+/**
+ * Applies one of the person's projects as the look (S51), if `request` (from
+ * `beginRequest`) is still the latest. `lib/project-look.ts` resolves the project.
+ */
+export const applyProjectLook = (
+  request: number,
+  look: Required<Pick<Look, "name" | "vars" | "project">>,
+  remember = true,
+): void => {
+  if (request !== latestRequest) return;
+  setLook(look);
+  if (remember) writeStoredTheme(look);
+};
 
 /**
  * Loads (if needed), applies and remembers a theme. Rejects if the chunk fails.

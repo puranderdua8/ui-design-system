@@ -171,6 +171,10 @@ export const createProjectsStore = (
   return {
     getView,
     getSnapshot: (): PlaygroundState => getView().state,
+
+    /** Any project by id (the view holds only the open one's state), or `undefined`. */
+    getProject: (id: string) =>
+      ensure().projects.find((project) => project.id === id),
     subscribe: (listener: () => void): (() => void) => {
       listeners.add(listener);
       return () => {

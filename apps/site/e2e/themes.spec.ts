@@ -41,6 +41,8 @@ const inExamples = (page: Page, name: string) =>
   tokenOf(page, "[data-examples-scope]", name);
 
 const chooseTheme = async (page: Page, label: string) => {
+  // A change made before hydration is lost: wait for the handler.
+  await expect(page.locator("[data-hydrated=true] select")).toBeVisible();
   await page.getByRole("combobox", { name: switcher }).selectOption({ label });
 };
 
