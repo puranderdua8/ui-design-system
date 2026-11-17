@@ -2,6 +2,7 @@
 import { isThemeName } from "../lib/theme";
 import { shadowAliases, resolveState } from "./engine";
 import { fontChoices } from "./fonts";
+import { parseOverride } from "./grammar";
 import { dimensionIds } from "./types";
 import type {
   Dims,
@@ -142,10 +143,13 @@ export const parseState = (raw: unknown): PlaygroundState | null => {
   const input = isRecord(raw) ? migrate(raw) : null;
   if (!input || !isThemeName(input.start)) return null;
   const overrides: Record<string, string> = {};
+  // Untrusted (D-144): an override stays only if its token is known and its value
+  // parses for that token's type; anything else is dropped, not repaired.
   if (isRecord(input.overrides))
-    for (const [key, value] of Object.entries(input.overrides))
-      if (key.startsWith("--ds-") && typeof value === "string" && value !== "")
-        overrides[key] = value;
+    for (const [key, value] of Object.entries(input.overrides)) {
+      const parsed = parseOverride(key, value);
+      if (parsed !== null) overrides[key] = parsed;
+    }
   return {
     start: input.start,
     mode: "light",

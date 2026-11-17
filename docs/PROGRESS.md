@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S48** (Value grammar, share link, project file; S47 Explain and fix is done on branch `s47-explain-fix`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S49** (CSS-variables and DTCG-file formats; S48 Value grammar, share link, project file is done on branch `s48-value-grammar`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -100,7 +100,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S45 State v2, projects and history                | M16       | ☑      |
 | S46 Presets, three questions and shuffle          | M16       | ☑      |
 | S47 Explain and fix                               | M16       | ☑      |
-| S48 Value grammar, share link, project file       | M16       | ☐      |
+| S48 Value grammar, share link, project file       | M16       | ☑      |
 | S49 CSS-variables and DTCG-file formats           | M16       | ☐      |
 | S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☐      |
 | S51 Builder shell                                 | M17       | ☐      |
@@ -844,6 +844,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) Nothing in the UI uses these yet (S56 Check); `knip` passes because tests import them. (2) The background-feel fix lowers tint, not lightness, because neutral steps keep their own lightness; the shipped looks never fail it, so it is covered by a synthetic report. (3) The property tests take about 40 seconds together (1080 brand fixes, 144 dark-brand and highlight fixes). (4) The plain place names are drafts like the rest of the copy (vocabulary gate still open).
 - Verified: site unit tests 204 passed (new `explain.test.ts`, 17 tests: a sentence for every cause, and a property test over 360 hues at three chroma levels where the brand fix leaves no failure for that cause and keeps the hue; dark brand and highlight fixes over 72 hues). Site typecheck, build, `knip` and Prettier clean. Site e2e not re-run (no UI change).
 - Next: S48.
+
+### S48 — Value grammar, share link, project file — 2026-11-17
+
+- Branch `s48-value-grammar` cut from `origin/main` (5e167da, S47 merged as #85). Started about 14:42, ended about 15:00 (local).
+- Done: `playground/grammar.ts` (allow-list parsers per type, `tokenType`, `parseOverride`, `safeValue`, `UnsafeValueError`); `parseState` drops overrides that do not parse; `toCss` and `toDtcg` refuse any value that does not parse; `share.ts` (state to gzip base64url for `#share=`, size caps, back through `parseState`); `project-file.ts` (write and read a project file). The planted injection (`red; } body { display: none } :root {`) is tested at the door (dropped by `parseState`) and at the exit (a state that bypassed the grammar makes `toCss`/`exportTheme` throw).
+- Decisions: D-153.
+- Gotchas: (1) Nothing in the UI uses share or project-file yet (S57 Use it, S51 shell); `knip` passes because tests import them. (2) An override on a key that is not a Base token is now dropped on load (it was ignored by the engine anyway); one old state test used a fake `--ds-x` and was changed to a real token. (3) Overrides are stored canonical (`#ABC` becomes `#aabbcc`). (4) `Dims` types `depth: "flat"` as never through its intersection; not touched here. (5) I used a one-off `node` script to un-export seven functions (against D-043).
+- Verified: site unit tests 254 passed (new `grammar.test.ts`, `share.test.ts`, `project-file.test.ts`), site typecheck, ESLint, `knip`, Prettier and `next build` clean. Site e2e not re-run (no UI change).
+- Next: S49.
 
 ## Retro (Release 1)
 
