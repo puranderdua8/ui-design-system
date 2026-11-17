@@ -340,6 +340,40 @@ export const builderContent = {
     },
   },
 
+  /** The Start and Colour steps' own controls (S53). */
+  start: {
+    brandLabel: "Brand colour",
+    brandHint: "Optional. Type a code such as #3366cc, or pick a colour.",
+    pickerLabel: "Pick a colour",
+    fromImage: "Choose a colour from a picture",
+    imageNote:
+      "The picture stays on your device. It is never uploaded or saved.",
+    imageFailed: {
+      message: "We could not find a colour in that picture.",
+      fix: "Try a different picture, or type a colour code.",
+    },
+    clearBrand: "Use the colour of the look",
+    looksLabel: "Starting look",
+    looksHint: "Each look shows your colour. You can change everything later.",
+    thumbnailSample: "Sample button",
+    applyAnswers: "Choose a look for me",
+  },
+  colour: {
+    brandLabel: "Brand colour",
+    shadesLabel: "Shades we made from your colour",
+    highlightLabel: "Highlight colour",
+    highlightHint: "Pick one of ours, or choose your own.",
+    suggestionLabel: "Suggested highlight",
+    ownHighlight: "Your own highlight colour",
+    useLookHighlight: "Use the colour of the look",
+    feelLabel: "Background feel",
+    readable: "Text is easy to read on this colour.",
+    hard: "Text is hard to read on this colour. The Check step can fix it.",
+    readableBrand: "White text on this colour is easy to read.",
+    hardBrand:
+      "Text on this colour is hard to read. The Check step can fix it.",
+  },
+
   /** Buttons say where they go. `{step}` is replaced with the next step's name. */
   buttons: {
     next: "Next: {step}",

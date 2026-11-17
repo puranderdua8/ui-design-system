@@ -20,9 +20,13 @@ import {
   stepHref,
   stepIds,
 } from "@/playground/steps";
+import { ColourStep } from "./colour-step";
+import { StartStep } from "./start-step";
 import { useBuilder } from "./use-builder";
 
 const { shell, buttons } = content;
+
+type VarRecord = Record<string, string | number>;
 
 // True once any Builder page has shown in this page load. The first load keeps the
 // normal tab order (header, then the steps); every later step moves focus to the open
@@ -42,7 +46,7 @@ const backLabel = (id: StepId): string =>
  * picture choices arrive in S53–S55; today each step shows its current choice.
  */
 export const BuilderShell = ({ step }: { step: StepId }) => {
-  const { view, hydrated, error, failing, vars } = useBuilder();
+  const { view, hydrated, error, failing, vars, resolved } = useBuilder();
 
   useEffect(() => {
     if (shownBefore) document.getElementById(headingId)?.focus();
@@ -143,7 +147,17 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
                               </Heading>
                               <Text>{open.whatItIs}</Text>
                               <Text>{open.whereItShows}</Text>
-                              {open.groups.length > 0 ? (
+                              {step === "start" ? (
+                                <StartStep
+                                  state={view.state}
+                                  vars={resolved.vars as VarRecord}
+                                />
+                              ) : step === "colour" ? (
+                                <ColourStep
+                                  state={view.state}
+                                  vars={resolved.vars as VarRecord}
+                                />
+                              ) : open.groups.length > 0 ? (
                                 <Text variant="caption">
                                   {shell.yourChoice}: {lines.join(", ")}.{" "}
                                   {shell.comingSoon}

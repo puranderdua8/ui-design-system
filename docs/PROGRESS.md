@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S53** (Start and Colour; S52 Preview pages is done on branch `s52-preview-pages`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S54** (Typography; S53 Start and Colour is done on branch `s53-start-colour`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -105,7 +105,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☑      |
 | S51 Builder shell                                 | M17       | ☑      |
 | S52 Preview pages                                 | M17       | ☑      |
-| S53 Start and Colour                              | M17       | ☐      |
+| S53 Start and Colour                              | M17       | ☑      |
 | S54 Typography                                    | M17       | ☐      |
 | S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☐      |
 | S56 Check                                         | M17       | ☐      |
@@ -889,6 +889,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) The old preview's sample sections are gone, so `playground.spec.ts` moved to the new pages: the primary button is "Get started", the accent card is "Highlights", the Select is "Country" on the Sign-up tab. (2) All components has tabs of its own, so e2e waits for `preview-frame`, not a tabpanel. (3) A Banner defaults to a full-screen height; the landing hero overrides it with `min-h-0`. (4) The preview's dark/light slot is not built (reserved for Release 3).
 - Verified: site unit tests 283 passed (new `pages.test.ts`, 5 tests); typecheck, ESLint, `knip` and Prettier clean; new `e2e/preview.spec.ts` (14 tests: axe on every tab in Base, Corporate, Nature and Quirky; one labelled region after the controls and a skip link; no landmark and h1/h2 only the preview title; links and forms do not act; width switch; every tab reflows at Phone; a dialog in the look) green; full site e2e 439 passed, 5 skipped (clipboard and video, as before) in Chromium, Firefox and WebKit. The tab list wraps to a second row in a narrow pane (a sideways scroll made WebKit miss a click in Corporate). Not looked at by eye in the browser pane (no dev server was left running); the e2e checks stand in.
 - Next: S53 (Start and Colour).
+
+### S53 — Start and Colour — 2026-11-17
+
+- Branch `s53-start-colour` cut from `origin/main` (50b51f2, S52 merged as #90). Started about 16:50, ended about 17:50 (local).
+- Done: Start (optional brand colour by text, picker or a picture read in the browser; four look RadioCards whose thumbnails redraw in the colour; "Not sure?" three questions with the reason) and Colour (brand colour with a ten-shade strip, four highlight suggestions or your own, background feel as swatch cards, a readability line under each colour). Every colour is `ColourField`: text field, picker beside it, line under it. Logic in `playground/start.ts`; UI in `components/build/{start-step,colour-step,colour-field}.tsx`; strings in `content/builder.ts` (`start`, `colour`).
+- Decisions: D-158.
+- Gotchas: (1) The package's Tailwind bridge names differ from the token names (`bg-ds-primary`, `bg-ds-canvas`, `text-ds-text`); a wrong name renders nothing and no check complains, so the e2e reads the thumbnail's computed colour. (2) "Creating a project" is read as: New design system on the chooser, then each way of starting on Start (the e2e counts the projects). (3) Firefox crashes the page ("Page crashed") when axe runs its button-name rule while the colour field shows its error; the error state is clean in Chromium and WebKit and the same page without the error is clean in Firefox, so that one axe test skips Firefox (cause not found). (4) `forms.spec.ts` "axe clean with a Select open" failed about 1 run in 12 in Firefox and WebKit under load, with and without this session's changes; not touched. (5) With four workers, WebKit timed out on unrelated tests; two workers were clean. (6) `rounded-ds-sm` in `builder-shell.tsx` (S51) matches no utility; not fixed here.
+- Verified: site unit tests 296 passed (new `start.test.ts`); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-start.spec.ts` (each way of starting makes a project, a brand change restyles the preview's main button, an invalid colour shows the sentence and suggestion and keeps the colour, picture colour sends no request, a non-picture file is refused, Colour step controls, axe); full site e2e 467 passed, 6 skipped, 1 flaky failure (item 4) in Chromium, Firefox and WebKit.
+- Next: S54 (Typography).
 
 ## Retro (Release 1)
 
