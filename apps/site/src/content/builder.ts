@@ -29,7 +29,7 @@ export const bannedWords = [
 /** The longest sentence allowed in a Guided string, in words. */
 export const maxSentenceWords = 25;
 
-export type StepId =
+type StepId =
   | "start"
   | "colour"
   | "typography"
@@ -39,20 +39,20 @@ export type StepId =
   | "check"
   | "use";
 
-export type Choice = {
+type Choice = {
   /** Short name on the picture card. */
   name: string;
   /** One short sentence under the name. */
   hint: string;
 };
 
-export type ChoiceGroup = {
+type ChoiceGroup = {
   /** The label of the group of cards. */
   label: string;
   choices: Choice[];
 };
 
-export type Step = {
+type Step = {
   id: StepId;
   /** Name in the step list. */
   name: string;
