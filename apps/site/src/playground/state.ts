@@ -70,7 +70,8 @@ const sanitiseDims = (input: unknown): Dims => {
   if (!isRecord(input)) return dims;
   for (const id of dimensionIds) {
     const value = input[id];
-    if (isThemeName(value)) dims[id] = value;
+    if (isThemeName(value) || (id === "depth" && value === "flat"))
+      (dims as Record<string, string>)[id] = value;
   }
   return dims;
 };
@@ -112,6 +113,7 @@ export const sanitiseKnobs = (input: unknown): Knobs => {
     "shadowStrength",
     "density",
     "motionSpeed",
+    "typeScale",
   ] as const) {
     if (positive(input[key])) knobs[key] = input[key];
   }

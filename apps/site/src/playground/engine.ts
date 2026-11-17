@@ -8,6 +8,7 @@
 // Nothing here touches the DOM. An unset knob (or one at its neutral value) is a no-op,
 // so an untouched state resolves to exactly the starting theme.
 import { fontStack } from "./fonts";
+import { applyDims } from "./presets";
 import { brandRamp, neutralRamp } from "./ramps";
 import type {
   IgnoredOverride,
@@ -28,6 +29,9 @@ export const shadowAliases: Record<string, string> = {
   "--ds-elevation-raised": "--ds-shadow-sm",
   "--ds-elevation-overlay": "--ds-shadow-lg",
 };
+
+/** No text size goes under 12px, however far the type scale is turned down (S46). */
+const minFontSizeRem = 0.75;
 
 const number = (n: number): string => String(+n.toFixed(4));
 
@@ -166,6 +170,14 @@ const applyKnobs = (primitives: VarMap, knobs: Knobs): VarMap => {
       );
   }
 
+  if (knobs.typeScale !== undefined && knobs.typeScale !== 1) {
+    const factor = positive("typeScale", knobs.typeScale);
+    for (const key of Object.keys(out)) {
+      if (key.startsWith("--ds-font-size-"))
+        out[key] = scaleRem(out[key], factor, minFontSizeRem);
+    }
+  }
+
   if (knobs.motionSpeed !== undefined && knobs.motionSpeed !== 1) {
     const speed = positive("motionSpeed", knobs.motionSpeed);
     for (const key of ["--ds-duration-100", "--ds-duration-200"])
@@ -282,4 +294,8 @@ export const resolveState = (
   state: PlaygroundState,
   themes: Record<ThemeName, ThemeJson>,
 ): ResolvedTheme =>
-  resolveTheme(themes[state.start], state.knobs, state.overrides);
+  resolveTheme(
+    applyDims(themes[state.start], themes, state.dims),
+    state.knobs,
+    state.overrides,
+  );

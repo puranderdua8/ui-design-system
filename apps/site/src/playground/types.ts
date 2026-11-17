@@ -37,6 +37,8 @@ export type Knobs = {
   density?: number;
   /** Speed multiplier: 2 = durations halve. 1 = unchanged. */
   motionSpeed?: number;
+  /** Multiplier for `font-size.*`; no size goes under 12px (S46). 1 = unchanged. */
+  typeScale?: number;
 };
 
 /** The six picture-choice dimensions that can each take their values from a shipped look (spec 4.4). */
@@ -48,13 +50,16 @@ export const dimensionIds = [
   "depth",
   "motion",
 ] as const;
-type DimensionId = (typeof dimensionIds)[number];
+export type DimensionId = (typeof dimensionIds)[number];
 
 /**
  * Which look each dimension takes its values from. A dimension that is not listed
- * follows `start`, so `{}` is exactly the starting look. S46 applies these.
+ * follows `start`, so `{}` is exactly the starting look. `presets.ts` applies these;
+ * `depth` may also be `"flat"`, the one value no shipped look has (S46).
  */
-export type Dims = Partial<Record<DimensionId, ThemeName>>;
+export type Dims = Partial<Record<DimensionId, ThemeName>> & {
+  depth?: ThemeName | "flat";
+};
 
 /** A typeface the person typed by name ("I have my own font"). Plain text only. */
 export type Fonts = { heading?: string; body?: string };
