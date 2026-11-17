@@ -13,6 +13,7 @@ import {
   TabsTrigger,
   Text,
 } from "@puranderdua/ui";
+import { builderContent } from "@/content/builder";
 import { evaluateContrast } from "@/playground/contrast";
 import { contrastSpec, themeMaps } from "@/playground/data";
 import { previewVars, safeResolve } from "@/playground/state";
@@ -66,6 +67,12 @@ export const Playground = () => {
               update. Your last changes are remembered in this browser.
             </Text>
           </Stack>
+          <a
+            href="#preview"
+            className="sr-only ds-focus-ring text-ds-link focus:not-sr-only focus:bg-ds-canvas focus:px-ds-gap-md focus:py-ds-gap-sm"
+          >
+            {builderContent.shell.skipToPreview}
+          </a>
           {error ? (
             <div
               role="alert"
@@ -122,12 +129,15 @@ export const Playground = () => {
                   </TabsContent>
                 </Tabs>
               </Stack>
-              <div
+              <section
+                id="preview"
+                tabIndex={-1}
+                aria-label={builderContent.shell.previewLabel}
                 data-testid="preview-pin"
                 className="@4xl:sticky @4xl:top-0 @4xl:max-h-dvh @4xl:overflow-y-auto"
               >
                 <Preview theme={state.start} vars={vars} />
-              </div>
+              </section>
             </Split>
           </div>
         </Stack>

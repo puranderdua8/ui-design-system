@@ -420,6 +420,20 @@ export const builderContent = {
     examplesGroup: "Your design systems",
   },
 
+  /** The preview's own controls: the five example pages and the width switch (S52). */
+  preview: {
+    pagesLabel: "Example pages",
+    pages: {
+      landing: "Landing page",
+      signup: "Sign-up form",
+      settings: "Settings screen",
+      article: "Article",
+      all: "All components",
+    },
+    widthLabel: "Screen width",
+    widths: { phone: "Phone", tablet: "Tablet", desktop: "Desktop" },
+  },
+
   /** What the Check step says about a cause. `{count}` places are affected. */
   check: {
     /** One sentence per cause (S47). `explain.ts` adds `affected` after it. */
