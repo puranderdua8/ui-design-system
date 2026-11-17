@@ -380,14 +380,63 @@ export const builderContent = {
 
   /** What the Check step says about a cause. `{count}` places are affected. */
   check: {
-    tooLight:
-      "Your brand colour is too light for white text. {count} places are affected, for example main buttons.",
-    tooDark:
-      "Your brand colour is too dark for dark text. {count} places are affected, for example badges.",
-    lowContrast:
-      "Some text is hard to read on its background. {count} places are affected.",
+    /** One sentence per cause (S47). `explain.ts` adds `affected` after it. */
+    causes: {
+      brandLight: "Your brand colour is too light for white text.",
+      brandDark: "Your brand colour is too dark for dark text.",
+      highlight: "Your highlight colour is hard to read.",
+      background:
+        "The feel you chose for your backgrounds makes some text hard to read.",
+      handSet: "A colour you set by hand is hard to read.",
+      other: "Some text is hard to read on its background.",
+    },
+    /** `{count}` places are affected; `{example}` is a name from `roleNames`. */
+    affectedOne: "1 place is affected, for example {example}.",
+    affectedMany: "{count} places are affected, for example {example}.",
     before: "Before",
     after: "After",
+    /** Used when a colour has no name in `roleNames`. */
+    unnamedPlace: "some text",
+    /**
+     * Plain names for the colours a pair is made of, keyed by the role's variable name
+     * without the `--ds-` prefix. A name stands for the place the colour shows up, not for
+     * the colour. A dark-section colour (`on-inverse-link`) uses its plain role's name.
+     */
+    roleNames: {
+      "text-primary": "body text",
+      "text-muted": "quiet text",
+      "text-inverse": "text on dark sections",
+      "text-on-brand": "text on coloured sections",
+      "text-link": "links",
+      "text-link-hover": "links you point at",
+      "text-accent": "highlighted text",
+      "accent-border": "highlight outlines",
+      "action-primary-fg": "main buttons",
+      "action-primary-bg": "main buttons",
+      "action-primary-bg-hover": "main buttons you point at",
+      "action-primary-bg-active": "main buttons you press",
+      "action-secondary-fg": "second buttons",
+      "action-secondary-bg": "second buttons",
+      "action-secondary-bg-hover": "second buttons you point at",
+      "action-secondary-bg-active": "second buttons you press",
+      "action-secondary-border": "second buttons",
+      "focus-ring": "the outline around what you tab to",
+      "border-control": "outlines of form fields",
+      "input-border": "outlines of form fields",
+      "input-border-hover": "outlines of form fields",
+      "input-bg": "form fields",
+      "input-placeholder": "hint text in form fields",
+      "menu-highlight-fg": "the chosen item in a list",
+      "menu-highlight-bg": "the chosen item in a list",
+      "feedback-danger-fg": "error messages",
+      "feedback-danger-bg": "error messages",
+      "feedback-danger-border": "error messages",
+      "surface-canvas": "page backgrounds",
+      "surface-subtle": "soft backgrounds",
+      "surface-raised": "cards",
+      "surface-inverse": "dark sections",
+      "surface-brand": "coloured sections",
+    },
   },
 
   /** An error is one sentence, then a suggestion. */
