@@ -52,17 +52,41 @@ export const ExportPanel = ({
     }
   };
 
+  const cssFile = files.find((file) => file.mime === "text/css");
+  const jsonFiles = files.filter((file) => file !== cssFile);
+
+  const fileRow = (file: ExportFile) => (
+    <li
+      key={file.name}
+      className="flex flex-wrap items-center justify-between gap-ds-gap-sm"
+    >
+      <code className="min-w-0 break-all">{file.name}</code>
+      <Cluster gap="sm">
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => copy(file)}
+          aria-label={`Copy ${file.name}`}
+        >
+          Copy
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => download(file)}
+          aria-label={`Download ${file.name}`}
+        >
+          Download
+        </Button>
+      </Cluster>
+    </li>
+  );
+
   return (
     <Stack gap="md">
       <Heading as="h2" variant="h3">
         Export
       </Heading>
-      <Text>
-        Put the four JSON files in <code>tokens/themes/{slug}/</code>, list them
-        under a <code>{slug}</code> theme in <code>tokens/resolver.json</code>,
-        then run <code>pnpm tokens:build</code>. The CSS file is what a consumer
-        imports after <code>foundations.css</code>.
-      </Text>
       <Field label="Theme name">
         <Input
           value={name}
@@ -87,44 +111,54 @@ export const ExportPanel = ({
           {unrepresentable.map((key) => key.replace(/^--ds-/, "")).join(", ")}.
         </Text>
       ) : null}
-      <ul
-        className="flex flex-col gap-ds-gap-sm"
-        role="list"
-        aria-label="Export files"
-      >
-        {files.map((file) => (
-          <li
-            key={file.name}
-            className="flex flex-wrap items-center justify-between gap-ds-gap-sm"
+      <Heading as="h3" variant="h3">
+        Use in your app
+      </Heading>
+      {cssFile ? (
+        <ul className="flex flex-col gap-ds-gap-sm" role="list">
+          {fileRow(cssFile)}
+        </ul>
+      ) : null}
+      <Stack gap="sm">
+        <Text>
+          <strong>Any site:</strong> link <code>{cssFile?.name}</code> in your
+          page. It carries your decisions as CSS variables, not components.
+        </Text>
+        <Text>
+          <strong>
+            With <code>@puranderdua/ui</code>:
+          </strong>{" "}
+          import <code>{cssFile?.name}</code> after <code>foundations.css</code>
+          .
+        </Text>
+      </Stack>
+      <details className="ds-border rounded-ds-card border-ds-border p-ds-gap-sm">
+        <summary className="ds-focus-ring cursor-pointer font-semibold">
+          Advanced: theme folder for this repository
+        </summary>
+        <Stack gap="md" className="mt-ds-gap-sm">
+          <Text>
+            Put the four JSON files in <code>tokens/themes/{slug}/</code>, list
+            them under a <code>{slug}</code> theme in{" "}
+            <code>tokens/resolver.json</code>, then run{" "}
+            <code>pnpm tokens:build</code>. The CSS file is what a consumer
+            imports after <code>foundations.css</code>.
+          </Text>
+          <ul
+            className="flex flex-col gap-ds-gap-sm"
+            role="list"
+            aria-label="Theme folder files"
           >
-            <code className="min-w-0 break-all">{file.name}</code>
-            <Cluster gap="sm">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => copy(file)}
-                aria-label={`Copy ${file.name}`}
-              >
-                Copy
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => download(file)}
-                aria-label={`Download ${file.name}`}
-              >
-                Download
-              </Button>
-            </Cluster>
-          </li>
-        ))}
-      </ul>
-      <Button
-        onClick={() => files.forEach(download)}
-        data-testid="export-download-all"
-      >
-        Download all {files.length} files
-      </Button>
+            {jsonFiles.map(fileRow)}
+          </ul>
+          <Button
+            onClick={() => files.forEach(download)}
+            data-testid="export-download-all"
+          >
+            Download all {files.length} files
+          </Button>
+        </Stack>
+      </details>
       <Text role="status" data-testid="export-status">
         {copied
           ? `Copied ${copied}.`

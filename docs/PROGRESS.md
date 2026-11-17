@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S39** (export quick win; S38 is done), then S40 (M14), then the maintainer's first usability round (T0). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
+- **Next session:** **S40** (S38 and S39 are done), then (M14), then the maintainer's first usability round (T0). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
 - **Blockers:** none for S38–S40. **Maintainer to-dos:** (1) `v1.0.0` is **not** on npm (`npm view` shows 0.9.0) and not tagged on origin: push the tag and approve `npm-publish`. Then, in one small change, pin `apps/site` to `@puranderdua/ui` 1.0.0, swap the `minimumReleaseAgeExclude` entry in `pnpm-workspace.yaml` from `@puranderdua/ui@0.9.0` to `@puranderdua/ui@1.0.0`, refresh the lockfile, run the site e2e, and deploy (D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -90,7 +90,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S36 Release 2 kickoff                             | M13       | ☑      |
 | S37 Analytics and privacy note                    | M13       | ☑      |
 | S38 Playground quick wins                         | M14       | ☑      |
-| S39 Export quick win                              | M14       | ☐      |
+| S39 Export quick win                              | M14       | ☑      |
 | S40 Components quick wins                         | M14       | ☐      |
 | T0 First usability round (maintainer)             | M14       | ☐      |
 | S41 RadioCard and Slider                          | M15       | ☐      |
@@ -764,6 +764,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Decisions: none new.
 - Gotchas: (1) Radix unmounts inactive tab panels, so a test must open the Export tab before looking for an export warning; the preview has tabs too, so tests scope to the first `[data-slot="tabs"]`. (2) At the very end of the page the footer pushes the pinned preview up by its own height (normal sticky); the test asserts most of it stays in view. (3) The page title stays "Playground" (nav link and e2e); the rename to Builder is S51+. (4) `.claude/launch.json` gained a `site` entry for the preview server (local, not tracked content).
 - Next: S39.
+
+### S39 — Export quick win — 2026-11-17
+
+- S38 check: merged (#76, 019d04b); branch `s39-export-quick-win` cut from `origin/main`.
+- Done (site only, `export-panel.tsx`): the Export tab leads with "Use in your app": the `<name>.css` file with Copy and Download, then two one-line cases (any site: link it, it carries the decisions as CSS variables, not components; `@puranderdua/ui`: import it after `foundations.css`). The four JSON files, the repository steps and "Download all 5 files" are in a closed "Advanced: theme folder for this repository" disclosure. Theme name field, contrast and override warnings, `exportTheme` and `export.test.ts` are unchanged.
+- Verified: site typecheck, prettier, eslint, knip, `export.test.ts` (8 passed, unchanged), playground e2e in three browsers (61 passed, 2 skipped: clipboard outside Chromium). Export e2e now checks the disclosure is closed, downloads the lead CSS, then opens it for the JSON files and the copy test.
+- Decisions: none new.
+- Gotchas: the CSS row is only in the lead (not repeated in the disclosure) so button names stay unique. The font snippet and credit comment in spec 4.6 are not in this session's prompt, so left for the Builder's own Use-it step (S57).
+- Next: S40.
 
 ## Retro (Release 1)
 
