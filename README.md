@@ -1,6 +1,6 @@
 # ui-design-system
 
-A small, token-driven design system: **Text**, **Heading**, **Button**, **Link** and layout components (**Container**, **Grid**, **Stack**, **Cluster**, **Section**, **Split**, **Sidebar**) and form components (**Label**, **Field**, **Fieldset**, **Input**, **Checkbox**, **RadioGroup**, **Select**) and display components (**Card**, **Tabs**, **Banner**) for React 19 and Tailwind CSS v4, distributed as one npm package, with four themes (**Base**, **Corporate**, **Nature**, **Quirky**). Release 1 is complete (see [Roadmap](#roadmap) and the [v1 release notes](docs/releases/v1.md)).
+A small, token-driven design system: **Text**, **Heading**, **Button**, **Link** and layout components (**Container**, **Grid**, **Stack**, **Cluster**, **Section**, **Split**, **Sidebar**) and form components (**Label**, **Field**, **Fieldset**, **Input**, **Checkbox**, **RadioGroup**, **RadioCard**, **Select**, **Slider**, **ToggleGroup**) and the **AlertDialog** overlay and display components (**Card**, **Tabs**, **Banner**) for React 19 and Tailwind CSS v4, distributed as one npm package, with four themes (**Base**, **Corporate**, **Nature**, **Quirky**). Release 1 is complete (see [Roadmap](#roadmap) and the [v1 release notes](docs/releases/v1.md)).
 
 - Site: https://ui-design-system-beta.vercel.app/
 - Component showcase: https://ui-design-system-beta.vercel.app/components (Typography, Layout, Forms, Actions, Display; the header switches the theme)
@@ -67,7 +67,7 @@ Release 1, done ([plan](docs/plans/release-1.md)):
 
 Releases went out as npm minors 0.2.0 → 0.9.0; 0.7.0 added the Corporate, Nature and Quirky themes, 0.8.0 the accent colour role and 0.9.0 the hardening with its breaking changes. 1.0.0 removes the names 0.9.0 deprecated and is the first stable release (see the [CHANGELOG](CHANGELOG.md), the [migration guide](docs/migration-0.8-to-1.0.md) and [CONTRIBUTING](CONTRIBUTING.md)). The playground is site-only.
 
-Release 2, in progress ([plan](docs/PLAN.md), [design](docs/builder-spec.md)): **the Builder**. The site becomes a guided, plain-language tool for building a design system: pick a look, choose colours, type, shape and spacing as named options beside a live preview of real pages, get readability problems explained and fixed, then leave with a share link, a printable style guide and one file per stack. It starts with quick wins on today's playground and component pages, and ships package 1.1.0 (RadioCard, Slider, ToggleGroup, AlertDialog). Dark mode per theme follows as Release 3.
+Release 2, in progress ([plan](docs/PLAN.md), [design](docs/builder-spec.md)): **the Builder**. The site becomes a guided, plain-language tool for building a design system: pick a look, choose colours, type, shape and spacing as named options beside a live preview of real pages, get readability problems explained and fixed, then leave with a share link, a printable style guide and one file per stack. It starts with quick wins on today's playground and component pages, and adds RadioCard, Slider, ToggleGroup and AlertDialog to package 1.0.0. Dark mode per theme follows as Release 3.
 
 ## Develop
 

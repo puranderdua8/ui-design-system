@@ -255,7 +255,7 @@ The engine folder keeps its name (`src/playground`); renaming internal folders g
 | Story usage notes (repo, H20c)            | All 22 story files carry a developer-facing usage and accessibility note in `docs.description.component`                                                                                        | The gallery can reuse them for its "For developers" part; the plain "what it is, use it when" lines are still to be written                                                                               |
 | **Not verified**                          | Native DTCG import in Figma (only secondary sources); Google Fonts' own privacy and licence wording (the page could not be read)                                                                | Stated as open in section 7; neither is promised in the UI until checked                                                                                                                                  |
 
-### 5.6 Package (`@puranderdua/ui` 1.1.0, a minor)
+### 5.6 Package (`@puranderdua/ui` 1.0.0; D-148: the four components ship in the first stable release)
 
 **RadioCard** (picture choice), **Slider** (fine-tune), **ToggleGroup** (preview width), **AlertDialog** (confirm delete and start over). Each adapted from shadcn new-york-v4 with a provenance doc, an individual `@radix-ui/react-*` package, and the per-component checklist in `PLAN.md` (tests, axe, story, hit area, string props, contrast matrix for any new role with a default alias, D-095). Meta files (`./meta/components.json`, `./meta/tokens.json`) ship in a later minor, when the gallery and inspect need them.
 

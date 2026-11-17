@@ -12,7 +12,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CNA_VERSION="${CNA_VERSION:-16.4.2}"
+CNA_VERSION="${CNA_VERSION:-16.4.6}"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/ds-check-rsc.XXXXXX")"
 SERVER_PID=""
 SERVER_PORT=3103
@@ -44,13 +44,14 @@ mkdir "$WORK/unpacked"
 tar -xzf "$TARBALL" -C "$WORK/unpacked"
 DIST="$WORK/unpacked/package/dist"
 # Every client component (H3, F36): Radix-based and context-based files.
-for client in field input checkbox radio-group select tabs banner-video; do
+for client in field input checkbox radio-group select tabs banner-video slider radio-card toggle-group alert-dialog; do
   expect "$DIST/components/$client.js" '"use client"'
 done
 # Server-safe files, including the plain `.styles` modules (F01). Card has no
 # directive (it only composes Heading and Text), so Server Components render it.
 for server in text heading label button link stack grid cluster container section split sidebar card banner \
-  input.styles checkbox.styles radio-group.styles select.styles card.styles tabs.styles banner.styles; do
+  input.styles checkbox.styles radio-group.styles select.styles card.styles tabs.styles banner.styles \
+  slider.styles radio-card.styles toggle-group.styles alert-dialog.styles; do
   reject "$DIST/components/$server.js" '"use client"'
 done
 reject "$DIST/index.js" '"use client"'
@@ -89,6 +90,9 @@ cat >src/app/page.tsx <<'TSX'
 // components inside the package, so they must arrive as client references.
 import * as ui from "@puranderdua/ui";
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+  RadioCard, Slider, ToggleGroup, ToggleGroupItem,
   Banner, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardMedia, CardTitle,
   Checkbox, Cluster, Container, Field, Grid, Heading, Input, Link, Label,
   RadioGroup, RadioGroupItem, Section, Select, SelectContent, SelectItem,
@@ -139,6 +143,19 @@ export default function Page() {
           <SelectContent><SelectItem value="in">India</SelectItem></SelectContent>
         </Select>
       </Field>
+      <Field label="Volume"><Slider defaultValue={[40]} showValue aria-valuetext="40 percent" /></Field>
+      <RadioGroup aria-label="Plan"><RadioCard value="free" label="Free" description="No cost" /></RadioGroup>
+      <ToggleGroup type="single" aria-label="Align" defaultValue="l">
+        <ToggleGroupItem value="l">Left</ToggleGroupItem>
+        <ToggleGroupItem value="r">Right</ToggleGroupItem>
+      </ToggleGroup>
+      <AlertDialog>
+        <AlertDialogTrigger asChild><Button>Delete</Button></AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader><AlertDialogTitle>Sure?</AlertDialogTitle><AlertDialogDescription>Cannot undo.</AlertDialogDescription></AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogCancel>No</AlertDialogCancel><AlertDialogAction>Yes</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Card as="article" variant="raised">
         <CardMedia><div>media</div></CardMedia>
         <CardHeader><CardTitle as="h2">Card title</CardTitle><CardDescription>Card hint</CardDescription></CardHeader>
@@ -207,6 +224,16 @@ expect "$WORK/page.html" ',\"BannerVideo\"]'
 expect "$WORK/page.html" 'data-slot="banner-video"'
 reject "$WORK/page.html" '<video'
 expect "$WORK/page.html" 'role="tablist"'
+# The 1.0.0 components are client references that still SSR (S43): the slider
+# and its value, the radio card, the toggle group, and the closed dialog's trigger.
+expect "$WORK/page.html" ',\"Slider\"]'
+expect "$WORK/page.html" ',\"RadioCard\"]'
+expect "$WORK/page.html" ',\"ToggleGroup\"]'
+expect "$WORK/page.html" ',\"AlertDialog\"]'
+expect "$WORK/page.html" 'role="slider"'
+expect "$WORK/page.html" 'aria-valuetext="40 percent"'
+expect "$WORK/page.html" 'data-slot="toggle-group"'
+reject "$WORK/page.html" 'role="alertdialog"'
 expect "$WORK/page.html" ',\"Tabs\"]'
 expect "$WORK/page.html" '[\"$\",\"h1\",null,{\"children\":\"RSC check\"'
 expect "$WORK/page.html" '[\"$\",\"p\",null,{\"children\":\"Rendered on the server.\"'
