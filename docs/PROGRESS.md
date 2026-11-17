@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S55** (Shape, Spacing, Depth and motion, shuffle; S54 Typography is done on branch `s54-typography`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S56** (Check; S55 Shape, Spacing, Depth and motion, shuffle is done on branch `s55-shape-spacing-depth`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -107,7 +107,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S52 Preview pages                                 | M17       | ☑      |
 | S53 Start and Colour                              | M17       | ☑      |
 | S54 Typography                                    | M17       | ☑      |
-| S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☐      |
+| S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☑      |
 | S56 Check                                         | M17       | ☐      |
 | S57 Use it and the shared view                    | M17       | ☐      |
 | S58 Style guide and print                         | M17       | ☐      |
@@ -907,6 +907,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) `previewVars` now takes the typed fonts as a second argument; the four callers pass `state.fonts` (without it the stand-in would not apply). (2) The content test allows only known placeholders, so the slider's percent is formatted in code. (3) Firefox crashes the page ("Page crashed") when axe runs while the typed-font note shows, the same signature as S53's colour error; that one axe test skips Firefox, the plain step is clean in all three (cause not found). (4) The first full e2e run had 11 WebKit failures in `build-start` and `build-typography` that all passed alone and in the second full run (load, as in S53 item 5). (5) The Firefox `forms.spec` "axe clean with a Select open" flake from S53 item 4 failed again, untouched.
 - Verified: site unit tests 311 passed (new `typography.test.ts`: name grammar, quoted stack with the replaced stack's fallbacks, typed font wins over a pairing, reaches CSS and DTCG, stand-in never names the font, unsafe stored names dropped, pairings use only served fonts, size fine-tune); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-typography.spec.ts` (a pairing changes both fonts and every request stays on our origin; the typed name is a stand-in in the preview and in the exported CSS; a wrong name says so and keeps the last good one; text size by cards and by keyboard; axe) green in Chromium, Firefox and WebKit; full site e2e 484 passed, 7 skipped, 1 failed (the Firefox forms flake). Not looked at by eye in the browser pane; the e2e checks stand in.
 - Next: S55 (Shape, Spacing, Depth and motion, shuffle).
+
+### S55 — Shape, Spacing, Depth and motion, shuffle — 2026-11-17
+
+- Branch `s55-shape-spacing-depth` cut from `origin/main` (d682673, S54 merged as #92). Started about 18:30, ended about 19:00 (local).
+- Done: the Shape, Spacing and Depth and motion steps (`components/build/preset-steps.tsx`): picture cards for corners, outline, spacing, shadows and motion, each group with a fine-tune `Slider` whose value is said in words, a tap-target note under Spacing, and a Play button for motion that respects reduced motion. "Try another combination" is in the top bar with a "Keep my colours" checkbox (ticked), one `setState` call, so one undo. The "on their way" note no longer shows for any step. Strings in `content/builder.ts` (`look`, `shuffle`).
+- Decisions: D-160.
+- Gotchas: (1) The panel's own classes use the package bridge, which has `rounded-ds-control|card|pill` only; `rounded-ds-sm|md` match nothing (the S53 note about `builder-shell.tsx` is still open). (2) Playwright loads specs as CommonJS, so `import.meta` fails; the spec reads theme files through `createRequire(process.cwd())`. (3) Card pictures are drawn from the look's value, not the project's, so they stay put while a slider moves.
+- Verified: site unit tests 311 passed; typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-shape.spec.ts` (each card sets the look's value in the preview; corners, outline, spacing, shadow and speed fine-tunes by keyboard with words; Play and reduced motion; shuffle one undo and keeps the brand colour; unticked shuffle changes it; axe on the three steps) 8 of 8 in Chromium; full site e2e with two workers 507 passed, 7 skipped, 2 failed: `forms.spec` "axe clean with a Select open" in Firefox and WebKit (colour contrast on the highlighted option). It fails the same way on `main` with my changes stashed, so it is not from S55 (it is now consistent, not 1 in 12 as in S53). Not looked at by eye in the browser pane.
+- Next: S56 (Check).
 
 ## Retro (Release 1)
 
