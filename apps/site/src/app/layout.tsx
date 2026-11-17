@@ -70,8 +70,8 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
-  // The head script and the theme switcher change <html>'s style and data-ds-theme
-  // before React hydrates, so React must not flag the mismatch.
+  // The chrome always wears Base (D-128); the head script only adds a style rule for
+  // examples, in <head>, which React must not flag either.
   <html lang="en" className={fontVariables} suppressHydrationWarning>
     <head>
       <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

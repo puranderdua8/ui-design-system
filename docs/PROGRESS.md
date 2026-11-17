@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S50** (Site on 1.0.0, neutral chrome, examples scope; S49 CSS-variables and DTCG-file formats is done on branch `s49-formats`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S51** (Builder shell; S50 neutral chrome and examples scope is done on branch `s50-neutral-chrome`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -102,7 +102,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S47 Explain and fix                               | M16       | ☑      |
 | S48 Value grammar, share link, project file       | M16       | ☑      |
 | S49 CSS-variables and DTCG-file formats           | M16       | ☑      |
-| S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☐      |
+| S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☑      |
 | S51 Builder shell                                 | M17       | ☐      |
 | S52 Preview pages                                 | M17       | ☐      |
 | S53 Start and Colour                              | M17       | ☐      |
@@ -862,6 +862,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) Nothing in the UI uses the formats yet (S57 Use it); `knip` passes because tests import them. (2) Role groups are the first word of the var name, not the repo's own nesting, so the repo's `contrast-pairs.json` cannot be checked against the file; the validator test uses a minimal contrast file. (3) The validator needs a `$description` on every role, so the test adds a placeholder; the file itself carries none. (4) The font snippet and the three lines of instructions are UI (S57), not part of these functions.
 - Verified: site unit tests 268 passed (new `formats.test.ts`, 14 tests: one `:root`, every var resolved, same values as the theme map for all four looks, a planted injection refused, aliases resolve to same-type primitives, a role value of its own, an unrepresentable role reported, and the file passing `validate-tokens.mjs` for all four looks); new `e2e/css-vars.spec.ts` applies the CSS to a plain HTML page in Chromium, Firefox and WebKit (3 passed). Site typecheck, ESLint, `knip` and Prettier clean.
 - Next: S50.
+
+### S50 — Site on 1.0.0, neutral chrome, examples scope — 2026-11-17
+
+- Branch `s50-neutral-chrome` cut from `origin/main` (45d2ead, S49 merged as #87). Started about 15:20, ended about 15:45 (local).
+- Done: the site was already pinned to `@puranderdua/ui@1.0.0` (S44), so no change. `lib/theme.ts` no longer writes to `<html>` (store of name and vars, same `ds-theme` cache); new `components/examples-scope.tsx` (`ThemeScope` + `data-examples-scope`); `Example` wraps its demo frame in it; the head script now appends a `[data-examples-scope]` style rule from the cache; header switcher is "Showing examples in". `themes.spec.ts` rewritten (chrome stays Base, examples follow, reload applies the look before hydration, planted break-out value ignored, axe in every look on every showcase page).
+- Decisions: D-155.
+- Gotchas: (1) The playground preview already had its own `ThemeScope` fed by the playground state, so it was not changed; the playground page chrome now stays Base too. (2) Pre-hydration paint is covered by the style rule, then `ThemeScope` sets the same vars inline after hydration. (3) The header switcher still has no projects entry (S51). (4) `docs/themes.md` updated to the new flow.
+- Verified: site unit tests 268 passed, typecheck, ESLint, `knip`, Prettier clean, `next build` clean; full site e2e 364 passed, 5 skipped in Chromium, Firefox and WebKit (including `themes.spec.ts`, 31 tests per browser).
+- Next: S51 (Builder shell).
 
 ## Retro (Release 1)
 
