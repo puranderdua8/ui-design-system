@@ -111,6 +111,19 @@ const parseFontFamily = (input: string): string | null => {
     : null;
 };
 
+const fontName = /^[\p{L}\p{N}][\p{L}\p{N} .&_-]{0,59}$/u;
+
+/**
+ * A font's name as a person types it ("Space Grotesk"): letters, numbers, spaces and
+ * `. & _ -`, up to 60 characters, with runs of spaces collapsed. Anything else is `null`,
+ * so a name can never close a quote or carry CSS. The same set `quotedFont` allows.
+ */
+export const parseFontName = (input: unknown): string | null => {
+  if (typeof input !== "string") return null;
+  const text = input.replace(/\s+/g, " ").trim();
+  return fontName.test(text) ? text : null;
+};
+
 /** A plain number (font weight, line height, a letter-spacing multiple). */
 const parseNumber = (input: string): string | null =>
   new RegExp(`^${num}$`).test(input) ? String(Number(input)) : null;

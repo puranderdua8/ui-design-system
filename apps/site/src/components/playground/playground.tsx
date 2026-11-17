@@ -45,7 +45,10 @@ export const Playground = () => {
     () => evaluateContrast(resolved.vars, contrastSpec),
     [resolved],
   );
-  const vars = useMemo(() => previewVars(resolved.vars), [resolved]);
+  const vars = useMemo(
+    () => previewVars(resolved.vars, state.fonts),
+    [resolved, state.fonts],
+  );
   const failing = report.results.filter((result) => !result.ok).length;
   const [tab, setTab] = useState("design");
 

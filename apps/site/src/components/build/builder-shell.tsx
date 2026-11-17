@@ -22,6 +22,7 @@ import {
 } from "@/playground/steps";
 import { ColourStep } from "./colour-step";
 import { StartStep } from "./start-step";
+import { TypographyStep } from "./typography-step";
 import { useBuilder } from "./use-builder";
 
 const { shell, buttons } = content;
@@ -154,6 +155,11 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
                                 />
                               ) : step === "colour" ? (
                                 <ColourStep
+                                  state={view.state}
+                                  vars={resolved.vars as VarRecord}
+                                />
+                              ) : step === "typography" ? (
+                                <TypographyStep
                                   state={view.state}
                                   vars={resolved.vars as VarRecord}
                                 />

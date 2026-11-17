@@ -37,7 +37,10 @@ export const useBuilder = () => {
     () => evaluateContrast(resolved.vars, contrastSpec),
     [resolved],
   );
-  const vars = useMemo(() => previewVars(resolved.vars), [resolved]);
+  const vars = useMemo(
+    () => previewVars(resolved.vars, view.state.fonts),
+    [resolved, view.state.fonts],
+  );
   const failing = report.results.filter((result) => !result.ok).length;
   return { view, hydrated, resolved, error, report, vars, failing };
 };

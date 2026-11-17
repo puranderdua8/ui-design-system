@@ -35,7 +35,7 @@ export const activateProject = async (
     request,
     {
       name: project.state.start,
-      vars: previewVars(resolved.vars),
+      vars: previewVars(resolved.vars, project.state.fonts),
       project: id,
     },
     remember,

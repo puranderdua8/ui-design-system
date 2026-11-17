@@ -373,6 +373,26 @@ export const builderContent = {
     hardBrand:
       "Text on this colour is hard to read. The Check step can fix it.",
   },
+  /** The Typography step's own controls (S54). */
+  typography: {
+    pairingsHint: "Each card is drawn in its own fonts.",
+    headingSample: "Make it yours",
+    bodySample: "Words are how people hear your voice.",
+    headingFont: "Heading font",
+    bodyFont: "Body font",
+    ownHint:
+      "Optional. Type the name of a font you already use, such as Space Grotesk.",
+    ownIntro:
+      "Your own font appears here as a stand-in, because we never load fonts from other websites.",
+    standIn: "Shown here in a stand-in font:",
+    clearOwn: "Use the pairing instead",
+    sizeFineTune: "Fine-tune the text size",
+    sizeWord: {
+      smaller: "Smaller than standard",
+      standard: "Standard size",
+      larger: "Larger than standard",
+    },
+  },
 
   /** Buttons say where they go. `{step}` is replaced with the next step's name. */
   buttons: {
@@ -534,6 +554,10 @@ export const builderContent = {
     colourInvalid: {
       message: "That colour did not work.",
       fix: "Try a hex code such as #3366cc, or pick one from the wheel.",
+    },
+    fontInvalid: {
+      message: "That font name did not work.",
+      fix: "Use letters, numbers and spaces only, such as Space Grotesk.",
     },
     fontMissing: {
       message: "We can not load that font in the preview.",

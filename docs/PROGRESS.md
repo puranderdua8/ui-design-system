@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S54** (Typography; S53 Start and Colour is done on branch `s53-start-colour`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S55** (Shape, Spacing, Depth and motion, shuffle; S54 Typography is done on branch `s54-typography`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -106,7 +106,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S51 Builder shell                                 | M17       | ☑      |
 | S52 Preview pages                                 | M17       | ☑      |
 | S53 Start and Colour                              | M17       | ☑      |
-| S54 Typography                                    | M17       | ☐      |
+| S54 Typography                                    | M17       | ☑      |
 | S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☐      |
 | S56 Check                                         | M17       | ☐      |
 | S57 Use it and the shared view                    | M17       | ☐      |
@@ -898,6 +898,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) The package's Tailwind bridge names differ from the token names (`bg-ds-primary`, `bg-ds-canvas`, `text-ds-text`); a wrong name renders nothing and no check complains, so the e2e reads the thumbnail's computed colour. (2) "Creating a project" is read as: New design system on the chooser, then each way of starting on Start (the e2e counts the projects). (3) Firefox crashes the page ("Page crashed") when axe runs its button-name rule while the colour field shows its error; the error state is clean in Chromium and WebKit and the same page without the error is clean in Firefox, so that one axe test skips Firefox (cause not found). (4) `forms.spec.ts` "axe clean with a Select open" failed about 1 run in 12 in Firefox and WebKit under load, with and without this session's changes; not touched. (5) With four workers, WebKit timed out on unrelated tests; two workers were clean. (6) `rounded-ds-sm` in `builder-shell.tsx` (S51) matches no utility; not fixed here.
 - Verified: site unit tests 296 passed (new `start.test.ts`); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-start.spec.ts` (each way of starting makes a project, a brand change restyles the preview's main button, an invalid colour shows the sentence and suggestion and keeps the colour, picture colour sends no request, a non-picture file is refused, Colour step controls, axe); full site e2e 467 passed, 6 skipped, 1 flaky failure (item 4) in Chromium, Firefox and WebKit.
 - Next: S54 (Typography).
+
+### S54 — Typography — 2026-11-17
+
+- Branch `s54-typography` cut from `origin/main` (2ef0ca1, S53 merged as #91). Started about 17:46, ended about 18:10 (local).
+- Done: the Typography step. Three pairing cards drawn in their own typefaces (Clean and modern, Classic and warm, Friendly and round; only the five fonts the site already self-hosts); "I have my own font" (two optional fields, heading and body; the name passes `parseFontName`, the preview shows a labelled stand-in, the exports carry the name); Text size (Compact, Standard, Large cards plus a fine-tune `Slider` whose value is said in words). `state.fonts` now reaches the engine (`resolveTheme` takes it as a fourth argument). The step row summary names the pairing, typed font and size. Logic in `playground/{fonts,state,engine,grammar}.ts`; UI in `components/build/typography-step.tsx`; strings in `content/builder.ts` (`typography`, `errors.fontInvalid`).
+- Decisions: D-159.
+- Gotchas: (1) `previewVars` now takes the typed fonts as a second argument; the four callers pass `state.fonts` (without it the stand-in would not apply). (2) The content test allows only known placeholders, so the slider's percent is formatted in code. (3) Firefox crashes the page ("Page crashed") when axe runs while the typed-font note shows, the same signature as S53's colour error; that one axe test skips Firefox, the plain step is clean in all three (cause not found). (4) The first full e2e run had 11 WebKit failures in `build-start` and `build-typography` that all passed alone and in the second full run (load, as in S53 item 5). (5) The Firefox `forms.spec` "axe clean with a Select open" flake from S53 item 4 failed again, untouched.
+- Verified: site unit tests 311 passed (new `typography.test.ts`: name grammar, quoted stack with the replaced stack's fallbacks, typed font wins over a pairing, reaches CSS and DTCG, stand-in never names the font, unsafe stored names dropped, pairings use only served fonts, size fine-tune); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-typography.spec.ts` (a pairing changes both fonts and every request stays on our origin; the typed name is a stand-in in the preview and in the exported CSS; a wrong name says so and keeps the last good one; text size by cards and by keyboard; axe) green in Chromium, Firefox and WebKit; full site e2e 484 passed, 7 skipped, 1 failed (the Firefox forms flake). Not looked at by eye in the browser pane; the e2e checks stand in.
+- Next: S55 (Shape, Spacing, Depth and motion, shuffle).
 
 ## Retro (Release 1)
 
