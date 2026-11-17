@@ -908,6 +908,11 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Verified: site unit tests 311 passed (new `typography.test.ts`: name grammar, quoted stack with the replaced stack's fallbacks, typed font wins over a pairing, reaches CSS and DTCG, stand-in never names the font, unsafe stored names dropped, pairings use only served fonts, size fine-tune); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-typography.spec.ts` (a pairing changes both fonts and every request stays on our origin; the typed name is a stand-in in the preview and in the exported CSS; a wrong name says so and keeps the last good one; text size by cards and by keyboard; axe) green in Chromium, Firefox and WebKit; full site e2e 484 passed, 7 skipped, 1 failed (the Firefox forms flake). Not looked at by eye in the browser pane; the e2e checks stand in.
 - Next: S55 (Shape, Spacing, Depth and motion, shuffle).
 
+### Fix — Select axe test in Firefox and WebKit — 2026-11-17
+
+- Branch `fix-select-contrast-axe` from `main`. The `forms.spec` "axe clean with a Select open" failure (noted in S53, S54, S55) was a timing race in the test, not a contrast bug: options carry `ds-transition`, and Firefox and WebKit ran axe while the highlighted option was mid-fade (`#51799e`, 2.77:1). The settled colours are in the contrast matrix. The test now emulates reduced motion (which turns the fade off, `theme.css`) and waits for the list to have no running animations. No component or token changed.
+- Verified: the whole `forms.spec` 27 passed in all three browsers; the one test 15 runs per browser pair (3 × `--repeat-each=5`), 30 of 30 each time.
+
 ## Retro (Release 1)
 
 - **Time per session:** not tracked per session. From merge times: S13–S25 and H1 on 2026-10-19 and 10-20 (thirteen sessions in about two days, the plan's 60-minute slots were not the limit); MH H1–H10 from 10-21 to 11-12 (H3–H7 within about 4 hours on 11-11); S26–S28 on 11-12 and 11-13 (18:10 to 18:42 on 11-12 for S26–S28 prep); S29–S31 on 11-13 (14:35 to 15:44); S32 on 11-14 (11:22 to 11:49), S33 12:52, A1 13:06 to 13:20, S34 14:52, S35 the same day. The maintainer: add real figures.
