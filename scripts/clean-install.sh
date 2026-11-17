@@ -14,7 +14,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="${VERSION:-$(node -p "require('$REPO_ROOT/packages/ui/package.json').version")}"
-CNA_VERSION="${CNA_VERSION:-16.4.2}"
+CNA_VERSION="${CNA_VERSION:-16.4.6}"
 AXE_VERSION="4.14.0"
 JSDOM_VERSION="27.0.0"
 [ -z "${EVIDENCE:-}" ] || EVIDENCE="$(cd "$(dirname "$EVIDENCE")" && pwd)/$(basename "$EVIDENCE")"

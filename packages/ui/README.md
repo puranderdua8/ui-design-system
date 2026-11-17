@@ -1,6 +1,6 @@
 # @puranderdua/ui
 
-Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Fieldset`, `Input`, `Checkbox`, `RadioGroup`, `Select`) and the display set (`Card`, `Tabs`, `Banner`). React 19 and Tailwind CSS v4 only.
+Token-driven React components: `Text`, `Heading`, `Button`, `Link` and the layout set (`Container`, `Grid`, `Stack`, `Cluster`, `Section`, `Split`, `Sidebar`) and the form set (`Label`, `Field`, `Fieldset`, `Input`, `Checkbox`, `RadioGroup`, `RadioCard`, `Select`, `Slider`, `ToggleGroup`) and the overlay `AlertDialog` and the display set (`Card`, `Tabs`, `Banner`). React 19 and Tailwind CSS v4 only.
 
 ## Install
 
@@ -101,6 +101,13 @@ Forms (0.4.0). The controls are client components; a Server Component page can s
 - `Label`: the label text style, with an optional required marker. `Input`: `size` sm | md; invalid and disabled states.
 - `Checkbox`: checked, indeterminate, invalid, disabled. `RadioGroup` with `RadioGroupItem`: arrow keys move between items. Both keep a 16px visual with a pointer target of at least `control.target-min` (24px, WCAG 2.2 SC 2.5.8) through the `.ds-hit-area` recipe.
 - `Select` with `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `SelectGroup`, `SelectLabel`, `SelectSeparator`: `SelectContent` takes a `container` so the list renders inside a themed scope.
+
+Added in 1.0.0 (client components, themed with existing roles):
+
+- `Slider`: one value or a range. `showValue` shows the value as an `<output>`, `formatValue` formats it, `aria-valuetext` (string or function) gives a spoken value, `thumbLabels` names each thumb of a range. Name it with `Field`.
+- `RadioCard`: a card that is the radio; use it inside `RadioGroup` in a `Fieldset`. Props `label`, `description`, `media`. The selected card has a heavier border and a check mark.
+- `ToggleGroup`, `ToggleGroupItem`: segmented toggles, `type` single | multiple, arrow keys.
+- `AlertDialog`, `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel`: a confirm dialog that portals through `ScopedPortal` (keeps the theme; `container` wins). Action and Cancel need a `children` label.
 
 **Field or Fieldset?** One control with one label: `Field`. A group of related controls (radio group, list of checkboxes) with one question: `Fieldset`.
 

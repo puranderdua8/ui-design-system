@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **T0**, the maintainer's first usability round (S38–S40 are done and M14's quick wins are complete; deploy them first). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
+- **Next session:** **T0**, the maintainer's first usability round (S38–S40 are done and M14's quick wins are complete; deploy them first). M15 (package 1.0.0) and M16 (engine) can run in parallel after that.
 - **Blockers:** none for S41 onward. **Maintainer to-dos:** (1) `v1.0.0` is **not** on npm (`npm view` shows 0.9.0) and not tagged on origin: push the tag and approve `npm-publish`. Then, in one small change, pin `apps/site` to `@puranderdua/ui` 1.0.0, swap the `minimumReleaseAgeExclude` entry in `pnpm-workspace.yaml` from `@puranderdua/ui@0.9.0` to `@puranderdua/ui@1.0.0`, refresh the lockfile, run the site e2e, and deploy (D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -95,14 +95,14 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | T0 First usability round (maintainer)             | M14       | ☐      |
 | S41 RadioCard and Slider                          | M15       | ☑      |
 | S42 ToggleGroup and AlertDialog                   | M15       | ☑      |
-| S43 1.1.0 release prep                            | M15       | ☐      |
+| S43 1.0.0 release prep                            | M15       | ☑      |
 | S44 Content file and plain-language rules         | M16       | ☐      |
 | S45 State v2, projects and history                | M16       | ☐      |
 | S46 Presets, three questions and shuffle          | M16       | ☐      |
 | S47 Explain and fix                               | M16       | ☐      |
 | S48 Value grammar, share link, project file       | M16       | ☐      |
 | S49 CSS-variables and DTCG-file formats           | M16       | ☐      |
-| S50 Site on 1.1.0, neutral chrome, examples scope | M17       | ☐      |
+| S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☐      |
 | S51 Builder shell                                 | M17       | ☐      |
 | S52 Preview pages                                 | M17       | ☐      |
 | S53 Start and Colour                              | M17       | ☐      |
@@ -799,7 +799,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Verified: package tests 340 pass; `test:layout` 243 passed, 3 skipped (three browsers); `docs test:stories` 125 pass (axe); `check-client-exports` ok (13 client files); `tokens:check`, lint (0 errors; the older `Children.toArray` warning), knip, Prettier, typecheck and build green. The overlay test shows the dialog inside a `ThemeScope` carries its theme, vars, direction and the raised tone, outside the scope element, and that an explicit `container` wins.
 - Decisions: D-147.
 - Gotchas: (1) The dialog does not use the Radix `Portal`, so the scrim and panel are siblings in `ScopedPortal`'s `display: contents` wrapper. (2) A modal dialog sets `pointer-events: none` on `body`, so a "click outside" test must target the scrim. (3) No new colour role (the scrim is `overlay.scrim`), so the contrast matrix and default aliases did not change. (4) No rendered-layout test was added for the two new components; the story axe tests render ToggleGroup and the closed AlertDialog in Chromium, and the open dialog is axe-checked in jsdom.
-- Next: S43 1.1.0 release prep.
+- Next: S43 1.0.0 release prep (renamed from 1.1.0 in S43, D-148).
+
+### S43 — 1.0.0 release prep — 2026-11-17
+
+- Branch `s43-release-1-0-0` cut from `origin/main` (S42 merged as #80). Not published or tagged.
+- Done: the maintainer's decision (D-148): 1.0.0 was never published (npm shows 0.9.0), so the four M15 components ship in 1.0.0, not 1.1.0. `packages/ui` stays 1.0.0; the CHANGELOG 1.0.0 entry gains Slider, RadioCard, ToggleGroup, AlertDialog and the three Radix dependencies; the migration guide, both READMEs (component lists) and the plan, spec and this file are renumbered (1.1.0 → 1.0.0; the later meta-files release 1.2.0 → 1.1.0). `scripts/check-rsc.sh` has client and server-safe cases for the four components and SSR assertions (slider role and valuetext, radio card, toggle group slot, the closed dialog renders no `alertdialog`).
+- Verified: `pnpm check` green; `pnpm check:rsc` PASS; `scripts/clean-install.sh` PASS (`TARBALL` = the packed 1.0.0, since it is not on npm); site e2e 355 passed, 5 skipped (Chromium, Firefox, WebKit); `pnpm audit --prod --audit-level high` clean. Audit register: only the dark-mode rows (R26, R27, R29, rest of R28) are open, handed to Release 3 (D-103, D-145), outside this release's scope.
+- Gotchas: (1) `next build` in `check-rsc.sh` and `clean-install.sh` refused the pinned create-next-app 16.4.2 with a known-vulnerability error; both pins are now 16.4.6 (the site is on 16.4.5, not changed here). (2) Radix single `ToggleGroup` does not render `role="group"`, so the RSC check asserts `data-slot="toggle-group"` instead. (3) `clean-install.sh` needs `TARBALL` until 1.0.0 is on npm.
+- Next: the maintainer merges, pushes `v1.0.0` and approves `npm-publish`; then the site is pinned to 1.0.0 (S50 also expects this). Then S44.
 
 ## Retro (Release 1)
 

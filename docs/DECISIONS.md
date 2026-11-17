@@ -835,3 +835,9 @@ RadioCard (S41) is our own component on the adopted RadioGroup item, not an adap
 ToggleGroup and AlertDialog (S42) are adapted from shadcn new-york-v4 on `@radix-ui/react-toggle-group` and `@radix-ui/react-alert-dialog` (pre-approved), with provenance docs. AlertDialog renders its scrim and panel through `ScopedPortal` as siblings in its wrapper, not through the Radix `Portal`, so it carries the nearest `ThemeScope`'s theme, vars and direction and a `container` prop wins (D-091, D-098). A pressed ToggleGroup item is a fill plus the strong border width, via the existing `.ds-border-selected` recipe, which now also matches `data-state="on"`. No new colour role: the scrim is `overlay.scrim`, so no contrast pair or default alias changed.
 
 **Why:** the Radix `Portal` would leave the dialog outside the scope's theme; reusing the recipe keeps one rule for "selected is not colour alone".
+
+### D-148
+
+The four Release 2 components (RadioCard, Slider, ToggleGroup, AlertDialog) ship in **1.0.0**, not 1.1.0 (S43, maintainer's decision, 2026-11-17). 1.0.0 was prepared in H20 but never tagged or published (npm shows 0.9.0), so there is no released 1.0.0 to add to. `packages/ui` stays 1.0.0 and the 1.0.0 CHANGELOG entry gains the additions. The later release planned as 1.2.0 (package meta files, M18–M22) becomes **1.1.0**. `docs/versioning.md` still applies from the first release: after 1.0.0 is on npm, additions are minors.
+
+**Why:** a minor on top of an unpublished major would mean publishing two releases back to back with nothing consuming 1.0.0 alone; one first stable release with the controls the Builder needs is simpler, and the site pins it once (S50).

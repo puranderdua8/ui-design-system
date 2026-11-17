@@ -7,7 +7,7 @@ Release 1 (package 1.0.0) is archived in [`plans/release-1.md`](plans/release-1.
 **Launch (S36–S63), done when all are true:**
 
 1. **Quick wins are live.** Today's `/playground` keeps its preview in view, uses plain labels and leads with one "use in your app" file; component pages show code on demand.
-2. **Package 1.1.0** is on npm with RadioCard, Slider, ToggleGroup and AlertDialog.
+2. **Package 1.0.0** is on npm with RadioCard, Slider, ToggleGroup and AlertDialog.
 3. **Guided builder.** `/build` offers the eight steps as an expanding list beside a pinned preview of real example pages, in plain language, with named projects, undo/redo and "Try another combination".
 4. **Check.** Readability problems are explained by cause and fixed in one click.
 5. **Use it.** A share link, a printable style guide, a DTCG tokens file, a CSS-variables file and the package theme.
@@ -15,7 +15,7 @@ Release 1 (package 1.0.0) is archived in [`plans/release-1.md`](plans/release-1.
 7. **Accessible.** WCAG 2.2 AA on every `/build` route (axe in three browsers, 320px, 200% zoom, the screen-reader script).
 8. **Tested with people.** T0 and T1 are recorded in `docs/research/`; no open critical or serious finding from T1 or the independent review.
 9. **Product-first site.** A product home page, an About page, nav "Build", and `/playground` redirecting to `/build`.
-10. **Production-ready bar.** The [Definition of Done](#definition-of-done-every-release) holds for 1.1.0 and for the site at launch.
+10. **Production-ready bar.** The [Definition of Done](#definition-of-done-every-release) holds for 1.0.0 and for the site at launch.
 
 **Whole release (after launch, sized in [Later](#later-after-launch-sized-not-specified)):** Studio rebuild, three more export formats, any Google Font, the teaching aids, the full components gallery, a release review and T2.
 
@@ -25,10 +25,10 @@ Release 1 (package 1.0.0) is archived in [`plans/release-1.md`](plans/release-1.
 | ----------------------------- | -------------- | ------------------ | ------------------------------------------------ |
 | **M13 Groundwork**            | S36–S37        | none               | docs, test kit, analytics                        |
 | **M14 Quick wins**            | S38–S40        | none               | existing components only; then **T0**            |
-| **M15 Package controls**      | S41–S43        | 1.1.0              | parallel with M16                                |
+| **M15 Package controls**      | S41–S43        | 1.0.0              | parallel with M16                                |
 | **M16 Engine v2 and content** | S44–S49        | none               | pure TypeScript and data; parallel with M15      |
 | **M17 Guided builder v1**     | S50–S63        | none               | dark-launched at `/build`; **T1**; launch in S63 |
-| M18–M22                       | to be numbered | 1.2.0 (meta files) | see Later                                        |
+| M18–M22                       | to be numbered | 1.1.0 (meta files) | see Later                                        |
 
 **To launch:** 28 sessions and two test rounds. **Whole release:** about 50 sessions. The estimate budgets review and fix time because Release 1 needed 26 review and hardening sessions for 23 feature sessions (spec section 9, row 3).
 
@@ -146,7 +146,7 @@ Archived the Release 1 plan, wrote this file, `builder-spec.md`, D-104 to D-145 
 
 ---
 
-## M15 Package controls → 1.1.0 (parallel with M16)
+## M15 Package controls → 1.0.0 (parallel with M16)
 
 ### S41: RadioCard and Slider (60 min)
 
@@ -169,13 +169,13 @@ Archived the Release 1 plan, wrote this file, `builder-spec.md`, D-104 to D-145 
 
 **Done when:** the same checks as S41; the overlay test shows the dialog carrying a `ThemeScope`'s theme, vars and direction.
 
-### S43: 1.1.0 release prep (50 min)
+### S43: 1.0.0 release prep (50 min)
 
 **Prompt:**
 
-> S43. Release prep for 1.1.0 (a minor: additions only, `docs/versioning.md`). CHANGELOG, package README component list, `check:rsc` cases for the new client components, and the full [Definition of Done](#definition-of-done-every-release). Do not publish or tag.
+> S43. Release prep for 1.0.0 (D-148: 1.0.0 was never published, so RadioCard, Slider, ToggleGroup and AlertDialog ship in it; the package is already 1.0.0). CHANGELOG (fold the additions into the 1.0.0 entry), package README component list, `check:rsc` cases for the new client components, and the full [Definition of Done](#definition-of-done-every-release). Do not publish or tag.
 
-**You do:** merge, push `v1.1.0`, approve `npm-publish`.
+**You do:** merge, push `v1.0.0`, approve `npm-publish`.
 **Done when:** every Definition of Done line is shown green and the PR is open.
 
 ## M16 Engine v2 and content (parallel with M15; no UI)
@@ -232,15 +232,15 @@ Archived the Release 1 plan, wrote this file, `builder-spec.md`, D-104 to D-145 
 
 ---
 
-## M17 Guided builder v1 (needs 1.1.0 on npm; dark-launched)
+## M17 Guided builder v1 (needs 1.0.0 on npm; dark-launched)
 
-### S50: Site on 1.1.0, neutral chrome, examples scope (60 min)
+### S50: Site on 1.0.0, neutral chrome, examples scope (60 min)
 
-**You do first:** 1.1.0 is published.
+**You do first:** 1.0.0 is published.
 
 **Prompt:**
 
-> S50. Read spec 4.2 and D-128. Pin the site to 1.1.0. Stop applying a look to `<html>`: the tool's chrome always uses Base. Wrap every example (component pages, the playground preview) in a scope that wears the chosen look, and turn the header "Theme" switcher into "Showing examples in" (the four looks now; projects are added in S51). A reload must not flash the wrong look in the examples.
+> S50. Read spec 4.2 and D-128. Pin the site to 1.0.0. Stop applying a look to `<html>`: the tool's chrome always uses Base. Wrap every example (component pages, the playground preview) in a scope that wears the chosen look, and turn the header "Theme" switcher into "Showing examples in" (the four looks now; projects are added in S51). A reload must not flash the wrong look in the examples.
 
 **Done when:** `themes.spec.ts` is updated and green in three browsers; axe is clean on every showcase page in every look.
 
@@ -354,7 +354,7 @@ Archived the Release 1 plan, wrote this file, `builder-spec.md`, D-104 to D-145 
 | ---------------------- | -------------------------------------------------------------------------------------- | --------------- |
 | M18 Studio and formats | Studio rebuild (spec 4.7); Tailwind v4, shadcn/ui and JSON/TypeScript exports          | 6 sessions      |
 | M19 Fonts              | Catalogue snapshot, proxy routes (spec 5.3), search in the Typography step             | 2 sessions      |
-| M20 Teaching           | Glossary page; inspect the preview; "how it fits together"; package meta files (1.2.0) | 5 sessions      |
+| M20 Teaching           | Glossary page; inspect the preview; "how it fits together"; package meta files (1.1.0) | 5 sessions      |
 | M21 Gallery            | Index with search; per-component pages; props tables                                   | 5 sessions      |
 | M22 Close              | Full release review, fixes, **T2**, docs, retro, Release 3 hand-over                   | 4 to 6 sessions |
 

@@ -2,7 +2,7 @@
 
 ## 1.0.0 — 2026-11-16
 
-The first stable release. It is 0.9.0 with the deprecated names removed; the public API is the contract in [`docs/versioning.md`](docs/versioning.md) and the upgrade steps from 0.8 are in [`docs/migration-0.8-to-1.0.md`](docs/migration-0.8-to-1.0.md).
+The first stable release. It is 0.9.0 with the deprecated names removed, plus four new components; the public API is the contract in [`docs/versioning.md`](docs/versioning.md) and the upgrade steps from 0.8 are in [`docs/migration-0.8-to-1.0.md`](docs/migration-0.8-to-1.0.md).
 
 **Removed (deprecated in 0.9.0, D-089):**
 
@@ -15,13 +15,23 @@ The first stable release. It is 0.9.0 with the deprecated names removed; the pub
 
 The development warning that came with these names is gone too. TypeScript reports the old names as errors; plain JavaScript ignores them.
 
-**Added:**
+**Added (four client components, D-148; token-driven, no new colour role, so custom themes need no change):**
+
+- `Slider`: horizontal, single value or a range, on `@radix-ui/react-slider`. `showValue` renders the value as an `<output>`; `formatValue` formats it; `aria-valuetext` is a string or a function; `thumbLabels` names each thumb of a range. Wrap it in `Field` to name and describe it. Thumbs keep a 24px target.
+- `RadioCard`: a radio the whole card selects, for use inside `RadioGroup` in a `Fieldset`. `label`, optional `description` and `media`; the selected card has a heavier border and a check mark, so selection is not shown by colour alone.
+- `ToggleGroup` and `ToggleGroupItem`: segmented toggles, `type="single"` or `"multiple"`, arrow-key navigation, on `@radix-ui/react-toggle-group`. Pressed items are filled with the primary colour and a heavier border (an outline in forced colours).
+- `AlertDialog` with `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction` and `AlertDialogCancel`: a modal confirm dialog on `@radix-ui/react-alert-dialog`. The scrim and panel render through `ScopedPortal`, so the dialog keeps the nearest `ThemeScope`'s theme, direction and raised tone; an explicit `container` wins. `AlertDialogAction` and `AlertDialogCancel` use the Button styles and need a visible `children` string.
+- The `.ds-border-selected` recipe also matches `data-state="on"` (ToggleGroup items).
+
+**Dependencies:** `@radix-ui/react-slider`, `@radix-ui/react-toggle-group` and `@radix-ui/react-alert-dialog` (individual packages, not the `radix-ui` umbrella).
+
+Also added:
 
 - Development warnings (once per message, silent in production) for `Split` without exactly two children and for `Grid` given both `cols` and `minItemWidth` from JavaScript.
 - Storybook Docs pages: a props table generated from the types, and a usage and accessibility note on every component page. `CONTRIBUTING.md`.
 - The package README has a "Rules to know" section: the cost of `cn()` (`tailwind-merge`, about 10 KB gzip in a client bundle, R02), the `Field` id rule, errors and focus being the app's job, overlays and themes, CSS setup.
 
-**Migration:** upgrade to 0.9.0 first and fix every `@puranderdua/ui:` warning, then to 1.0.0. No token, CSS or dependency changes.
+**Migration:** upgrade to 0.9.0 first and fix every `@puranderdua/ui:` warning, then to 1.0.0. No token or CSS changes; three Radix dependencies are added for the new components.
 
 ## 0.9.0 — 2026-11-16
 
