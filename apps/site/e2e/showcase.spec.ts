@@ -74,7 +74,7 @@ test.describe("Link examples", () => {
     await expect(link).toHaveCSS("text-decoration-line", "underline");
     for (
       let i = 0;
-      i < 20 && !(await link.evaluate((el) => el === document.activeElement));
+      i < 40 && !(await link.evaluate((el) => el === document.activeElement));
       i++
     ) {
       await page.keyboard.press(tabKey(browserName));
@@ -143,10 +143,70 @@ test.describe("demo source", () => {
   test("the code shown is the code that rendered", async ({ page }) => {
     await page.goto("/components/layout");
     const code = page.getByRole("region", { name: "Grid code" });
+    // Closed by default: the code is not on screen until someone asks for it.
+    await expect(code).toBeHidden();
+    await page.locator("#grid").getByText("Show code", { exact: true }).click();
     await expect(code).toContainText(
       'import { Grid, Stack } from "@puranderdua/ui"',
     );
     await expect(code).toContainText('<Grid cols={3} gap="sm">');
+  });
+
+  test("Copy puts the shown code on the clipboard and says so", async ({
+    page,
+    context,
+    browserName,
+  }) => {
+    // Only Chromium lets a test grant clipboard access.
+    test.skip(
+      browserName !== "chromium",
+      "clipboard permission is Chromium-only",
+    );
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/components/layout");
+    await page.locator("#grid").getByText("Show code", { exact: true }).click();
+    await page.getByRole("button", { name: "Copy Grid code" }).click();
+    await expect(page.locator("#grid").getByRole("status")).toHaveText(
+      "Copied",
+    );
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    expect(copied).toContain('<Grid cols={3} gap="sm">');
+  });
+
+  test("with every code block open there are no axe violations", async ({
+    page,
+  }) => {
+    await page.goto("/components/forms");
+    await page.evaluate(() => {
+      document.querySelectorAll("details").forEach((d) => (d.open = true));
+    });
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
+  });
+});
+
+test.describe("On this page", () => {
+  test("lists every example and each link reaches its section", async ({
+    page,
+  }) => {
+    await page.goto("/components/actions");
+    const nav = page.getByRole("navigation", { name: "On this page" });
+    const links = nav.getByRole("link");
+    const sections = page.locator("main section");
+    await expect(links).toHaveCount(await sections.count());
+    await nav.getByRole("link", { name: "Disabled" }).click();
+    await expect(page).toHaveURL(/#disabled$/);
+    await expect(page.locator("#disabled")).toBeInViewport();
+  });
+
+  test("every example says what the component is for", async ({ page }) => {
+    await page.goto("/components/forms");
+    const sections = page.locator("main section");
+    const count = await sections.count();
+    for (let i = 0; i < count; i++) {
+      // heading, then the plain purpose line, which is not empty.
+      await expect(sections.nth(i).locator("p").first()).not.toBeEmpty();
+    }
   });
 });
 

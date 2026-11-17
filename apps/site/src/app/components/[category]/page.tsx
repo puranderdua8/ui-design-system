@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Container, Heading, Stack, Text } from "@puranderdua/ui";
+import { Container, Heading, Link, Stack, Text } from "@puranderdua/ui";
 import { categoryContent } from "@/components/category-pages";
+import { Example, exampleId } from "@/components/example";
 import { categories } from "@/lib/categories";
 
 type Params = { category: string };
@@ -28,7 +29,7 @@ const CategoryPage = async ({ params }: PageProps) => {
   const { category } = await params;
   const found = categories.find((c) => c.slug === category);
   if (!found) notFound();
-  const Content = categoryContent[found.slug];
+  const { note, examples } = categoryContent[found.slug];
 
   return (
     <main id="main" tabIndex={-1} className="py-ds-section-sm">
@@ -38,7 +39,31 @@ const CategoryPage = async ({ params }: PageProps) => {
             {found.title}
           </Heading>
           <Text variant="lead">{found.description}</Text>
-          <Content />
+          {/* aria-label, not aria-labelledby: the latter made Firefox crash inside axe. */}
+          <nav aria-label="On this page">
+            <Stack gap="sm">
+              <Text as="span" variant="label">
+                On this page
+              </Text>
+              <ul className="flex flex-wrap gap-x-ds-gap-md gap-y-ds-gap-xs">
+                {examples.map((example) => (
+                  <li key={example.title}>
+                    <Link href={`#${exampleId(example.title)}`}>
+                      {example.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Stack>
+          </nav>
+          {note ? (
+            <Text variant="caption" className="text-ds-text-muted">
+              {note}
+            </Text>
+          ) : null}
+          {examples.map((example) => (
+            <Example key={example.title} {...example} />
+          ))}
         </Stack>
       </Container>
     </main>

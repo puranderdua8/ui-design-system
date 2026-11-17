@@ -6,8 +6,8 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S40** (S38 and S39 are done), then (M14), then the maintainer's first usability round (T0). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
-- **Blockers:** none for S38–S40. **Maintainer to-dos:** (1) `v1.0.0` is **not** on npm (`npm view` shows 0.9.0) and not tagged on origin: push the tag and approve `npm-publish`. Then, in one small change, pin `apps/site` to `@puranderdua/ui` 1.0.0, swap the `minimumReleaseAgeExclude` entry in `pnpm-workspace.yaml` from `@puranderdua/ui@0.9.0` to `@puranderdua/ui@1.0.0`, refresh the lockfile, run the site e2e, and deploy (D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
+- **Next session:** **T0**, the maintainer's first usability round (S38–S40 are done and M14's quick wins are complete; deploy them first). M15 (package 1.1.0) and M16 (engine) can run in parallel after that.
+- **Blockers:** none for S41 onward. **Maintainer to-dos:** (1) `v1.0.0` is **not** on npm (`npm view` shows 0.9.0) and not tagged on origin: push the tag and approve `npm-publish`. Then, in one small change, pin `apps/site` to `@puranderdua/ui` 1.0.0, swap the `minimumReleaseAgeExclude` entry in `pnpm-workspace.yaml` from `@puranderdua/ui@0.9.0` to `@puranderdua/ui@1.0.0`, refresh the lockfile, run the site e2e, and deploy (D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
 ## Brand (filled in S1)
@@ -91,7 +91,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S37 Analytics and privacy note                    | M13       | ☑      |
 | S38 Playground quick wins                         | M14       | ☑      |
 | S39 Export quick win                              | M14       | ☑      |
-| S40 Components quick wins                         | M14       | ☐      |
+| S40 Components quick wins                         | M14       | ☑      |
 | T0 First usability round (maintainer)             | M14       | ☐      |
 | S41 RadioCard and Slider                          | M15       | ☐      |
 | S42 ToggleGroup and AlertDialog                   | M15       | ☐      |
@@ -773,6 +773,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Decisions: none new.
 - Gotchas: the CSS row is only in the lead (not repeated in the disclosure) so button names stay unique. The font snippet and credit comment in spec 4.6 are not in this session's prompt, so left for the Builder's own Use-it step (S57).
 - Next: S40.
+
+### S40 — Components quick wins — 2026-11-17
+
+- S39 check: merged (#77, 9e1ca01); branch `s40-components-quick-wins` cut from `origin/main`.
+- Done (site only): `Example` puts the code behind a native `<details>` "Show code" (closed by default) with a Copy button (`copy-code-button.tsx`, a client file that exports one component; a `role="status"` line says "Copied" or asks the reader to copy by hand) and still shows the file that rendered (`readDemo`). Every example has one plain `purpose` line (the old technical `description` stays under it in smaller muted text) and an anchor id from its title. `category-pages.tsx` is now data (`categoryContent[slug] = { note?, examples }`), and the category page renders an "On this page" list of links above the examples.
+- Verified: site lint, typecheck, prettier; full site e2e in Chromium, Firefox and WebKit (355 passed, 5 skipped: clipboard test outside Chromium). `showcase.spec.ts`: the "code shown is the code that rendered" test now opens "Show code" first (closed content is hidden from `getByRole`); new tests for the closed default, Copy plus status, "On this page" links and one purpose line per example, and axe with every code block open. `themes.spec.ts` (axe on every category page in every look) and the 320px checks pass unchanged.
+- Decisions: none new.
+- Gotchas: (1) A `<nav aria-labelledby>` pointing at a visible label crashed Firefox ("Page crashed") inside axe on `/components/forms` and `/display` about half the time; baseline `main` passed 12 of 12 with the same probe, removing the nav or the `aria-labelledby` made it pass 12 of 12. The nav now uses `aria-label`. The crash does not appear outside the Playwright runner, so it is not guaranteed to be gone for every Firefox version. (2) `ds-hit-area` puts an absolutely positioned pseudo-element on its element, so the `summary` uses padding for its 24px target instead. (3) The inline-link Tab test now allows 40 Tab presses because the "On this page" links come first.
+- Next: T0 (the maintainer's first usability round), then S41.
 
 ## Retro (Release 1)
 
