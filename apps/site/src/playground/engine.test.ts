@@ -39,7 +39,14 @@ const state = (
   start: ThemeName,
   knobs: PlaygroundState["knobs"] = {},
   overrides: PlaygroundState["overrides"] = {},
-): PlaygroundState => ({ start, knobs, overrides });
+): PlaygroundState => ({
+  start,
+  mode: "light",
+  dims: {},
+  fonts: {},
+  knobs,
+  overrides,
+});
 
 describe("colour ramps", () => {
   const inputs = [

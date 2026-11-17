@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S45** (State v2, projects and history). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S46** (Presets, three questions and shuffle; S45 State v2 is done on branch `s45-state-v2`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -97,7 +97,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S42 ToggleGroup and AlertDialog                   | M15       | ☑      |
 | S43 1.0.0 release prep                            | M15       | ☑      |
 | S44 Content file and plain-language rules         | M16       | ☑      |
-| S45 State v2, projects and history                | M16       | ☐      |
+| S45 State v2, projects and history                | M16       | ☑      |
 | S46 Presets, three questions and shuffle          | M16       | ☐      |
 | S47 Explain and fix                               | M16       | ☐      |
 | S48 Value grammar, share link, project file       | M16       | ☐      |
@@ -817,6 +817,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) T0 has not run (only the test kit exists), so the draft vocabulary is used and the **vocabulary gate stays open**; the maintainer reads the copy once. (2) 1.0.0 removed Banner's `align`: `demos/display/banner-image.tsx` moved to `justify` (the only site usage; Cluster and Split keep `align`). (3) `pnpm install` rejected the lockfile until both 0.9.0 and 1.0.0 were temporarily excluded, because the old entry was under the release-age cutoff; the 0.9.0 exclude was then removed and a frozen install passes.
 - Verified: `pnpm --filter site test` 107 passed; site and docs typecheck, site build, `tokens:check`; site e2e 355 passed, 5 skipped.
 - Next: S45.
+
+### S45 — State v2, projects and history — 2026-11-17
+
+- Branch `s45-state-v2` cut from `origin/main` (43d40e4, S44 merged as #82). Started about 14:08, ended about 14:20 (local).
+- Done: in `apps/site/src/playground/`: `state.ts` v2 (`mode`, `dims`, `fonts`; v0 and v1 migrate; newer is not read; `sanitiseText` for typed names), `history.ts` (undo/redo with a `group` so a drag is one step, cap 100), `projects.ts` (create, rename, duplicate, delete, name sanitising, stored-file reader, draft migration), `projects-store.ts` (the store with injectable storage, `ok | blocked | full | newer` status), and `store.ts` now fronts it (same `getSnapshot`/`subscribe`/`setState` the playground uses, plus an optional `group`). The playground behaves as before.
+- Decisions: D-150.
+- Gotchas: (1) The store has the project list, undo and redo (tested), but `store.ts` exports only what the site uses today, because `pnpm knip` fails on unused exports; S51 adds the wrappers when the shell needs them. (2) Nothing applies `dims` yet (S46); nothing reads `fonts` yet (S54). (3) History is in memory only. (4) A `storage` event from another tab reloads projects and starts undo history over. (5) The existing `ds-playground` key is read once for migration and never deleted.
+- Verified: site unit tests 134 passed (new: `projects.test.ts`, extended `state.test.ts`: old draft migrating intact, untouched state equal to its starting look, undo/redo round trip, newer version left alone, blocked/full/corrupt storage); site typecheck, build, `knip`, lint and Prettier clean (one existing warning in `split.tsx`); playground e2e 21 passed (Chromium). The full cross-browser e2e was not re-run.
+- Next: S46.
 
 ## Retro (Release 1)
 

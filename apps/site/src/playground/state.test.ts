@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { PlaygroundState } from "./types";
 import { evaluateContrast } from "./contrast";
 import { contrastSpec, themeMaps } from "./data";
 import {
@@ -19,25 +20,67 @@ import {
 
 describe("parseState", () => {
   it("round-trips a state through JSON", () => {
-    const state = {
-      start: "nature" as const,
+    const state: PlaygroundState = {
+      start: "nature",
+      mode: "light",
+      dims: { spacing: "corporate", shape: "quirky" },
+      fonts: { heading: "Space Grotesk" },
       knobs: { brand: "#1762b6", radiusScale: 2, neutral: { hue: 30 } },
       overrides: { "--ds-action-primary-bg": "#112233" },
     };
     expect(parseState(JSON.parse(JSON.stringify(state)))).toEqual(state);
   });
 
-  it("writes a version, and reads the unversioned original (R33)", () => {
-    const state = {
-      start: "quirky" as const,
-      knobs: { radiusScale: 2 },
-      overrides: {},
-    };
+  it("writes version 2, and reads the older drafts intact (R33, S45)", () => {
+    const state = { ...startFrom("quirky"), knobs: { radiusScale: 2 } };
     const stored = serialiseState(state);
-    expect(stored.version).toBe(stateVersion);
+    expect(stored.version).toBe(2);
+    expect(stateVersion).toBe(2);
     expect(parseState(JSON.parse(JSON.stringify(stored)))).toEqual(state);
-    // What 0.8.0-era sites stored: no `version` at all.
-    expect(parseState(JSON.parse(JSON.stringify(state)))).toEqual(state);
+    // What 0.8.0-era sites stored: no `version`, no mode, dims or fonts.
+    const v0 = {
+      start: "quirky",
+      knobs: { radiusScale: 2 },
+      overrides: { "--ds-action-primary-bg": "#112233" },
+    };
+    expect(parseState(v0)).toEqual({
+      ...state,
+      overrides: { "--ds-action-primary-bg": "#112233" },
+    });
+    // What the site stored before S45: version 1, same fields as v0.
+    expect(parseState({ version: 1, ...v0 })).toEqual(parseState(v0));
+  });
+
+  it("an untouched state is exactly its starting look", () => {
+    for (const name of ["base", "corporate", "nature", "quirky"] as const) {
+      const { resolved, error } = safeResolve(startFrom(name), themeMaps);
+      expect(error).toBeUndefined();
+      expect(resolved.vars).toEqual(themeMaps[name].vars);
+    }
+    // And one read back from a v0 draft with nothing changed.
+    const read = parseState({ start: "nature", knobs: {}, overrides: {} });
+    expect(read).toEqual(startFrom("nature"));
+  });
+
+  it("keeps only known looks in dims and plain text in fonts", () => {
+    const parsed = parseState({
+      version: 2,
+      start: "base",
+      mode: "dark",
+      dims: { colour: "nature", shape: "neon", bogus: "base", motion: 3 },
+      fonts: {
+        heading: "Space Grotesk;}</style>",
+        body: "x".repeat(200),
+        other: "Inter",
+      },
+    });
+    // `mode` is reserved: only light is read.
+    expect(parsed?.mode).toBe("light");
+    expect(parsed?.dims).toEqual({ colour: "nature" });
+    // Every character outside the plain-text set is dropped, never escaped.
+    expect(parsed?.fonts.heading).toBe("Space Groteskstyle");
+    expect(parsed?.fonts.body).toHaveLength(60);
+    expect(Object.keys(parsed?.fonts ?? {})).toEqual(["heading", "body"]);
   });
 
   it("does not guess at a version newer than it knows", () => {
@@ -86,7 +129,7 @@ describe("safeResolve", () => {
 
   it("falls back to the starting theme instead of throwing", () => {
     const { resolved, error } = safeResolve(
-      { start: "nature", knobs: { radiusScale: -1 }, overrides: {} },
+      { ...startFrom("nature"), knobs: { radiusScale: -1 } },
       themeMaps,
     );
     expect(error).toMatch(/radiusScale/);
@@ -117,6 +160,9 @@ describe("state edits", () => {
   it("starting from a theme drops knobs and overrides", () => {
     expect(startFrom("quirky")).toEqual({
       start: "quirky",
+      mode: "light",
+      dims: {},
+      fonts: {},
       knobs: {},
       overrides: {},
     });
