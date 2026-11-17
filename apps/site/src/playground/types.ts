@@ -39,8 +39,32 @@ export type Knobs = {
   motionSpeed?: number;
 };
 
+/** The six picture-choice dimensions that can each take their values from a shipped look (spec 4.4). */
+export const dimensionIds = [
+  "colour",
+  "type",
+  "shape",
+  "spacing",
+  "depth",
+  "motion",
+] as const;
+type DimensionId = (typeof dimensionIds)[number];
+
+/**
+ * Which look each dimension takes its values from. A dimension that is not listed
+ * follows `start`, so `{}` is exactly the starting look. S46 applies these.
+ */
+export type Dims = Partial<Record<DimensionId, ThemeName>>;
+
+/** A typeface the person typed by name ("I have my own font"). Plain text only. */
+export type Fonts = { heading?: string; body?: string };
+
 export type PlaygroundState = {
   start: ThemeName;
+  /** Reserved for dark mode (Release 3). Light is the only value today. */
+  mode: "light";
+  dims: Dims;
+  fonts: Fonts;
   knobs: Knobs;
   /**
    * Per-token overrides, keyed by var name (`--ds-action-primary-bg`). A value starting

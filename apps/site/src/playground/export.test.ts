@@ -28,7 +28,14 @@ const state = (
   start: ThemeName,
   knobs: PlaygroundState["knobs"] = {},
   overrides: PlaygroundState["overrides"] = {},
-): PlaygroundState => ({ start, knobs, overrides });
+): PlaygroundState => ({
+  start,
+  mode: "light",
+  dims: {},
+  fonts: {},
+  knobs,
+  overrides,
+});
 
 const run = (script: string, ...args: string[]) => {
   try {

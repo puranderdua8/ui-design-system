@@ -2,8 +2,11 @@
 import { isThemeName } from "../lib/theme";
 import { shadowAliases, resolveState } from "./engine";
 import { fontChoices } from "./fonts";
+import { dimensionIds } from "./types";
 import type {
+  Dims,
   FontId,
+  Fonts,
   Knobs,
   PlaygroundState,
   ResolvedTheme,
@@ -15,15 +18,15 @@ import type {
 export const storageKey = "ds-playground";
 
 /**
- * Version of the stored shape. 0 is the unversioned original, whose fields are the
- * same as 1, so `parseState` reads it unchanged. When a knob is renamed or added
- * (R29's `mode`), bump this and add a step to `migrate` instead of dropping the
- * user's work. A version newer than this code (written by a newer site in another
- * tab) is not read, so the default state is shown rather than a lossy guess.
+ * Version of the stored shape. 0 is the unversioned original and 1 added a version;
+ * both have the same fields, and 2 adds `mode`, `dims` and `fonts` (S45, spec 5.2).
+ * When a field is renamed or added, bump this and add a step to `migrate` instead of
+ * dropping the user's work. A version newer than this code (written by a newer site
+ * in another tab) is not read, so the default state is shown rather than a lossy guess.
  */
-export const stateVersion = 1;
+export const stateVersion = 2;
 
-/** The stored form: the state plus its version. */
+/** The stored form: the version, then the state. */
 export const serialiseState = (state: PlaygroundState) => ({
   version: stateVersion,
   ...state,
@@ -33,14 +36,53 @@ const migrate = (
   input: Record<string, unknown>,
 ): Record<string, unknown> | null => {
   const version = input.version ?? 0;
-  if (version === 0 || version === stateVersion) return input;
+  // 0 and 1 have no mode, dims or fonts: they read as "light, follow the start".
+  if (version === 0 || version === 1 || version === stateVersion) return input;
   return null;
 };
 
 export const defaultState: PlaygroundState = {
   start: "base",
+  mode: "light",
+  dims: {},
+  fonts: {},
   knobs: {},
   overrides: {},
+};
+
+/**
+ * Plain text for a name a person typed (a project or a font): letters, numbers,
+ * spaces and a few marks, collapsed, trimmed and cut to `max`. Anything else is
+ * dropped, so a name can never carry markup or CSS. Returns "" when nothing is left.
+ */
+export const sanitiseText = (input: unknown, max = 60): string =>
+  typeof input === "string"
+    ? input
+        .replace(/[^\p{L}\p{N} .,'&()+_-]/gu, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, max)
+        .trim()
+    : "";
+
+const sanitiseDims = (input: unknown): Dims => {
+  const dims: Dims = {};
+  if (!isRecord(input)) return dims;
+  for (const id of dimensionIds) {
+    const value = input[id];
+    if (isThemeName(value)) dims[id] = value;
+  }
+  return dims;
+};
+
+const sanitiseFonts = (input: unknown): Fonts => {
+  const fonts: Fonts = {};
+  if (!isRecord(input)) return fonts;
+  for (const key of ["heading", "body"] as const) {
+    const name = sanitiseText(input[key]);
+    if (name) fonts[key] = name;
+  }
+  return fonts;
 };
 
 const hex6 = /^#[0-9a-f]{6}$/i;
@@ -104,6 +146,9 @@ export const parseState = (raw: unknown): PlaygroundState | null => {
         overrides[key] = value;
   return {
     start: input.start,
+    mode: "light",
+    dims: sanitiseDims(input.dims),
+    fonts: sanitiseFonts(input.fonts),
     knobs: sanitiseKnobs(input.knobs),
     overrides,
   };
@@ -124,7 +169,10 @@ export const safeResolve = (
     return { resolved: resolveState(state, themes) };
   } catch (error) {
     return {
-      resolved: resolveState({ ...state, knobs: {}, overrides: {} }, themes),
+      resolved: resolveState(
+        { ...state, dims: {}, fonts: {}, knobs: {}, overrides: {} },
+        themes,
+      ),
       error: (error as Error).message,
     };
   }
@@ -212,6 +260,9 @@ export const withKnobs = (
 /** A fresh state for a starting theme: no knobs, no overrides. */
 export const startFrom = (start: ThemeName): PlaygroundState => ({
   start,
+  mode: "light",
+  dims: {},
+  fonts: {},
   knobs: {},
   overrides: {},
 });
