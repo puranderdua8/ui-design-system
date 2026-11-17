@@ -18,6 +18,7 @@ import {
 type ProjectEntry = { id: string; name: string };
 
 const projectPrefix = "project:";
+const noopSubscribe = () => () => {};
 
 export const ThemeSwitcher = () => {
   // The chosen look lives in the store (D-128): it reaches examples only, never the
@@ -31,6 +32,12 @@ export const ThemeSwitcher = () => {
   // import, so no page pays for the projects store until the switcher is on screen.
   const [projects, setProjects] = useState<ProjectEntry[]>([]);
   const [groupLabel, setGroupLabel] = useState("");
+  // False until the change handler is attached (the e2e tests wait for it).
+  const hydrated = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     let stopped = false;
@@ -84,7 +91,7 @@ export const ThemeSwitcher = () => {
   const value = look.project ? `${projectPrefix}${look.project}` : look.name;
 
   return (
-    <div className="flex items-center gap-ds-gap-sm">
+    <div className="flex items-center gap-ds-gap-sm" data-hydrated={hydrated}>
       <Text as="span" variant="caption" aria-hidden="true">
         Showing examples in
       </Text>
