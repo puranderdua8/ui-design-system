@@ -221,6 +221,11 @@
     border-style: solid;
     border-width: var(--ds-border-width-strong);
   }
+  /* Strong border for a selected item (RadioCard). Recipes are plain classes,
+     so a state variant such as data-[state=checked]: cannot apply to them. */
+  .ds-border-selected[data-state="checked"] {
+    border-width: var(--ds-border-width-strong);
+  }
 
   /* Transitions from the motion.* tokens. Reduced motion removes them. */
   .ds-transition {

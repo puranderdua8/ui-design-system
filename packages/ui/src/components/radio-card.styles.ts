@@ -4,9 +4,9 @@
 // group, so the card reads it from the `group` root, like RadioGroupItem (F13).
 export const radioCardClasses =
   "group/card relative flex w-full flex-col items-stretch gap-ds-gap-sm rounded-ds-card bg-ds-input p-ds-gap-md text-start text-ds-text " +
-  "ds-border border-ds-border-control ds-transition ds-focus-ring " +
+  "ds-border ds-border-selected border-ds-border-control ds-transition ds-focus-ring " +
   "hover:border-ds-input-border-hover " +
-  "data-[state=checked]:ds-border-strong data-[state=checked]:border-ds-primary " +
+  "data-[state=checked]:border-ds-primary " +
   "aria-invalid:enabled:border-ds-danger-border group-aria-invalid:enabled:border-ds-danger-border " +
   "disabled:cursor-not-allowed disabled:border-ds-disabled-border disabled:bg-ds-disabled disabled:text-ds-disabled-fg";
 

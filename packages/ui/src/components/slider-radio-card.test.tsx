@@ -192,7 +192,7 @@ describe("RadioCard", () => {
   });
 
   it("does not rely on colour alone for the selected state", () => {
-    expect(radioCardClasses).toContain("data-[state=checked]:ds-border-strong");
+    expect(radioCardClasses).toContain("ds-border-selected");
     render(
       <RadioGroup aria-label="Layout" defaultValue="grid">
         {cards}
