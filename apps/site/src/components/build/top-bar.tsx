@@ -3,11 +3,21 @@
 import { useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, Cluster, Container, Input, Link, Text } from "@puranderdua/ui";
+import {
+  Button,
+  Checkbox,
+  Cluster,
+  Container,
+  Field,
+  Input,
+  Link,
+  Text,
+} from "@puranderdua/ui";
 import { builderContent as content } from "@/content/builder";
 import { isCurrent } from "@/lib/is-current";
+import { shuffle } from "@/playground/presets";
 import { stepHref } from "@/playground/steps";
-import { redo, renameProject, undo } from "@/playground/store";
+import { redo, renameProject, setState, undo } from "@/playground/store";
 import { useBuilder } from "./use-builder";
 
 const { shell, buttons, status } = content;
@@ -53,6 +63,7 @@ const viewLinkClasses =
 export const TopBar = () => {
   const pathname = usePathname();
   const { view, failing } = useBuilder();
+  const [keepColours, setKeepColours] = useState(true);
   const current = view.projects.find(
     (project) => project.id === view.currentId,
   );
@@ -126,6 +137,25 @@ export const TopBar = () => {
             >
               {buttons.redo}
             </Button>
+            <Cluster gap="sm" align="center">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  setState(shuffle(view.state, { colours: !keepColours }))
+                }
+              >
+                {buttons.tryAnother}
+              </Button>
+              <Field layout="inline" label={content.shuffle.keepColours}>
+                <Checkbox
+                  checked={keepColours}
+                  onCheckedChange={(checked) =>
+                    setKeepColours(checked === true)
+                  }
+                />
+              </Field>
+            </Cluster>
             <Text
               role="status"
               data-testid="status-pill"
