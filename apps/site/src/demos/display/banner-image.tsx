@@ -5,7 +5,7 @@ export const Demo = () => (
   <Banner
     as="div"
     height="tall"
-    align="start"
+    justify="start"
     scrim="strong"
     media={<Image src="/media/hero.svg" alt="" fill unoptimized />}
   >
