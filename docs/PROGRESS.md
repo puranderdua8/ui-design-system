@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S49** (CSS-variables and DTCG-file formats; S48 Value grammar, share link, project file is done on branch `s48-value-grammar`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S50** (Site on 1.0.0, neutral chrome, examples scope; S49 CSS-variables and DTCG-file formats is done on branch `s49-formats`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -101,7 +101,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S46 Presets, three questions and shuffle          | M16       | ☑      |
 | S47 Explain and fix                               | M16       | ☑      |
 | S48 Value grammar, share link, project file       | M16       | ☑      |
-| S49 CSS-variables and DTCG-file formats           | M16       | ☐      |
+| S49 CSS-variables and DTCG-file formats           | M16       | ☑      |
 | S50 Site on 1.0.0, neutral chrome, examples scope | M17       | ☐      |
 | S51 Builder shell                                 | M17       | ☐      |
 | S52 Preview pages                                 | M17       | ☐      |
@@ -853,6 +853,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) Nothing in the UI uses share or project-file yet (S57 Use it, S51 shell); `knip` passes because tests import them. (2) An override on a key that is not a Base token is now dropped on load (it was ignored by the engine anyway); one old state test used a fake `--ds-x` and was changed to a real token. (3) Overrides are stored canonical (`#ABC` becomes `#aabbcc`). (4) `Dims` types `depth: "flat"` as never through its intersection; not touched here. (5) I used a one-off `node` script to un-export seven functions (against D-043).
 - Verified: site unit tests 254 passed (new `grammar.test.ts`, `share.test.ts`, `project-file.test.ts`), site typecheck, ESLint, `knip`, Prettier and `next build` clean. Site e2e not re-run (no UI change).
 - Next: S49.
+
+### S49 — CSS-variables and DTCG-file formats — 2026-11-17
+
+- Branch `s49-formats` cut from `origin/main` (703e0d8, S48 merged as #86). Started about 15:03, ended about 15:12 (local).
+- Done: `playground/formats/` with `credit.ts`, `css-vars.ts` (`toCssVars`) and `dtcg-file.ts` (`toDtcgFile`); `output.ts` exports `primitiveSlot` and `literalSlot` (shared with `toDtcg`, which is unchanged, as is the theme-folder export and its round-trip test).
+- Decisions: D-154.
+- Gotchas: (1) Nothing in the UI uses the formats yet (S57 Use it); `knip` passes because tests import them. (2) Role groups are the first word of the var name, not the repo's own nesting, so the repo's `contrast-pairs.json` cannot be checked against the file; the validator test uses a minimal contrast file. (3) The validator needs a `$description` on every role, so the test adds a placeholder; the file itself carries none. (4) The font snippet and the three lines of instructions are UI (S57), not part of these functions.
+- Verified: site unit tests 268 passed (new `formats.test.ts`, 14 tests: one `:root`, every var resolved, same values as the theme map for all four looks, a planted injection refused, aliases resolve to same-type primitives, a role value of its own, an unrepresentable role reported, and the file passing `validate-tokens.mjs` for all four looks); new `e2e/css-vars.spec.ts` applies the CSS to a plain HTML page in Chromium, Firefox and WebKit (3 passed). Site typecheck, ESLint, `knip` and Prettier clean.
+- Next: S50.
 
 ## Retro (Release 1)
 
