@@ -271,6 +271,75 @@ const steps: Step[] = [
 export const builderContent = {
   steps,
 
+  /**
+   * "Not sure?" on the Start step: three questions that pick a starting look and a
+   * few choices, with the reason as text (spec 4.4). The reason shown is the three
+   * `reason` sentences of the chosen answers, one after another.
+   */
+  questions: {
+    link: "Not sure? Answer three questions",
+    result: "Here is why we chose this for you:",
+    mood: {
+      question: "What mood fits your product?",
+      options: {
+        calm: {
+          name: "Calm and quiet",
+          reason: "A calm mood suits the quiet and neutral look.",
+        },
+        serious: {
+          name: "Serious and trusted",
+          reason: "A serious mood suits the crisp and businesslike look.",
+        },
+        warm: {
+          name: "Warm and friendly",
+          reason: "A friendly mood suits the warm and calm look.",
+        },
+        bold: {
+          name: "Bold and playful",
+          reason: "A playful mood suits the bold and playful look.",
+        },
+      },
+    },
+    room: {
+      question: "How much room do you like?",
+      options: {
+        tight: {
+          name: "Tight",
+          reason: "Things sit close together, so more fits on the screen.",
+        },
+        balanced: {
+          name: "Balanced",
+          reason: "Things have a comfortable amount of room around them.",
+        },
+        airy: {
+          name: "Airy",
+          reason: "Things have plenty of room, so each one stands out.",
+        },
+      },
+    },
+    corners: {
+      question: "How do you like corners?",
+      options: {
+        sharp: {
+          name: "Sharp",
+          reason: "Square corners look precise and formal.",
+        },
+        soft: {
+          name: "Soft",
+          reason: "Slightly rounded corners feel neat and friendly.",
+        },
+        rounded: {
+          name: "Rounded",
+          reason: "Rounder corners feel gentle and welcoming.",
+        },
+        extraRound: {
+          name: "Extra round",
+          reason: "Very round corners feel bold and playful.",
+        },
+      },
+    },
+  },
+
   /** Buttons say where they go. `{step}` is replaced with the next step's name. */
   buttons: {
     next: "Next: {step}",

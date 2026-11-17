@@ -33,10 +33,10 @@ export const neutralSteps = [
   "950",
 ] as const;
 
-const hexAt = (l: number, c: number, h: number): string =>
+export const hexAt = (l: number, c: number, h: number): string =>
   formatHex(clampChroma({ mode: "oklch", l, c, h }, "oklch"));
 
-const read = (hex: string) => {
+export const read = (hex: string) => {
   const color = parse(hex);
   if (!color) throw new RangeError(`not a colour: "${hex}"`);
   const { l, c, h } = toOklch(color);
