@@ -9,6 +9,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   // A flake fails the run (F22): no retries, and a test that only passed on retry is a failure.
   retries: 0,
+  // Firefox crashes the page ("Page crashed") while axe runs when the runner is busy
+  // (S53, S54, S55); it does not happen on a quiet machine. Two workers ease the load on
+  // the CI runner; a local run uses Playwright's default.
+  workers: process.env.CI ? 2 : undefined,
   failOnFlakyTests: !!process.env.CI,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: { baseURL, trace: "retain-on-failure" },

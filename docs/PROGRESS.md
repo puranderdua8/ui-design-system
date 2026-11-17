@@ -911,6 +911,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 ### Fix — Select axe test in Firefox and WebKit — 2026-11-17
 
 - Branch `fix-select-contrast-axe` from `main`. The `forms.spec` "axe clean with a Select open" failure (noted in S53, S54, S55) was a timing race in the test, not a contrast bug: options carry `ds-transition`, and Firefox and WebKit ran axe while the highlighted option was mid-fade (`#51799e`, 2.77:1). The settled colours are in the contrast matrix. The test now emulates reduced motion (which turns the fade off, `theme.css`) and waits for the list to have no running animations. No component or token changed.
+- CI on #93 and #94 then failed on a different thing: Firefox "Page crashed" inside axe (`build-shape` axe test on #93, `build-start` axe test on #94; the Select test passed in CI). Same signature as S53 and S54, three different pages, no iframes, not reproducible locally (Firefox, 6 repeats). `playwright.config.ts` now sets `workers: 2` on CI. Whether that is enough is judged by repeated CI runs; if it still crashes, the next step is skipping Firefox on the Builder axe tests.
 - Verified: the whole `forms.spec` 27 passed in all three browsers; the one test 15 runs per browser pair (3 × `--repeat-each=5`), 30 of 30 each time.
 
 ## Retro (Release 1)
