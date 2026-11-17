@@ -1,8 +1,13 @@
 // Playground UI state helpers (S34). Pure: no React, no DOM, so they are unit tested.
 import { isThemeName } from "../lib/theme";
 import { shadowAliases, resolveState } from "./engine";
-import { fontChoices } from "./fonts";
-import { parseOverride } from "./grammar";
+import {
+  fallbackOf,
+  fontChoices,
+  fontPairings,
+  type FontPairing,
+} from "./fonts";
+import { parseFontName, parseOverride } from "./grammar";
 import { dimensionIds } from "./types";
 import type {
   Dims,
@@ -81,7 +86,7 @@ const sanitiseFonts = (input: unknown): Fonts => {
   const fonts: Fonts = {};
   if (!isRecord(input)) return fonts;
   for (const key of ["heading", "body"] as const) {
-    const name = sanitiseText(input[key]);
+    const name = parseFontName(sanitiseText(input[key]));
     if (name) fonts[key] = name;
   }
   return fonts;
@@ -193,8 +198,15 @@ const leadingFamily = (stack: string): string =>
  * swap the leading family for the font's CSS variable and keep the fallback stack.
  * Every var that names a family is swapped, so the `type-*-font-family` roles follow.
  */
-export const previewVars = (vars: VarMap): VarMap => {
+export const previewVars = (vars: VarMap, fonts: Fonts = {}): VarMap => {
   const out: VarMap = { ...vars };
+  // A font the person typed cannot be loaded (no request leaves our origin, D-122), so
+  // the preview shows the stack's fallbacks instead: the labelled stand-in.
+  const own = new Set(
+    [fonts.heading, fonts.body]
+      .map((name) => parseFontName(name))
+      .filter((name): name is string => name !== null),
+  );
   for (const [key, value] of Object.entries(vars)) {
     if (!key.includes("font-family")) continue;
     const stack = String(value);
@@ -202,8 +214,53 @@ export const previewVars = (vars: VarMap): VarMap => {
       (choice) => leadingFamily(choice.stack) === leadingFamily(stack),
     );
     if (font) out[key] = stack.replace(/^[^,]+/, `var(${font.cssVar})`);
+    else if (own.has(leadingFamily(stack))) out[key] = fallbackOf(stack);
   }
   return out;
+};
+
+/** A pairing's two fonts as knobs, with any typed font cleared so the pairing shows. */
+export const withPairing = (
+  state: PlaygroundState,
+  pairing: FontPairing,
+): PlaygroundState => ({
+  ...withKnobs(state, {
+    headingFont: pairing.heading,
+    bodyFont: pairing.body,
+  }),
+  fonts: {},
+});
+
+/**
+ * The pairing the project wears now, read from the resolved families, or `undefined`
+ * when a font was typed or the two fonts are not a pairing (the Base look, for one,
+ * is Clean and modern).
+ */
+export const currentPairing = (
+  state: PlaygroundState,
+  vars: VarMap,
+): FontPairing | undefined => {
+  if (state.fonts.heading || state.fonts.body) return undefined;
+  const heading = currentFont(vars, "--ds-font-family-heading");
+  const body = currentFont(vars, "--ds-font-family-body");
+  return fontPairings.find(
+    (pairing) => pairing.heading === heading && pairing.body === body,
+  );
+};
+
+/**
+ * Returns `state` with one typed font set (a valid name) or cleared (`undefined`). The
+ * engine applies a typed font after the pairing, so it wins for its role.
+ */
+export const withOwnFont = (
+  state: PlaygroundState,
+  role: "heading" | "body",
+  name: string | undefined,
+): PlaygroundState => {
+  const fonts = { ...state.fonts };
+  if (name === undefined) delete fonts[role];
+  else fonts[role] = name;
+  return { ...state, fonts };
 };
 
 /** The curated font a resolved family var currently names, if it is one of them. */

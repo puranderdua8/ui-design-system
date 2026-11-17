@@ -7,10 +7,12 @@
 //
 // Nothing here touches the DOM. An unset knob (or one at its neutral value) is a no-op,
 // so an untouched state resolves to exactly the starting theme.
-import { fontStack } from "./fonts";
+import { fontStack, ownFontStack } from "./fonts";
+import { parseFontName } from "./grammar";
 import { applyDims } from "./presets";
 import { brandRamp, neutralRamp } from "./ramps";
 import type {
+  Fonts,
   IgnoredOverride,
   Knobs,
   PlaygroundState,
@@ -210,6 +212,7 @@ export const resolveTheme = (
   start: ThemeJson,
   knobs: Knobs = {},
   overrides: Record<string, string> = {},
+  fonts: Fonts = {},
 ): ResolvedTheme => {
   const startRefs: Record<string, string> = { ...start.refs, ...shadowAliases };
   const isSemantic = (key: string): boolean => key in startRefs;
@@ -219,6 +222,19 @@ export const resolveTheme = (
     if (!isSemantic(key)) primitives0[key] = value;
 
   let primitives = applyKnobs(primitives0, knobs);
+  // A font the person typed (S54) wins over a pairing; an override still wins over both.
+  // `parseFontName` is the gate: a name that does not pass is not written.
+  for (const [role, key] of [
+    ["heading", "--ds-font-family-heading"],
+    ["body", "--ds-font-family-body"],
+  ] as const) {
+    const name = parseFontName(fonts[role]);
+    if (name !== null)
+      primitives = {
+        ...primitives,
+        [key]: ownFontStack(name, String(primitives[key])),
+      };
+  }
   const refs = { ...startRefs };
   const semanticLiterals: VarMap = {};
   const ignored: IgnoredOverride[] = [];
@@ -298,4 +314,5 @@ export const resolveState = (
     applyDims(themes[state.start], themes, state.dims),
     state.knobs,
     state.overrides,
+    state.fonts,
   );

@@ -48,7 +48,10 @@ const Thumbnail = ({
 }) => {
   const vars = useMemo(
     () =>
-      previewVars(safeResolve(withLook(state, look), themeMaps).resolved.vars),
+      previewVars(
+        safeResolve(withLook(state, look), themeMaps).resolved.vars,
+        state.fonts,
+      ),
     [state, look],
   );
   return (

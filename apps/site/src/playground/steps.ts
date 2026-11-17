@@ -3,6 +3,7 @@
 // Every string comes from the content file; nothing here is shown to a person unchanged
 // except what the content file already holds.
 import { builderContent as content, type StepId } from "../content/builder";
+import { fontPairings } from "./fonts";
 import { presetChoices, type PresetDimension } from "./presets";
 import type { PlaygroundState, ThemeName } from "./types";
 
@@ -78,8 +79,21 @@ export const currentChoice = (
             swatch: state.knobs.brand,
           }
         : { lines: [shell.brandFromLook] };
-    case "typography":
-      return { lines: [choiceName("typography", 1, "type", state)] };
+    case "typography": {
+      const group = getStep("typography").groups[0]!;
+      const own = state.fonts.heading ?? state.fonts.body;
+      const index = fontPairings.findIndex(
+        (pairing) =>
+          pairing.heading === state.knobs.headingFont &&
+          pairing.body === state.knobs.bodyFont,
+      );
+      return {
+        lines: [
+          `${group.label}: ${own ?? (index === -1 ? shell.sameAsLook : group.choices[index]!.name)}`,
+          choiceName("typography", 1, "type", state),
+        ],
+      };
+    }
     case "shape": {
       const bold = (state.knobs.borderWidth ?? 1) >= 2;
       const outline = getStep("shape").groups[1]!;

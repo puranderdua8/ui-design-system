@@ -44,6 +44,36 @@ export const fontChoices: readonly FontChoice[] = [
   },
 ];
 
+/**
+ * The Typography pairings (spec 4.4 row 3), each made only of fonts the site already
+ * self-hosts, so choosing one never asks another server for a file. Fonts come from the
+ * shipped looks: Clean and modern is Base, Classic and warm is Nature, Friendly and
+ * round is Quirky's heading with Nature's body. The names are in the content file.
+ */
+export const fontPairings = [
+  { id: "clean", heading: "inter", body: "inter" },
+  { id: "classic", heading: "fraunces", body: "nunito" },
+  { id: "friendly", heading: "bricolage", body: "nunito" },
+] as const satisfies readonly { id: string; heading: FontId; body: FontId }[];
+
+export type FontPairing = (typeof fontPairings)[number];
+
+const genericFallback = "system-ui, sans-serif";
+
+/** What follows the leading family in a stack: the fallbacks a missing font falls back to. */
+export const fallbackOf = (stack: string): string => {
+  const rest = stack.split(",").slice(1).join(",").trim();
+  return rest === "" ? genericFallback : rest;
+};
+
+/**
+ * A typed font name as a stack: the name, quoted, then the fallbacks of the stack it
+ * replaces. `name` must already have passed `parseFontName`. This is what the exports
+ * carry; the preview shows the fallbacks only (see `previewVars`).
+ */
+export const ownFontStack = (name: string, replaced: string): string =>
+  `'${name}', ${fallbackOf(replaced)}`;
+
 export const fontStack = (id: FontId): string => {
   const choice = fontChoices.find((font) => font.id === id);
   if (!choice) throw new RangeError(`unknown font "${id}"`);
