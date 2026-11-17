@@ -277,17 +277,31 @@ test("export downloads DTCG JSON and CSS that carry the edit", async ({
   await openTab(page, "Export");
   await page.getByLabel("Theme name", { exact: true }).fill("Acme Brand");
 
+  // The lead file is the CSS; the JSON files sit in a closed disclosure (S39).
+  const advanced = page.locator("details", {
+    has: page.getByText("Advanced: theme folder for this repository"),
+  });
+  await expect(advanced).not.toHaveAttribute("open", "");
+  await expect(
+    page.getByRole("heading", { name: "Use in your app" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Copy color.json" }),
+  ).toBeHidden();
+
+  const css = await readDownload(page, "acme-brand.css");
+  expect(css).toContain("--ds-color-brand-600: #1762b6;");
+  expect(css).toContain(':root,\n[data-ds-mode="light"] {');
+  expect(css).toContain("color-scheme: light;");
+
+  await advanced.getByText("Advanced: theme folder").click();
+  await expect(advanced).toHaveAttribute("open", "");
   const colours = JSON.parse(await readDownload(page, "color.json"));
   // DTCG 2025.10 colour object (D-090).
   expect(colours.color.brand["600"].$value).toMatchObject({
     colorSpace: "srgb",
     hex: "#1762b6",
   });
-
-  const css = await readDownload(page, "acme-brand.css");
-  expect(css).toContain("--ds-color-brand-600: #1762b6;");
-  expect(css).toContain(':root,\n[data-ds-mode="light"] {');
-  expect(css).toContain("color-scheme: light;");
 });
 
 test("export warns about failing contrast", async ({ page }) => {
@@ -334,6 +348,7 @@ test("export copies a file to the clipboard", async ({
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.getByLabel("Brand colour", { exact: true }).fill("#1762b6");
   await openTab(page, "Export");
+  await page.getByText("Advanced: theme folder").click();
   await page.getByRole("button", { name: "Copy color.json" }).click();
   await expect(page.getByTestId("export-status")).toHaveText(
     "Copied color.json.",
