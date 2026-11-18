@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -52,6 +52,41 @@ const ProjectName = ({ id, name }: { id: string; name: string }) => {
   );
 };
 
+/** How long the status has to stay the same before it is spoken (ms). */
+const announceAfter = 600;
+
+/**
+ * One polite live region for the preview's readability (spec 4.11). It speaks the status
+ * only after it has stopped changing for `announceAfter` ms, and only when that settled
+ * status differs from the last one spoken, so a slider drag or a quick change and back
+ * says nothing and a lasting change says one thing. Nothing is spoken on load.
+ */
+const LiveStatus = ({ text, ready }: { text: string; ready: boolean }) => {
+  const [spoken, setSpoken] = useState("");
+  const [last, setLast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!ready) return;
+    const timer = window.setTimeout(() => {
+      if (last === null) setLast(text);
+      else if (text !== last) {
+        setLast(text);
+        setSpoken(text);
+      }
+    }, announceAfter);
+    return () => window.clearTimeout(timer);
+  }, [text, ready, last]);
+  return (
+    <span
+      role="status"
+      aria-live="polite"
+      data-testid="live-status"
+      className="sr-only"
+    >
+      {spoken}
+    </span>
+  );
+};
+
 const viewLinkClasses =
   "aria-[current=page]:font-semibold aria-[current=page]:underline aria-[current=page]:underline-offset-4";
 
@@ -62,8 +97,14 @@ const viewLinkClasses =
  */
 export const TopBar = () => {
   const pathname = usePathname();
-  const { view, failing } = useBuilder();
+  const { view, failing, hydrated } = useBuilder();
   const [keepColours, setKeepColours] = useState(true);
+  const pillText =
+    failing === 0
+      ? status.readable
+      : failing === 1
+        ? status.fixOne
+        : status.fixMany.replace("{count}", String(failing));
   const current = view.projects.find(
     (project) => project.id === view.currentId,
   );
@@ -156,17 +197,10 @@ export const TopBar = () => {
                 />
               </Field>
             </Cluster>
-            <Text
-              role="status"
-              data-testid="status-pill"
-              className="font-semibold"
-            >
-              {failing === 0
-                ? status.readable
-                : failing === 1
-                  ? status.fixOne
-                  : status.fixMany.replace("{count}", String(failing))}
+            <Text data-testid="status-pill" className="font-semibold">
+              {pillText}
             </Text>
+            <LiveStatus text={pillText} ready={hydrated} />
             <Button asChild size="sm">
               <NextLink href={stepHref("use")}>{buttons.useIt}</NextLink>
             </Button>

@@ -14,6 +14,15 @@ main:focus {
   outline: none;
 }
 
+/* Check's "Show me": the places in the preview that use a colour pair that is hard to
+   read. Fixed colours, not tokens: the preview re-maps every token, and the outline must
+   stand out against whatever the person built. The white halo keeps it visible on dark. */
+[data-check-flag] {
+  outline: 3px solid #b0005f;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px #fff;
+}
+
 body {
   @apply bg-ds-canvas text-ds-text font-ds-body;
 }

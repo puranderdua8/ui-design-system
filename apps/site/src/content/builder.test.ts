@@ -68,7 +68,15 @@ describe("Builder content (spec 4.10)", () => {
   });
 
   it("only uses known placeholders", () => {
-    const known = new Set(["step", "count", "example"]);
+    const known = new Set([
+      "step",
+      "count",
+      "example",
+      "fg",
+      "bg",
+      "ratio",
+      "min",
+    ]);
     const unknown = strings.flatMap(({ path, text }) =>
       [...text.matchAll(/\{(\w+)\}/g)]
         .filter((m) => !known.has(m[1]!))

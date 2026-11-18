@@ -550,6 +550,28 @@ export const builderContent = {
     after: "After",
     /** Used when a colour has no name in `roleNames`. */
     unnamedPlace: "some text",
+    /** The Check step's own words (S56). */
+    sampleLabel: "A sample of the colours that are hard to read",
+    sampleText: "Aa Sample text",
+    hideIt: "Hide it",
+    fixAll: "Fix all",
+    /** "Show me" found nothing on the example page that is open. */
+    noPlace:
+      "The example page you have open does not show this. Try another page.",
+    shownOne: "Showing 1 place in the preview.",
+    shownMany: "Showing {count} places in the preview.",
+    /** "Fix it for me" could not find a colour near this one that works. */
+    noFix:
+      "We could not find a nearby colour that fixes this. Try choosing another colour.",
+    fixedTitle: "Fixed",
+    fixedSummary: "{count} left to fix.",
+    allFixed: "Nothing is left to fix.",
+    /** The disclosure for people who want the numbers. */
+    detailsRow: "{fg} on {bg}: {ratio} to 1, needs {min} to 1",
+    detailsNone: "Every colour pair is at or above its minimum.",
+    /** The list of every decision, each linking to its step. */
+    builtTitle: "What you've built",
+    builtLead: "Every choice you made. Use a link to change one.",
     /**
      * Plain names for the colours a pair is made of, keyed by the role's variable name
      * without the `--ds-` prefix. A name stands for the place the colour shows up, not for
