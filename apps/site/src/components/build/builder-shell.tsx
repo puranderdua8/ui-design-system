@@ -20,6 +20,7 @@ import {
   stepHref,
   stepIds,
 } from "@/playground/steps";
+import { CheckStep } from "./check-step";
 import { ColourStep } from "./colour-step";
 import { StartStep } from "./start-step";
 import { DepthStep, ShapeStep, SpacingStep } from "./preset-steps";
@@ -48,7 +49,8 @@ const backLabel = (id: StepId): string =>
  * picture choices arrive in S53–S55; today each step shows its current choice.
  */
 export const BuilderShell = ({ step }: { step: StepId }) => {
-  const { view, hydrated, error, failing, vars, resolved } = useBuilder();
+  const { view, hydrated, error, failing, report, vars, resolved } =
+    useBuilder();
 
   useEffect(() => {
     if (shownBefore) document.getElementById(headingId)?.focus();
@@ -178,6 +180,12 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
                                 <DepthStep
                                   state={view.state}
                                   vars={resolved.vars as VarRecord}
+                                />
+                              ) : step === "check" ? (
+                                <CheckStep
+                                  state={view.state}
+                                  report={report}
+                                  resolved={resolved}
                                 />
                               ) : open.groups.length > 0 ? (
                                 <Text variant="caption">

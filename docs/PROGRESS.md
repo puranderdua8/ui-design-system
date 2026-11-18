@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S56** (Check; S55 Shape, Spacing, Depth and motion, shuffle is done on branch `s55-shape-spacing-depth`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S57** (Use it and the shared view; S56 Check is done on branch `s56-check`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -108,7 +108,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S53 Start and Colour                              | M17       | ☑      |
 | S54 Typography                                    | M17       | ☑      |
 | S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☑      |
-| S56 Check                                         | M17       | ☐      |
+| S56 Check                                         | M17       | ☑      |
 | S57 Use it and the shared view                    | M17       | ☐      |
 | S58 Style guide and print                         | M17       | ☐      |
 | S59 Phones, accessibility, e2e suite              | M17       | ☐      |
@@ -922,6 +922,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Branch `fix-select-contrast-axe` from `main`. The `forms.spec` "axe clean with a Select open" failure (noted in S53, S54, S55) was a timing race in the test, not a contrast bug: options carry `ds-transition`, and Firefox and WebKit ran axe while the highlighted option was mid-fade (`#51799e`, 2.77:1). The settled colours are in the contrast matrix. The test now emulates reduced motion (which turns the fade off, `theme.css`) and waits for the list to have no running animations. No component or token changed.
 - CI on #93 and #94 then failed on a different thing: Firefox "Page crashed" inside axe (`build-shape` axe test on #93, `build-start` axe test on #94; the Select test passed in CI). Same signature as S53 and S54, three different pages, no iframes, not reproducible locally (Firefox, 6 repeats). Two Playwright workers on CI did not help (it crashed again in `build.spec`, and CI went from about 6 to 9 minutes), so that change was reverted. Reproduced locally with 3 Firefox workers and `--repeat-each=20`: 4 to 7 crashes in 20; none without axe (16 of 16); none with only the AA or best-practice rule groups; the WCAG A group crashes, and turning off its `button-name` rule gave 20 of 20 clean on the plain step pages. But turning `button-name` off for every Builder axe test still left 31 of 100 failing (24 of them `Page crashed`), and the invalid-colour and typed-font tests crashed on every repeat, so that workaround was dropped. Cause not found; it is a Firefox plus axe problem on Builder pages, not one control. **Decision (maintainer): Firefox does not run axe on the Builder pages.** The Builder specs call `builderAxe(page)` (`e2e/axe.ts`), which returns no violations in Firefox and the real axe in Chromium and WebKit; the rest of each test still runs in Firefox, and the two whole-test Firefox skips from S53 and S54 are gone. To bring Firefox back, remove the Firefox branch in `e2e/axe.ts` once the cause is fixed. Still open: find the cause.
 - Verified: the whole `forms.spec` 27 passed in all three browsers; the one test 15 runs per browser pair (3 × `--repeat-each=5`), 30 of 30 each time.
+
+### S56 — Check — 2026-11-18
+
+- Branch `s56-check` cut from `origin/main` (eedb3e3, the Select axe fix merged as #94). Started about 10:30, ended about 11:00 (local).
+- Done: the Check step (`components/build/check-step.tsx`): failures by cause with a sample, "Show me" (outlines the places in the preview), "Fix it for me" (before and after, one undo step), "Fix all", a "Technical details" disclosure with every pair's ratio, the all-clear line, and "What you've built" (six decisions, each linked to its step). The top bar has a polite, debounced live region (600 ms, nothing on load); the status pill lost its `role="status"`. Logic in `playground/{check,show-me}.ts`; strings in `content/builder.ts` (`check`).
+- Decisions: D-161.
+- Gotchas: (1) The preview pages have no role markers, so "Show me" matches computed colours (text, border or background on the pair's back colour); a pair that only shows in an open Select or dialog finds no place and the card says so. (2) The step list's `li` count in `build.spec` also counted Check's own lists; it now counts `:scope > ol > li`. (3) `Heading` has no `h4` variant; the sub-headings use `h3`. (4) WebKit `build-typography.spec` fails in some runs with "navigation interrupted by another navigation to /build/start" in its `open` helper; it fails the same way with this session's changes stashed, so it is not from S56 (the S55 spec waits for the redirect, this one does not).
+- Verified: site unit tests 317 passed (new `check.test.ts`, content placeholders); typecheck, ESLint, `knip`, Prettier clean; `next build` clean; new `e2e/build-check.spec.ts` (a readable system says so and links every decision; a pale brand colour is explained, shown, hidden, fixed in one click and undone; Fix all is one undo step; the live region says nothing for a quick change and back and one thing for a lasting change; axe) 5 of 5 in Chromium, Firefox and WebKit; the Builder e2e specs 116 passed in all three before the `build.spec` fix and 64 of 66 after it (the two are the WebKit typography race in item 4). Not looked at by eye in the browser pane. The full site e2e was not run.
+- Next: S57 (Use it and the shared view).
 
 ## Retro (Release 1)
 

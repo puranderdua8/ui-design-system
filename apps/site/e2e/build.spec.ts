@@ -39,7 +39,8 @@ test("every step has its own URL, title, current mark and no violation", async (
       /noindex/,
     );
     const list = page.getByRole("navigation", { name: shell.stepListLabel });
-    await expect(list.getByRole("listitem")).toHaveCount(steps.length);
+    // The step rows only: the open step's own lists (Check has some) are not rows.
+    await expect(list.locator(":scope > ol > li")).toHaveCount(steps.length);
     await expect(list.locator('[aria-current="step"]')).toHaveCount(1);
     await expect(list.locator('[aria-current="step"]')).toContainText(
       `${index + 1}. ${step.name}`,

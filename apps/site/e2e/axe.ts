@@ -10,8 +10,10 @@ import type { Page } from "@playwright/test";
  * these pages are still checked; the rest of each test still runs in Firefox.
  * Remove this file's Firefox branch to bring Firefox back once the cause is fixed.
  */
-export const builderAxe = (page: Page) => {
+export const builderAxe = (page: Page, exclude: string[] = []) => {
   if (page.context().browser()?.browserType().name() === "firefox")
     return { analyze: async () => ({ violations: [] as never[] }) };
-  return new AxeBuilder({ page });
+  const builder = new AxeBuilder({ page });
+  for (const selector of exclude) builder.exclude(selector);
+  return builder;
 };
