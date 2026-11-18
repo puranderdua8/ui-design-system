@@ -232,6 +232,35 @@ describe("the projects store", () => {
     expect(store.getSnapshot()).toBe(first);
   });
 
+  it("saves a shared design as a new project and never changes an existing one", () => {
+    const { storage } = fakeStorage();
+    const store = createProjectsStore(() => storage, idMaker());
+    const mine = withKnobs(store.getSnapshot(), { brand: "#112233" });
+    store.setState(mine);
+    const shared = withKnobs(startFrom("nature"), { brand: "#1762b6" });
+    expect(store.saveCopy("Shared", shared)).toBe(true);
+    // The copy is the open project; the first one is exactly as it was.
+    expect(store.getView().projects.map((p) => p.name)).toEqual([
+      "My design system",
+      "Shared",
+    ]);
+    expect(store.getSnapshot()).toBe(shared);
+    store.openProject("id1");
+    expect(store.getSnapshot()).toBe(mine);
+    // Saving again adds another; it never overwrites the first copy.
+    expect(store.saveCopy("Shared", shared)).toBe(true);
+    expect(store.getView().projects).toHaveLength(3);
+  });
+
+  it("does not save a copy when the list is full", () => {
+    const { storage } = fakeStorage();
+    const store = createProjectsStore(() => storage, idMaker());
+    for (let i = 0; i < 49; i++) store.newProject(`P${i}`);
+    expect(store.getView().projects).toHaveLength(50);
+    expect(store.saveCopy("One too many", startFrom("base"))).toBe(false);
+    expect(store.getView().projects).toHaveLength(50);
+  });
+
   it("keeps a snapshot stable until something changes", () => {
     const { storage } = fakeStorage();
     const store = createProjectsStore(() => storage, idMaker());

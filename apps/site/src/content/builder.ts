@@ -614,6 +614,75 @@ export const builderContent = {
     },
   },
 
+  /** The Use it step (S57): share, print, hand over. */
+  use: {
+    shareTitle: "Share it",
+    shareLead:
+      "Copy a link that opens your design system for anyone you send it to.",
+    linkLabel: "Your link",
+    linkCopied: "Link copied.",
+    linkCopyFailed:
+      "Your browser would not copy it. Select the link and copy it yourself.",
+    linkTooBig:
+      "This design system is too big for a link. Download your project file instead.",
+    guideTitle: "Show it",
+    guideLead:
+      "A page with your colours, fonts, shapes and sample parts that you can print.",
+    openGuide: "Open style guide",
+    designTitle: "Design with it",
+    designLead:
+      "One file for your designer. It holds your colours, fonts and sizes.",
+    designNote:
+      "Ask your designer to bring it into their design tool. Steps for each tool will follow.",
+    buildTitle: "Build with it",
+    buildLead: "Pick the way your product is built. Each way is one file.",
+    tabsLabel: "Ways to build",
+    tabCss: "Any site (CSS variables)",
+    tabPackage: "@puranderdua/ui",
+    cssNote:
+      "This file holds your choices as CSS variables. It does not hold ready-made parts.",
+    cssSteps: [
+      "Save the file next to your page.",
+      "Link it in your page before your own styles.",
+      "Use a value anywhere, such as var(--ds-color-brand-600).",
+    ],
+    packageNote: "This file restyles every part in @puranderdua/ui.",
+    packageSteps: [
+      "Install the package with npm install @puranderdua/ui.",
+      "In your main CSS, import foundations.css first.",
+      "Then import this file. Every part picks up your choices.",
+    ],
+    fontsTitle: "Your fonts",
+    fontsLead:
+      "Your file names these fonts. Add this line to your page so visitors see them.",
+    fontsOwnNote:
+      "If you typed your own font name, check that the font host has it, or load it from your own files.",
+    fontsNone:
+      "Your fonts are already on every device. You need nothing extra.",
+    fileCopied: "Copied.",
+    fileCopyFailed: "Your browser would not copy it. Use Download instead.",
+    /** Shown above the files while something is hard to read. */
+    banner: "Some text is hard to read.",
+    bannerFix: "Go to Check",
+    bannerKeep: "Your files still work as they are.",
+  },
+
+  /** The page that opens a shared link (S57). */
+  shared: {
+    title: "Shared design system",
+    /** The name a saved copy gets. */
+    copyName: "Shared design system",
+    readOnly: "It is read-only. Your own design systems are not changed.",
+    saved:
+      "Saved. It is now one of your design systems, and you can change it.",
+    savedOpen: "Open it",
+    full: "There is no room for another design system. Delete one first.",
+    newer:
+      "This link was made with a newer version of this tool. Reload the page, or ask for a new link.",
+    startOwn: "Start your own design system",
+    loading: "Opening the link.",
+  },
+
   /** An error is one sentence, then a suggestion. */
   errors: {
     colourInvalid: {

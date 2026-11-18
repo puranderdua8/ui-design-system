@@ -113,12 +113,19 @@ export const decodeShare = async (text: unknown): Promise<DecodedShare> => {
   return state ? { kind: "ok", state } : { kind: "invalid" };
 };
 
-/** The hash fragment key: `#share=<text>`. */
-const hashKey = "share=";
+/** The shared view's path (spec 5.1). The design itself travels in the hash after it. */
+export const sharedPath = "/build/shared";
 
-export const shareHash = async (state: PlaygroundState): Promise<string> =>
-  `#${hashKey}${await encodeShare(state)}`;
+/** The hash fragment key: `#d=<text>`. */
+const hashKey = "d=";
 
-/** The share text in a URL hash (`#share=…`), or `null` if the hash is not a share link. */
+/** The whole link for a design, given the site's origin. */
+export const shareUrl = async (
+  origin: string,
+  state: PlaygroundState,
+): Promise<string> =>
+  `${origin}${sharedPath}#${hashKey}${await encodeShare(state)}`;
+
+/** The share text in a URL hash (`#d=…`), or `null` if the hash is not a share link. */
 export const readShareHash = (hash: string): string | null =>
   hash.startsWith(`#${hashKey}`) ? hash.slice(hashKey.length + 1) : null;

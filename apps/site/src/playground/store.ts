@@ -47,6 +47,8 @@ export const getProject = (id: string) => store.getProject(id);
 export const undo = (): void => store.undo();
 export const redo = (): void => store.redo();
 export const newProject = (name?: string): void => store.newProject(name);
+export const saveCopy = (name: string, state: PlaygroundState): boolean =>
+  store.saveCopy(name, state);
 export const openProject = (id: string): void => store.openProject(id);
 export const renameProject = (id: string, name: string): void =>
   store.rename(id, name);

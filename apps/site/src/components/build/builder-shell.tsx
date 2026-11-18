@@ -25,6 +25,7 @@ import { ColourStep } from "./colour-step";
 import { StartStep } from "./start-step";
 import { DepthStep, ShapeStep, SpacingStep } from "./preset-steps";
 import { TypographyStep } from "./typography-step";
+import { UseStep } from "./use-step";
 import { useBuilder } from "./use-builder";
 
 const { shell, buttons } = content;
@@ -186,6 +187,18 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
                                   state={view.state}
                                   report={report}
                                   resolved={resolved}
+                                />
+                              ) : step === "use" ? (
+                                <UseStep
+                                  state={view.state}
+                                  resolved={resolved}
+                                  failing={failing}
+                                  name={
+                                    view.projects.find(
+                                      (project) =>
+                                        project.id === view.currentId,
+                                    )?.name ?? ""
+                                  }
                                 />
                               ) : open.groups.length > 0 ? (
                                 <Text variant="caption">
