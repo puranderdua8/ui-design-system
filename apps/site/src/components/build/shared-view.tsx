@@ -36,11 +36,14 @@ type Reading = { kind: "loading" } | DecodedShare;
 export const SharedView = () => {
   const [reading, setReading] = useState<Reading>({ kind: "loading" });
   const [saved, setSaved] = useState<"no" | "yes" | "full">("no");
+  /** The link's own hash, passed on to the style guide. Only set once it has been read. */
+  const [hash, setHash] = useState("");
 
   useEffect(() => {
     let cancelled = false;
     const read = async () => {
       const text = readShareHash(window.location.hash);
+      if (text !== null) setHash(`#d=${text}`);
       const result: DecodedShare =
         text === null ? { kind: "invalid" } : await decodeShare(text);
       if (!cancelled) setReading(result);
@@ -133,6 +136,12 @@ export const SharedView = () => {
                       }
                     >
                       {buttons.saveCopy}
+                    </Button>
+                    <Button asChild variant="secondary" size="sm">
+                      {/* The style guide reads the same link, so it opens this design. */}
+                      <NextLink href={`/build/guide${hash}`}>
+                        {content.use.openGuide}
+                      </NextLink>
                     </Button>
                     {saved === "yes" ? (
                       <Text role="status" data-testid="shared-saved">
