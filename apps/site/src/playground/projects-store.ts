@@ -209,6 +209,18 @@ export const createProjectsStore = (
 
     newProject: (name?: string): void =>
       commit(addProject(ensure(), makeId(), name)),
+    /**
+     * Keeps a design that came from outside (a shared link) as a new project and opens
+     * it. It only adds: no project that exists is changed or replaced. `false` when the
+     * list is full.
+     */
+    saveCopy: (name: string, state: PlaygroundState): boolean => {
+      const before = ensure();
+      const next = addProject(before, makeId(), name, state);
+      if (next === before) return false;
+      commit(next);
+      return true;
+    },
     openProject: (id: string): void => commit(selectProject(ensure(), id)),
     rename: (id: string, name: string): void =>
       commit(renameProject(ensure(), id, name)),

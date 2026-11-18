@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S57** (Use it and the shared view; S56 Check is done on branch `s56-check`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S58** (Style guide and print; S57 Use it is done on branch `s57-use-it`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -109,7 +109,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S54 Typography                                    | M17       | ☑      |
 | S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☑      |
 | S56 Check                                         | M17       | ☑      |
-| S57 Use it and the shared view                    | M17       | ☐      |
+| S57 Use it and the shared view                    | M17       | ☑      |
 | S58 Style guide and print                         | M17       | ☐      |
 | S59 Phones, accessibility, e2e suite              | M17       | ☐      |
 | S60 Independent review                            | M17       | ☐      |
@@ -931,6 +931,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) The preview pages have no role markers, so "Show me" matches computed colours (text, border or background on the pair's back colour); a pair that only shows in an open Select or dialog finds no place and the card says so. (2) The step list's `li` count in `build.spec` also counted Check's own lists; it now counts `:scope > ol > li`. (3) `Heading` has no `h4` variant; the sub-headings use `h3`. (4) WebKit `build-typography.spec` fails in some runs with "navigation interrupted by another navigation to /build/start" in its `open` helper; it fails the same way with this session's changes stashed, so it is not from S56 (the S55 spec waits for the redirect, this one does not).
 - Verified: site unit tests 317 passed (new `check.test.ts`, content placeholders); typecheck, ESLint, `knip`, Prettier clean; `next build` clean; new `e2e/build-check.spec.ts` (a readable system says so and links every decision; a pale brand colour is explained, shown, hidden, fixed in one click and undone; Fix all is one undo step; the live region says nothing for a quick change and back and one thing for a lasting change; axe) 5 of 5 in Chromium, Firefox and WebKit; the Builder e2e specs 116 passed in all three before the `build.spec` fix and 64 of 66 after it (the two are the WebKit typography race in item 4). Not looked at by eye in the browser pane. The full site e2e was not run.
 - Next: S57 (Use it and the shared view).
+
+### S57 — Use it and the shared view — 2026-11-18
+
+- Branch `s57-use-it` cut from `origin/main` (47cda8d, S56 merged as #95). Started about 11:30, ended about 12:15 (local).
+- Done: the Use it step (`components/build/use-step.tsx`): "Copy link" (says it is a snapshot, always shows the link in a read-only field), "Open style guide", the design file (no tool named), "Build with it" tabs (CSS variables, `@puranderdua/ui`) each with Copy, Download, three lines of instructions and the font snippet, and a banner linking to Check while anything fails. The shared view `/build/shared#d=…` (`components/build/shared-view.tsx`): read-only, labelled as someone else's, "Save a copy" (new `saveCopy` on the projects store, only ever appends), a safe message for a bad link. New `formats/package-css.ts`, `formats/font-snippet.ts`, `lib/download.ts` (the export panel uses it too). Strings in `content/builder.ts` (`use`, `shared`).
+- Decisions: D-162.
+- Gotchas: (1) "Open style guide" links to `/build/guide`, which is S58's page, so it 404s until then. (2) The hash key is now `#d=` (was `#share=`; no UI used it). (3) The design-file section says no tool by name and that steps "will follow"; the by-hand import checks per tool are still to do (spec 4.6). (4) The five-file theme-folder export is still in Studio's export panel; moving it under "Advanced export" is not in S57's prompt and stays as is. (5) The font snippet points at Google Fonts; a typed font may not exist there, and the text says so.
+- Verified: site unit tests 325 passed (new `use-formats.test.ts`, `saveCopy` tests in `projects.test.ts`, the share URL test); typecheck, ESLint, `knip`, Prettier clean; `next build` clean; new `e2e/build-use.spec.ts` (a copied link reopens the same system in a clean context with the same brand colour and no editing controls; Save a copy adds a project and leaves the existing ones as they were; the three files download with the design in them; the CSS tab note and Copy; four kinds of tampered link give the message and save nothing; the banner links to Check; axe on both tabs, the shared view and the broken-link page) 7 of 7 in Chromium, Firefox and WebKit, with `build.spec` and `build-check.spec` (69 passed in all). Not looked at by eye in the browser pane. The full site e2e was not run.
+- Next: S58 (Style guide and print).
 
 ## Retro (Release 1)
 

@@ -16,6 +16,7 @@ import {
 import { builderContent as content } from "@/content/builder";
 import { isCurrent } from "@/lib/is-current";
 import { shuffle } from "@/playground/presets";
+import { sharedPath } from "@/playground/share";
 import { stepHref } from "@/playground/steps";
 import { redo, renameProject, setState, undo } from "@/playground/store";
 import { useBuilder } from "./use-builder";
@@ -110,6 +111,20 @@ export const TopBar = () => {
   );
   const inStudio = isCurrent(pathname, "/build/studio");
   const inGuided = !inStudio && pathname !== "/build";
+  // A shared design is someone else's and read-only: no editing controls, no status.
+  if (isCurrent(pathname, sharedPath))
+    return (
+      <section
+        aria-label={shell.topBarLabel}
+        className="border-b border-ds-border py-ds-gap-md"
+      >
+        <Container size="lg">
+          <Link asChild variant="standalone">
+            <NextLink href="/build">{shell.projectsTitle}</NextLink>
+          </Link>
+        </Container>
+      </section>
+    );
   return (
     <section
       aria-label={shell.topBarLabel}

@@ -5,7 +5,7 @@ import {
   maxDecodedLength,
   maxEncodedLength,
   readShareHash,
-  shareHash,
+  shareUrl,
 } from "./share";
 import { parseState, serialiseState, startFrom } from "./state";
 import type { PlaygroundState } from "./types";
@@ -48,11 +48,15 @@ describe("share link", () => {
     });
   });
 
-  it("builds and reads a URL hash", async () => {
-    const hash = await shareHash(state);
-    expect(hash.startsWith("#share=")).toBe(true);
-    expect(readShareHash(hash)).toBe(hash.slice(7));
+  it("builds the shared-view link and reads its hash back", async () => {
+    const url = await shareUrl("https://example.test", state);
+    expect(url.startsWith("https://example.test/build/shared#d=")).toBe(true);
+    const hash = url.slice(url.indexOf("#"));
+    const text = readShareHash(hash);
+    expect(text).toBe(await encodeShare(state));
+    expect(await decodeShare(text)).toEqual({ kind: "ok", state });
     expect(readShareHash("#other")).toBeNull();
+    expect(readShareHash("#share=abc")).toBeNull();
     expect(readShareHash("")).toBeNull();
   });
 

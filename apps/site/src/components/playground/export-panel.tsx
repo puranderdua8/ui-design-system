@@ -10,19 +10,12 @@ import {
   Stack,
   Text,
 } from "@puranderdua/ui";
+import { downloadText } from "@/lib/download";
 import { exportTheme, themeSlug, type ExportFile } from "@/playground/export";
 import type { ContrastReport, ResolvedTheme } from "@/playground/types";
 
-const download = (file: ExportFile): void => {
-  const url = URL.createObjectURL(
-    new Blob([file.content], { type: file.mime }),
-  );
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = file.name;
-  link.click();
-  URL.revokeObjectURL(url);
-};
+const download = (file: ExportFile): void =>
+  downloadText(file.name, file.mime, file.content);
 
 export const ExportPanel = ({
   resolved,
