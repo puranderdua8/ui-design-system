@@ -112,10 +112,12 @@ export const TopBar = () => {
   const inStudio = isCurrent(pathname, "/build/studio");
   const inGuided = !inStudio && pathname !== "/build";
   // A shared design is someone else's and read-only: no editing controls, no status.
-  if (isCurrent(pathname, sharedPath))
+  // The style guide is the same: it may show a shared design, and it prints.
+  if (isCurrent(pathname, sharedPath) || isCurrent(pathname, "/build/guide"))
     return (
       <section
         aria-label={shell.topBarLabel}
+        data-print="hide"
         className="border-b border-ds-border py-ds-gap-md"
       >
         <Container size="lg">
@@ -128,6 +130,7 @@ export const TopBar = () => {
   return (
     <section
       aria-label={shell.topBarLabel}
+      data-print="hide"
       className="border-b border-ds-border py-ds-gap-md"
     >
       <Container size="lg">

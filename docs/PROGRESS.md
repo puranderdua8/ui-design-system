@@ -6,7 +6,7 @@
 
 - **Release:** 2, **the Builder** (D-131): the site becomes a guided, plain-language tool for building a design system. Plan: `docs/PLAN.md` (sessions specified up to launch, S36–S63). Design: `docs/builder-spec.md`. Release 1 is done (package 1.0.0, H20 merged in #73) and archived in `docs/plans/release-1.md`; Release 0 in `docs/plans/release-0.md`.
 - **Current milestone:** **M13 Groundwork** (S36–S37) is done: S36 merged (#74), S37 on branch `s37-analytics-privacy`.
-- **Next session:** **S58** (Style guide and print; S57 Use it is done on branch `s57-use-it`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
+- **Next session:** **S59** (Phones, accessibility, e2e suite; S58 Style guide and print is done on branch `s58-style-guide`). T0, the maintainer's first usability round, is still to run; its vocabulary findings are applied to `builder.ts` when they exist (gate open).
 - **Blockers:** none. **Maintainer to-dos:** (1) `@puranderdua/ui@1.0.0` is on npm; the site is pinned to it as of S44 (deploy it, D-094). (2) After merging S37, deploy and check the Vercel dashboard (S37 "Done when"). (3) Read `docs/research/usability-test-kit.md` and recruit six people (2 makers, 2 designers, 2 marketers) for T0.
 - **Dark mode** (R26, R27, R29 and the rest of R28, handed over in D-103) is now Release 3 (D-118, D-145).
 
@@ -110,7 +110,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S55 Shape, Spacing, Depth and motion, shuffle     | M17       | ☑      |
 | S56 Check                                         | M17       | ☑      |
 | S57 Use it and the shared view                    | M17       | ☑      |
-| S58 Style guide and print                         | M17       | ☐      |
+| S58 Style guide and print                         | M17       | ☑      |
 | S59 Phones, accessibility, e2e suite              | M17       | ☐      |
 | S60 Independent review                            | M17       | ☐      |
 | T1 Second usability round (maintainer)            | M17       | ☐      |
@@ -940,6 +940,15 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) "Open style guide" links to `/build/guide`, which is S58's page, so it 404s until then. (2) The hash key is now `#d=` (was `#share=`; no UI used it). (3) The design-file section says no tool by name and that steps "will follow"; the by-hand import checks per tool are still to do (spec 4.6). (4) The five-file theme-folder export is still in Studio's export panel; moving it under "Advanced export" is not in S57's prompt and stays as is. (5) The font snippet points at Google Fonts; a typed font may not exist there, and the text says so.
 - Verified: site unit tests 325 passed (new `use-formats.test.ts`, `saveCopy` tests in `projects.test.ts`, the share URL test); typecheck, ESLint, `knip`, Prettier clean; `next build` clean; new `e2e/build-use.spec.ts` (a copied link reopens the same system in a clean context with the same brand colour and no editing controls; Save a copy adds a project and leaves the existing ones as they were; the three files download with the design in them; the CSS tab note and Copy; four kinds of tampered link give the message and save nothing; the banner links to Check; axe on both tabs, the shared view and the broken-link page) 7 of 7 in Chromium, Firefox and WebKit, with `build.spec` and `build-check.spec` (69 passed in all). Not looked at by eye in the browser pane. The full site e2e was not run.
 - Next: S58 (Style guide and print).
+
+### S58 — Style guide and print — 2026-11-18
+
+- Branch `s58-style-guide` cut from `origin/main` (4487cf3, S57 merged as #96). Started about 12:20, ended about 12:50 (local).
+- Done: `/build/guide` (`components/build/guide-view.tsx`): project name, colours with plain names, hex and "use for", font specimens, shape, spacing, shadows, motion, sample parts, a readability summary and the credit, inside one `ThemeScope`; "Save as PDF" calls the browser's print. Data in `playground/guide.ts` (every value passes the grammar). It reads `#d=` or else the open project; a bad or newer link shows a message only. The shared view now has "Open style guide", which passes its hash on. Print rules in `globals.css`; chrome marked `data-print="hide"`. Strings in `content/builder.ts` (`guide`).
+- Decisions: D-163.
+- Gotchas: (1) The skip link is not `body > :first-child`, so the print rule matches `a[href="#main"]`. (2) The guide uses the minimal top bar (like the shared view). (3) Motion shows durations as text, with no animation. (4) Real print layout (page breaks) is checked only through print emulation, not a printed PDF.
+- Verified: site unit tests 330 passed (new `guide.test.ts`); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-guide.spec.ts` (every section; link from Use it; print emulation hides header, footer, top bar, toolbar and skip link and nothing is clipped; works from a shared link and from the shared view's link; a tampered link is safe; axe clean) with `build-use.spec` 33 passed in Chromium, Firefox and WebKit. Not looked at by eye in the browser pane. The full site e2e and `next build` outside the e2e server were not run separately.
+- Next: S59 (Phones, accessibility, e2e suite).
 
 ## Retro (Release 1)
 

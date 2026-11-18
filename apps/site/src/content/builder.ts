@@ -683,6 +683,118 @@ export const builderContent = {
     loading: "Opening the link.",
   },
 
+  /** The style guide page (S58): a printable sheet of the design. */
+  guide: {
+    title: "Style guide",
+    /** Used when the open project has no name to show. */
+    untitled: "My design system",
+    lead: "Your colours, fonts, shapes and sample parts on one page.",
+    sharedNote: "This is someone else's design system, shown read-only.",
+    print: "Save as PDF",
+    printHint: "Your browser's print window lets you save this page as a PDF.",
+    back: "Back to Use it",
+    loading: "Opening the style guide.",
+    colourTitle: "Colours",
+    colourLead: "Each colour, with where to use it.",
+    useFor: "Use for",
+    colours: [
+      {
+        key: "--ds-action-primary-bg",
+        name: "Main colour",
+        useFor: "main buttons and strong highlights",
+      },
+      {
+        key: "--ds-color-accent-600",
+        name: "Highlight colour",
+        useFor: "tabs, tags and small accents",
+      },
+      {
+        key: "--ds-text-primary",
+        name: "Body text",
+        useFor: "paragraphs and headings",
+      },
+      {
+        key: "--ds-text-muted",
+        name: "Quiet text",
+        useFor: "hints and small print",
+      },
+      {
+        key: "--ds-text-link",
+        name: "Links",
+        useFor: "words that take you somewhere",
+      },
+      {
+        key: "--ds-surface-canvas",
+        name: "Page background",
+        useFor: "the background of every page",
+      },
+      {
+        key: "--ds-surface-subtle",
+        name: "Soft background",
+        useFor: "calm panels behind content",
+      },
+      {
+        key: "--ds-border-default",
+        name: "Outlines",
+        useFor: "lines between and around things",
+      },
+      {
+        key: "--ds-feedback-danger-fg",
+        name: "Error colour",
+        useFor: "messages that say something went wrong",
+      },
+    ],
+    typeTitle: "Fonts and text sizes",
+    typeLead: "Headings and body text as people will read them.",
+    headingFont: "Heading font",
+    bodyFont: "Body font",
+    specimenHeading: "A heading in your style",
+    specimenBody:
+      "Body text is what most people read. It should feel calm and clear, even in a long paragraph.",
+    specimenCaption: "Small print and captions look like this.",
+    shapeTitle: "Shape",
+    shapeLead: "How rounded your parts are.",
+    shapes: [
+      { key: "--ds-radius-control", name: "Buttons and fields" },
+      { key: "--ds-radius-card", name: "Cards" },
+      { key: "--ds-radius-pill", name: "Tags and pills" },
+    ],
+    spacingTitle: "Spacing",
+    spacingLead: "The gaps that keep things apart.",
+    spaces: [
+      { key: "--ds-space-2", name: "Small" },
+      { key: "--ds-space-4", name: "Medium" },
+      { key: "--ds-space-8", name: "Large" },
+    ],
+    depthTitle: "Shadows",
+    depthLead: "How far parts lift off the page.",
+    depths: [
+      { key: "--ds-elevation-raised", name: "Raised" },
+      { key: "--ds-elevation-overlay", name: "Floating" },
+    ],
+    motionTitle: "Motion",
+    motionLead: "How fast things move.",
+    motions: [
+      { key: "--ds-motion-duration-fast", name: "Quick" },
+      { key: "--ds-motion-duration-normal", name: "Everyday" },
+    ],
+    partsTitle: "Sample parts",
+    partsLead: "A few parts wearing your choices.",
+    sampleButton: "Main button",
+    sampleSecondary: "Second button",
+    sampleFieldLabel: "Your email",
+    sampleFieldHint: "A form field looks like this.",
+    sampleCheckbox: "Remind me later",
+    sampleCardTitle: "A card",
+    sampleCardBody: "Cards hold a small group of related things.",
+    sampleCardAction: "Read more",
+    readTitle: "How easy it is to read",
+    readAll: "Every colour pair is easy to read.",
+    /** `{count}` pairs are hard to read. */
+    readSome: "{count} colour pairs are hard to read. Use Check to fix them.",
+    credit: "Made with the Design System Builder.",
+  },
+
   /** An error is one sentence, then a suggestion. */
   errors: {
     colourInvalid: {

@@ -26,3 +26,39 @@ main:focus {
 body {
   @apply bg-ds-canvas text-ds-text font-ds-body;
 }
+
+/* Print (S58): a printed page is the content only. The skip link, the site header and
+   footer, the Builder's top bar and anything marked data-print="hide" go away; sections
+   and swatches stay whole across a page break; nothing is clipped or scrolls; colours
+   print as they are. Text stays real text. */
+@media print {
+  body > a[href="#main"],
+  body > header,
+  body > footer,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  body {
+    display: block;
+    min-height: 0;
+  }
+
+  main,
+  [data-guide-scope] {
+    overflow: visible !important;
+  }
+
+  [data-swatch],
+  [data-print="keep"] {
+    break-inside: avoid;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
