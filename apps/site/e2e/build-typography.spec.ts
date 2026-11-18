@@ -19,6 +19,8 @@ const open = async (page: Page) => {
   await page.goto("/build");
   await ready(page);
   await page.getByRole("button", { name: "New design system" }).click();
+  // Go on only once the new project has opened, or the two navigations collide.
+  await page.waitForURL("**/build/start");
   await page.goto("/build/typography");
   await ready(page);
 };

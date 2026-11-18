@@ -488,6 +488,9 @@ export const builderContent = {
     previewHeading: "Preview",
     skipToPreview: "Skip to the preview",
     skipToSteps: "Skip to the steps",
+    /** The phone's preview bar folds away so the steps get the whole screen (S59). */
+    hidePreview: "Hide the preview",
+    showPreview: "Show the preview",
     projectName: "Name of your design system",
     viewLabel: "View",
     guided: "Guided",

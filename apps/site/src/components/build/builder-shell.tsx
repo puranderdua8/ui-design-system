@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
 import {
   Button,
   Cluster,
   Container,
   Heading,
-  Split,
   Stack,
   Text,
 } from "@puranderdua/ui";
@@ -53,10 +52,37 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
   const { view, hydrated, error, failing, report, vars, resolved } =
     useBuilder();
 
+  const [collapsed, setCollapsed] = useState(false);
+  const pinRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     if (shownBefore) document.getElementById(headingId)?.focus();
     shownBefore = true;
   }, [step]);
+
+  // The pinned preview must never hide the focused control (2.4.11): the page scrolls
+  // clear of its height. Only the sticky (narrow) layout needs it; wide, the pin sits
+  // beside the steps and the height is 0.
+  useEffect(() => {
+    const pin = pinRef.current;
+    if (!pin) return;
+    const root = document.documentElement;
+    const measure = () =>
+      root.style.setProperty(
+        "scroll-padding-top",
+        getComputedStyle(pin).position === "sticky" &&
+          getComputedStyle(pin).gridColumnStart === "auto"
+          ? `${pin.offsetHeight}px`
+          : "0px",
+      );
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(pin);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("scroll-padding-top");
+    };
+  }, []);
 
   const open = getStep(step);
   const { previous, next } = neighbours(step);
@@ -75,8 +101,8 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
           <Heading as="h1" variant="h2">
             {shell.name}
           </Heading>
-          <a href="#preview" className={skip}>
-            {shell.skipToPreview}
+          <a href="#steps" className={skip}>
+            {shell.skipToSteps}
           </a>
           {error ? (
             <div
@@ -98,11 +124,50 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
             </div>
           ) : null}
           {/* The container query decides, not the viewport (D-064): from 56rem of
-              width the panel and the preview sit side by side and the preview is
-              pinned; narrower, the preview follows the steps and nothing sticks. */}
+              width the steps and the preview sit side by side and the preview is
+              pinned on the right; narrower (a phone), the preview comes first and is
+              pinned on top, collapsible, with the steps below it. The preview is first
+              in the page too, so what you see is the order a screen reader reads
+              (D-164); the wide layout places the columns by grid line. */}
           <div className="@container">
-            <Split ratio="1:1" align="start" gap="xl">
-              <nav aria-label={shell.stepListLabel}>
+            <div className="grid grid-cols-1 items-start gap-ds-gap-xl @4xl:grid-cols-2">
+              <section
+                id="preview"
+                tabIndex={-1}
+                aria-label={shell.previewLabel}
+                data-testid="preview-pin"
+                data-collapsed={collapsed}
+                ref={pinRef}
+                className="ds-layer-sticky sticky top-0 bg-ds-canvas py-ds-gap-sm @4xl:col-start-2 @4xl:row-start-1 @4xl:max-h-dvh @4xl:overflow-y-auto @4xl:py-0"
+              >
+                <div className="@4xl:hidden">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    aria-expanded={!collapsed}
+                    aria-controls="preview-body"
+                    onClick={() => setCollapsed((value) => !value)}
+                  >
+                    {collapsed ? shell.showPreview : shell.hidePreview}
+                  </Button>
+                </div>
+                <div
+                  id="preview-body"
+                  className={
+                    collapsed
+                      ? "@max-4xl:hidden"
+                      : "@max-4xl:max-h-[40dvh] @max-4xl:overflow-y-auto"
+                  }
+                >
+                  <Preview theme={view.state.start} vars={vars} />
+                </div>
+              </section>
+              <nav
+                id="steps"
+                tabIndex={-1}
+                aria-label={shell.stepListLabel}
+                className="@4xl:col-start-1 @4xl:row-start-1"
+              >
                 <ol className="m-0 flex list-none flex-col gap-ds-gap-md p-0">
                   {stepIds.map((id, index) => {
                     const item = getStep(id);
@@ -231,16 +296,7 @@ export const BuilderShell = ({ step }: { step: StepId }) => {
                   })}
                 </ol>
               </nav>
-              <section
-                id="preview"
-                tabIndex={-1}
-                aria-label={shell.previewLabel}
-                data-testid="preview-pin"
-                className="@4xl:sticky @4xl:top-0 @4xl:max-h-dvh @4xl:overflow-y-auto"
-              >
-                <Preview theme={view.state.start} vars={vars} />
-              </section>
-            </Split>
+            </div>
           </div>
         </Stack>
       </Container>

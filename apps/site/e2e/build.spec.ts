@@ -123,24 +123,24 @@ test("each step shows its current choice from the content file", async ({
   );
 });
 
-test("the preview follows the panel in the page and a skip link passes the steps", async ({
+test("the preview comes first in the page and a skip link passes it to the steps", async ({
   page,
   browserName,
 }) => {
   await page.goto("/build/start");
   await ready(page);
-  const skip = page.getByRole("link", { name: shell.skipToPreview });
+  const skip = page.getByRole("link", { name: shell.skipToSteps });
   await expect(skip).toHaveCount(1);
   const order = await page.evaluate(() => {
     const steps = document.querySelector("nav[aria-label='Steps']")!;
     const preview = document.getElementById("preview")!;
-    return steps.compareDocumentPosition(preview);
+    return preview.compareDocumentPosition(steps);
   });
-  // DOCUMENT_POSITION_FOLLOWING (4): the preview comes after the steps.
+  // DOCUMENT_POSITION_FOLLOWING (4): the steps come after the preview (D-164).
   expect(order & 4).toBe(4);
-  await tabTo(page, tabKey(browserName), shell.skipToPreview);
+  await tabTo(page, tabKey(browserName), shell.skipToSteps);
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/#preview$/);
+  await expect(page).toHaveURL(/#steps$/);
 });
 
 test("the top bar renames the project in place, and Undo and Redo start off", async ({
@@ -270,4 +270,151 @@ test("the header lists your projects, and the examples wear the one you pick", a
   await expect(
     page.getByLabel("Showing examples in", { exact: true }),
   ).toHaveValue(/^project:/);
+});
+
+// Phones, 320px and 200% zoom (S59, spec 4.11). 1.4.10: no sideways scroll at 320px; 200%
+// zoom is a 640px-wide viewport, as in the site's earlier zoom check.
+const sizes = [
+  { name: "320px", width: 320, height: 640 },
+  { name: "200% zoom", width: 640, height: 512 },
+];
+
+/** A share link for a project with a brand colour, built from the Use it step. */
+const shareLink = async (page: Page): Promise<string> => {
+  await page.goto("/build/colour");
+  await ready(page);
+  await page
+    .getByTestId("brand-colour")
+    .getByLabel(builderContent.colour.brandLabel, { exact: true })
+    .fill("#1762b6");
+  await page.goto("/build/use");
+  await ready(page);
+  await page.getByRole("button", { name: buttons.copyLink }).click();
+  return page.getByTestId("share-link").inputValue();
+};
+
+for (const size of sizes) {
+  test(`every Builder page has no sideways scroll and no violation at ${size.name}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: size.width, height: size.height });
+    const link = await shareLink(page);
+    const paths = [
+      "/build",
+      ...steps.map((step) => `/build/${step.id}`),
+      "/build/studio",
+      "/build/guide",
+      link,
+    ];
+    for (const path of paths) {
+      await page.goto(path);
+      // The guide and the shared view have their own ready mark.
+      if (path.startsWith("/build/guide"))
+        await expect(page.getByTestId("guide")).toHaveAttribute(
+          "data-state",
+          /project|ok/,
+        );
+      else if (path.includes("/build/shared"))
+        await expect(page.getByTestId("shared-view")).toBeVisible();
+      else await ready(page);
+      const overflow = await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      );
+      expect(overflow, `${path} at ${size.name}`).toBeLessThanOrEqual(0);
+      const results = await builderAxe(page).analyze();
+      expect(results.violations, `${path} at ${size.name}`).toEqual([]);
+    }
+  });
+}
+
+test.describe("on a phone", () => {
+  test.use({ viewport: { width: 320, height: 640 } });
+
+  test("the preview is pinned on top, folds away, and the steps follow it", async ({
+    page,
+  }) => {
+    await page.goto("/build/colour");
+    await ready(page);
+    const pin = page.getByTestId("preview-pin");
+    const list = page.getByRole("navigation", { name: shell.stepListLabel });
+    await expect(pin).toHaveCSS("position", "sticky");
+    const pinBox = (await pin.boundingBox())!;
+    const listBox = (await list.boundingBox())!;
+    // The preview is above the steps, and a tall page keeps it at the top.
+    expect(pinBox.y + pinBox.height).toBeLessThanOrEqual(listBox.y + 1);
+    await page.evaluate(() => window.scrollTo(0, 600));
+    await expect
+      .poll(async () => (await pin.boundingBox())!.y)
+      .toBeLessThanOrEqual(1);
+    // It never takes more than 40% of a short screen.
+    expect((await pin.boundingBox())!.height).toBeLessThanOrEqual(640 * 0.5);
+
+    // Fold it away: the steps get the screen, the button says what it will do next.
+    const toggle = pin.getByRole("button", { name: shell.hidePreview });
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await toggle.click();
+    await expect(
+      pin.getByRole("button", { name: shell.showPreview }),
+    ).toHaveAttribute("aria-expanded", "false");
+    await expect(page.locator("#preview-body")).toBeHidden();
+    expect((await pin.boundingBox())!.height).toBeLessThan(80);
+    await pin.getByRole("button", { name: shell.showPreview }).click();
+    await expect(page.locator("#preview-body")).toBeVisible();
+  });
+
+  test("the pinned preview never covers the control that has focus", async ({
+    page,
+    browserName,
+  }) => {
+    await page.goto("/build/colour");
+    await ready(page);
+    const key = tabKey(browserName);
+    // Walk forward through the page and check every stop is below the pinned bar.
+    for (let i = 0; i < 60; i += 1) {
+      await page.keyboard.press(key);
+      const covered = await page.evaluate(() => {
+        const focused = document.activeElement;
+        const bar = document.getElementById("preview");
+        if (
+          !focused ||
+          !bar ||
+          focused === document.body ||
+          bar.contains(focused)
+        )
+          return false;
+        const rect = focused.getBoundingClientRect();
+        if (rect.height === 0 || rect.bottom < 0 || rect.top > innerHeight)
+          return false;
+        // Covered: what is drawn at the control's centre is the pinned bar.
+        const top = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          Math.min(Math.max(rect.top + rect.height / 2, 0), innerHeight - 1),
+        );
+        return !!top && bar.contains(top);
+      });
+      expect(covered, `stop ${i + 1}`).toBe(false);
+    }
+  });
+});
+
+test("wide, the preview sits right of the steps and stays in view", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/build/colour");
+  await ready(page);
+  const pin = page.getByTestId("preview-pin");
+  const list = page.getByRole("navigation", { name: shell.stepListLabel });
+  expect((await pin.boundingBox())!.x).toBeGreaterThan(
+    (await list.boundingBox())!.x + (await list.boundingBox())!.width - 1,
+  );
+  await expect(
+    page.getByRole("button", { name: shell.hidePreview }),
+  ).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, 400));
+  await expect
+    .poll(async () => (await pin.boundingBox())!.y)
+    .toBeLessThanOrEqual(1);
 });
