@@ -111,7 +111,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S56 Check                                         | M17       | ☑      |
 | S57 Use it and the shared view                    | M17       | ☑      |
 | S58 Style guide and print                         | M17       | ☑      |
-| S59 Phones, accessibility, e2e suite              | M17       | ☐      |
+| S59 Phones, accessibility, e2e suite              | M17       | ◐      |
 | S60 Independent review                            | M17       | ☐      |
 | T1 Second usability round (maintainer)            | M17       | ☐      |
 | S61, S62 Fix review and T1 findings               | M17       | ☐      |
@@ -949,6 +949,16 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) The skip link is not `body > :first-child`, so the print rule matches `a[href="#main"]`. (2) The guide uses the minimal top bar (like the shared view). (3) Motion shows durations as text, with no animation. (4) Real print layout (page breaks) is checked only through print emulation, not a printed PDF.
 - Verified: site unit tests 330 passed (new `guide.test.ts`); typecheck, ESLint, `knip`, Prettier clean; new `e2e/build-guide.spec.ts` (every section; link from Use it; print emulation hides header, footer, top bar, toolbar and skip link and nothing is clipped; works from a shared link and from the shared view's link; a tampered link is safe; axe clean) with `build-use.spec` 33 passed in Chromium, Firefox and WebKit. Not looked at by eye in the browser pane. The full site e2e and `next build` outside the e2e server were not run separately.
 - Next: S59 (Phones, accessibility, e2e suite).
+
+### S59 — Phones, accessibility, e2e suite — 2026-11-18
+
+- Branch `s59-phones-a11y-e2e` cut from `origin/main` (75deda6, S58 merged as #97).
+- Done: the Guided shell puts the preview first in the page; on a narrow container it is sticky on top (at most 40% of the screen), with a "Hide the preview" button (`aria-expanded`); from 56rem it sits right of the steps by grid line. `scroll-padding-top` follows the bar's height so a focused control is never scrolled under it. Skip link is now "Skip to the steps". Strings in `content/builder.ts` (`shell.hidePreview`, `showPreview`). `build.spec.ts` gains: every Builder page (chooser, eight steps, Studio, style guide, a shared link) at 320px and at 200% zoom (640px) with no sideways scroll and axe clean; the phone layout (preview above the steps, pinned while scrolled, folds away); no focused control under the pinned bar over a 60-stop Tab walk; the wide layout. New `build-perf.spec.ts`.
+- Decisions: D-164 (preview first in the page: the one D-064 exception, chosen by the maintainer).
+- Measurements (local `next start`, 4 workers, Playwright Chromium/Firefox/WebKit; median of the samples, frames from the pointer or input event to the second animation frame after the preview changes): slider drag 30 / 29 / 25 ms (worst 30 / 43 / 39); colour pick 7 / 15 / 29 ms (worst 16 / 24 / 39). Budget 200 ms. `/build/start` first load: **315.2 KB gzip in 26 files** (Chromium, `networkidle`, every `_next/static/*.js` response) against 271.8 KB for `/playground` in H18. Not like for like: the H18 figure came from a different method (review scripts not in the repo), and `/build` carries more than the playground did. Not yet investigated what to trim.
+- Gotchas: (1) the mouse only reaches what is on screen, so the slider test scrolls the thumb into view first. (2) A local `pnpm build` without `SITE_ALLOW_HTTP=1` makes WebKit upgrade to https and never hydrate; the Playwright config sets it. (3) The S54 `build-typography.spec.ts` helper did not wait for the "New design system" navigation (WebKit race); fixed. (4) `playground.spec.ts` is kept: `/playground` is still a live route. (5) The native colour dialog cannot be driven, so the colour pick is its `input` event.
+- Verified: full site e2e locally 579 passed, 7 skipped before the typography fix, then the typography spec 18 of 18 in three browsers; ESLint, typecheck, `knip` and Prettier clean. Not run: the suite against a real deployment (the maintainer deploys, then `SITE_URL=<url> pnpm --filter site test:e2e`); a screen-reader pass; a real phone.
+- Next: S60 (Independent review). Maintainer: deploy and run the suite against it, which closes S59's "Done when".
 
 ## Retro (Release 1)
 
