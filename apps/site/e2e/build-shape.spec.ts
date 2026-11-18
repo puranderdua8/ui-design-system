@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import AxeBuilder from "@axe-core/playwright";
+import { builderAxe } from "./axe";
 import { expect, test, type Page } from "@playwright/test";
 import { builderContent } from "../src/content/builder";
 
@@ -34,6 +34,8 @@ const open = async (page: Page, id: string) => {
   await page.goto("/build");
   await ready(page);
   await page.getByRole("button", { name: "New design system" }).click();
+  // The new project opens Start; go on only once it has, or the two navigations collide.
+  await page.waitForURL("**/build/start");
   await page.goto(`/build/${id}`);
   await ready(page);
 };
@@ -267,7 +269,7 @@ test("unticking Keep my colours lets a shuffle change them", async ({
 test("axe finds nothing on the three steps", async ({ page }) => {
   for (const id of ["shape", "spacing", "depth"]) {
     await open(page, id);
-    const results = await new AxeBuilder({ page }).analyze();
+    const results = await builderAxe(page).analyze();
     expect(results.violations, id).toEqual([]);
   }
 });

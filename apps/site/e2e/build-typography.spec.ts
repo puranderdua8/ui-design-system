@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import AxeBuilder from "@axe-core/playwright";
+import { builderAxe } from "./axe";
 import { expect, test, type Page } from "@playwright/test";
 import { builderContent } from "../src/content/builder";
 
@@ -186,22 +186,18 @@ test("text size: the cards and the fine-tune slider (by keyboard) set the size",
 
 test("axe finds nothing on the Typography step", async ({ page }) => {
   await open(page);
-  const results = await new AxeBuilder({ page }).analyze();
+  const results = await builderAxe(page).analyze();
   expect(results.violations).toEqual([]);
 });
 
 test("axe finds nothing with a typed font and its stand-in line", async ({
   page,
-  browserName,
 }) => {
-  // Firefox crashes the page ("Page crashed") while axe runs on a page with this
-  // note showing, as it does with the colour error (S53); Chromium and WebKit are clean.
-  test.skip(browserName === "firefox", "Firefox crashes the page under axe");
   await open(page);
   await page
     .getByLabel(text.headingFont, { exact: true })
     .fill("Space Grotesk");
   await expect(page.getByTestId("own-heading-font-standin")).toBeVisible();
-  const results = await new AxeBuilder({ page }).analyze();
+  const results = await builderAxe(page).analyze();
   expect(results.violations).toEqual([]);
 });

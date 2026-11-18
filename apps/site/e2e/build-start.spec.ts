@@ -1,5 +1,5 @@
 import { deflateSync, crc32 } from "node:zlib";
-import AxeBuilder from "@axe-core/playwright";
+import { builderAxe } from "./axe";
 import { expect, test, type Page } from "@playwright/test";
 import { builderContent } from "../src/content/builder";
 
@@ -249,29 +249,24 @@ test("axe is clean on Start (questions open) and on Colour", async ({
   await page.goto("/build/start");
   await ready(page);
   await page.getByRole("button", { name: questions.link }).click();
-  let results = await new AxeBuilder({ page }).analyze();
+  let results = await builderAxe(page).analyze();
   expect(results.violations, "start").toEqual([]);
 
   await page.goto("/build/colour");
   await ready(page);
-  results = await new AxeBuilder({ page }).analyze();
+  results = await builderAxe(page).analyze();
   expect(results.violations, "colour").toEqual([]);
 });
 
-// Firefox crashes the page ("Page crashed") when axe runs its button-name rule while the
-// colour field shows its error. The same page without the error is clean in Firefox and
-// the error state is clean in Chromium and WebKit; the cause was not found (PROGRESS).
 test("axe is clean with the invalid-colour message showing", async ({
   page,
-  browserName,
 }) => {
-  test.skip(browserName === "firefox", "axe crashes the Firefox page here");
   await page.goto("/build/start");
   await ready(page);
   const field = page.getByLabel(start.brandLabel, { exact: true });
   await field.fill("blue");
   await field.blur();
   await expect(page.getByText(errors.colourInvalid.message)).toBeVisible();
-  const results = await new AxeBuilder({ page }).analyze();
+  const results = await builderAxe(page).analyze();
   expect(results.violations).toEqual([]);
 });

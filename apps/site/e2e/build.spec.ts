@@ -1,4 +1,4 @@
-import AxeBuilder from "@axe-core/playwright";
+import { builderAxe } from "./axe";
 import { expect, test, type Page } from "@playwright/test";
 import { builderContent } from "../src/content/builder";
 import { tabKey } from "./keys";
@@ -47,7 +47,7 @@ test("every step has its own URL, title, current mark and no violation", async (
     await expect(
       page.getByRole("heading", { level: 2, name: step.question }),
     ).toBeVisible();
-    const results = await new AxeBuilder({ page }).analyze();
+    const results = await builderAxe(page).analyze();
     expect(results.violations, step.id).toEqual([]);
   }
 });
@@ -184,7 +184,7 @@ test("Studio hosts today's four panels", async ({ page }) => {
   await expect(
     page.locator('[data-slot="tabs"]').first().getByRole("tab"),
   ).toHaveText(["Design", "Check", "Advanced", "Export"]);
-  const results = await new AxeBuilder({ page }).analyze();
+  const results = await builderAxe(page).analyze();
   expect(results.violations).toEqual([]);
 });
 
@@ -196,7 +196,7 @@ test("the project chooser renames, duplicates and deletes with a confirmation", 
   await expect(page).toHaveTitle(/^Your design systems/);
   const names = page.getByTestId("project-name");
   await expect(names).toHaveText(["My design system"]);
-  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  expect((await builderAxe(page).analyze()).violations).toEqual([]);
 
   // Rename
   await page.getByRole("button", { name: /^Rename/ }).click();
@@ -215,7 +215,7 @@ test("the project chooser renames, duplicates and deletes with a confirmation", 
   await expect(dialog).toContainText(
     builderContent.errors.deleteProject.message,
   );
-  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  expect((await builderAxe(page).analyze()).violations).toEqual([]);
   await dialog.getByRole("button", { name: buttons.cancel }).click();
   await expect(names).toHaveCount(2);
 
