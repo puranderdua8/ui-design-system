@@ -112,7 +112,7 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 | S57 Use it and the shared view                    | M17       | ☑      |
 | S58 Style guide and print                         | M17       | ☑      |
 | S59 Phones, accessibility, e2e suite              | M17       | ◐      |
-| S60 Independent review                            | M17       | ☐      |
+| S60 Independent review                            | M17       | ☑      |
 | T1 Second usability round (maintainer)            | M17       | ☐      |
 | S61, S62 Fix review and T1 findings               | M17       | ☐      |
 | S63 Product home, About and launch                | M17       | ☐      |
@@ -959,6 +959,14 @@ Specified up to launch (D-142). T0 and T1 are the maintainer's usability rounds.
 - Gotchas: (1) the mouse only reaches what is on screen, so the slider test scrolls the thumb into view first. (2) A local `pnpm build` without `SITE_ALLOW_HTTP=1` makes WebKit upgrade to https and never hydrate; the Playwright config sets it. (3) The S54 `build-typography.spec.ts` helper did not wait for the "New design system" navigation (WebKit race); fixed. (4) `playground.spec.ts` is kept: `/playground` is still a live route. (5) The native colour dialog cannot be driven, so the colour pick is its `input` event.
 - Verified: full site e2e locally 579 passed, 7 skipped before the typography fix, then the typography spec 18 of 18 in three browsers; ESLint, typecheck, `knip` and Prettier clean. Not run: the suite against a real deployment (the maintainer deploys, then `SITE_URL=<url> pnpm --filter site test:e2e`); a screen-reader pass; a real phone.
 - Next: S60 (Independent review). Maintainer: deploy and run the suite against it, which closes S59's "Done when".
+
+### S60 — Independent review — 2026-11-18
+
+- Branch `s60-builder-review` cut from `origin/main` (87dabbe, S59 merged as #98). Review only; start and end times not recorded.
+- Done: `docs/audits/2026-11-18-builder-review.md`: 5 findings with evidence (2 serious, 3 minor), 3 leads, what held up. Lint (1 warning, not the Builder), typecheck, knip, tokens, 330 site unit tests and 175 Builder e2e tests (three browsers) pass.
+- Findings in short: B01 project file export/import has no UI although error messages point to it; B02 one colour-picker drag fills the 100-step undo history; B03 two drags of one slider are one undo step; B04 `/build` size 315 KB vs 271.8 KB, not attributed; B05 spec 4.8 still says preview after the panel (D-164).
+- Not done: a screen-reader pass, a real phone, the suite against a real deployment, T0.
+- Next: T1 (maintainer), then S61 and S62 fix B01–B05 and the T1 findings.
 
 ## Retro (Release 1)
 
