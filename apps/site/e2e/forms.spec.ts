@@ -145,8 +145,20 @@ test.describe("validation form", () => {
   });
 
   test("the form is axe clean with a Select open", async ({ page }) => {
+    // An option's colours fade (`ds-transition`), and Firefox and WebKit run axe while
+    // the highlighted option is mid-fade (a colour between the two, 2.77:1). Reduced
+    // motion switches the fade off, so axe reads the settled colours, which the contrast
+    // matrix already checks.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.getByRole("combobox", { name: "Produce" }).click();
     await expect(page.getByRole("listbox")).toBeVisible();
+    await expect
+      .poll(() =>
+        page
+          .getByRole("listbox")
+          .evaluate((el) => el.getAnimations({ subtree: true }).length),
+      )
+      .toBe(0);
     // Scoped to the list: Radix aria-hides the rest of the page while it is
     // open (including the off-screen skip link), and the portalled list sits
     // outside any landmark by design.

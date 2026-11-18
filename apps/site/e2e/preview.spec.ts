@@ -1,4 +1,4 @@
-import AxeBuilder from "@axe-core/playwright";
+import { builderAxe } from "./axe";
 import { expect, test, type Page } from "@playwright/test";
 import { builderContent } from "../src/content/builder";
 
@@ -44,7 +44,7 @@ test.describe("axe on every tab in every look", () => {
       if (look !== "Base") await chooseLook(page, look);
       for (const name of pages) {
         await openPage(page, name);
-        const results = await new AxeBuilder({ page }).analyze();
+        const results = await builderAxe(page).analyze();
         expect(results.violations, `${look} / ${name}`).toEqual([]);
       }
     });
@@ -146,6 +146,6 @@ test("a dialog opens in the preview's look and the page stays put", async ({
   const dialog = page.getByRole("alertdialog");
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveCSS("--ds-color-brand-600", "#703dc6");
-  const results = await new AxeBuilder({ page }).analyze();
+  const results = await builderAxe(page).analyze();
   expect(results.violations).toEqual([]);
 });
